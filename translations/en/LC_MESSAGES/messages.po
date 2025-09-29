@@ -558,8 +558,8 @@ msgid "저희 제품은"
 msgstr "Our products"
 
 #: templates/products.html:88
-msgid "UID를 정직하게 제공"
-msgstr "provide UIDs"
+msgid "UDI를 정직하게 제공"
+msgstr "provide UDI"
 
 #: templates/products.html:88
 msgid "하고 있습니다."
