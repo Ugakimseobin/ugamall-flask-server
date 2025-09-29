@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, current_app
 from flask_babel import Babel
+from flask_login import UserMixin
+from flask_login import current_user, login_required
 from sqlalchemy.orm import joinedload
+from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
 import requests
 import os
@@ -17,6 +20,15 @@ import uuid
 from datetime import timedelta
 
 app = Flask(__name__)
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+
+login_manager = LoginManager(app)
+login_manager.login_view = "login"  # 로그인 안 된 상태에서 접근 시 이동할 뷰
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ugahan582818@localhost:3306/ugamall'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'SQLALCHEMY_DATABASE_URI',
@@ -66,7 +78,7 @@ ALLOWED_PAMPHLET_EXT = {".pdf", ".jpg", ".jpeg", ".png"}
 # -----------------------------
 # DB 모델
 # -----------------------------
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -340,9 +352,9 @@ def cancel_portone_payment(imp_uid, amount=None, reason="관리자 취소",
     return data["response"]
 
 def _cart_items_for_current_user():
-    user_id = session.get("user_id")
-    if user_id:
-        return CartItem.query.filter_by(user_id=user_id).all(), user_id, None
+    if current_user.is_authenticated:
+        return CartItem.query.filter_by(user_id=current_user.id).all(), current_user.id, None
+    # 비회원용 세션 카트
     if "session_id" not in session:
         session["session_id"] = str(uuid.uuid4())
     session_id = session["session_id"]
@@ -427,6 +439,12 @@ def register_info():
         detail_address = request.form["detail_address"]
         phone = request.form["phone"]
 
+        # ✅ 이메일 중복 체크
+        existing = User.query.filter_by(email=email).first()
+        if existing:
+            flash("이미 사용 중인 이메일입니다.", "error")
+            return redirect(url_for("register_info"))
+        
         if password != password_confirm:
             flash("비밀번호가 일치하지 않습니다.", "error")
             return redirect(url_for("register_info"))
@@ -484,17 +502,11 @@ def login():
         password = request.form.get("password")
 
         user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password_hash, password):
-            session["user_id"] = user.id
-            session["user_name"] = user.name
-            session["is_admin"] = user.is_admin   
-
-            # ✅ 마지막 로그인 업데이트
+        if user and user.check_password(password):
+            login_user(user)  # ✅ Flask-Login 사용
             user.last_login = datetime.now(KST)
-            # ✅ 휴면 상태였으면 해제
             if user.status == "dormant":
                 user.status = "active"
-
             db.session.commit()
 
             flash("로그인 성공!", "success")
@@ -506,7 +518,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    session.clear()
+    logout_user()   # ✅ 세션/쿠키 정리
     flash("로그아웃되었습니다.", "success")
     return redirect(url_for("home"))
 
@@ -554,30 +566,21 @@ def verify_code():
     return jsonify({"status": "error", "message": "인증번호가 올바르지 않습니다."})
 
 @app.route("/mypage", methods=["GET", "POST"])
+@login_required   # ✅ Flask-Login 데코레이터 사용
 def mypage():
-    if not session.get("user_id"):
-        flash("마이페이지는 로그인 후 이용 가능합니다." "비회원은 비회원 주문조회를 이용해 주세요", "error")
-        return redirect(url_for("login"))
+    user = current_user
 
-    user = User.query.get(session["user_id"])
-
-    # 👉 개인정보 변경 처리
     if request.method == "POST":
         form_type = request.form.get("form_type")
 
-        # 내 정보 저장
         if form_type == "info":
             user.name = request.form.get("name")
-
-            # ✅ 분리된 주소 저장
             user.base_address = request.form.get("base_address", "")
             user.detail_address = request.form.get("detail_address", "")
-
             user.agree_marketing = "agree_marketing" in request.form
             db.session.commit()
             flash("개인정보가 수정되었습니다.", "success")
 
-        # 비밀번호 변경
         elif form_type == "password":
             current_pw = request.form.get("current_password")
             new_pw = request.form.get("new_password")
@@ -594,21 +597,16 @@ def mypage():
 
         return redirect(url_for("mypage"))
 
-    # 👉 주문내역 불러오기 (Order 모델 연동)
     orders = Order.query.filter_by(user_id=user.id).order_by(Order.created_at.desc()).all()
     inquiries = Inquiry.query.filter_by(user_id=user.id).order_by(Inquiry.created_at.desc()).all()
 
     return render_template("mypage.html", user=user, orders=orders, inquiries=inquiries)
 
 @app.route("/mypage/inquiries")
+@login_required
 def my_inquiries():
-    user_id = session.get("user_id")
-    if not user_id:
-        flash("로그인 후 이용해주세요.", "error")
-        return redirect(url_for("login"))
-
-    inquiries = Inquiry.query.filter_by(user_id=user_id).order_by(Inquiry.created_at.desc()).all()
-    return render_template("mypage.html", inquiries=inquiries, orders=[], user=User.query.get(user_id))
+    inquiries = Inquiry.query.filter_by(user_id=current_user.id).order_by(Inquiry.created_at.desc()).all()
+    return render_template("mypage.html", inquiries=inquiries, orders=[], user=current_user)
 
 @app.route("/reset_password", methods=["GET", "POST"])
 def reset_password_request():
@@ -727,13 +725,14 @@ def add_to_cart():
     # ✅ 항상 key 정렬된 JSON 문자열로 변환
     chosen_options_str = json.dumps(chosen_options, ensure_ascii=False, sort_keys=True)
 
-    user_id = session.get("user_id")
-    if not user_id:
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        session_id = None
+    else:
         if "session_id" not in session:
             session["session_id"] = str(uuid.uuid4())
+        user_id = None
         session_id = session["session_id"]
-    else:
-        session_id = None
 
     # 해당 옵션 조합 찾기
     variants = ProductVariant.query.filter_by(product_id=product_id).all()
@@ -774,15 +773,14 @@ import json
 
 @app.route("/checkout", methods=["GET", "POST"])
 def checkout():
-    user_id = session.get("user_id")
-
-    # 장바구니 쿼리 빌더
-    if user_id:
-        base_q = CartItem.query.filter_by(user_id=user_id)
+    if current_user.is_authenticated:
+        base_q = CartItem.query.filter_by(user_id=current_user.id)
+        user_id = current_user.id
     else:
         if "session_id" not in session:
             session["session_id"] = str(uuid.uuid4())
         base_q = CartItem.query.filter_by(session_id=session["session_id"])
+        user_id = None
 
     if request.method == "POST":
         # 구매자 정보
@@ -827,8 +825,8 @@ def checkout():
 
         # 주문 생성
         new_order = Order(
-            user_id=user_id,
-            guest_email=guest_email,
+            user_id=current_user.id if current_user.is_authenticated else None,
+            guest_email=guest_email if not current_user.is_authenticated else None,
             name=name,
             phone=phone,
             base_address=base_address,
@@ -862,19 +860,18 @@ def checkout():
                 for ci in cart_items)
 
     user_info = {}
-    if user_id:
-        user = User.query.get(user_id)
-        if user:
-            user_info = {
-                "name": user.name,
-                "phone": user.phone,
-                "base_address": user.base_address,
-                "detail_address": user.detail_address,
-                "email": user.email
-            }
+    user_info = {}
+    if current_user.is_authenticated:
+        user_info = {
+            "name": current_user.name,
+            "phone": current_user.phone,
+            "base_address": current_user.base_address,
+            "detail_address": current_user.detail_address,
+            "email": current_user.email
+        }
 
-    return render_template("checkout.html", cart_items=cart_items, total=total, user_info=user_info, user_id=user_id)
-
+    return render_template("checkout.html", cart_items=cart_items, total=total,
+                           user_info=user_info, user_id=(current_user.id if current_user.is_authenticated else None))
 
 @app.route("/payment/<int:order_id>")
 def payment(order_id):
@@ -1002,7 +999,7 @@ def order_page():
         payment_method = request.form.get("payment_method")
 
         order = Order(
-            user_id=session.get("user_id"),
+            user_id=(current_user.id if current_user.is_authenticated else None),
             name=name,
             base_address=base_address,
             detail_address=detail_address,
@@ -1029,9 +1026,20 @@ def order_page():
 
     return render_template("order_page.html", cart_items=cart_items, total=total)
 
+def admin_required(view):
+    @wraps(view)
+    @login_required
+    def wrapped(*args, **kwargs):
+        if not current_user.is_admin:
+            flash("관리자만 접근 가능합니다.", "error")
+            return redirect(url_for("home"))
+        return view(*args, **kwargs)
+    return wrapped
+
 @app.route("/admin")
+@login_required
 def admin_dashboard():
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
     # 주문 중 결제 대기중 개수
@@ -1043,13 +1051,16 @@ def admin_dashboard():
         new_inquiries_count=new_inquiries_count)
 
 @app.route("/admin/products")
+@login_required
 def admin_products():
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
+        flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
     products = Product.query.all()
     return render_template("admin/products.html", products=products)
 
 @app.route("/admin/products/add", methods=["GET", "POST"])
+@login_required
 def admin_add_product():
     if not session.get("is_admin"):
         flash("관리자만 접근할 수 있습니다.", "error")
@@ -1093,6 +1104,7 @@ def admin_add_product():
     return render_template("admin_add_product.html")
 
 @app.route("/admin/products/<int:product_id>/options", methods=["GET", "POST"])
+@login_required
 def admin_product_options(product_id):
     if not session.get("is_admin"):
         return redirect(url_for("home"))
@@ -1114,6 +1126,7 @@ def admin_product_options(product_id):
     return render_template("admin/product_options.html", product=product, options=options)
 
 @app.route("/admin/products/<int:product_id>/variants", methods=["GET", "POST"])
+@login_required
 def admin_product_variants(product_id):
     if not session.get("is_admin"):
         return redirect(url_for("home"))
@@ -1147,6 +1160,7 @@ def admin_product_variants(product_id):
 
 # 옵션 삭제
 @app.route("/admin/products/<int:product_id>/options/<int:option_id>/delete", methods=["POST"])
+@login_required
 def admin_delete_option(product_id, option_id):
     if not session.get("is_admin"):
         return redirect(url_for("home"))
@@ -1158,6 +1172,7 @@ def admin_delete_option(product_id, option_id):
 
 # 조합 삭제
 @app.route("/admin/products/<int:product_id>/variants/<int:variant_id>/delete", methods=["POST"])
+@login_required
 def admin_delete_variant(product_id, variant_id):
     if not session.get("is_admin"):
         return redirect(url_for("home"))
@@ -1169,6 +1184,7 @@ def admin_delete_variant(product_id, variant_id):
 
 # 상품 수정
 @app.route("/admin/products/<int:product_id>/edit", methods=["GET", "POST"])
+@login_required
 def admin_edit_product(product_id):
     if not session.get("is_admin"):
         flash("관리자만 접근할 수 있습니다.", "error")
@@ -1207,6 +1223,7 @@ def admin_edit_product(product_id):
 
 # 상품 삭제
 @app.route("/admin/products/<int:product_id>/delete", methods=["POST"])
+@login_required
 def admin_delete_product(product_id):
     if not session.get("is_admin"):
         flash("관리자만 접근할 수 있습니다.", "error")
@@ -1224,6 +1241,7 @@ def admin_delete_product(product_id):
     return redirect(url_for("admin_products"))
 
 @app.route("/admin/videos")
+@login_required
 def admin_videos():
     if not session.get("is_admin"):
         return redirect(url_for("home"))
@@ -1231,6 +1249,7 @@ def admin_videos():
     return render_template("admin/videos.html", videos=videos)
 
 @app.route("/admin/videos/add", methods=["GET", "POST"])
+@login_required
 def admin_add_video():
     if not session.get("is_admin"):
         return redirect(url_for("home"))
@@ -1247,6 +1266,7 @@ def admin_add_video():
     return render_template("admin/video_form.html")
 
 @app.route("/admin/videos/<int:video_id>/edit", methods=["GET", "POST"])
+@login_required
 def admin_edit_video(video_id):
     video = Video.query.get_or_404(video_id)
 
@@ -1267,6 +1287,7 @@ def admin_edit_video(video_id):
     return render_template("admin/edit_video.html", video=video)
 
 @app.route("/admin/videos/<int:video_id>/delete", methods=["POST"])
+@login_required
 def admin_delete_video(video_id):
     video = Video.query.get_or_404(video_id)
 
@@ -1281,6 +1302,7 @@ def admin_delete_video(video_id):
     return redirect(url_for("admin_videos"))
 
 @app.route("/admin/users", methods=["GET", "POST"])
+@login_required
 def admin_users():
     if not session.get("is_admin"):
         flash("관리자만 접근할 수 있습니다.", "error")
@@ -1317,6 +1339,7 @@ def admin_users():
     return render_template("admin/users.html", users=users, two_years_ago=two_years_ago)
 
 @app.route("/admin/users/<int:user_id>/make_admin")
+@login_required
 def make_admin(user_id):
     if not session.get("is_admin"):
         return redirect(url_for("home"))
@@ -1328,6 +1351,7 @@ def make_admin(user_id):
     return redirect(url_for("admin_users"))
 
 @app.route("/admin/orders", methods=["GET", "POST"])
+@login_required
 def admin_orders():
     if not session.get("is_admin"):
         flash("관리자만 접근 가능합니다.", "error")
@@ -1398,6 +1422,7 @@ def admin_orders():
                            status_options=STATUS_OPTIONS)
 
 @app.post("/admin/orders/<int:order_id>/cancel")
+@login_required
 def admin_cancel_order(order_id):
     if not session.get("is_admin"):
         flash("관리자만 접근 가능합니다.", "error")
@@ -1458,6 +1483,7 @@ def admin_cancel_order(order_id):
 
 
 @app.route("/admin/inquiries", methods=["GET", "POST"])
+@login_required
 def admin_inquiries():
     # 👉 관리자 권한 체크 (원하시면 조건 강화 가능)
     if not session.get("is_admin"):
@@ -1492,10 +1518,11 @@ def contact():
         title = request.form.get("title")
         content = request.form.get("content")
 
-        user_id = session.get("user_id")
-        guest_email = None
-
-        if not user_id:  # 비회원이면 이메일 필수
+        if current_user.is_authenticated:
+            user_id = current_user.id
+            guest_email = None
+        else:
+            user_id = None
             guest_email = request.form.get("email")
             if not guest_email:
                 flash("비회원은 이메일을 입력해야 합니다.", "error")
@@ -1541,7 +1568,9 @@ def search():
     categories = [c[0] for c in db.session.query(Product.category).distinct()]
     return render_template("search.html", products=products, videos=videos, categories=categories, video_filter=True,q=q)
 
-
+@app.route("/debug")
+def debug():
+    return f"로그인 여부: {current_user.is_authenticated}, id={getattr(current_user,'id',None)}"
 
 @app.route('/autocomplete')
 def autocomplete():
