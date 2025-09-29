@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto p-6 sm:p-8 bg-white shadow-lg rounded mt-10">
+  <!-- 제목 -->
+  <h2 class="text-2xl sm:text-3xl font-bold text-center mb-6">{{ _("로그인") }}</h2>
+
+  <!-- 로그인 폼 -->
+  <form method="post" class="space-y-4">
+    <!-- 이메일 -->
+    <div>
+      <label class="block text-sm font-semibold mb-1">{{ _("이메일") }}</label>
+      <input type="email" name="email" placeholder="{{ _('이메일 입력') }}"
+             required class="w-full border p-2 rounded focus:ring focus:ring-indigo-200">
+    </div>
+
+    <!-- 비밀번호 -->
+    <div>
+      <label class="block text-sm font-semibold mb-1">{{ _("비밀번호") }}</label>
+      <input type="password" name="password" placeholder="{{ _('비밀번호 입력') }}"
+             required class="w-full border p-2 rounded focus:ring focus:ring-indigo-200">
+    </div>
+
+    <!-- 로그인 버튼 -->
+    <button type="submit"
+            class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">
+      {{ _("로그인") }}
+    </button>
+  </form>
+
+  <!-- 구분선 -->
+  <div class="flex items-center my-6">
+    <hr class="flex-grow border-gray-300">
+    <span class="px-3 text-gray-400 text-sm">{{ _("또는") }}</span>
+    <hr class="flex-grow border-gray-300">
+  </div>
+
+  <!-- 추가 링크 -->
+  <div class="space-y-3 text-sm text-center">
+    <p>
+      {{ _("계정이 없나요") }}? 
+      <a href="{{ url_for('register_terms') }}" class="text-indigo-600 hover:underline font-medium">{{ _("회원가입") }}</a>
+    </p>
+    <p>
+      {{ _("비밀번호를 잊으셨나요") }}? 
+      <a href="{{ url_for('reset_password_request') }}" class="text-indigo-600 hover:underline font-medium">{{ _("비밀번호 찾기") }}</a>
+    </p>
+    <p>
+      <a href="{{ url_for('guest_orders') }}" class="text-gray-600 hover:underline">{{ _("비회원 주문조회") }}</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

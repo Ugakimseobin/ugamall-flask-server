@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-xl mx-auto py-16 px-6 text-center">
+  <h1 class="text-2xl font-bold mb-4">{{ _("결제를 준비 중입니다") }}...</h1>
+  <p class="text-gray-600 mb-8">{{ _("잠시만 기다려 주세요. 결제창이 곧 열립니다.") }}</p>
+
+  <div class="text-sm bg-gray-50 border rounded p-4 text-left">
+    <div><b>{{ _("주문번호") }}</b> : {{ order.id }}</div>
+    <div><b>{{ _("주문자") }}</b> : {{ order.name }} ({{ order.phone }})</div>
+    {% if order.guest_email %}<div><b>Email</b> : {{ order.guest_email }}</div>{% endif %}
+    <div><b>{{ _("결제금액") }}</b> : {{ amount|comma }}원</div>
+  </div>
+</div>
+
+<script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+<script>
+(async function(){
+  const ORDER_ID = {{ order.id }};
+  const IMP_CODE = "{{ imp_code }}";
+  try {
+    // 1) 서버에서 merchant_uid/amount 확보
+    const prepRes = await fetch("/pay/prepare", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ order_id: ORDER_ID })
+    });
+    const prep = await prepRes.json();
+    if (!prep.ok) {
+      alert("결제 준비 실패");
+      location.href = "/checkout";
+      return;
+    }
+
+    // 2) 아임포트 결제 호출
+    const IMP = window.IMP;
+    IMP.init(prep.imp_code || IMP_CODE);
+
+    IMP.request_pay({
+      pg: "html5_inicis",        // 샌드박스
+      pay_method: "card",
+      merchant_uid: prep.merchant_uid,
+      name: "UGAMALL 주문 결제",
+      amount: prep.amount,
+      buyer_name: "{{ order.name }}",
+      buyer_tel: "{{ order.phone }}",
+      buyer_email: "{{ order.guest_email or '' }}",
+      buyer_addr: "{{ order.base_address }} {{ order.detail_address or '' }}"
+    }, async function (rsp) {
+      if (rsp.success) {
+        // 3) 서버 검증
+        const vRes = await fetch("/pay/verify", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ imp_uid: rsp.imp_uid, merchant_uid: rsp.merchant_uid, order_id: ORDER_ID })
+        });
+        const v = await vRes.json();
+        if (v.ok) {
+          alert("결제가 완료되었습니다.");
+          location.href = "/order-complete/" + ORDER_ID;
+        } else {
+          alert("검증 실패: " + (v.msg || ""));
+          location.href = "/checkout";
+        }
+      } else {
+        alert("결제 실패: " + rsp.error_msg);
+        location.href = "/checkout";
+      }
+    });
+  } catch(e){
+    console.error(e);
+    alert("결제 처리 중 오류가 발생했습니다.");
+    location.href = "/checkout";
+  }
+})();
+</script>
+{% endblock %}

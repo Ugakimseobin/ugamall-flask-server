@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-4 sm:p-6 shadow rounded mt-6 sm:mt-8">
+  <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">상품 등록</h1>
+  <form method="post" enctype="multipart/form-data" class="space-y-4">
+    
+    <!-- 상품명 -->
+    <div>
+      <label class="block font-semibold mb-1">상품명</label>
+      <input type="text" name="name" required 
+             class="w-full border rounded p-2 text-sm sm:text-base">
+    </div>
+
+    <!-- 가격 -->
+    <div>
+      <label class="block font-semibold mb-1">가격</label>
+      <input type="number" name="price" required 
+             class="w-full border rounded p-2 text-sm sm:text-base">
+    </div>
+
+    <!-- 카테고리 -->
+    <div>
+      <label class="block font-semibold mb-1">카테고리</label>
+      <input type="text" name="category" required 
+             class="w-full border rounded p-2 text-sm sm:text-base">
+    </div>
+
+    <!-- 설명 -->
+    <div>
+      <label class="block font-semibold mb-1">설명</label>
+      <textarea name="description" rows="4" 
+                class="w-full border rounded p-2 text-sm sm:text-base"></textarea>
+    </div>
+
+    <!-- 이미지 업로드 -->
+    <div>
+      <label class="block font-semibold mb-1">이미지</label>
+      <input type="file" name="image" required 
+             class="w-full border rounded p-2 text-sm sm:text-base">
+    </div>
+
+    <!-- 팜플렛 업로드 -->
+    <div>
+      <label class="block font-semibold mb-1">팜플렛</label>
+      <input type="file" name="pamphlet" 
+             class="w-full border rounded p-2 text-sm sm:text-base">
+    </div>
+
+    <!-- 버튼 -->
+    <button type="submit" 
+            class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 
+                   text-sm sm:text-base font-semibold">
+      등록하고 옵션 추가하기
+    </button>
+  </form>
+</div>
+{% endblock %}

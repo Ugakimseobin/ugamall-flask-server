@@ -1,0 +1,15 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+# Python
+__pycache__/
+*.pyc
+
+# Virtualenv
+venv/
+
+# OS
+.DS_Store
+
+# Video & Large files
+*.mp4
+*.avi
+*.mov

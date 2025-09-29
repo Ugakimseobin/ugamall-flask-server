@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-4 sm:p-6 shadow rounded mt-6 sm:mt-8">
+  <h1 class="text-xl sm:text-2xl font-bold mb-6">영상 등록</h1>
+
+  <form method="post" enctype="multipart/form-data" class="space-y-4">
+    <!-- 제목 -->
+    <div>
+      <label class="block font-semibold mb-1">제목</label>
+      <input type="text" name="title" required
+             placeholder="영상 제목을 입력하세요"
+             class="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-500">
+    </div>
+
+    <!-- 영상 파일 -->
+    <div>
+      <label class="block font-semibold mb-1">영상 파일</label>
+      <input type="file" name="video" accept="video/*" required
+             class="w-full border rounded p-2 bg-gray-50">
+      <p class="text-sm text-gray-500 mt-1">지원 형식: MP4, WebM, Ogg</p>
+    </div>
+
+    <!-- 미리보기 (선택) -->
+    <div id="video-preview" class="hidden mt-4">
+      <video controls class="w-full rounded border"></video>
+    </div>
+
+    <!-- 제출 버튼 -->
+    <button type="submit"
+            class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition">
+      등록하기
+    </button>
+  </form>
+</div>
+
+<script>
+document.querySelector("input[name='video']").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const preview = document.getElementById("video-preview");
+    const video = preview.querySelector("video");
+    video.src = URL.createObjectURL(file);
+    preview.classList.remove("hidden");
+  }
+});
+</script>
+{% endblock %}

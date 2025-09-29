@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto mt-12">
+    <h2 class="text-2xl font-bold mb-6">{{ _("비회원 주문내역") }}</h2>
+    <p class="mb-6 text-gray-600">{{ _("이메일") }}: {{ email }}</p>
+
+  {% for order in orders %}
+  <div class="bg-white shadow-md rounded p-6 mb-6">
+    <p><strong>{{ _("주문번호") }}:</strong> {{ order.id }}</p>
+    <p><strong>{{ _("주문자") }}:</strong> {{ order.name }}</p>
+    <p><strong>{{ _("전화번호") }}:</strong> {{ order.phone }}</p>
+    <p><strong>{{ _("배송지") }}:</strong> {{ order.base_address }}</p>
+    <p><strong>{{ _("배송지상세") }}:</strong> {{ order.detail_address }}</p>
+    <p><strong>{{ _("결제방식") }}:</strong> {{ order.payment_method }}</p>
+    <p><strong>{{ _("상태") }}:</strong> {{ order.status }}</p>
+    <p><strong>{{ _("주문일자") }}:</strong> {{ order.created_at.strftime("%Y-%m-%d %H:%M") }}</p>
+
+    <div class="mt-4">
+      <h3 class="font-semibold mb-2">{{ _("주문 상품") }}</h3>
+      <ul class="list-disc pl-6">
+        {% for item in order.items %}
+        <li>
+          {{ item.variant.product.name }}
+          {% if item.variant.options %} ({{ _("옵션") }}: {{ item.variant.options }}) {% endif %}
+          - {{ item.quantity }}{{ _("개") }} / {{ item.price }}{{ _("원") }}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

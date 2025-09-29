@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-5xl mx-auto p-4 sm:py-10">
+  <h2 class="text-xl sm:text-2xl font-bold mb-6 text-center">문의 관리</h2>
+
+  {% for q in inquiries %}
+  <div class="border rounded p-4 bg-white shadow mb-4 text-sm sm:text-base">
+    <!-- 제목 -->
+    <p class="font-bold break-words">제목: {{ q.title }}</p>
+
+    <!-- 작성일 -->
+    <p class="text-xs sm:text-sm text-gray-500">
+      작성일: {{ q.created_at.strftime("%Y-%m-%d %H:%M") }}
+    </p>
+
+    <!-- 작성자 -->
+    <p class="text-xs sm:text-sm text-gray-600">
+      작성자: 
+      {% if q.user %}
+        {{ q.user.name }} ({{ q.user.email }})
+      {% else %}
+        비회원 ({{ q.guest_email }})
+      {% endif %}
+    </p>
+
+    <!-- 본문 -->
+    <p class="mt-2 whitespace-pre-line">{{ q.content }}</p>
+
+    <!-- 답변 -->
+    {% if q.answer %}
+      <div class="mt-3 border-t pt-2">
+        <p class="font-bold text-indigo-600">[답변]</p>
+        <p class="whitespace-pre-line">{{ q.answer }}</p>
+        <p class="text-xs text-gray-500">{{ q.answered_at.strftime("%Y-%m-%d %H:%M") }}</p>
+      </div>
+    {% else %}
+      <form method="POST" class="mt-3 space-y-2">
+        <input type="hidden" name="inquiry_id" value="{{ q.id }}">
+        <textarea name="answer" rows="3"
+                  class="w-full border rounded p-2 text-sm sm:text-base"
+                  placeholder="답변 내용을 입력하세요"></textarea>
+        <button type="submit"
+                class="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 text-sm sm:text-base">
+          답변 등록
+        </button>
+      </form>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

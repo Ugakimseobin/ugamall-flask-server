@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UGAMALL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* 툴팁  */
+.noUi-tooltip {
+  background: #f9fafb;
+  color: #000;
+  border: 1px solid #f9fafb;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 6px;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes cart-bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-8px) scale(1.02); }
+  60% { transform: translateY(-4px) scale(1.01); }
+}
+.animate-cart-bounce {
+  animation: cart-bounce 1.2s ease;
+}
+</style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-['Noto Sans KR',sans-serif]">
+  <!-- Header -->
+  <header class="fixed w-full bg-white shadow z-50">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center h-16">
+      <a href="/" class="text-xl md:text-2xl font-bold text-indigo-600">{{ _("유가몰") }}</a>
+
+      <!-- 검색창 -->
+      <form id="search-form" action="{{ url_for('search') }}" class="hidden md:flex relative w-1/3">
+        <input type="text" id="search-input" name="name"
+              placeholder="{{ _('상품 검색') }}..."
+              value="{{ request.args.get('name','') }}"
+              class="w-full border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <button type="submit"
+                class="border border-gray-300 bg-white text-gray-600 px-2 rounded-r-lg hover:bg-gray-200 flex items-center justify-center">
+          <img src="{{ url_for('static', filename='images/search_logo.png') }}">
+        </button>
+      </form>
+
+      <!-- 네비게이션 (데스크탑) -->
+      <nav class="hidden md:flex space-x-6 text-sm md:text-base">
+        <a href="/company" class="hover:text-indigo-600">{{ _("회사소개") }}</a>
+        <a href="/products" class="hover:text-indigo-600">{{ _("제품") }}</a>
+        <a href="/contact" class="hover:text-indigo-600">{{ _("문의") }}</a>
+        {% if session.get("user_id") %}
+          {% if session.get("is_admin") %}
+            <a href="{{ url_for('admin_dashboard') }}" class="hover:text-red-600 font-bold">관리자</a>
+          {% else %}
+            <a href="{{ url_for('mypage') }}" class="hover:text-blue-600 font-bold">{{ _("마이페이지") }}</a>
+          {% endif %}
+          <a href="{{ url_for('logout') }}" class="hover:text-indigo-600">{{ _("로그아웃") }}</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="hover:text-indigo-600">{{ _("로그인") }}</a>
+        {% endif %}
+        <a href="/checkout" class="relative" aria-label="장바구니">
+          <span id="cart-icon-desktop" class="inline-block align-middle">🛒</span>
+        </a>
+      </nav>
+
+      <!-- 언어 변경 -->
+      <div class="relative inline-block hidden md:inline-block">
+        <button id="lang-button" 
+          class="flex flex-col items-center text-gray-700 hover:text-indigo-600 focus:outline-none">
+          <img src="{{ url_for('static', filename='images/icons8-지구-그리드-32.png') }}">
+          <span class="text-xs">
+            {% if get_locale() == 'ko' %}
+              한국어
+            {% elif get_locale() == 'en' %}
+              Eng
+            {% else %}
+              Language
+            {% endif %}
+          </span>
+        </button>
+
+        <!-- 드롭다운 메뉴 -->
+        <div id="lang-menu" class="hidden absolute mt-2 w-32 bg-white border rounded shadow-lg z-50">
+          <a href="{{ url_for('set_lang', lang='ko') }}" 
+            class="block px-4 py-2 text-sm hover:bg-gray-100 {% if get_locale() == 'ko' %}font-bold text-indigo-600{% endif %}">
+            한국어
+          </a>
+          <a href="{{ url_for('set_lang', lang='en') }}" 
+            class="block px-4 py-2 text-sm hover:bg-gray-100 {% if get_locale() == 'en' %}font-bold text-indigo-600{% endif %}">
+            Eng
+          </a>
+        </div>
+      </div>
+
+      <!-- 모바일 메뉴 버튼 -->
+      <button id="mobile-menu-button" class="md:hidden text-2xl">☰</button>
+    </div>
+
+    <!-- 모바일 메뉴 -->
+    <div id="mobile-menu" class="hidden bg-white border-t shadow-md md:hidden">
+      <form id="mobile-search" action="{{ url_for('search') }}" class="flex px-4 py-2">
+        <input type="text" name="name"
+              placeholder="{{ _('상품 검색') }}..."
+              class="flex-grow border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <button type="submit"
+                class="border border-gray-300 bg-white text-gray-600 px-2 rounded-r-lg hover:bg-gray-200">
+          <img src="{{ url_for('static', filename='images/search_logo.png') }}">
+        </button>
+      </form>
+      <nav class="flex flex-col px-4 py-2 space-y-2 text-sm">
+        <a href="/company" class="hover:text-indigo-600">{{ _("회사소개") }}</a>
+        <a href="/products" class="hover:text-indigo-600">{{ _("제품") }}</a>
+        <a href="/contact" class="hover:text-indigo-600">{{ _("문의") }}</a>
+        {% if session.get("user_id") %}
+          {% if session.get("is_admin") %}
+            <a href="{{ url_for('admin_dashboard') }}" class="hover:text-red-600 font-bold">관리자</a>
+          {% else %}
+            <a href="{{ url_for('mypage') }}" class="hover:text-blue-600 font-bold">{{ _("마이페이지") }}</a>
+          {% endif %}
+          <a href="{{ url_for('logout') }}" class="hover:text-indigo-600">{{ _("로그아웃") }}</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="hover:text-indigo-600">{{ _("로그인") }}</a>
+        {% endif %}
+        <a href="/checkout" class="flex items-center gap-2" aria-label="장바구니">
+          <span id="cart-icon-mobile" class="inline-block align-middle">🛒</span>
+          {{ _("장바구니") }}
+        </a>
+      </nav>
+      <div class="px-4 py-3 border-t">
+        <div class="text-xs text-gray-500 mb-2">{{ _("언어") }}</div>
+        <div class="flex gap-2">
+          <a href="{{ url_for('set_lang', lang='ko') }}"
+            class="px-3 py-1 rounded border text-sm
+                    {% if get_locale() == 'ko' %}bg-indigo-600 text-white border-indigo-600{% else %}bg-white text-gray-700 border-gray-300{% endif %}">
+            한국어
+          </a>
+          <a href="{{ url_for('set_lang', lang='en') }}"
+            class="px-3 py-1 rounded border text-sm
+                    {% if get_locale() == 'en' %}bg-indigo-600 text-white border-indigo-600{% else %}bg-white text-gray-700 border-gray-300{% endif %}">
+            English
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Flash Messages -->
+  <div class="fixed top-20 left-1/2 transform -translate-x-1/2 w-full max-w-3xl px-4 z-50">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message mb-3 px-4 py-3 rounded-lg shadow-lg
+                      {% if category == 'success' %} bg-green-100 text-green-800 border border-green-300
+                      {% elif category == 'error' %} bg-red-100 text-red-800 border border-red-300
+                      {% else %} bg-gray-100 text-gray-800 border border-gray-300 {% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <main class="pt-20">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-300 py-10 mt-16">
+    <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm md:text-base">
+      <div>
+        <a href="/" class="inline-block mb-3 bg-white p-1">
+          <img src="{{ url_for('static', filename='images/Uga_logo.png') }}" class="w-32" alt="UGA MEDICAL">
+        </a>
+        <p class="text-sm leading-relaxed">Your trusted partner in healthcare solutions.</p>
+      </div>
+      <div>
+        <h6 class="text-white font-semibold mb-3">{{ _("바로가기") }}</h6>
+        <ul class="space-y-2">
+          <li><a href="/products" class="hover:text-white transition">{{ _("상품") }}</a></li>
+          <li><a href="/about" class="hover:text-white transition">{{ _("회사소개") }}</a></li>
+          <li><a href="/contact" class="hover:text-white transition">{{ _("문의하기") }}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h6 class="text-white font-semibold mb-3">Contact Us</h6>
+        <p>{{ _("부산광역시 동래구 안남로 78-3") }} (더 평안빌딩 2층), Korea</p>
+        <p>E: <a href="mailto:ugamedical@naver.com" class="hover:text-white">ugamedical@naver.com</a></p>
+        <p>F: <a href="#" class="hover:text-white">051-524-3969</a></p>
+        <p>T: <a href="tel:0515223969" class="hover:text-white">051-522-3969</a></p>
+      </div>
+    </div>
+    <div class="border-t border-gray-700 mt-8 pt-6 text-center text-xs md:text-sm text-gray-500">
+      © 2025 <span class="font-semibold text-white">UGA MEDICAL</span>. All Rights Reserved.
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    // 모바일 메뉴 토글
+    document.getElementById("mobile-menu-button").addEventListener("click", () => {
+      document.getElementById("mobile-menu").classList.toggle("hidden");
+    });
+
+    // flash 3초후 종료
+    setTimeout(() => {
+      document.querySelectorAll(".flash-message").forEach(el => {
+        el.style.transition = "opacity 0.5s";
+        el.style.opacity = "0";
+        setTimeout(() => el.remove(), 500);
+      });
+    }, 3000);
+  </script>
+
+<script>
+  const btn = document.getElementById("lang-button");
+  const menu = document.getElementById("lang-menu");
+
+  btn.addEventListener("click", () => {
+    menu.classList.toggle("hidden");
+  });
+
+  // 바깥 클릭 시 닫기
+  window.addEventListener("click", (e) => {
+    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+      menu.classList.add("hidden");
+    }
+  });
+</script>
+<script>
+  // 장바구니 담기 성공 시 아이콘에 바운스 효과 주기
+  function cartBounce() {
+    const ids = ["cart-icon-desktop", "cart-icon-mobile"];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      // 재실행 가능하게 강제 리플로우
+      el.classList.remove("animate-cart-bounce");
+      void el.offsetWidth;
+      el.classList.add("animate-cart-bounce");
+      // 애니메이션 종료 후 클래스 제거(다음에도 실행되도록)
+      setTimeout(() => el.classList.remove("animate-cart-bounce"), 700);
+    });
+  }
+
+  // 어디서든 `document.dispatchEvent(new CustomEvent('cart:added'))`만 쏘면 자동 바운스
+  document.addEventListener("cart:added", cartBounce);
+</script>
+
+
+  <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/ads.js') }}"></script>
+</body>
+</html>

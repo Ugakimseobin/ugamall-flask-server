@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-6xl mx-auto bg-white p-4 sm:p-6 shadow rounded mt-8">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-xl sm:text-2xl font-bold">영상 관리</h1>
+    <a href="{{ url_for('admin_add_video') }}" 
+       class="bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded hover:bg-indigo-700 text-sm sm:text-base">
+      + 영상 추가
+    </a>
+  </div>
+
+  <!-- ✅ 데스크탑: 테이블 -->
+  <div class="hidden md:block overflow-x-auto">
+    <table class="w-full border-collapse text-sm sm:text-base">
+      <thead>
+        <tr class="bg-gray-100 text-left">
+          <th class="border px-4 py-2">ID</th>
+          <th class="border px-4 py-2">제목</th>
+          <th class="border px-4 py-2">파일 경로</th>
+          <th class="border px-4 py-2">관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in videos %}
+        <tr class="hover:bg-gray-50">
+          <td class="border px-4 py-2">{{ v.id }}</td>
+          <td class="border px-4 py-2">{{ v.title }}</td>
+          <td class="border px-4 py-2">{{ v.file_path }}</td>
+          <td class="border px-4 py-2 space-x-2">
+            <a href="{{ url_for('admin_edit_video', video_id=v.id) }}"
+               class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 text-sm">
+              수정
+            </a>
+            <form action="{{ url_for('admin_delete_video', video_id=v.id) }}" 
+                  method="post" class="inline">
+              <button type="submit"
+                      class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm"
+                      onclick="return confirm('정말 삭제하시겠습니까?')">
+                삭제
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ✅ 모바일: 카드 형태 -->
+  <div class="md:hidden space-y-4">
+    {% for v in videos %}
+    <div class="border rounded-lg shadow p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="font-bold text-lg">{{ v.title }}</h2>
+        <span class="text-sm text-gray-500">#{{ v.id }}</span>
+      </div>
+      <p class="text-sm text-gray-600 mb-3 break-words">{{ v.file_path }}</p>
+      <div class="flex space-x-2">
+        <a href="{{ url_for('admin_edit_video', video_id=v.id) }}"
+           class="flex-1 text-center bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 text-sm">
+          수정
+        </a>
+        <form action="{{ url_for('admin_delete_video', video_id=v.id) }}" method="post" class="flex-1">
+          <button type="submit"
+                  class="w-full bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm"
+                  onclick="return confirm('정말 삭제하시겠습니까?')">
+            삭제
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

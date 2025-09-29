@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Hero Section -->
+<section class="relative w-full h-72 md:h-96 flex items-center justify-center text-white shadow-lg overflow-hidden">
+  <!-- 배경 영상 -->
+  <video autoplay muted loop playsinline 
+         class="absolute inset-0 w-full h-full object-cover object-center">
+    <source src="{{ url_for('static', filename='videos/ocean.mp4') }}" type="video/mp4">
+  </video>
+  <!-- 어두운 오버레이 -->
+  <div class="absolute inset-0 bg-black/50"></div>
+
+  <!-- Hero 텍스트 -->
+  <div class="relative z-10 text-center px-4">
+    <h1 class="text-3xl md:text-5xl font-bold mb-4">{{ _("유가에 대해") }}</h1>
+  </div>
+</section>
+
+<!-- 소개 Section -->
+<section class="py-16 max-w-6xl mx-auto px-6 text-center">
+  <h2 class="text-2xl md:text-4xl font-bold mb-6">{{ _("소개") }}</h2>
+  <p class="text-gray-600 leading-relaxed text-sm md:text-lg mb-12 max-w-3xl mx-auto">
+    {{ _("주식회사 유가는 의료기기 공급과 신기술 보급에 전문화된 기업입니다. 병원의 요구에 맞춘 기기를 안정적으로 납품하고, 새로운 의료기기가 출시되면 직접 찾아가 소개하며 현장에 필요한 솔루션을 제공합니다.") }}
+  </p>
+
+  <div class="grid md:grid-cols-3 gap-8 text-left">
+    <div class="p-8 bg-white rounded-lg shadow hover:shadow-lg transition">
+      <h3 class="text-xl font-bold mb-3 text-indigo-600">Our Mission</h3>
+      <p class="text-gray-600">
+        {{ _("환자와 고객의 삶의 질 향상을 위한 혁신적인 의료 솔루션을 제공합니다.") }}
+      </p>
+    </div>
+    <div class="p-8 bg-white rounded-lg shadow hover:shadow-lg transition">
+      <h3 class="text-xl font-bold mb-3 text-indigo-600">Our Vision</h3>
+      <p class="text-gray-600">
+        {{ _("글로벌 의료 시장에서 신뢰받는 리더로 자리매김하는 것을 목표로 합니다.") }}
+      </p>
+    </div>
+    <div class="p-8 bg-white rounded-lg shadow hover:shadow-lg transition">
+      <h3 class="text-xl font-bold mb-3 text-indigo-600">Our Value</h3>
+      <p class="text-gray-600">
+        {{ _("혁신 · 신뢰 · 협력을 핵심 가치로 삼아 함께 성장합니다.") }}
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 연혁 -->
+<section class="bg-gray-50 py-16">
+  <div class="max-w-5xl mx-auto px-6">
+    <h2 class="text-2xl md:text-3xl font-bold mb-10 text-center">{{ _("연혁") }}</h2>
+    <div class="space-y-8 border-l-4 border-indigo-600 pl-6">
+      <div>
+        <h3 class="text-lg font-bold">2025</h3>
+        <p class="text-gray-600">{{ _("UGAMALL 온라인 플랫폼 공식 런칭") }}</p>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold">2023</h3>
+        <p class="text-gray-600">{{ _("대형 병원 의료기기 납품 확대") }}</p>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold">2020</h3>
+        <p class="text-gray-600">{{ _("해외 제조사와 파트너십 체결") }}</p>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold">2018</h3>
+        <p class="text-gray-600">{{ _("UGA MEDICAL 설립") }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 협력사 -->
+<section class="py-16">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <h2 class="text-2xl md:text-3xl font-bold mb-8">{{ _("함께하는 사람들") }}</h2>
+    <p class="text-gray-600 mb-10">{{ _("국내외 다양한 파트너사와 함께 헬스케어의 미래를 만들어갑니다.") }}</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <!-- 폼메디칼 -->
+      <div class="bg-white rounded-xl shadow-md p-10 hover:shadow-xl hover:scale-105 transition transform">
+        <div class="flex flex-col items-center">
+          <span class="text-2xl md:text-3xl font-extrabold text-indigo-600 tracking-wide">
+            {{ _("폼메디칼") }}
+          </span>
+          <p class="text-gray-500 text-sm mt-4 max-w-xs">
+            {{ _("혁신적인 의료기기 공급으로 병원과 의료진에게 신뢰받는 파트너") }}
+          </p>
+        </div>
+      </div>
+
+      <!-- 메디케이 -->
+      <div class="bg-white rounded-xl shadow-md p-10 hover:shadow-xl hover:scale-105 transition transform">
+        <div class="flex flex-col items-center">
+          <span class="text-2xl md:text-3xl font-extrabold text-indigo-600 tracking-wide">
+            {{ _("메디케이") }}
+          </span>
+          <p class="text-gray-500 text-sm mt-4 max-w-xs">
+            {{ _("첨단 기술 기반의 의료 솔루션을 제공하는 글로벌 파트너") }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

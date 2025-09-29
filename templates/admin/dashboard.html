@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-6xl mx-auto py-8 sm:py-12 px-4 sm:px-6">
+  <h1 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">관리자 대시보드</h1>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
+    
+    <!-- 상품 관리 -->
+    <a href="{{ url_for('admin_products') }}" 
+       class="relative p-4 sm:p-6 bg-white shadow rounded hover:bg-indigo-50 text-center sm:text-left">
+      📦 <span class="font-semibold">상품 관리</span>
+    </a>
+
+    <!-- 주문 관리 + 뱃지 -->
+    <a href="{{ url_for('admin_orders') }}" 
+       class="relative p-4 sm:p-6 bg-white shadow rounded hover:bg-indigo-50 text-center sm:text-left">
+      🧾 <span class="font-semibold">주문 관리</span>
+      {% if pending_orders > 0 %}
+      <span class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+        {{ pending_orders }}
+      </span>
+      {% endif %}
+    </a>
+
+    <!-- 영상 관리 -->
+    <a href="{{ url_for('admin_videos') }}" 
+       class="p-4 sm:p-6 bg-white shadow rounded hover:bg-indigo-50 text-center sm:text-left">
+      🎬 <span class="font-semibold">영상 관리</span>
+    </a>
+
+    <!-- 회원 관리 -->
+    <a href="{{ url_for('admin_users') }}" 
+       class="p-4 sm:p-6 bg-white shadow rounded hover:bg-indigo-50 text-center sm:text-left">
+      👥 <span class="font-semibold">회원 관리</span>
+    </a>
+
+    <!-- 문의 관리 -->
+    <a href="{{ url_for('admin_inquiries') }}" 
+       class="relative p-4 sm:p-6 bg-white shadow rounded hover:bg-indigo-50 text-center sm:text-left">
+      ✉️ <span class="font-semibold">문의 관리</span>
+      {% if new_inquiries_count > 0 %}
+        <span class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-1">
+          {{ new_inquiries_count }}
+        </span>
+      {% endif %}
+    </a>
+
+  </div>
+</div>
+{% endblock %}

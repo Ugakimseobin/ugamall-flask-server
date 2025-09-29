@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-5xl mx-auto py-6 sm:py-10 px-4 sm:px-6">
+    <h1 class="text-2xl sm:text-3xl font-bold mb-6">{{ _("주문 / 결제") }}</h1>
+
+    <form method="post" id="checkout-form">
+        <!-- 장바구니 -->
+        <div class="bg-white shadow rounded p-4 sm:p-6 mb-8">
+            {% if cart_items %}
+                {% for item in cart_items %}
+                <div class="cart-item flex flex-col sm:flex-row sm:items-center border-b py-4 gap-4 sm:gap-0"
+                     data-id="{{ item.id }}"
+                     data-price="{{ item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0) }}">
+
+                    <!-- 체크박스 -->
+                    <label class="custom-checkbox flex-shrink-0 mr-2 sm:mr-4">
+                        <input type="checkbox" name="selected_items" value="{{ item.id }}" class="item-checkbox">
+                        <span class="checkmark"></span>
+                    </label>
+
+                    <!-- 제품 이미지 -->
+                    <img src="{{ url_for('static', filename='images/' ~ item.variant.product.image) }}" 
+                         alt="{{ item.variant.product.name }}" 
+                         class="w-20 h-20 object-cover rounded sm:mr-4">
+
+                    <!-- 중앙: 제품명 + 옵션 -->
+                    <div class="flex-1">
+                        <p class="font-bold text-sm sm:text-base">{{ item.variant.product.name }}</p>
+                        <p class="text-gray-500 text-xs sm:text-sm">
+                            {% if item.variant %}
+                                {% for key, val in item.variant.options.items() %}
+                                    {{ key }}: {{ val }}
+                                {% endfor %}
+                            {% else %}
+                                {{ _("기본상품") }}
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- 수량 조절 -->
+                    <div class="flex items-center mt-2 sm:mt-0">
+                        <button type="button" class="px-2 py-1 bg-gray-200 rounded-l decrease-btn">-</button>
+                        <input type="number" name="quantity_{{ item.id }}" value="{{ item.quantity }}" min="1"
+                               class="w-12 sm:w-16 text-center border-t border-b text-xs sm:text-sm">
+                        <button type="button" class="px-2 py-1 bg-gray-200 rounded-r increase-btn">+</button>
+                    </div>
+
+                    <!-- 우측: 가격 + 삭제 -->
+                    <div class="w-full sm:w-32 text-right mt-2 sm:mt-0">
+                        <div class="font-semibold item-total text-sm sm:text-base">
+                            {{ (item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) * item.quantity }}{{ _("원") }}
+                        </div>
+                        <button type="button" class="remove-btn mt-1 sm:mt-2 text-red-500 hover:text-red-700 text-xs sm:text-sm"
+                                data-url="{{ url_for('remove_from_cart', item_id=item.id) }}">
+                            {{ _("삭제") }}
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-gray-500">{{ _("장바구니가 비어 있습니다") }}.</p>
+            {% endif %}
+        </div>
+
+        <!-- 구매자 정보 -->
+        <div class="bg-white shadow rounded p-4 sm:p-6 mb-24">
+            <h2 class="text-lg sm:text-xl font-semibold mb-4">{{ _("구매자 정보") }}</h2>
+
+            <div class="mb-4">
+                <label class="block font-semibold mb-2">{{ _("이름") }}</label>
+                <input type="text" name="name"
+                       value="{{ user_info.name if user_info else '' }}"
+                       required class="w-full border p-2 rounded text-sm sm:text-base">
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-semibold mb-2">{{ _("전화번호") }}</label>
+                <input type="text" name="phone"
+                       value="{{ user_info.phone if user_info else '' }}"
+                       required class="w-full border p-2 rounded text-sm sm:text-base">
+            </div>
+
+            <div class="mb-4">
+              <label class="block font-medium">{{ _("기본 주소") }}</label>
+              <input type="text" name="address" value="{{ user_info.base_address if user_info else '' }}" 
+                     class="w-full border rounded p-2 text-sm sm:text-base">
+            </div>
+            <div class="mb-4">
+              <label class="block font-medium">{{ _("상세 주소") }}</label>
+              <input type="text" name="detail_address" value="{{ user_info.detail_address if user_info else '' }}" 
+                     class="w-full border rounded p-2 text-sm sm:text-base">
+            </div>
+
+            {% if not user_id %}
+            <div class="mb-4">
+              <label class="block font-semibold mb-2">{{ _("이메일") }}</label>
+              <input type="email" name="email" placeholder="{{ _('이메일') }}" 
+                     class="w-full border p-2 rounded text-sm sm:text-base" required>
+            </div>
+            {% endif %} 
+
+            <div class="mb-4">
+                <label class="block font-semibold mb-2">{{ _("결제 방법") }}</label>
+                <select name="payment_method" class="w-full border p-2 rounded text-sm sm:text-base">
+                    <option value="무통장입금">{{ _("무통장입금") }}</option>
+                    <option value="카드결제">{{ _("카드결제") }}</option>
+                    <option value="간편결제">{{ _("간편결제") }}</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 하단 고정 결제 바 -->
+        <div class="fixed bottom-0 left-0 w-full bg-black text-white p-3 sm:p-4 flex flex-col sm:flex-row justify-between items-center shadow-lg gap-2 sm:gap-0">
+            <div class="text-base sm:text-lg font-bold">{{ _("총 금액") }}: <span id="grand-total">0</span>{{ _("원") }}</div>
+            <button id="payBtn" type="submit" class="bg-indigo-600 px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-indigo-700 w-full sm:w-auto">
+                {{ _("결제하기") }}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+// 총 금액 업데이트
+function updateTotals() {
+    let grandTotal = 0;
+    document.querySelectorAll(".cart-item").forEach(item => {
+        const checkbox = item.querySelector(".item-checkbox");
+        const quantityInput = item.querySelector("input[type='number']");
+        const price = Number(item.dataset.price) || 0;   // ✅ parseInt → Number, 기본값 0
+        const totalEl = item.querySelector(".item-total");
+
+        let qty = parseInt(quantityInput.value) || 1;
+        let total = price * qty;
+
+        totalEl.textContent = total.toLocaleString() + "원";   // ✅ 천단위 콤마
+        if (checkbox.checked) {
+            grandTotal += total;
+        }
+    });
+    document.getElementById("grand-total").textContent = grandTotal.toLocaleString();
+}
+
+// 수량 버튼 이벤트
+document.querySelectorAll(".cart-item").forEach(item => {
+    const decreaseBtn = item.querySelector(".decrease-btn");
+    const increaseBtn = item.querySelector(".increase-btn");
+    const quantityInput = item.querySelector("input[type='number']");
+
+    decreaseBtn.addEventListener("click", () => {
+        let val = parseInt(quantityInput.value) || 1;
+        quantityInput.value = Math.max(1, val - 1);
+        updateTotals();
+    });
+
+    increaseBtn.addEventListener("click", () => {
+        let val = parseInt(quantityInput.value) || 1;
+        quantityInput.value = val + 1;
+        updateTotals();
+    });
+
+    quantityInput.addEventListener("input", updateTotals);
+});
+
+// 체크박스 클릭 시 총 금액 업데이트
+document.querySelectorAll(".item-checkbox").forEach(cb => {
+    cb.addEventListener("change", updateTotals);
+});
+
+// 초기 로딩 시 총합
+updateTotals();
+
+// 결제 시 체크된 상품만 전송
+document.getElementById("checkout-form").addEventListener("submit", function(e) {
+    const checked = document.querySelectorAll(".item-checkbox:checked");
+    if (checked.length === 0) {
+        e.preventDefault();
+        alert("결제할 상품을 선택해주세요.");
+    }
+});
+
+// 삭제 버튼 전용 처리
+document.querySelectorAll(".remove-btn").forEach(btn => {
+  btn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    const url = this.dataset.url;
+    if (confirm("{{ _('이 상품을 장바구니에서 삭제하시겠습니까?') }}")) {
+      fetch(url, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      })
+      .then(res => {
+        if (res.ok) {
+          window.location.reload();
+        } else {
+          alert("{{ _('삭제 요청에 실패했습니다.') }}");
+        }
+      })
+      .catch(err => console.error("{{ _('삭제 실패') }}:", err));
+    }
+  });
+});
+</script>
+
+{% endblock %}

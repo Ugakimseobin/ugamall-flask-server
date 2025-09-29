@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-7xl mx-auto bg-white p-4 sm:p-6 shadow rounded mt-6 sm:mt-8">
+  <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">주문 관리</h1>
+
+  <!-- 데스크탑 : 테이블 -->
+  <div class="overflow-x-auto hidden md:block">
+    <table class="w-full border-collapse text-sm">
+      <thead>
+        <tr class="bg-gray-100 text-left">
+          <th class="border px-3 py-2">주문번호</th>
+          <th class="border px-3 py-2">주문일시</th>
+          <th class="border px-3 py-2">주문자</th>
+          <th class="border px-3 py-2">상품/수량</th>
+          <th class="border px-3 py-2">총액</th>
+          <th class="border px-3 py-2">결제상태</th>
+          <th class="border px-3 py-2">배송지</th>
+          <th class="border px-3 py-2">주문상태</th>
+          <th class="border px-3 py-2 w-[320px]">작업</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in orders %}
+        <tr class="hover:bg-gray-50 align-top">
+          <td class="border px-3 py-2">{{ o.id }}</td>
+          <td class="border px-3 py-2">{{ o.created_at.strftime('%Y-%m-%d %H:%M') if o.created_at else '-' }}</td>
+
+          <td class="border px-3 py-2">
+            <div class="font-medium">{{ o._who }}</div>
+            <div class="text-gray-500">{{ o._email }}</div>
+            <div class="text-gray-500">{{ o._phone }}</div>
+          </td>
+
+          <td class="border px-3 py-2">
+            <div class="font-medium">{{ o._summary }}</div>
+            <div class="text-gray-500">총 {{ o._qty_sum }}개</div>
+          </td>
+
+          <td class="border px-3 py-2 font-semibold">{{ o._total_amount|won }}원</td>
+
+          <td class="border px-3 py-2">
+            <span class="inline-block rounded bg-gray-100 px-2 py-0.5">
+              {{ o._pay_status | status_label }}
+            </span>
+          </td>
+
+          <td class="border px-3 py-2">{{ o._address }}</td>
+
+          <td class="border px-3 py-2">
+            <span class="inline-block rounded bg-gray-100 px-2 py-0.5">
+              {{ o.status | status_label }}
+            </span>
+          </td>
+
+          <td class="border px-3 py-2">
+            <!-- 상태 변경 -->
+            <form method="post" action="{{ url_for('admin_orders') }}" class="flex flex-wrap items-center gap-2 mb-2">
+              <input type="hidden" name="order_id" value="{{ o.id }}">
+              <select name="status" class="border rounded px-2 py-1 text-sm">
+                {% for opt in status_options %}
+                  <option value="{{ opt.value }}" {% if o.status == opt.value %}selected{% endif %}>
+                    {{ opt.label }}
+                  </option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm">상태 변경</button>
+            </form>
+
+            <!-- 환불(결제취소) -->
+            <form method="post" action="{{ url_for('admin_cancel_order', order_id=o.id) }}" class="flex flex-wrap items-center gap-2">
+              <input type="text" name="reason" placeholder="사유(선택)"
+                     class="border rounded px-2 py-1 text-xs grow md:grow-0">
+              <input type="number" name="amount" min="1" placeholder="부분취소 금액"
+                     class="border rounded px-2 py-1 text-xs w-32">
+
+              {# 가상계좌 '입금 후' 취소 시에만 환불 계좌 필요 #}
+              {% if o.payment and o.payment.method == 'vbank' and o._pay_status == 'paid' %}
+                <input type="text" name="refund_bank" placeholder="은행코드(예:004)" class="border rounded px-2 py-1 text-xs w-32">
+                <input type="text" name="refund_account" placeholder="환불 계좌번호" class="border rounded px-2 py-1 text-xs w-40">
+                <input type="text" name="refund_holder" placeholder="예금주" class="border rounded px-2 py-1 text-xs w-28">
+              {% endif %}
+
+              <button type="submit"
+                      class="bg-red-600 text-white px-3 py-1 rounded text-xs"
+                      onclick="return confirm('정말 환불(결제취소) 하시겠습니까?');">
+                환불
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 모바일 : 카드 -->
+  <div class="space-y-4 md:hidden">
+    {% for o in orders %}
+    <div class="border rounded-lg shadow p-4 text-sm">
+      <div class="flex justify-between items-center mb-1">
+        <div class="font-semibold">주문번호 {{ o.id }}</div>
+        <div class="text-gray-500">{{ o.created_at.strftime('%Y-%m-%d %H:%M') if o.created_at else '-' }}</div>
+      </div>
+      <div class="mb-1"><span class="text-gray-500">주문자</span> : {{ o._who }} <span class="text-gray-500">/</span> {{ o._phone }}</div>
+      <div class="mb-1 text-gray-500">{{ o._email }}</div>
+      <div class="mb-1"><span class="text-gray-500">상품</span> : {{ o._summary }} (총 {{ o._qty_sum }}개)</div>
+      <div class="mb-1"><span class="text-gray-500">총액</span> : <b>{{ o._total_amount|won }}원</b></div>
+      <div class="mb-1"><span class="text-gray-500">결제</span> :
+        <span class="inline-block rounded bg-gray-100 px-2 py-0.5">
+          {{ o._pay_status | status_label }}
+        </span>
+      </div>
+      <div class="mb-1"><span class="text-gray-500">배송지</span> : {{ o._address }}</div>
+      <div class="mb-3"><span class="text-gray-500">주문상태</span> :
+        <span class="inline-block rounded bg-gray-100 px-2 py-0.5">
+          {{ o.status | status_label }}
+        </span>
+      </div>
+
+      <!-- 상태 변경 -->
+      <form method="post" action="{{ url_for('admin_orders') }}" class="flex items-center gap-2 mb-2">
+        <input type="hidden" name="order_id" value="{{ o.id }}">
+        <select name="status" class="border rounded px-2 py-1 text-sm flex-1">
+          {% for opt in status_options %}
+            <option value="{{ opt.value }}" {% if o.status == opt.value %}selected{% endif %}>
+              {{ opt.label }}
+            </option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm">변경</button>
+      </form>
+
+      <!-- 환불(결제취소) -->
+      <form method="post" action="{{ url_for('admin_cancel_order', order_id=o.id) }}" class="space-y-2">
+        <div class="flex flex-col gap-2">
+          <input type="text" name="reason" placeholder="사유(선택)" class="border rounded px-2 py-1 text-xs">
+          <input type="number" name="amount" min="1" placeholder="부분취소 금액" class="border rounded px-2 py-1 text-xs">
+        </div>
+
+        {% if o.payment and o.payment.method == 'vbank' and o._pay_status == 'paid' %}
+        <div class="flex flex-col gap-2">
+          <input type="text" name="refund_bank" placeholder="은행코드(예:004)" class="border rounded px-2 py-1 text-xs">
+          <input type="text" name="refund_account" placeholder="환불 계좌번호" class="border rounded px-2 py-1 text-xs">
+          <input type="text" name="refund_holder" placeholder="예금주" class="border rounded px-2 py-1 text-xs">
+        </div>
+        {% endif %}
+
+        <button type="submit"
+                class="bg-red-600 text-white px-3 py-1 rounded text-sm w-full"
+                onclick="return confirm('정말 환불(결제취소) 하시겠습니까?');">
+          환불
+        </button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

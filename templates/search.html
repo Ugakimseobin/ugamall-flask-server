@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:py-10 px-4 sm:px-6">
+  <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center">{{ _("검색 결과") }}</h2>
+
+  <div class="flex flex-col md:flex-row gap-6">
+    <!-- 필터 (모바일: 아코디언, 데스크탑: 사이드바) -->
+    <aside class="w-full md:w-1/4 md:pr-6 bg-white md:bg-transparent p-4 md:p-0 shadow md:shadow-none rounded md:rounded-none">
+      <!-- 모바일 필터 토글 -->
+      <button id="filter-toggle" class="w-full md:hidden bg-indigo-600 text-white px-4 py-2 rounded mb-4">
+        {{ _("필터 열기/닫기") }}
+      </button>
+
+      <div id="filter-box" class="hidden md:block">
+        <h3 class="font-bold text-lg mb-4">{{ _("필터") }}</h3>
+
+        <!-- 상품명 -->
+        <div class="mb-4">
+          <input id="filter-name" name="name" 
+                 class="border p-2 w-full mb-4" 
+                 placeholder="{{ _('상품명') }}" 
+                 value="{{ request.args.get('name', '') }}">
+        </div>
+
+        <!-- 분야 -->
+        <div class="mb-4">
+          <label class="block font-semibold mb-1">{{ _("분야") }}</label>
+          <select id="filter-category" name="category" class="border p-2 w-full mb-4">
+            <option value="">{{ _("전체") }}</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>
+              {{ cat }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- 가격 -->
+        <div class="mb-6">
+          <label class="block font-semibold mb-2 text-gray-700">{{ _("가격") }}</label>
+          <div id="price-slider" class="mb-3"></div>
+
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center border rounded px-2 py-1 w-1/2 bg-white shadow-sm">
+              <span class="text-sm text-gray-500 mr-1">₩</span>
+              <input id="price-min-input" type="number" 
+                     class="w-full outline-none text-sm" 
+                     value="{{ request.args.get('price_min', 0) }}" 
+                     min="0" max="1000000" step="1000">
+            </div>
+
+            <span class="text-gray-400">~</span>
+
+            <div class="flex items-center border rounded px-2 py-1 w-1/2 bg-white shadow-sm">
+              <span class="text-sm text-gray-500 mr-1">₩</span>
+              <input id="price-max-input" type="number" 
+                     class="w-full outline-none text-sm" 
+                     value="{{ request.args.get('price_max', 1000000) }}" 
+                     min="0" max="1000000" step="1000">
+            </div>
+          </div>
+        </div>
+
+        {% if video_filter %}
+        <div class="mb-4">
+          <label class="block font-semibold mb-1">{{ _("영상 포함") }}</label>
+          <input type="checkbox" id="filter-video" 
+                 {% if request.args.get('video') == 'true' %}checked{% endif %}>
+        </div>
+        {% endif %}
+
+        <button id="apply-filters" data-baseurl="{{ url_for('search') }}"
+                class="bg-indigo-600 text-white px-4 py-2 rounded w-full mt-4">
+          {{ _("적용") }}
+        </button>
+      </div>
+    </aside>
+
+    <!-- 검색 결과 -->
+    <section class="w-full md:w-3/4">
+      {% if products|length == 0 %}
+        <p class="text-center text-gray-500">"{{ q }}"{{ _("에 대한 검색 결과가 없습니다.") }}</p>
+      {% else %}
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6" id="product-list">
+        {% for p in products %}
+        <a href="{{ url_for('product_detail', product_id=p.id) }}" 
+           class="block bg-white p-3 sm:p-4 shadow rounded hover:shadow-lg transition">
+          <img src="{{ url_for('static', filename='images/' ~ p.image) }}" class="h-32 sm:h-40 w-full object-cover rounded">
+          <h3 class="mt-2 font-bold text-sm sm:text-base">{{ p.name }}</h3>
+          <p class="text-gray-600 text-xs sm:text-sm">{{ p.base_price }}원</p>
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if videos %}
+      <h2 class="font-bold text-lg sm:text-xl mt-8 sm:mt-10 mb-4 text-center">{{ _("영상") }}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        {% for v in videos %}
+        <div class="bg-white p-3 sm:p-4 shadow rounded">
+          <video controls class="w-full h-32 sm:h-40 object-cover">
+            <source src="{{ url_for('static', filename='videos/' ~ v.file_path) }}">
+          </video>
+          <h3 class="mt-2 text-sm sm:text-base">{{ v.title }}</h3>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+
+<script>
+document.getElementById("apply-filters").addEventListener("click", function() {
+  const name = document.getElementById("filter-name").value;
+  const category = document.getElementById("filter-category").value;
+  const priceMin = document.getElementById("price-min-input").value;
+  const priceMax = document.getElementById("price-max-input").value;
+  const video = document.getElementById("filter-video")?.checked ? "true" : "false";
+
+  let url = new URL("{{ url_for('search') }}", window.location.origin);
+  url.searchParams.set("name", name);
+  url.searchParams.set("category", category);
+  url.searchParams.set("price_min", priceMin);
+  url.searchParams.set("price_max", priceMax);
+  url.searchParams.set("video", video);
+
+  window.location.href = url.toString();
+});
+
+// 모바일 필터 토글
+document.getElementById("filter-toggle").addEventListener("click", () => {
+  document.getElementById("filter-box").classList.toggle("hidden");
+});
+</script>
+{% endblock %}

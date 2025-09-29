@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-6 shadow rounded mt-8">
+  <h1 class="text-xl font-bold mb-6">영상 수정</h1>
+  <form method="post" enctype="multipart/form-data" class="space-y-4">
+    <div>
+      <label class="block font-semibold mb-1">제목</label>
+      <input type="text" name="title" value="{{ video.title }}" class="w-full border rounded p-2">
+    </div>
+    <div>
+      <label class="block font-semibold mb-1">영상 교체</label>
+      <video class="w-full h-40 mb-2 rounded" controls>
+        <source src="{{ url_for('static', filename='videos/' ~ video.file_path) }}">
+      </video>
+      <input type="file" name="video" class="w-full border rounded p-2">
+    </div>
+    <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">저장</button>
+  </form>
+</div>
+{% endblock %}

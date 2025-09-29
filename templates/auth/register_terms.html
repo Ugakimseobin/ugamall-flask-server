@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-xl mx-auto p-6 sm:p-8 bg-white shadow-lg rounded mt-10">
+  <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-600 text-center">
+    {{ _("이용약관 동의") }}
+  </h2>
+
+  <form method="post" class="space-y-4 text-sm sm:text-base">
+    <!-- 전체 동의 -->
+    <label class="flex items-center font-semibold text-lg">
+      <input type="checkbox" id="agree_all" class="mr-2"> {{ _("전체 동의") }}
+    </label>
+    <hr class="my-4">
+
+    <!-- 약관 항목 -->
+    <div class="flex justify-between items-center">
+      <label class="flex-1">
+        <input type="checkbox" name="agree_terms" class="agree-item mr-2" required>
+        {{ _("유가몰 구매회원 이용약관 (필수)") }}
+      </label>
+      <button type="button" class="text-blue-600 underline text-sm" onclick="openModal('terms1')">{{ _("보기") }}</button>
+    </div>
+
+    <div class="flex justify-between items-center">
+      <label class="flex-1">
+        <input type="checkbox" name="agree_finance" class="agree-item mr-2" required>
+        {{ _("전자금융서비스 이용약관 동의 (필수)") }}
+      </label>
+      <button type="button" class="text-blue-600 underline text-sm" onclick="openModal('terms2')">{{ _("보기") }}</button>
+    </div>
+
+    <div class="flex justify-between items-center">
+      <label class="flex-1">
+        <input type="checkbox" name="agree_privacy" class="agree-item mr-2" required>
+        {{ _("개인정보 수집 및 이용동의 (필수)") }}
+      </label>
+      <button type="button" class="text-blue-600 underline text-sm" onclick="openModal('terms3')">{{ _("보기") }}</button>
+    </div>
+
+    <div class="flex justify-between items-center">
+      <label class="flex-1">
+        <input type="checkbox" name="agree_age" class="agree-item mr-2" required>
+        {{ _("만 14세 이상입니다. (필수)") }}
+      </label>
+      <button type="button" class="text-blue-600 underline text-sm" onclick="openModal('terms4')">{{ _("보기") }}</button>
+    </div>
+
+    <div class="flex justify-between items-center">
+      <label class="flex-1">
+        <input type="checkbox" name="agree_marketing" class="agree-item mr-2">
+        {{ _("혜택 알림 이메일, 문자, 앱 푸시 수신 (선택)") }}
+      </label>
+      <button type="button" class="text-blue-600 underline text-sm" onclick="openModal('terms5')">{{ _("보기") }}</button>
+    </div>
+
+    <!-- 버튼 -->
+    <div class="flex justify-end mt-6">
+      <button type="submit"
+              class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">
+        {{ _("다음 단계") }}
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- 모달 -->
+<div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+  <div class="bg-white rounded-lg shadow-lg max-w-lg w-11/12 sm:w-full p-6 relative">
+    <h3 id="modal-title" class="text-xl font-bold mb-4">{{ _("약관 내용") }}</h3>
+    <div id="modal-content" class="h-60 overflow-y-auto border p-3 text-sm leading-relaxed bg-gray-50">
+      <!-- JS로 내용 삽입 -->
+    </div>
+    <button onclick="closeModal()" class="absolute top-2 right-3 text-gray-500 text-2xl leading-none">&times;</button>
+    <div class="text-right mt-4">
+      <button onclick="closeModal()" class="px-5 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+        {{ _("닫기") }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const agreeAll = document.getElementById("agree_all");
+  const items = document.querySelectorAll(".agree-item");
+
+  // 전체 동의 → 개별 체크
+  agreeAll.addEventListener("change", function() {
+    items.forEach(chk => chk.checked = this.checked);
+  });
+
+  // 개별 체크 → 전체 동의 반영
+  items.forEach(chk => {
+    chk.addEventListener("change", function() {
+      agreeAll.checked = [...items].every(i => i.checked);
+    });
+  });
+
+  // 약관 내용
+  const termsData = {
+    terms1: "여기에 '유가몰 구매회원 이용약관' 전문을 넣으세요...",
+    terms2: "여기에 '전자금융서비스 이용약관' 전문을 넣으세요...",
+    terms3: "여기에 '개인정보 수집 및 이용동의' 전문을 넣으세요...",
+    terms4: "만 14세 이상임을 확인합니다. (법적으로 필수 조건)",
+    terms5: "마케팅/혜택 수신 동의 관련 안내 내용..."
+  };
+
+  // 모달 열기
+  function openModal(key) {
+    document.getElementById("modal").classList.remove("hidden");
+    document.getElementById("modal-title").innerText = "{{ _('약관 상세') }}";
+    document.getElementById("modal-content").innerText = termsData[key];
+  }
+
+  // 모달 닫기
+  function closeModal() {
+    document.getElementById("modal").classList.add("hidden");
+  }
+</script>
+{% endblock %}

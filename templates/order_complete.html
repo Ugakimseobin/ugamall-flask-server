@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto py-12 px-6">
+  <h1 class="text-2xl font-bold mb-4">{{ _("주문이 접수되었습니다") }}</h1>
+
+  <div class="bg-white border rounded p-6 space-y-2">
+    <div><b>{{ _("주문번호") }}</b> : {{ order.id }}</div>
+    <div><b>{{ _("주문자") }}</b> : {{ order.name }} ({{ order.phone }})</div>
+    {% if order.guest_email %}<div><b>Email</b> : {{ order.guest_email }}</div>{% endif %}
+    <div><b>{{ _("주소") }}</b> : {{ order.base_address }} {{ order.detail_address or '' }}</div>
+    <div><b>{{ _("결제수단") }}</b> : {{ order.payment_method }}</div>
+    <div><b>{{ _("결제상태") }}</b> : {{ order.status|status_label }}</div>
+    <div><b>{{ _("결제금액") }}</b> : {{ "{:,}".format(amount) }}원</div>
+  </div>
+
+  {% if order.payment_method == "무통장입금" %}
+  <div class="mt-6 bg-indigo-50 border rounded p-6">
+    <h2 class="font-semibold mb-2">{{ _("입금 안내") }}</h2>
+    <p class="text-sm text-gray-700">
+      {{ _("아래 계좌로 주문금액을 입금해 주세요.") }}<br>
+      {{ _("예금주") }}: UGA MEDICAL / {{ _("계좌") }}: 000-0000-0000 (국민은행)
+    </p>
+  </div>
+  {% endif %}
+
+  <div class="mt-8 flex gap-3">
+    <a href="{{ url_for('home') }}" class="px-4 py-2 rounded bg-gray-800 text-white">{{ _("홈으로") }}</a>
+    <a href="{{ url_for('mypage') }}" class="px-4 py-2 rounded bg-indigo-600 text-white">{{ _("마이페이지") }}</a>
+  </div>
+</div>
+{% endblock %}

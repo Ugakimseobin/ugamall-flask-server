@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Shorts Section -->
+<section class="relative w-full h-[500px] md:h-[800px] bg-black overflow-hidden">
+  {% if latest_video %}
+    <div class="relative w-full h-full">
+      <!-- 영상 -->
+      <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+        <source src="{{ url_for('static', filename='videos/' ~ latest_video.file_path) }}" type="video/mp4">
+      </video>
+
+      <!-- 검은색 오버레이 -->
+      <div class="absolute top-0 left-0 h-full w-2/3 sm:w-1/2 md:w-1/3
+                  bg-gradient-to-r from-black/80 to-transparent
+                  transform -translate-x-2/3 hover:translate-x-0
+                  transition-transform duration-700 ease-in-out
+                  flex items-center p-4 sm:p-6 text-white cursor-pointer">
+        <div class="text-sm sm:text-base md:text-lg">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3">{{ _("UGAMALL 홍보 영상") }}</h2>
+          <p class="mb-3 sm:mb-4 text-gray-200 text-xs sm:text-sm md:text-base">{{ _("UGAMALL의 최신 소식과 스토리를 만나보세요.") }}</p>
+          <a href="/videos" 
+             class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1 sm:px-4 sm:py-2 rounded-lg shadow text-xs sm:text-sm md:text-base">
+            {{ _("영상 더 보기 →") }}
+          </a>
+        </div>
+
+        <!-- 세로 텍스트 안내 -->
+        <div class="absolute top-1/2 right-2 sm:right-3 -translate-y-1/2
+            [writing-mode:vertical-rl] rotate--180
+            font-bold text-xs sm:text-sm md:text-lg tracking-wider
+            text-white drop-shadow-[0_0_4px_rgba(0,0,0,0.8)]
+            flex items-center gap-1 pointer-events-none">
+            <span class="animate-bounce">▼</span>
+            <span>{{ _("자세히 보기") }}</span>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="flex items-center justify-center h-full text-white">
+      <p>{{ _("아직 등록된 영상이 없습니다.") }}</p>
+    </div>
+  {% endif %}
+</section>
+
+<!-- 광고 섹션 -->
+<section class="bg-gray-100 max-w-full mx-auto px-4 sm:px-8 md:px-16 py-10 sm:py-14 md:py-16 
+                grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
+  <!-- 왼쪽 텍스트 -->
+  <div>
+    <h2 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">🔥 {{ _("🔥 신제품 프로모션") }}</h2>
+    <p class="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
+      {{ _("특별 상품") }}<br>
+      {{ _("지금 즉시 구매") }}
+    </p>
+    <a href="/products/1" target="_blank"
+       class="inline-block bg-indigo-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow hover:bg-indigo-700 text-sm sm:text-base">
+      {{ _("자세히 보러가기 →") }}
+    </a>
+  </div>
+
+  <!-- 오른쪽 이미지 캐러셀 -->
+  <div class="hidden sm:flex relative w-full h-72 md:h-80 items-center justify-center overflow-hidden">
+    <div id="ad-carousel-pc" class="relative w-full h-full flex items-center justify-center">
+      <img src="{{ url_for('static', filename='images/ad1.jpg') }}" 
+          class="ad-slide w-[300px] md:w-[400px] absolute rounded-lg shadow">
+      <img src="{{ url_for('static', filename='images/ad2.jpg') }}" 
+          class="ad-slide w-[300px] md:w-[400px] absolute rounded-lg shadow">
+      <img src="{{ url_for('static', filename='images/ad3.jpg') }}" 
+          class="ad-slide w-[300px] md:w-[400px] absolute rounded-lg shadow">
+    </div>
+  </div>
+
+  <!-- 모바일 전용 (손가락 스와이프 가능) -->
+  <div class="sm:hidden relative w-full h-56 overflow-x-auto">
+    <div class="flex space-x-4 w-max px-4 snap-x snap-mandatory">
+      <img src="{{ url_for('static', filename='images/ad1.jpg') }}" 
+          class="w-64 h-40 object-cover rounded-lg shadow snap-center flex-shrink-0">
+      <img src="{{ url_for('static', filename='images/ad2.jpg') }}" 
+          class="w-64 h-40 object-cover rounded-lg shadow snap-center flex-shrink-0">
+      <img src="{{ url_for('static', filename='images/ad3.jpg') }}" 
+          class="w-64 h-40 object-cover rounded-lg shadow snap-center flex-shrink-0">
+    </div>
+  </div>
+</section>
+
+<!-- Company Section -->
+<section class="py-12 sm:py-16 text-center">
+  <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">{{ _("유가몰 소개") }}</h2>
+  <p class="max-w-2xl mx-auto text-gray-600 text-sm sm:text-base">
+    UGAMALL {{ _("은 광고와 쇼핑을 결합한 플랫폼으로") }}
+  </p>
+</section>
+
+<!-- Contact Section -->
+<section class="bg-gray-100 py-12 sm:py-16">
+  <div class="max-w-3xl mx-auto px-4">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center">{{ _("문의하기") }}</h2>
+    <form method="POST" action="{{ url_for('contact') }}" class="bg-white shadow rounded p-4 sm:p-6 space-y-4">
+
+      {% if not session.get("user_id") %}
+      <!-- ✅ 비회원일 경우 표시 -->
+      <div>
+        <label class="block text-sm font-medium">{{ _("이메일 (필수)") }}</label>
+        <input type="email" name="email" class="w-full border rounded p-2" required>
+      </div>
+      <div>
+        <label class="block text-sm font-medium">{{ _("이름") }}</label>
+        <input type="text" name="guest_name" class="w-full border rounded p-2">
+      </div>
+      <div>
+        <label class="block text-sm font-medium">{{ _("전화번호") }}</label>
+        <input type="text" name="guest_phone" class="w-full border rounded p-2">
+      </div>
+      {% endif %}
+
+      <div>
+        <label class="block text-sm font-medium">{{ _("제목") }}</label>
+        <input type="text" name="title" class="w-full border rounded p-2" required>
+      </div>
+      <div>
+        <label class="block text-sm font-medium">{{ _("내용") }}</label>
+        <textarea name="content" rows="5" class="w-full border rounded p-2" required></textarea>
+      </div>
+      <button type="submit" class="w-full bg-indigo-600 text-white py-2 sm:py-3 rounded hover:bg-indigo-700 text-sm sm:text-base">
+        {{ _("보내기") }}
+      </button>
+    </form>
+  </div>
+</section>
+{% endblock %}

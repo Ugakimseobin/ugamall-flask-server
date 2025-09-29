@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flex flex-col md:flex-row max-w-7xl mx-auto py-6 md:py-10 px-4 md:px-0">
+  <!-- 왼쪽 필터 (모바일에서는 상단, 아코디언처럼) -->
+  <aside class="w-full md:w-1/4 md:pr-6 mb-6 md:mb-0">
+    <h3 class="font-bold text-lg mb-4">{{ _("필터") }}</h3>
+
+    <!-- 상품명 -->
+    <div class="mb-4">
+      <input id="filter-name" name="name" 
+             class="border p-2 w-full text-sm md:text-base" 
+             placeholder="{{ _('상품명') }}"
+             value="{{ request.args.get('name', '') }}">
+    </div>
+
+    <!-- 분야 -->
+    <div class="mb-4">
+      <label class="block font-semibold mb-1 text-sm md:text-base">{{ _("분야") }}</label>
+      <select id="filter-category" name="category" class="border p-2 w-full text-sm md:text-base">
+        <option value="">{{ _("전체") }}</option>
+        {% for cat in categories %}
+          <option value="{{ cat }}" 
+            {% if request.args.get('category') == cat %}selected{% endif %}>
+            {{cat}}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- 가격 -->
+    <div class="mb-6">
+      <label class="block font-semibold mb-2 text-gray-700 text-sm md:text-base">{{ _("가격") }}</label>
+      <div id="price-slider" class="mb-3"></div>
+
+      <!-- 입력 필드 -->
+      <div class="flex items-center space-x-3">
+        <div class="flex items-center border rounded px-2 py-1 w-1/2 bg-white shadow-sm">
+          <span class="text-sm text-gray-500 mr-1">₩</span>
+          <input id="price-min-input" 
+                type="number" 
+                class="w-full outline-none text-sm" 
+                value="{{ request.args.get('price_min', 0) }}" 
+                min="0" max="1000000" step="1000">
+        </div>
+
+        <span class="text-gray-400">~</span>
+
+        <div class="flex items-center border rounded px-2 py-1 w-1/2 bg-white shadow-sm">
+          <span class="text-sm text-gray-500 mr-1">₩</span>
+          <input id="price-max-input" 
+                type="number" 
+                class="w-full outline-none text-sm" 
+                value="{{ request.args.get('price_max', 1000000) }}" 
+                min="0" max="1000000" step="1000">
+        </div>
+      </div>
+    </div>
+
+    <button id="apply-filters" data-baseurl="{{ url_for('products') }}"
+      class="bg-indigo-600 text-white px-4 py-2 rounded w-full mt-4 text-sm md:text-base">
+      {{ _("적용") }}
+    </button>
+  </aside>
+
+  <!-- 오른쪽 상품 목록 -->
+  <main class="w-full md:w-3/4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6" id="product-list">
+    {% for p in products %}
+      <a href="{{ url_for('product_detail', product_id=p.id) }}" 
+         class="block bg-white p-3 sm:p-4 shadow rounded hover:shadow-lg transition h-56 sm:h-64">
+        <img src="{{ url_for('static', filename='images/' ~ p.image) }}" 
+             class="h-28 sm:h-40 w-full object-cover rounded">
+        <h3 class="mt-2 font-bold text-sm sm:text-base truncate">{{ p.name }}</h3>
+        <p class="text-gray-600 text-sm sm:text-base">{{ p.base_price }}원</p>
+      </a>
+    {% endfor %}
+  </main>
+</div>
+
+<!-- ✅ 안내사항 팝업 -->
+<div id="notice-popup"
+     class="fixed top-20 right-6 md:right-24 w-64 sm:w-72 md:w-80 bg-yellow-200 shadow-lg rounded-lg p-4 sm:p-6 z-50 hidden"
+     style="font-family: 'Nanum Pen Script', cursive;">
+  <div class="flex justify-between items-center mb-2 sm:mb-3">
+    <h3 class="font-bold text-lg sm:text-xl text-gray-800">{{ _("안내사항") }}</h3>
+    <button onclick="closeNotice()" class="text-gray-600 hover:text-gray-900 font-bold text-lg">✕</button>
+  </div>
+  <p class="text-gray-700 text-sm sm:text-base leading-relaxed">
+    {{ _("저희 제품은") }} <span class="font-semibold">{{ _("UID를 정직하게 제공") }}</span>{{ _("하고 있습니다.") }}<br>
+    {{ _("안심하고 사용하세요 😊") }}
+  </p>
+</div>
+
+<script>
+document.getElementById("apply-filters").addEventListener("click", function() {
+    const name = document.getElementById("filter-name").value;
+    const category = document.getElementById("filter-category").value;
+    const priceMin = document.getElementById("price-min").textContent;
+    const priceMax = document.getElementById("price-max").textContent;
+    const video = document.getElementById("filter-video")?.checked ? "true" : "false";
+
+    let url = new URL("{{ url_for('products') }}", window.location.origin);
+    url.searchParams.set("name", name);
+    url.searchParams.set("category", category);
+    url.searchParams.set("price_min", priceMin);
+    url.searchParams.set("price_max", priceMax);
+
+    if (document.getElementById("filter-video")) {
+        url.searchParams.set("video", video);
+    }
+
+    window.location.href = url.toString();
+});
+
+// ✅ 팝업 로직
+const popupKey = "uga_notice_seen";
+
+function closeNotice() {
+  document.getElementById("notice-popup").style.display = "none";
+  const today = new Date();
+  today.setHours(23,59,59,999); 
+  localStorage.setItem(popupKey, today.getTime());
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const popup = document.getElementById("notice-popup");
+  const saved = localStorage.getItem(popupKey);
+  const now = new Date().getTime();
+  if (!saved || now > parseInt(saved)) {
+    popup.style.display = "block";
+  }
+  makeDraggable(popup);
+});
+
+function makeDraggable(el) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  el.onmousedown = dragMouseDown;
+  function dragMouseDown(e) {
+    e.preventDefault();
+    pos3 = e.clientX; pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+  function elementDrag(e) {
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX; pos4 = e.clientY;
+    el.style.top = (el.offsetTop - pos2) + "px";
+    el.style.left = (el.offsetLeft - pos1) + "px";
+    el.style.bottom = "auto";
+    el.style.right = "auto";
+  }
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+</script>
+{% endblock %}

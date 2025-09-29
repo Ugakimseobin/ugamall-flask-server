@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-4 sm:p-6 shadow rounded mt-6 sm:mt-8">
+  <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">{{ product.name }} 옵션 관리</h1>
+
+  <!-- 옵션 추가 폼 -->
+  <form method="post" class="space-y-4">
+    <div>
+      <label class="block font-semibold mb-1">옵션명</label>
+      <input type="text" name="name" placeholder="예: 색상, 사이즈" 
+             class="w-full border rounded p-2 text-sm sm:text-base" required>
+    </div>
+    <div>
+      <label class="block font-semibold mb-1">옵션값</label>
+      <input type="text" name="values" placeholder="예: 파랑, 검정, 빨강" 
+             class="w-full border rounded p-2 text-sm sm:text-base" required>
+      <p class="text-xs text-gray-500 mt-1">여러 값을 입력할 때는 쉼표(,)로 구분하세요.</p>
+    </div>
+    <button type="submit" 
+            class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 text-sm sm:text-base font-semibold">
+      옵션 추가
+    </button>
+  </form>
+
+  <!-- 등록된 옵션 -->
+  <h2 class="text-lg sm:text-xl font-bold mt-8 mb-4">등록된 옵션</h2>
+  {% if options %}
+    <ul class="space-y-2">
+      {% for o in options %}
+        <li class="flex justify-between items-center border-b pb-2">
+          <span class="text-sm sm:text-base">{{ o.name }}: <span class="text-gray-600">{{ o.value }}</span></span>
+          <form action="{{ url_for('admin_delete_option', product_id=product.id, option_id=o.id) }}" method="post" class="inline">
+            <button type="submit" class="text-red-600 text-sm hover:underline">삭제</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-gray-500 text-sm">아직 등록된 옵션이 없습니다.</p>
+  {% endif %}
+
+  <!-- ✅ 다음 단계 버튼 -->
+  <div class="mt-8 text-right">
+    <a href="{{ url_for('admin_product_variants', product_id=product.id) }}" 
+       class="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm sm:text-base">
+      옵션 조합 등록으로 이동 →
+    </a>
+  </div>
+</div>
+{% endblock %}

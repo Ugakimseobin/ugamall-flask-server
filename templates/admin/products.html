@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-6xl mx-auto bg-white p-4 sm:p-6 shadow rounded mt-6 sm:mt-8">
+  <!-- 헤더 -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
+    <h1 class="text-xl sm:text-2xl font-bold">상품 관리</h1>
+    <a href="{{ url_for('admin_add_product') }}" 
+       class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 text-sm sm:text-base">
+      + 상품 추가
+    </a>
+  </div>
+
+  <!-- 상품 테이블 -->
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse text-sm sm:text-base">
+      <thead>
+        <tr class="bg-gray-100 text-left">
+          <th class="border px-3 py-2">ID</th>
+          <th class="border px-3 py-2">상품명</th>
+          <th class="border px-3 py-2">가격</th>
+          <th class="border px-3 py-2">카테고리</th>
+          <th class="border px-3 py-2">이미지</th>
+          <th class="border px-3 py-2">관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        <tr class="hover:bg-gray-50">
+          <td class="border px-3 py-2">{{ p.id }}</td>
+          <td class="border px-3 py-2 font-semibold">{{ p.name }}</td>
+          <td class="border px-3 py-2">{{ "{:,.0f}".format(p.base_price) }}원</td>
+          <td class="border px-3 py-2">{{ p.category }}</td>
+          <td class="border px-3 py-2">
+            {% if p.image %}
+              <img src="{{ url_for('static', filename='images/' ~ p.image) }}" 
+                   class="h-12 w-12 object-cover rounded shadow">
+            {% else %}
+              <span class="text-gray-400 text-sm">없음</span>
+            {% endif %}
+          </td>
+          <td class="border px-3 py-2 space-y-1 sm:space-y-0 sm:space-x-1 sm:flex sm:flex-wrap">
+            <!-- 옵션 관리 -->
+            <a href="{{ url_for('admin_product_options', product_id=p.id) }}"
+               class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-xs sm:text-sm">
+              옵션
+            </a>
+            <!-- 조합 관리 -->
+            <a href="{{ url_for('admin_product_variants', product_id=p.id) }}"
+               class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 text-xs sm:text-sm">
+              조합
+            </a>
+            <!-- 수정 -->
+            <a href="{{ url_for('admin_edit_product', product_id=p.id) }}"
+               class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 text-xs sm:text-sm">
+              수정
+            </a>
+            <!-- 삭제 -->
+            <form action="{{ url_for('admin_delete_product', product_id=p.id) }}" method="post" class="inline">
+              <button type="submit" 
+                      class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs sm:text-sm"
+                      onclick="return confirm('정말 삭제하시겠습니까?')">
+                삭제
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

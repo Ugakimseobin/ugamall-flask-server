@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto p-6 sm:p-8 bg-white shadow-lg rounded mt-10">
+
+  <!-- ✅ PC 전용 (기존 전체 입력폼) -->
+  <div class="hidden sm:block">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center">{{ _("회원 정보 입력") }}</h2>
+    <form method="post" class="space-y-4">
+      <!-- 이메일 -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">{{ _("이메일") }}</label>
+        <input type="email" name="email" placeholder="{{ _('이메일 입력') }}"
+               required class="w-full border p-2 rounded focus:ring focus:ring-indigo-200">
+      </div>
+      <!-- 비밀번호 -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">{{ _("비밀번호") }}</label>
+        <input type="password" name="password" placeholder="{{ _('비밀번호') }}"
+               required class="w-full border p-2 rounded focus:ring focus:ring-indigo-200">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold mb-1">{{ _("비밀번호 확인") }}</label>
+        <input type="password" name="password_confirm" placeholder="{{ _('비밀번호 확인') }}"
+               required class="w-full border p-2 rounded focus:ring focus:ring-indigo-200">
+      </div>
+      <!-- 이름 -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">{{ _("이름") }}</label>
+        <input type="text" name="name" placeholder="{{ _('이름') }}"
+               required class="w-full border p-2 rounded focus:ring focus:ring-indigo-200">
+      </div>
+      <!-- 주소 -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">{{ _("주소") }}</label>
+        <div class="flex space-x-2 mb-2">
+          <input type="text" id="postcode" placeholder="{{ _('우편번호') }}"
+                 class="border p-2 rounded w-1/2 bg-gray-100" readonly>
+          <button type="button" onclick="execDaumPostcode()"
+                  class="px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+            {{ _("주소찾기") }}
+          </button>
+        </div>
+        <input type="text" id="address" name="address"
+               placeholder="{{ _('기본주소') }}"
+               class="w-full border p-2 rounded mb-2 bg-gray-100" readonly>
+        <input type="text" id="detailAddress" name="detail_address"
+               placeholder="{{ _('상세주소') }}"
+               class="w-full border p-2 rounded focus:ring focus:ring-indigo-200">
+      </div>
+      <!-- 휴대폰 번호 -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">{{ _("휴대폰 번호") }}</label>
+        <div class="flex space-x-2">
+          <input type="text" id="phone" name="phone"
+                 placeholder="예: 01012345678"
+                 class="border p-2 rounded flex-1 focus:ring focus:ring-indigo-200">
+          <button type="button" onclick="sendCode()"
+                  class="bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-700">
+            {{ _("인증번호 받기") }}
+          </button>
+        </div>
+      </div>
+      <!-- 인증번호 -->
+      <div class="flex space-x-2">
+        <input type="text" id="verify_code" placeholder="{{ _('인증번호 입력') }}"
+               class="border p-2 rounded flex-1 focus:ring focus:ring-indigo-200">
+        <button type="button" onclick="verifyCode()"
+                class="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700">
+          {{ _("인증 확인") }}
+        </button>
+      </div>
+      <!-- 가입 버튼 -->
+      <button type="submit"
+              class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+        {{ _("가입하기") }}
+      </button>
+    </form>
+  </div>
+
+  <!-- ✅ 모바일 전용 (멀티스텝 폼) -->
+  <div class="block sm:hidden">
+    <h2 class="text-2xl font-bold mb-4 text-center">{{ _("회원가입") }}</h2>
+
+    <!-- 진행 표시 -->
+    <div class="mb-6">
+        <div id="step-label" class="text-center text-sm font-semibold mb-2">{{ _("진행상황") }} 1 / 5</div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+        <div id="progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width:20%"></div>
+        </div>
+    </div>
+
+    <form method="post" id="mobile-register-form">
+        <!-- STEP 1 -->
+        <div class="step" id="step1">
+        <label class="block font-semibold mb-2">{{ _("이메일") }}</label>
+        <input type="email" name="email" required class="w-full border p-2 rounded mb-4">
+        <button type="button" onclick="nextStep(2)" class="w-full bg-indigo-600 text-white py-2 rounded">{{ _("다음") }}</button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step hidden" id="step2">
+        <label class="block font-semibold mb-2">{{ _("비밀번호") }}</label>
+        <input type="password" name="password" required class="w-full border p-2 rounded mb-2">
+        <input type="password" name="password_confirm" required class="w-full border p-2 rounded mb-4">
+        <div class="flex justify-between">
+            <button type="button" onclick="prevStep(1)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
+            <button type="button" onclick="nextStep(3)" class="bg-indigo-600 text-white px-4 py-2 rounded">{{ _("다음") }}</button>
+        </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step hidden" id="step3">
+        <label class="block font-semibold mb-2">{{ _("이름") }}</label>
+        <input type="text" name="name" required class="w-full border p-2 rounded mb-4">
+        <div class="flex justify-between">
+            <button type="button" onclick="prevStep(2)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
+            <button type="button" onclick="nextStep(4)" class="bg-indigo-600 text-white px-4 py-2 rounded">{{ _("다음") }}</button>
+        </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step hidden" id="step4">
+        <label class="block font-semibold mb-2">{{ _("주소") }}</label>
+        <button type="button" onclick="execDaumPostcode()" class="w-full bg-indigo-600 text-white py-2 rounded mb-2">{{ _("주소 찾기") }}</button>
+        <input type="text" id="address_m" name="address" readonly placeholder="{{ _('기본주소') }}" class="w-full border p-2 rounded mb-2">
+        <input type="text" id="detailAddress_m" name="detail_address" placeholder="{{ _('상세주소') }}" class="w-full border p-2 rounded mb-4">
+        <div class="flex justify-between">
+            <button type="button" onclick="prevStep(3)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
+            <button type="button" onclick="nextStep(5)" class="bg-indigo-600 text-white px-4 py-2 rounded">{{ _("다음") }}</button>
+        </div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="step hidden" id="step5">
+        <label class="block font-semibold mb-2">{{ _("휴대폰 번호") }}</label>
+        <input type="text" id="phone_m" name="phone" placeholder="0101+2345678" class="w-full border p-2 rounded mb-2">
+        <button type="button" onclick="sendCode()" class="w-full bg-indigo-600 text-white py-2 rounded mb-2">{{ _("인증번호 받기") }}</button>
+        <input type="text" id="verify_code_m" placeholder="{{ _('인증번호 입력') }}" class="w-full border p-2 rounded mb-4">
+        <div class="flex justify-between">
+            <button type="button" onclick="prevStep(4)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">{{ _("가입하기") }}</button>
+        </div>
+        </div>
+    </form>
+    </div>
+</div>
+
+<!-- ✅ 카카오 주소검색 API -->
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+  function execDaumPostcode() {
+    new daum.Postcode({
+      oncomplete: function(data) {
+        document.getElementById("postcode").value = data.zonecode;
+        document.getElementById("address").value = data.roadAddress ? data.roadAddress : data.jibunAddress;
+        document.getElementById("detailAddress").focus();
+      }
+    }).open();
+  }
+
+  function sendCode() {
+    const phone = document.getElementById("phone").value;
+    fetch("/send_verification_code", {
+      method: "POST",
+      body: new URLSearchParams({ phone })
+    }).then(r => r.json()).then(data => {
+      alert(data.message);
+    });
+  }
+
+  function verifyCode() {
+    const code = document.getElementById("verify_code").value;
+    fetch("/verify_code", {
+      method: "POST",
+      body: new URLSearchParams({ code })
+    }).then(r => r.json()).then(data => {
+      alert(data.message);
+    });
+  }
+</script>
+
+<script>
+let currentStep = 1;
+const totalSteps = 5;
+
+function updateProgress() {
+  const percent = (currentStep / totalSteps) * 100;
+  document.getElementById("progress-bar").style.width = percent + "%";
+  document.getElementById("step-label").innerText = `진행상황 ${currentStep} / ${totalSteps}`;
+}
+
+function validateStep(step) {
+  if (step === 1) {
+    const email = document.querySelector("#step1 input[name='email']").value.trim();
+    if (!email) {
+      alert("{{ _('이메일을 입력해주세요.') }}");
+      return false;
+    }
+    // 간단 이메일 정규식
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      alert("{{ _('올바른 이메일 형식을 입력해주세요.') }}");
+      return false;
+    }
+  }
+  if (step === 2) {
+    const pw = document.querySelector("#step2 input[name='password']").value.trim();
+    const pwc = document.querySelector("#step2 input[name='password_confirm']").value.trim();
+    if (!pw || !pwc) {
+      alert("{{ _('비밀번호를 입력해주세요.') }}");
+      return false;
+    }
+    if (pw.length < 6) {
+      alert("{{ _('비밀번호는 6자 이상이어야 합니다.') }}");
+      return false;
+    }
+    if (pw !== pwc) {
+      alert("{{ _('비밀번호와 비밀번호 확인이 일치하지 않습니다.') }}");
+      return false;
+    }
+  }
+  if (step === 3) {
+    const name = document.querySelector("#step3 input[name='name']").value.trim();
+    if (!name) {
+      alert("{{ _('이름을 입력해주세요.') }}");
+      return false;
+    }
+  }
+  if (step === 4) {
+    const address = document.querySelector("#address_m").value.trim();
+    const detail = document.querySelector("#detailAddress_m").value.trim();
+    if (!address || !detail) {
+      alert("{{ _('주소와 상세주소를 입력해주세요.') }}");
+      return false;
+    }
+  }
+  if (step === 5) {
+    const phone = document.querySelector("#phone_m").value.trim();
+    if (!phone) {
+      alert("{{ _('휴대폰 번호를 입력해주세요.') }}");
+      return false;
+    }
+    if (!/^\d{10,11}$/.test(phone)) {
+      alert("{{ _('올바른 휴대폰 번호를 입력해주세요.') }}");
+      return false;
+    }
+  }
+  return true;
+}
+
+function nextStep(step) {
+  // 현재 step 검증
+  if (!validateStep(currentStep)) return;
+
+  document.getElementById("step" + currentStep).classList.add("hidden");
+  document.getElementById("step" + step).classList.remove("hidden");
+  currentStep = step;
+  updateProgress();
+}
+
+function prevStep(step) {
+  document.getElementById("step" + currentStep).classList.add("hidden");
+  document.getElementById("step" + step).classList.remove("hidden");
+  currentStep = step;
+  updateProgress();
+}
+
+// 초기화
+updateProgress();
+</script>
+{% endblock %}

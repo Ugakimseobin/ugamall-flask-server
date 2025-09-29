@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-6xl mx-auto bg-white p-4 sm:p-6 shadow rounded mt-6 sm:mt-8">
+  <h1 class="text-xl sm:text-2xl font-bold mb-6">회원 관리</h1>
+
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse text-sm sm:text-base">
+      <thead>
+        <tr class="bg-gray-100 text-left">
+          <th class="border px-3 py-2">ID</th>
+          <th class="border px-3 py-2">이메일</th>
+          <th class="border px-3 py-2">이름</th>
+          <th class="border px-3 py-2">상태</th>
+          <th class="border px-3 py-2">마지막 로그인</th>
+          <th class="border px-3 py-2">액션</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr class="hover:bg-gray-50">
+          <td class="border px-3 py-2">{{ u.id }}</td>
+          <td class="border px-3 py-2 font-medium">{{ u.email }}</td>
+          <td class="border px-3 py-2">{{ u.name or "-" }}</td>
+          <td class="border px-3 py-2">
+            {% if u.status == "active" %}
+              <span class="px-2 py-1 text-xs sm:text-sm rounded bg-green-100 text-green-700">정상</span>
+            {% elif u.status == "dormant" %}
+              <span class="px-2 py-1 text-xs sm:text-sm rounded bg-yellow-100 text-yellow-700">휴면</span>
+            {% elif u.status == "deleted" %}
+              <span class="px-2 py-1 text-xs sm:text-sm rounded bg-red-100 text-red-700">탈퇴</span>
+            {% endif %}
+          </td>
+          <td class="border px-3 py-2 text-gray-600">
+            {% if u.last_login %}
+              {{ u.last_login.strftime('%Y-%m-%d %H:%M') }}
+            {% else %}
+              기록 없음
+            {% endif %}
+          </td>
+          <td class="border px-3 py-2">
+            <form method="POST" class="inline">
+              <input type="hidden" name="user_id" value="{{ u.id }}">
+              {% if u.status == "active" and u.last_login and u.last_login < two_years_ago %}
+                <button type="submit" name="action" value="dormant"
+                        class="bg-yellow-500 text-white px-3 py-1 rounded text-xs sm:text-sm hover:bg-yellow-600">
+                  휴면 처리
+                </button>
+              {% elif u.status == "dormant" %}
+                <button type="submit" name="action" value="delete"
+                        class="bg-red-600 text-white px-3 py-1 rounded text-xs sm:text-sm hover:bg-red-700">
+                  탈퇴 처리
+                </button>
+              {% else %}
+                <span class="text-gray-400 text-sm">-</span>
+              {% endif %}
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

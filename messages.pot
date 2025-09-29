@@ -1,0 +1,1097 @@
+# Translations template for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-09-26 09:31+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: templates/base.html:32
+msgid "유가몰"
+msgstr ""
+
+#: templates/base.html:37 templates/base.html:78
+msgid "상품 검색"
+msgstr ""
+
+#: templates/base.html:48 templates/base.html:86 templates/base.html:137
+msgid "회사소개"
+msgstr ""
+
+#: templates/base.html:49 templates/base.html:87
+msgid "제품"
+msgstr ""
+
+#: templates/base.html:50 templates/base.html:88
+#: templates/product_detail.html:69
+msgid "문의"
+msgstr ""
+
+#: templates/base.html:55 templates/base.html:93 templates/mypage.html:6
+msgid "마이페이지"
+msgstr ""
+
+#: templates/base.html:57 templates/base.html:95
+msgid "로그아웃"
+msgstr ""
+
+#: templates/auth/login.html:5 templates/auth/login.html:26
+#: templates/base.html:59 templates/base.html:97
+msgid "로그인"
+msgstr ""
+
+#: templates/base.html:99
+msgid "장바구니"
+msgstr ""
+
+#: templates/base.html:134
+msgid "바로가기"
+msgstr ""
+
+#: templates/base.html:136
+msgid "상품"
+msgstr ""
+
+#: templates/base.html:138 templates/contact.html:15 templates/contact.html:42
+#: templates/index.html:97
+msgid "문의하기"
+msgstr ""
+
+#: templates/base.html:143
+msgid "부산광역시 동래구 안남로 78-3"
+msgstr ""
+
+#: templates/checkout.html:4
+msgid "주문 / 결제"
+msgstr ""
+
+#: templates/checkout.html:35 templates/mypage.html:58
+msgid "기본상품"
+msgstr ""
+
+#: templates/checkout.html:51 templates/checkout.html:114
+#: templates/guest_orders.html:25 templates/product_detail.html:21
+#: templates/product_detail.html:87 templates/product_detail.html:114
+msgid "원"
+msgstr ""
+
+#: templates/checkout.html:55
+msgid "삭제"
+msgstr ""
+
+#: templates/checkout.html:61
+msgid "장바구니가 비어 있습니다"
+msgstr ""
+
+#: templates/checkout.html:67
+msgid "구매자 정보"
+msgstr ""
+
+#: templates/auth/register_info.html:28 templates/auth/register_info.html:29
+#: templates/auth/register_info.html:113 templates/checkout.html:70
+#: templates/index.html:107 templates/mypage.html:97
+msgid "이름"
+msgstr ""
+
+#: templates/checkout.html:77 templates/guest_orders.html:11
+#: templates/index.html:111
+msgid "전화번호"
+msgstr ""
+
+#: templates/checkout.html:84
+msgid "기본 주소"
+msgstr ""
+
+#: templates/checkout.html:89
+msgid "상세 주소"
+msgstr ""
+
+#: templates/auth/login.html:11 templates/auth/register_info.html:11
+#: templates/auth/register_info.html:95 templates/checkout.html:96
+#: templates/checkout.html:97 templates/contact.html:20
+#: templates/contact.html:52 templates/guest_orders.html:5
+#: templates/guest_orders_search.html:8 templates/mypage.html:93
+msgid "이메일"
+msgstr ""
+
+#: templates/checkout.html:103
+msgid "결제 방법"
+msgstr ""
+
+#: templates/checkout.html:105
+msgid "무통장입금"
+msgstr ""
+
+#: templates/checkout.html:106
+msgid "카드결제"
+msgstr ""
+
+#: templates/checkout.html:107
+msgid "간편결제"
+msgstr ""
+
+#: templates/checkout.html:114
+msgid "총 금액"
+msgstr ""
+
+#: templates/checkout.html:116
+msgid "결제하기"
+msgstr ""
+
+#: templates/checkout.html:186
+msgid "이 상품을 장바구니에서 삭제하시겠습니까?"
+msgstr ""
+
+#: templates/checkout.html:195
+msgid "삭제 요청에 실패했습니다."
+msgstr ""
+
+#: templates/checkout.html:198
+msgid "삭제 실패"
+msgstr ""
+
+#: templates/company.html:15
+msgid "유가에 대해"
+msgstr ""
+
+#: templates/company.html:21
+msgid "소개"
+msgstr ""
+
+#: templates/company.html:23
+msgid ""
+"주식회사 유가는 의료기기 공급과 신기술 보급에 전문화된 기업입니다. 병원의 요구에 맞춘 기기를 안정적으로 납품하고, 새로운 "
+"의료기기가 출시되면 직접 찾아가 소개하며 현장에 필요한 솔루션을 제공합니다."
+msgstr ""
+
+#: templates/company.html:30
+msgid "환자와 고객의 삶의 질 향상을 위한 혁신적인 의료 솔루션을 제공합니다."
+msgstr ""
+
+#: templates/company.html:36
+msgid "글로벌 의료 시장에서 신뢰받는 리더로 자리매김하는 것을 목표로 합니다."
+msgstr ""
+
+#: templates/company.html:42
+msgid "혁신 · 신뢰 · 협력을 핵심 가치로 삼아 함께 성장합니다."
+msgstr ""
+
+#: templates/company.html:51
+msgid "연혁"
+msgstr ""
+
+#: templates/company.html:55
+msgid "UGAMALL 온라인 플랫폼 공식 런칭"
+msgstr ""
+
+#: templates/company.html:59
+msgid "대형 병원 의료기기 납품 확대"
+msgstr ""
+
+#: templates/company.html:63
+msgid "해외 제조사와 파트너십 체결"
+msgstr ""
+
+#: templates/company.html:67
+msgid "UGA MEDICAL 설립"
+msgstr ""
+
+#: templates/company.html:76
+msgid "함께하는 사람들"
+msgstr ""
+
+#: templates/company.html:77
+msgid "국내외 다양한 파트너사와 함께 헬스케어의 미래를 만들어갑니다."
+msgstr ""
+
+#: templates/company.html:84
+msgid "폼메디칼"
+msgstr ""
+
+#: templates/company.html:87
+msgid "혁신적인 의료기기 공급으로 병원과 의료진에게 신뢰받는 파트너"
+msgstr ""
+
+#: templates/company.html:96
+msgid "메디케이"
+msgstr ""
+
+#: templates/company.html:99
+msgid "첨단 기술 기반의 의료 솔루션을 제공하는 글로벌 파트너"
+msgstr ""
+
+#: templates/contact.html:10
+msgid "우리에게"
+msgstr ""
+
+#: templates/contact.html:23
+msgid "답변 받으실 이메일 입력"
+msgstr ""
+
+#: templates/contact.html:28 templates/index.html:117
+msgid "제목"
+msgstr ""
+
+#: templates/contact.html:31
+msgid "문의 제목"
+msgstr ""
+
+#: templates/contact.html:35 templates/index.html:121
+msgid "내용"
+msgstr ""
+
+#: templates/contact.html:38
+msgid "문의 내용을 입력하세요"
+msgstr ""
+
+#: templates/contact.html:48
+msgid "오는 길"
+msgstr ""
+
+#: templates/auth/register_info.html:34 templates/auth/register_info.html:123
+#: templates/contact.html:50 templates/mypage.html:101
+msgid "주소"
+msgstr ""
+
+#: templates/contact.html:50
+msgid "부산광역시 동래구 안남로 78-3 (더 평안빌딩 2층)"
+msgstr ""
+
+#: templates/contact.html:51
+msgid "전화"
+msgstr ""
+
+#: templates/guest_orders.html:4
+msgid "비회원 주문내역"
+msgstr ""
+
+#: templates/guest_orders.html:9 templates/mypage.html:27
+msgid "주문번호"
+msgstr ""
+
+#: templates/guest_orders.html:10
+msgid "주문자"
+msgstr ""
+
+#: templates/guest_orders.html:12
+msgid "배송지"
+msgstr ""
+
+#: templates/guest_orders.html:13
+msgid "배송지상세"
+msgstr ""
+
+#: templates/guest_orders.html:14
+msgid "결제방식"
+msgstr ""
+
+#: templates/guest_orders.html:15 templates/mypage.html:156
+msgid "상태"
+msgstr ""
+
+#: templates/guest_orders.html:16
+msgid "주문일자"
+msgstr ""
+
+#: templates/guest_orders.html:19
+msgid "주문 상품"
+msgstr ""
+
+#: templates/guest_orders.html:24
+msgid "옵션"
+msgstr ""
+
+#: templates/guest_orders.html:25
+msgid "개"
+msgstr ""
+
+#: templates/auth/login.html:48 templates/guest_orders_search.html:4
+msgid "비회원 주문조회"
+msgstr ""
+
+#: templates/guest_orders_search.html:9
+msgid "주문 시 입력한 이메일"
+msgstr ""
+
+#: templates/guest_orders_search.html:14
+msgid "주문번호 (선택)"
+msgstr ""
+
+#: templates/guest_orders_search.html:15
+msgid "주문번호가 있다면 입력"
+msgstr ""
+
+#: templates/guest_orders_search.html:21
+msgid "조회하기"
+msgstr ""
+
+#: templates/index.html:19
+msgid "UGAMALL 홍보 영상"
+msgstr ""
+
+#: templates/index.html:20
+msgid "UGAMALL의 최신 소식과 스토리를 만나보세요."
+msgstr ""
+
+#: templates/index.html:23
+msgid "영상 더 보기 →"
+msgstr ""
+
+#: templates/index.html:34
+msgid "자세히 보기"
+msgstr ""
+
+#: templates/index.html:40
+msgid "아직 등록된 영상이 없습니다."
+msgstr ""
+
+#: templates/index.html:50
+msgid "🔥 신제품 프로모션"
+msgstr ""
+
+#: templates/index.html:52
+msgid "특별 상품"
+msgstr ""
+
+#: templates/index.html:53
+msgid "지금 즉시 구매"
+msgstr ""
+
+#: templates/index.html:57
+msgid "자세히 보러가기 →"
+msgstr ""
+
+#: templates/index.html:88
+msgid "유가몰 소개"
+msgstr ""
+
+#: templates/index.html:90
+msgid "은 광고와 쇼핑을 결합한 플랫폼으로"
+msgstr ""
+
+#: templates/index.html:103
+msgid "이메일 (필수)"
+msgstr ""
+
+#: templates/index.html:125
+msgid "보내기"
+msgstr ""
+
+#: templates/mypage.html:8 templates/mypage.html:18
+msgid "주문내역"
+msgstr ""
+
+#: templates/mypage.html:9
+msgid "개인정보"
+msgstr ""
+
+#: templates/mypage.html:10
+msgid "문의내역"
+msgstr ""
+
+#: templates/mypage.html:20
+msgid "주문 내역이 없습니다."
+msgstr ""
+
+#: templates/mypage.html:28
+msgid "주문일"
+msgstr ""
+
+#: templates/mypage.html:36 templates/products.html:12 templates/search.html:21
+msgid "상품명"
+msgstr ""
+
+#: templates/mypage.html:37 templates/product_detail.html:51
+#: templates/product_detail.html:118
+msgid "수량"
+msgstr ""
+
+#: templates/mypage.html:38 templates/products.html:32 templates/search.html:40
+msgid "가격"
+msgstr ""
+
+#: templates/mypage.html:39
+msgid "재주문"
+msgstr ""
+
+#: templates/mypage.html:73 templates/product_detail.html:153
+msgid "장바구니 담기"
+msgstr ""
+
+#: templates/mypage.html:89
+msgid "개인정보 변경"
+msgstr ""
+
+#: templates/auth/register_info.html:36 templates/mypage.html:103
+msgid "우편번호"
+msgstr ""
+
+#: templates/auth/register_info.html:40 templates/mypage.html:104
+msgid "주소찾기"
+msgstr ""
+
+#: templates/auth/register_info.html:44 templates/auth/register_info.html:125
+#: templates/mypage.html:108
+msgid "기본주소"
+msgstr ""
+
+#: templates/auth/register_info.html:47 templates/auth/register_info.html:126
+#: templates/mypage.html:111
+msgid "상세주소"
+msgstr ""
+
+#: templates/mypage.html:116
+msgid "마케팅/혜택 수신 동의"
+msgstr ""
+
+#: templates/mypage.html:119
+msgid "저장"
+msgstr ""
+
+#: templates/auth/reset_password_form.html:27 templates/mypage.html:123
+#: templates/mypage.html:138
+msgid "비밀번호 변경"
+msgstr ""
+
+#: templates/mypage.html:127
+msgid "현재 비밀번호"
+msgstr ""
+
+#: templates/auth/reset_password_form.html:10 templates/mypage.html:131
+msgid "새 비밀번호"
+msgstr ""
+
+#: templates/auth/reset_password_form.html:18 templates/mypage.html:135
+msgid "새 비밀번호 확인"
+msgstr ""
+
+#: templates/mypage.html:144
+msgid "문의 내역"
+msgstr ""
+
+#: templates/mypage.html:146
+msgid "등록된 문의가 없습니다."
+msgstr ""
+
+#: templates/mypage.html:159
+msgid "답변"
+msgstr ""
+
+#: templates/product_detail.html:7
+msgid "← 뒤로가기"
+msgstr ""
+
+#: templates/product_detail.html:23
+msgid "카테고리"
+msgstr ""
+
+#: templates/product_detail.html:36 templates/product_detail.html:140
+msgid "선택하세요"
+msgstr ""
+
+#: templates/product_detail.html:63
+msgid "장바구니에 담기"
+msgstr ""
+
+#: templates/product_detail.html:78
+msgid "관련 상품"
+msgstr ""
+
+#: templates/product_detail.html:168
+msgid "장바구니에 추가되었습니다"
+msgstr ""
+
+#: templates/product_detail.html:172
+msgid "계속 쇼핑하기"
+msgstr ""
+
+#: templates/product_detail.html:176
+msgid "장바구니로 이동"
+msgstr ""
+
+#: templates/products.html:6 templates/search.html:15
+msgid "필터"
+msgstr ""
+
+#: templates/products.html:18 templates/search.html:27
+msgid "분야"
+msgstr ""
+
+#: templates/products.html:20 templates/search.html:29
+msgid "전체"
+msgstr ""
+
+#: templates/products.html:61 templates/search.html:74
+msgid "적용"
+msgstr ""
+
+#: templates/products.html:84
+msgid "안내사항"
+msgstr ""
+
+#: templates/products.html:88
+msgid "저희 제품은"
+msgstr ""
+
+#: templates/products.html:88
+msgid "UID를 정직하게 제공"
+msgstr ""
+
+#: templates/products.html:88
+msgid "하고 있습니다."
+msgstr ""
+
+#: templates/products.html:89
+msgid "안심하고 사용하세요 😊"
+msgstr ""
+
+#: templates/search.html:4
+msgid "검색 결과"
+msgstr ""
+
+#: templates/search.html:11
+msgid "필터 열기/닫기"
+msgstr ""
+
+#: templates/search.html:66
+msgid "영상 포함"
+msgstr ""
+
+#: templates/search.html:82
+msgid "에 대한 검색 결과가 없습니다."
+msgstr ""
+
+#: templates/search.html:97
+msgid "영상"
+msgstr ""
+
+#: templates/videos.html:4
+msgid "영상 아카이브"
+msgstr ""
+
+#: templates/videos.html:13
+msgid "영상 ID"
+msgstr ""
+
+#: templates/auth/login.html:12 templates/auth/register_info.html:12
+msgid "이메일 입력"
+msgstr ""
+
+#: templates/auth/login.html:18 templates/auth/register_info.html:17
+#: templates/auth/register_info.html:18 templates/auth/register_info.html:102
+msgid "비밀번호"
+msgstr ""
+
+#: templates/auth/login.html:19
+msgid "비밀번호 입력"
+msgstr ""
+
+#: templates/auth/login.html:33
+msgid "또는"
+msgstr ""
+
+#: templates/auth/login.html:40
+msgid "계정이 없나요"
+msgstr ""
+
+#: templates/auth/login.html:41 templates/auth/register_info.html:82
+msgid "회원가입"
+msgstr ""
+
+#: templates/auth/login.html:44
+msgid "비밀번호를 잊으셨나요"
+msgstr ""
+
+#: templates/auth/login.html:45
+msgid "비밀번호 찾기"
+msgstr ""
+
+#: templates/auth/register_info.html:7
+msgid "회원 정보 입력"
+msgstr ""
+
+#: templates/auth/register_info.html:22 templates/auth/register_info.html:23
+msgid "비밀번호 확인"
+msgstr ""
+
+#: templates/auth/register_info.html:52 templates/auth/register_info.html:135
+msgid "휴대폰 번호"
+msgstr ""
+
+#: templates/auth/register_info.html:59 templates/auth/register_info.html:137
+msgid "인증번호 받기"
+msgstr ""
+
+#: templates/auth/register_info.html:65 templates/auth/register_info.html:138
+msgid "인증번호 입력"
+msgstr ""
+
+#: templates/auth/register_info.html:69
+msgid "인증 확인"
+msgstr ""
+
+#: templates/auth/register_info.html:75 templates/auth/register_info.html:141
+msgid "가입하기"
+msgstr ""
+
+#: templates/auth/register_info.html:86
+msgid "진행상황"
+msgstr ""
+
+#: templates/auth/register_info.html:97 templates/auth/register_info.html:107
+#: templates/auth/register_info.html:117 templates/auth/register_info.html:129
+msgid "다음"
+msgstr ""
+
+#: templates/auth/register_info.html:106 templates/auth/register_info.html:116
+#: templates/auth/register_info.html:128 templates/auth/register_info.html:140
+msgid "이전"
+msgstr ""
+
+#: templates/auth/register_info.html:124
+msgid "주소 찾기"
+msgstr ""
+
+#: templates/auth/register_info.html:196
+msgid "이메일을 입력해주세요."
+msgstr ""
+
+#: templates/auth/register_info.html:202
+msgid "올바른 이메일 형식을 입력해주세요."
+msgstr ""
+
+#: templates/auth/register_info.html:210
+msgid "비밀번호를 입력해주세요."
+msgstr ""
+
+#: templates/auth/register_info.html:214
+msgid "비밀번호는 6자 이상이어야 합니다."
+msgstr ""
+
+#: templates/auth/register_info.html:218
+msgid "비밀번호와 비밀번호 확인이 일치하지 않습니다."
+msgstr ""
+
+#: templates/auth/register_info.html:225
+msgid "이름을 입력해주세요."
+msgstr ""
+
+#: templates/auth/register_info.html:233
+msgid "주소와 상세주소를 입력해주세요."
+msgstr ""
+
+#: templates/auth/register_info.html:240
+msgid "휴대폰 번호를 입력해주세요."
+msgstr ""
+
+#: templates/auth/register_info.html:244
+msgid "올바른 휴대폰 번호를 입력해주세요."
+msgstr ""
+
+#: templates/auth/register_terms.html:5
+msgid "이용약관 동의"
+msgstr ""
+
+#: templates/auth/register_terms.html:11
+msgid "전체 동의"
+msgstr ""
+
+#: templates/auth/register_terms.html:19
+msgid "유가몰 구매회원 이용약관 (필수)"
+msgstr ""
+
+#: templates/auth/register_terms.html:21 templates/auth/register_terms.html:29
+#: templates/auth/register_terms.html:37 templates/auth/register_terms.html:45
+#: templates/auth/register_terms.html:53
+msgid "보기"
+msgstr ""
+
+#: templates/auth/register_terms.html:27
+msgid "전자금융서비스 이용약관 동의 (필수)"
+msgstr ""
+
+#: templates/auth/register_terms.html:35
+msgid "개인정보 수집 및 이용동의 (필수)"
+msgstr ""
+
+#: templates/auth/register_terms.html:43
+msgid "만 14세 이상입니다. (필수)"
+msgstr ""
+
+#: templates/auth/register_terms.html:51
+msgid "혜택 알림 이메일, 문자, 앱 푸시 수신 (선택)"
+msgstr ""
+
+#: templates/auth/register_terms.html:60
+msgid "다음 단계"
+msgstr ""
+
+#: templates/auth/register_terms.html:69
+msgid "약관 내용"
+msgstr ""
+
+#: templates/auth/register_terms.html:76
+msgid "닫기"
+msgstr ""
+
+#: templates/auth/register_terms.html:110
+msgid "약관 상세"
+msgstr ""
+
+#: templates/auth/reset_password_form.html:5
+msgid "새 비밀번호 설정"
+msgstr ""
+
+#: templates/auth/reset_password_form.html:20
+msgid "비밀번호 다시 입력"
+msgstr ""
+
+#: templates/auth/reset_password_form.html:33
+msgid "비밀번호는 안전하게 암호화되어 저장됩니다."
+msgstr ""
+
+#: templates/auth/reset_password_form.html:34
+msgid "다른 사이트에서 사용하지 않은 비밃너호를 입력하세요."
+msgstr ""
+
+#: templates/auth/reset_password_request.html:5
+msgid "비밀번호 재설정"
+msgstr ""
+
+#: templates/auth/reset_password_request.html:10
+msgid "가입 이메일"
+msgstr ""
+
+#: templates/auth/reset_password_request.html:11
+msgid "가입 시 사용한 이메일을 입력하세요"
+msgstr ""
+
+#: templates/auth/reset_password_request.html:18
+msgid "메일 보내기"
+msgstr ""
+
+#: templates/auth/reset_password_request.html:24
+msgid "입력하신 이메일 주소로 비밀번호 재설정 링크가 전송됩니다."
+msgstr ""
+
+#: templates/auth/reset_password_request.html:25
+msgid "메일이 오지 않았다면 스팸함을 확인해주세요."
+msgstr ""
+
+#: venv/Lib/site-packages/click/_termui_impl.py:600
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr ""
+
+#: venv/Lib/site-packages/click/_termui_impl.py:604
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1084
+#: venv/Lib/site-packages/click/core.py:1121
+#, python-brace-format
+msgid "{text} {deprecated_message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1140
+msgid "Options"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1202
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/core.py:1221
+#, python-brace-format
+msgid "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1405
+msgid "Aborted!"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1779
+msgid "Commands"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1810
+msgid "Missing command."
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1888
+#, python-brace-format
+msgid "No such command {name!r}."
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2303
+msgid "Value must be an iterable."
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2324
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/core.py:2404
+#, python-brace-format
+msgid ""
+"DeprecationWarning: The {param_type} {name!r} is "
+"deprecated.{extra_message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2807
+#, python-brace-format
+msgid "env var: {var}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2810
+#, python-brace-format
+msgid "default: {default}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2814
+msgid "required"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2870
+msgid "(dynamic)"
+msgstr ""
+
+#: venv/Lib/site-packages/click/decorators.py:465
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr ""
+
+#: venv/Lib/site-packages/click/decorators.py:522
+msgid "Show the version and exit."
+msgstr ""
+
+#: venv/Lib/site-packages/click/decorators.py:548
+msgid "Show this message and exit."
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:50
+#: venv/Lib/site-packages/click/exceptions.py:89
+#, python-brace-format
+msgid "Error: {message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:81
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:130
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:132
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:190
+msgid "Missing argument"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:192
+msgid "Missing option"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:194
+msgid "Missing parameter"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:196
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:203
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:223
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:235
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/exceptions.py:282
+msgid "unknown error"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:289
+#, python-brace-format
+msgid "Could not open file {filename!r}: {message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/formatting.py:156
+msgid "Usage:"
+msgstr ""
+
+#: venv/Lib/site-packages/click/parser.py:200
+#, python-brace-format
+msgid "Argument {name!r} takes {nargs} values."
+msgstr ""
+
+#: venv/Lib/site-packages/click/parser.py:383
+#, python-brace-format
+msgid "Option {name!r} does not take a value."
+msgstr ""
+
+#: venv/Lib/site-packages/click/parser.py:444
+#, python-brace-format
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/shell_completion.py:326
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+
+#: venv/Lib/site-packages/click/shell_completion.py:333
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:162
+msgid "Repeat for confirmation"
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:178
+msgid "Error: The value you entered was invalid."
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:180
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:191
+msgid "Error: The two entered values do not match."
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:247
+msgid "Error: invalid input"
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:866
+msgid "Press any key to continue..."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:332
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:369
+#, python-brace-format
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/types.py:460
+#, python-brace-format
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/types.py:482
+#, python-brace-format
+msgid "{value!r} is not a valid {number_type}."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:538
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:679
+#, python-brace-format
+msgid "{value!r} is not a valid boolean."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:703
+#, python-brace-format
+msgid "{value!r} is not a valid UUID."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:893
+msgid "file"
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:895
+msgid "directory"
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:897
+msgid "path"
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:944
+#, python-brace-format
+msgid "{name} {filename!r} does not exist."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:953
+#, python-brace-format
+msgid "{name} {filename!r} is a file."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:961
+#, python-brace-format
+msgid "{name} {filename!r} is a directory."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:970
+#, python-brace-format
+msgid "{name} {filename!r} is not readable."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:979
+#, python-brace-format
+msgid "{name} {filename!r} is not writable."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:988
+#, python-brace-format
+msgid "{name} {filename!r} is not executable."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:1055
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] ""
+msgstr[1] ""
+

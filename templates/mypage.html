@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-6xl mx-auto py-6 sm:py-10 flex flex-col md:flex-row px-4 sm:px-6 gap-6">
+  <!-- ✅ 왼쪽 사이드바 -->
+  <aside class="w-full md:w-1/4 md:pr-6">
+    <h2 class="font-bold text-xl sm:text-2xl mb-4 sm:mb-6">{{ _("마이페이지") }}</h2>
+    <ul class="grid grid-cols-3 md:flex md:flex-col md:space-y-2 gap-2">
+      <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="orders">{{ _("주문내역") }}</button></li>
+      <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-indigo-600 text-white" data-tab="info">{{ _("개인정보") }}</button></li>
+      <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="inquiry">{{ _("문의내역") }}</button></li>
+    </ul>
+  </aside>
+
+  <!-- ✅ 오른쪽 컨텐츠 -->
+  <main class="w-full md:w-3/4 bg-white shadow rounded p-4 sm:p-6">
+    <!-- 주문내역 -->
+    <section id="tab-orders" class="tab-content hidden">
+      <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("주문내역") }}</h3>
+      {% if orders|length == 0 %}
+        <p class="text-gray-500">{{ _("주문 내역이 없습니다.") }}</p>
+      {% else %}
+        <div class="space-y-6">
+          {% for order in orders %}
+          <div class="border rounded-lg shadow p-4">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
+              <div>
+                <h4 class="font-bold text-sm sm:text-base">{{ _("주문번호") }}: {{ order.id }}</h4>
+                <p class="text-xs sm:text-sm text-gray-500">{{ _("주문일") }}: {{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+              </div>
+              <p class="text-gray-600 text-sm">{{ order.status | status_label }}</p>
+            </div>
+            <table class="w-full text-left mb-3 text-xs sm:text-sm">
+              <thead>
+                <tr class="text-gray-600 border-b">
+                  <th class="w-[70px] sm:w-[90px]"></th>
+                  <th class="py-1">{{ _("상품명") }}</th>
+                  <th class="py-1">{{ _("수량") }}</th>
+                  <th class="py-1">{{ _("가격") }}</th>
+                  <th class="py-1">{{ _("재주문") }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in order.items %}
+                <tr class="border-b">
+                  <td class="w-[70px] sm:w-[90px]">
+                    <img src="{{ url_for('static', filename='images/' ~ item.variant.product.image) }}" 
+                         alt="{{ item.variant.product.name }}" 
+                         class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded">
+                  </td>
+                  <td class="py-1 text-xs sm:text-sm">
+                    {{ item.variant.product.name }}
+                    <p class="text-gray-500 text-xs">
+                      {% if item.variant %}
+                          {% for key, val in item.variant.options.items() %}
+                              {{ key }}: {{ val }}
+                          {% endfor %}
+                      {% else %}
+                          {{ _("기본상품") }}
+                      {% endif %}
+                    </p>
+                  </td>
+                  <td class="py-1">{{ item.quantity }}</td>
+                  <td class="py-1">{{ (item.variant.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) * item.quantity }}원</td>
+                  <td class="py-1">
+                    <form method="post" action="{{ url_for('add_to_cart') }}">
+                        <input type="hidden" name="product_id" value="{{ item.variant.product.id }}">
+                        <input type="hidden" name="quantity" value="{{ item.quantity }}">
+                        {% for key, val in item.variant.options.items() %}
+                        <input type="hidden" name="option_{{ key }}" value="{{ val }}">
+                        {% endfor %}
+                        <button type="submit"
+                                class="bg-indigo-600 text-white px-2 sm:px-3 py-1 rounded hover:bg-indigo-700 text-xs sm:text-sm">
+                        {{ _("장바구니 담기") }}
+                        </button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </section>
+
+    <!-- 개인정보 변경 -->
+    <section id="tab-info" class="tab-content">
+      <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("개인정보 변경") }}</h3>
+      <form method="post" class="space-y-4 text-sm sm:text-base">
+        <input type="hidden" name="form_type" value="info">
+        <div>
+          <label class="block font-semibold">{{ _("이메일") }}</label>
+          <input type="email" value="{{ user.email }}" readonly class="w-full border p-2 rounded bg-gray-100 text-sm sm:text-base">
+        </div>
+        <div>
+          <label class="block font-semibold">{{ _("이름") }}</label>
+          <input type="text" name="name" value="{{ user.name }}" class="w-full border p-2 rounded">
+        </div>
+        <div>
+          <label class="block font-semibold">{{ _("주소") }}</label>
+          <div class="flex flex-col sm:flex-row sm:space-x-2 mb-2">
+            <input type="text" id="postcode" placeholder="{{ _('우편번호') }}" class="border p-2 rounded w-full sm:w-1/2 mb-2 sm:mb-0" readonly>
+            <button type="button" onclick="execDaumPostcode()" class="px-3 py-2 bg-indigo-600 text-white rounded text-sm sm:text-base">{{ _("주소찾기") }}</button>
+          </div>
+          <input type="text" id="baseAddress" name="base_address"
+                 value="{{ user.base_address or '' }}"
+                 placeholder="{{ _('기본주소') }}" class="w-full border p-2 rounded mb-2" readonly>
+          <input type="text" id="detailAddress" name="detail_address"
+                 value="{{ user.detail_address or '' }}"
+                 placeholder="{{ _('상세주소') }}" class="w-full border p-2 rounded">
+        </div>
+        <div>
+          <label class="text-sm sm:text-base">
+            <input type="checkbox" name="agree_marketing" {% if user.agree_marketing %}checked{% endif %}>
+            {{ _("마케팅/혜택 수신 동의") }}
+          </label>
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded">{{ _("저장") }}</button>
+      </form>
+
+      <hr class="my-8">
+      <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("비밀번호 변경") }}</h3>
+      <form method="post" class="space-y-4 text-sm sm:text-base">
+        <input type="hidden" name="form_type" value="password">
+        <div>
+          <label class="block font-semibold">{{ _("현재 비밀번호") }}</label>
+          <input type="password" name="current_password" class="w-full border p-2 rounded" required>
+        </div>
+        <div>
+          <label class="block font-semibold">{{ _("새 비밀번호") }}</label>
+          <input type="password" name="new_password" class="w-full border p-2 rounded" required>
+        </div>
+        <div>
+          <label class="block font-semibold">{{ _("새 비밀번호 확인") }}</label>
+          <input type="password" name="new_password_confirm" class="w-full border p-2 rounded" required>
+        </div>
+        <button type="submit" class="w-full bg-red-600 text-white py-2 rounded">{{ _("비밀번호 변경") }}</button>
+      </form>
+    </section>
+
+    <!-- 문의내역 -->
+    <section id="tab-inquiry" class="tab-content hidden">
+      <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("문의 내역") }}</h3>
+      {% if inquiries|length == 0 %}
+        <p class="text-gray-500">{{ _("등록된 문의가 없습니다.") }}</p>
+      {% else %}
+        <div class="space-y-6 text-sm sm:text-base">
+          {% for q in inquiries %}
+          <div class="border rounded-lg shadow p-4 bg-white">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
+              <h4 class="font-bold">{{ q.title }}</h4>
+              <p class="text-xs sm:text-sm text-gray-500">{{ q.created_at.strftime("%Y-%m-%d %H:%M") }}</p>
+            </div>
+            <p class="mb-3">{{ q.content }}</p>
+            <p class="text-xs sm:text-sm text-gray-600">{{ _("상태") }}: {{ q.status }}</p>
+            {% if q.answer %}
+            <div class="mt-3 border-t pt-2">
+              <p class="font-bold text-indigo-600">[{{ _("답변") }}]</p>
+              <p>{{ q.answer }}</p>
+              <p class="text-xs text-gray-500">{{ q.answered_at.strftime("%Y-%m-%d %H:%M") }}</p>
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </section>
+  </main>
+</div>
+
+<!-- JS 탭 전환 그대로 유지 -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.classList.remove("bg-indigo-600","text-white");
+    btn.classList.add("bg-gray-200");
+  });
+  document.querySelector('[data-tab="orders"]').classList.add("bg-indigo-600","text-white");
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.add("hidden"));
+  document.getElementById("tab-orders").classList.remove("hidden");
+
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("bg-indigo-600","text-white"));
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.add("bg-gray-200"));
+      btn.classList.add("bg-indigo-600","text-white");
+
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.add("hidden"));
+      document.getElementById("tab-" + btn.dataset.tab).classList.remove("hidden");
+    });
+  });
+});
+</script>
+
+<!-- 카카오 주소검색 그대로 -->
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+function execDaumPostcode() {
+  new daum.Postcode({
+    oncomplete: function(data) {
+      document.getElementById("postcode").value = data.zonecode;
+      document.getElementById("baseAddress").value = data.roadAddress ? data.roadAddress : data.jibunAddress;
+      document.getElementById("detailAddress").focus();
+    }
+  }).open();
+}
+</script>
+{% endblock %}
