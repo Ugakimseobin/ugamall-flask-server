@@ -271,7 +271,7 @@ msgstr "Title"
 
 #: templates/contact.html:32
 msgid "문의 제목"
-msgstr "Inquiry History"
+msgstr "Inquiry about"
 
 #: templates/contact.html:36 templates/index.html:123
 msgid "내용"
@@ -282,8 +282,8 @@ msgid "문의 내용을 입력하세요"
 msgstr "Please enter your inquiry details"
 
 #: templates/contact.html:49
-msgid "오는 길"
-msgstr "Directions"
+msgid "오시는 길"
+msgstr "LOCATION"
 
 #: templates/auth/register_info.html:34 templates/auth/register_info.html:123
 #: templates/contact.html:51 templates/mypage.html:101

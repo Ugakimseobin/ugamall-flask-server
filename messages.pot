@@ -265,7 +265,7 @@ msgid "문의 내용을 입력하세요"
 msgstr ""
 
 #: templates/contact.html:49
-msgid "오는 길"
+msgid "오시는 길"
 msgstr ""
 
 #: templates/auth/register_info.html:34 templates/auth/register_info.html:123
