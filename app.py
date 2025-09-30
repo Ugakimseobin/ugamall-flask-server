@@ -1577,12 +1577,15 @@ def autocomplete():
 
 @app.route("/make_admin_once")
 def make_admin_once():
-    user = User.query.filter_by(email="admin@ugamall.com").first()
-    if user and not user.is_admin:
-        user.is_admin = True
-        db.session.commit()
-        return "✅ 관리자 권한 부여 완료"
-    return "ℹ️ 이미 관리자거나, 해당 유저가 없습니다."
+    try:
+        user = User.query.filter_by(email="admin@ugamall.com").first()
+        if user and not user.is_admin:
+            user.is_admin = True
+            db.session.commit()
+            return "관리자 권한 부여 완료"
+        return "이미 관리자거나 해당 유저가 없습니다."
+    except Exception as e:
+        return f"오류 발생: {e}"
 
 with app.app_context():
     db.create_all()
