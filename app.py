@@ -1574,7 +1574,14 @@ def autocomplete():
     if q:
         results = [p.name for p in Product.query.filter(Product.name.contains(q)).all()]
     return jsonify(results)
-
+@app.route("/db_tables")
+def db_tables():
+    try:
+        # users 테이블이 있다면 확인
+        tables = db.engine.table_names()
+        return f"현재 DB에 존재하는 테이블: {tables}"
+    except Exception as e:
+        return f"확인 실패: {e}"
 @app.route("/make_admin_once")
 def make_admin_once():
     try:
