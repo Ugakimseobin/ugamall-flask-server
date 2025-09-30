@@ -1059,7 +1059,7 @@ def admin_products():
 @app.route("/admin/products/add", methods=["GET", "POST"])
 @login_required
 def admin_add_product():
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         flash("관리자만 접근할 수 있습니다.", "error")
         return redirect(url_for("home"))
 
@@ -1103,7 +1103,7 @@ def admin_add_product():
 @app.route("/admin/products/<int:product_id>/options", methods=["GET", "POST"])
 @login_required
 def admin_product_options(product_id):
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         return redirect(url_for("home"))
 
     product = Product.query.get_or_404(product_id)
