@@ -1578,7 +1578,14 @@ def autocomplete():
 with app.app_context():
     db.create_all()
     print("✅ DB schema created (or already exists)")
-    
+    admin = User(
+        email="admin@ugamall.com",
+        password=generate_password_hash("1234"),
+        is_admin=True,
+        name="관리자"
+    )
+    db.session.add(admin)
+    db.session.commit()
 
 if __name__=="__main__":
     app.run(debug=True)
