@@ -313,7 +313,7 @@ def inject_admin_alerts():
 def inject_admin_alerts():
     if current_user.is_authenticated and current_user.is_admin:
         unread_orders = Order.query.filter_by(is_read=False).count()
-        unread_inquiries = Inquiry.query.filter_by(is_read=False).count()
+        unread_inquiries = Inquiry.query.filter_by(is_checked=False).count()
         return dict(
             unread_orders=unread_orders,
             unread_inquiries=unread_inquiries,
