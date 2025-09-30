@@ -161,7 +161,7 @@ class Inquiry(db.Model):
 
     answer = db.Column(db.Text, nullable=True)
     answered_at = db.Column(db.DateTime, nullable=True)
-    is_checked = db.Column(db.Boolean, default=False)
+    is_read = db.Column(db.Boolean, default=False)
 
     user = db.relationship("User", backref="inquiries")
 
@@ -306,14 +306,14 @@ def inject_admin_alerts():
     if current_user.is_authenticated and current_user.is_admin:
         return dict(
             pending_orders=Order.query.filter_by(status="pending").count(),
-            new_inquiries_count=Inquiry.query.filter_by(is_checked=False).count()
+            new_inquiries_count=Inquiry.query.filter_by(is_read=False).count()
         )
     return {}
 @app.context_processor
 def inject_admin_alerts():
     if current_user.is_authenticated and current_user.is_admin:
         unread_orders = Order.query.filter_by(is_read=False).count()
-        unread_inquiries = Inquiry.query.filter_by(is_checked=False).count()
+        unread_inquiries = Inquiry.query.filter_by(is_read=False).count()
         return dict(
             unread_orders=unread_orders,
             unread_inquiries=unread_inquiries,
@@ -1510,7 +1510,7 @@ def admin_inquiries():
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
     if not inquiry.is_read:
-        inquiry.is_checked = True
+        inquiry.is_read = True
         db.session.commit()
 
     if request.method == "POST":
