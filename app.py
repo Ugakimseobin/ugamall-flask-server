@@ -210,6 +210,7 @@ class Order(db.Model):
     payment_method = db.Column(db.String(50), nullable=False)  # 카드, vbank 등
     status = db.Column(db.String(20), default="주문 접수")  # 주문 상태
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_read = db.Column(db.Boolean, default=False)
 
     # 관계
     user = db.relationship("User", backref="orders")
@@ -306,6 +307,17 @@ def inject_admin_alerts():
         return dict(
             pending_orders=Order.query.filter_by(status="pending").count(),
             new_inquiries_count=Inquiry.query.filter_by(is_checked=False).count()
+        )
+    return {}
+@app.context_processor
+def inject_admin_alerts():
+    if current_user.is_authenticated and current_user.is_admin:
+        unread_orders = Order.query.filter_by(is_read=False).count()
+        unread_inquiries = Inquiry.query.filter_by(is_read=False).count()
+        return dict(
+            unread_orders=unread_orders,
+            unread_inquiries=unread_inquiries,
+            admin_total_alerts=unread_orders + unread_inquiries
         )
     return {}
 # ----------------------------
@@ -1361,6 +1373,10 @@ def admin_orders():
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
 
+    if not order.is_read:
+        order.is_read = True
+        db.session.commit()
+
     # 상태 변경
     if request.method == "POST":
         order_id = request.form.get("order_id", type=int)
@@ -1493,6 +1509,9 @@ def admin_inquiries():
     if not current_user.is_admin:
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
+    if not inquiry.is_read:
+        inquiry.is_checked = True
+        db.session.commit()
 
     if request.method == "POST":
         inquiry_id = request.form.get("inquiry_id")

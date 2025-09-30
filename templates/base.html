@@ -61,9 +61,9 @@
           {% if current_user.is_admin %}
             <a href="{{ url_for('admin_dashboard') }}" class="relative hover:text-red-600 font-bold">
               관리자
-              {% if (pending_orders + new_inquiries_count) > 0 %}
+              {% if admin_total_alerts > 0 %}
                 <span class="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                  {{ pending_orders + new_inquiries_count }}
+                  {{ admin_total_alerts }}
                 </span>
               {% endif %}
             </a>
