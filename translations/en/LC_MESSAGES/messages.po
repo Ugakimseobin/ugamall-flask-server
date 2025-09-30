@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-09-26 09:31+0900\n"
+"POT-Creation-Date: 2025-09-30 10:00+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,58 +18,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: templates/base.html:32
+#: templates/base.html:41
 msgid "유가몰"
 msgstr "UGAMall"
 
-#: templates/base.html:37 templates/base.html:78
+#: templates/base.html:46 templates/base.html:112
 msgid "상품 검색"
 msgstr "Product search"
 
-#: templates/base.html:48 templates/base.html:86 templates/base.html:137
+#: templates/base.html:57 templates/base.html:120 templates/base.html:189
 msgid "회사소개"
 msgstr "Introduction"
 
-#: templates/base.html:49 templates/base.html:87
+#: templates/base.html:58 templates/base.html:121
 msgid "제품"
 msgstr "product"
 
-#: templates/base.html:50 templates/base.html:88
+#: templates/base.html:59 templates/base.html:122
 #: templates/product_detail.html:69
 msgid "문의"
 msgstr "Contact us"
 
-#: templates/base.html:55 templates/base.html:93 templates/mypage.html:6
+#: templates/base.html:64 templates/base.html:127 templates/mypage.html:6
+#: templates/order_complete.html:28
 msgid "마이페이지"
 msgstr "My Page"
 
-#: templates/base.html:57 templates/base.html:95
+#: templates/base.html:66 templates/base.html:129
 msgid "로그아웃"
 msgstr "Sign out"
 
 #: templates/auth/login.html:5 templates/auth/login.html:26
-#: templates/base.html:59 templates/base.html:97
+#: templates/base.html:68 templates/base.html:131
 msgid "로그인"
 msgstr "Sign in"
 
-#: templates/base.html:99
+#: templates/base.html:135
 msgid "장바구니"
 msgstr "Add to Cart"
 
-#: templates/base.html:134
+#: templates/base.html:139
+msgid "언어"
+msgstr ""
+
+#: templates/base.html:186
 msgid "바로가기"
 msgstr "Go to menu"
 
-#: templates/base.html:136
+#: templates/base.html:188
 msgid "상품"
 msgstr "Product Name"
 
-#: templates/base.html:138 templates/contact.html:15 templates/contact.html:42
-#: templates/index.html:97
+#: templates/base.html:190 templates/contact.html:15 templates/contact.html:42
+#: templates/index.html:99
 msgid "문의하기"
 msgstr "Contact us"
 
-#: templates/base.html:143
+#: templates/base.html:195
 msgid "부산광역시 동래구 안남로 78-3"
 msgstr "78-3, Annam-ro, Dongnae-gu, Busan, Republic of Korea"
 
@@ -101,12 +106,12 @@ msgstr "Buyer Information"
 
 #: templates/auth/register_info.html:28 templates/auth/register_info.html:29
 #: templates/auth/register_info.html:113 templates/checkout.html:70
-#: templates/index.html:107 templates/mypage.html:97
+#: templates/index.html:109 templates/mypage.html:97
 msgid "이름"
 msgstr "Name"
 
 #: templates/checkout.html:77 templates/guest_orders.html:11
-#: templates/index.html:111
+#: templates/index.html:113
 msgid "전화번호"
 msgstr "Phone Number"
 
@@ -152,8 +157,7 @@ msgstr "payment"
 
 #: templates/checkout.html:186
 msgid "이 상품을 장바구니에서 삭제하시겠습니까?"
-msgstr ""
-"Are you sure you want to remove this product from your cart"
+msgstr "Are you sure you want to remove this product from your cart"
 
 #: templates/checkout.html:195
 msgid "삭제 요청에 실패했습니다."
@@ -163,86 +167,23 @@ msgstr "Delete request failed"
 msgid "삭제 실패"
 msgstr "Deletion failed"
 
-#: templates/company.html:15
+#: templates/company.html:11
 msgid "유가에 대해"
 msgstr "About UGA"
 
-#: templates/company.html:21
-msgid "소개"
-msgstr "Introduction"
-
-#: templates/company.html:23
-msgid ""
-"주식회사 유가는 의료기기 공급과 신기술 보급에 전문화된 기업입니다. 병원의 요구에 맞춘 기기를 안정적으로 납품하고, 새로운 "
-"의료기기가 출시되면 직접 찾아가 소개하며 현장에 필요한 솔루션을 제공합니다."
+#: templates/company.html:12
+msgid "혁신 · 신뢰 · 협력"
 msgstr ""
-"UGA is a company specialized in medical device supply and new technology "
-"distribution. We reliably provide devices tailored to hospital needs and "
-"introduce new solutions directly to the field."
 
-#: templates/company.html:30
-msgid "환자와 고객의 삶의 질 향상을 위한 혁신적인 의료 솔루션을 제공합니다."
-msgstr ""
-"We provide innovative medical solutions to improve the quality of life "
-"for patients and customers."
-
-#: templates/company.html:36
-msgid "글로벌 의료 시장에서 신뢰받는 리더로 자리매김하는 것을 목표로 합니다."
-msgstr "Our goal is to become a trusted leader in the global medical market."
-
-#: templates/company.html:42
-msgid "혁신 · 신뢰 · 협력을 핵심 가치로 삼아 함께 성장합니다."
-msgstr "Innovation · Trust · Collaboration are our core values for growth."
-
-#: templates/company.html:51
-msgid "연혁"
-msgstr "History"
-
-#: templates/company.html:55
-msgid "UGAMALL 온라인 플랫폼 공식 런칭"
-msgstr "Official launch of UGAMALL online platform"
-
-#: templates/company.html:59
-msgid "대형 병원 의료기기 납품 확대"
-msgstr "Expanded medical device supply to major hospitals"
-
-#: templates/company.html:63
-msgid "해외 제조사와 파트너십 체결"
-msgstr "Partnership with overseas manufacturers"
-
-#: templates/company.html:67
-msgid "UGA MEDICAL 설립"
-msgstr "Founded UGA MEDICAL"
-
-#: templates/company.html:76
+#: templates/company.html:127
 msgid "함께하는 사람들"
 msgstr "Our Partners"
 
-#: templates/company.html:77
+#: templates/company.html:128
 msgid "국내외 다양한 파트너사와 함께 헬스케어의 미래를 만들어갑니다."
 msgstr ""
 "We shape the future of healthcare with diverse domestic and global "
 "partners."
-
-#: templates/company.html:84
-msgid "폼메디칼"
-msgstr ""
-
-#: templates/company.html:87
-msgid "혁신적인 의료기기 공급으로 병원과 의료진에게 신뢰받는 파트너"
-msgstr ""
-"A trusted partner supplying innovative medical devices to hospitals and "
-"professionals."
-
-#: templates/company.html:96
-msgid "메디케이"
-msgstr ""
-
-#: templates/company.html:99
-msgid "첨단 기술 기반의 의료 솔루션을 제공하는 글로벌 파트너"
-msgstr ""
-"A global partner providing advanced healthcare solutions based on "
-"cutting-edge technology."
 
 #: templates/contact.html:10
 msgid "우리에게"
@@ -252,7 +193,7 @@ msgstr "To us"
 msgid "답변 받으실 이메일 입력"
 msgstr "Enter your email address to receive a reply"
 
-#: templates/contact.html:28 templates/index.html:117
+#: templates/contact.html:28 templates/index.html:119
 msgid "제목"
 msgstr "Title"
 
@@ -260,7 +201,7 @@ msgstr "Title"
 msgid "문의 제목"
 msgstr "Inquiry History"
 
-#: templates/contact.html:35 templates/index.html:121
+#: templates/contact.html:35 templates/index.html:123
 msgid "내용"
 msgstr "Contents"
 
@@ -274,6 +215,7 @@ msgstr "Directions"
 
 #: templates/auth/register_info.html:34 templates/auth/register_info.html:123
 #: templates/contact.html:50 templates/mypage.html:101
+#: templates/order_complete.html:10
 msgid "주소"
 msgstr "Address"
 
@@ -290,10 +232,12 @@ msgid "비회원 주문내역"
 msgstr "Guest Order History"
 
 #: templates/guest_orders.html:9 templates/mypage.html:27
+#: templates/order_complete.html:7 templates/payment.html:8
 msgid "주문번호"
 msgstr "Order Number"
 
-#: templates/guest_orders.html:10
+#: templates/guest_orders.html:10 templates/order_complete.html:8
+#: templates/payment.html:9
 msgid "주문자"
 msgstr "Customer"
 
@@ -390,14 +334,20 @@ msgid "유가몰 소개"
 msgstr "Introduction to UGAMall"
 
 #: templates/index.html:90
-msgid "은 광고와 쇼핑을 결합한 플랫폼으로"
-msgstr "is a platform that combines advertising and shopping."
+msgid ""
+"유가몰은 누구나 편리하게 이용할 수 있는 의료용품 전문 스토어입니다.\n"
+"일상에서 필요한 제품을 간편하게 만나보세요.\n"
+"믿을 수 있는 품질, 합리적인 가격, 빠른 배송으로 여러분의 건강한 생활을 응원합니다 "
+msgstr ""
+"Ugamall is a medical supplies specialty store that anyone can conveniently use.\n"
+"Easily find the products you need in your daily life.\n"
+"We support your healthy lifestyle with reliable quality, reasonable prices, and fast delivery."
 
-#: templates/index.html:103
+#: templates/index.html:105
 msgid "이메일 (필수)"
 msgstr "Email (required)"
 
-#: templates/index.html:125
+#: templates/index.html:127
 msgid "보내기"
 msgstr "send"
 
@@ -500,6 +450,52 @@ msgstr "No inquiries registered."
 #: templates/mypage.html:159
 msgid "답변"
 msgstr "Answer"
+
+#: templates/order_complete.html:4
+#, fuzzy
+msgid "주문이 접수되었습니다"
+msgstr "No order history available."
+
+#: templates/order_complete.html:11
+msgid "결제수단"
+msgstr "payment method"
+
+#: templates/order_complete.html:12
+#, fuzzy
+msgid "결제상태"
+msgstr "Status"
+
+#: templates/order_complete.html:13 templates/payment.html:11
+msgid "결제금액"
+msgstr "amount"
+
+#: templates/order_complete.html:18
+msgid "입금 안내"
+msgstr "Deposit Information"
+
+#: templates/order_complete.html:20
+msgid "아래 계좌로 주문금액을 입금해 주세요."
+msgstr "Please deposit the order amount into the account below."
+
+#: templates/order_complete.html:21
+msgid "예금주"
+msgstr "depositor"
+
+#: templates/order_complete.html:21
+msgid "계좌"
+msgstr "account"
+
+#: templates/order_complete.html:27
+msgid "홈으로"
+msgstr "Go back"
+
+#: templates/payment.html:4
+msgid "결제를 준비 중입니다"
+msgstr "Preparing payment"
+
+#: templates/payment.html:5
+msgid "잠시만 기다려 주세요. 결제창이 곧 열립니다."
+msgstr "Please wait a moment. The payment window will open shortly."
 
 #: templates/product_detail.html:7
 msgid "← 뒤로가기"
@@ -744,7 +740,9 @@ msgstr "You must be 14 years or older (required)"
 
 #: templates/auth/register_terms.html:51
 msgid "혜택 알림 이메일, 문자, 앱 푸시 수신 (선택)"
-msgstr "Receive benefit notification emails, text messages, and app push notifications (optional)"
+msgstr ""
+"Receive benefit notification emails, text messages, and app push "
+"notifications (optional)"
 
 #: templates/auth/register_terms.html:60
 msgid "다음 단계"
@@ -788,8 +786,7 @@ msgstr "Email"
 
 #: templates/auth/reset_password_request.html:11
 msgid "가입 시 사용한 이메일을 입력하세요"
-msgstr ""
-"Please enter the email address you used to sign up."
+msgstr "Please enter the email address you used to sign up."
 
 #: templates/auth/reset_password_request.html:18
 msgid "메일 보내기"
@@ -801,8 +798,1215 @@ msgstr "A password reset link will be sent to the email address you entered."
 
 #: templates/auth/reset_password_request.html:25
 msgid "메일이 오지 않았다면 스팸함을 확인해주세요."
+msgstr "If you haven't received an email, please check your spam folder."
+
+#: venv/Lib/site-packages/git_filter_repo.py:139
+#, python-format
+msgid "Error: Cannot handle glob %s"
 msgstr ""
-"If you haven't received an email, please check your spam folder."
+
+#: venv/Lib/site-packages/git_filter_repo.py:375
+#, python-format
+msgid "Cannot read %s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:557
+#, python-format
+msgid "Unimplemented function: %s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:707
+#, python-format
+msgid "new name needed for rename of %s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:729
+#, python-format
+msgid "Unhandled filechange type: %s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1138
+msgid "Couldn't parse rename source"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1168
+#, python-format
+msgid "Malformed %(refname)s line: '%(line)s'"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1550
+#, python-format
+msgid "Unsupported command: '%s'"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1552
+#, python-format
+msgid "Could not parse line: '%s'"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1569
+#, python-format
+msgid ""
+"\n"
+"NEXT STEPS FOR YOUR SENSITIVE DATA REMOVAL:\n"
+"  * If you are doing your rewrite in multiple steps, ignore these next "
+"steps\n"
+"    until you have completed all your invocations of git-filter-repo.\n"
+"  * See the \"Sensitive Data Removal\" subsection of the \"DISCUSSION\" "
+"section\n"
+"    of the manual for more details about any of the steps below.\n"
+"  * Inspect this repository and verify that the sensitive data is indeed\n"
+"    completely removed from all commits.\n"
+"  * Force push the rewritten history to the server:\n"
+"      %s\n"
+"  * Contact the server admins for additional steps they need to take; the"
+"\n"
+"    First Changed Commit(s)%s may come in handy here.\n"
+"  * Have other colleagues with a clone either discard their clone and "
+"reclone\n"
+"    OR follow the detailed steps in the manual to repeatedly rebase and\n"
+"    purge the sensitive data from their copy.  Again, the First Changed\n"
+"    Commit(s)%s may come in handy.\n"
+"  * See the \"Prevent repeats and avoid future sensitive data spills\" "
+"section\n"
+"    of the manual.\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1640
+#, python-format
+msgid "%s does not appear to be a valid git repository"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1699
+#, python-format
+msgid "Processed %d blob sizes"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1718
+#, python-format
+msgid "Error: unexpected `git cat-file` output: \"%s\"\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1777
+msgid ""
+"Error: --path-rename expects one colon in its argument: "
+"<old_name:new_name>."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1781
+msgid ""
+"Error: With --path-rename, if OLD_NAME and NEW_NAME are both non-empty "
+"and either ends with a slash then both must."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1785
+#: venv/Lib/site-packages/git_filter_repo.py:1792
+msgid "Error: Pathnames cannot begin with a '/'"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1795
+#, python-format
+msgid "Error: Invalid path component '%s' found in '%s'"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1818
+#, python-format
+msgid "Error: HelperFilter given invalid option_string: %s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1830
+msgid ""
+"Rewrite (or analyze) repository history\n"
+"\n"
+"    git-filter-repo destructively rewrites history (unless --analyze or\n"
+"    --dry-run are given) according to specified rules.  It refuses to do "
+"any\n"
+"    rewriting unless either run from a clean fresh clone, or --force was\n"
+"    given.\n"
+"\n"
+"    Basic Usage:\n"
+"      git-filter-repo --analyze\n"
+"      git-filter-repo [FILTER/RENAME/CONTROL OPTIONS]\n"
+"\n"
+"    See EXAMPLES section for details.\n"
+"    "
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1845
+msgid ""
+"CALLBACKS\n"
+"\n"
+"    Most callback functions are of the same general format.  For a "
+"command line\n"
+"    argument like\n"
+"      --foo-callback 'BODY'\n"
+"\n"
+"    the following code will be compiled and called:\n"
+"      def foo_callback(foo):\n"
+"        BODY\n"
+"\n"
+"    The exception on callbacks is the --file-info-callback, which will be"
+"\n"
+"    discussed further below.\n"
+"\n"
+"    Given the callback style, we can thus make a simple callback to "
+"replace\n"
+"    'Jon' with 'John' in author/committer/tagger names:\n"
+"      git filter-repo --name-callback 'return name.replace(b\"Jon\", "
+"b\"John\")'\n"
+"\n"
+"    To remove all 'Tested-by' tags in commit (or tag) messages:\n"
+"      git filter-repo --message-callback 'return re.sub(br\"\\nTested-"
+"by:.*\", \"\", message)'\n"
+"\n"
+"    To remove all .DS_Store files:\n"
+"      git filter-repo --filename-callback 'return None if "
+"os.path.basename(filename) == b\".DS_Store\" else filename'\n"
+"\n"
+"    Note that if BODY resolves to a filename, then the contents of that "
+"file\n"
+"    will be used as the BODY in the callback function.\n"
+"\n"
+"    The --file-info-callback has a more involved function callback; for "
+"it the\n"
+"    following code will be compiled and called:\n"
+"      def file_info_callback(filename, mode, blob_id, value):\n"
+"        BODY\n"
+"\n"
+"    It is designed to be used in cases where filtering depends on both\n"
+"    filename and contents (and maybe mode).  It is called for file "
+"changes\n"
+"    other than deletions (since deletions have no file contents to "
+"operate\n"
+"    on).  This callback is expected to return a tuple of (filename, mode,"
+"\n"
+"    blob_id).  It can make use of the following functions from the value\n"
+"    instance:\n"
+"      value.get_contents_by_identifier(blob_id) -> contents (bytestring)\n"
+"      value.get_size_by_identifier(blob_id) -> size_of_blob (int)\n"
+"      value.insert_file_with_contents(contents) -> blob_id\n"
+"      value.is_binary(contents) -> bool\n"
+"      value.apply_replace_text(contents) -> new_contents (bytestring)\n"
+"    and can read/write the following data member from the value instance:"
+"\n"
+"      value.data (dict)\n"
+"\n"
+"    The filename can be used for renaming the file similar to\n"
+"    --filename-callback (or None to drop the change), and mode is one\n"
+"    of b'100644', b'100755', b'120000', or b'160000'.\n"
+"\n"
+"    For more detailed examples and explanations AND caveats, see\n"
+"      https://htmlpreview.github.io/?https://github.com/newren/git-"
+"filter-repo/blob/docs/html/git-filter-repo.html#CALLBACKS\n"
+"\n"
+"EXAMPLES\n"
+"\n"
+"    To get a bunch of reports mentioning renames that have occurred in\n"
+"    your repo and listing sizes of objects aggregated by any of path,\n"
+"    directory, extension, or blob-id:\n"
+"      git filter-repo --analyze\n"
+"\n"
+"    (These reports can help you choose how to filter your repo; it can\n"
+"    be useful to re-run this command after filtering to regenerate the\n"
+"    report and verify the changes look correct.)\n"
+"\n"
+"    To extract the history that touched just 'guides' and "
+"'tools/releases':\n"
+"      git filter-repo --path guides/ --path tools/releases\n"
+"\n"
+"    To remove foo.zip and bar/baz/zips from every revision in history:\n"
+"      git filter-repo --path foo.zip --path bar/baz/zips/ --invert-paths\n"
+"\n"
+"    To replace the text 'password' with 'p455w0rd':\n"
+"      git filter-repo --replace-text <(echo \"password==>p455w0rd\")\n"
+"\n"
+"    To use the current version of the .mailmap file to update authors,\n"
+"    committers, and taggers throughout history and make it permanent:\n"
+"      git filter-repo --use-mailmap\n"
+"\n"
+"    To extract the history of 'src/', rename all files to have a new "
+"leading\n"
+"    directory 'my-module' (e.g. src/foo.java -> my-module/src/foo.java), "
+"and\n"
+"    add a 'my-module-' prefix to all tags:\n"
+"      git filter-repo --path src/ --to-subdirectory-filter my-module "
+"--tag-rename '':'my-module-'\n"
+"\n"
+"    For more detailed examples and explanations, see\n"
+"      https://htmlpreview.github.io/?https://github.com/newren/git-"
+"filter-repo/blob/docs/html/git-filter-repo.html#EXAMPLES"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1936
+msgid "Analysis"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1938
+msgid ""
+"Analyze repository history and create a report that may be useful in "
+"determining what to filter in a subsequent run. Will not modify your "
+"repo."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1945
+msgid ""
+"Directory to write report, defaults to "
+"GIT_DIR/filter_repo/analysis,refuses to run if exists, --force delete "
+"existing dir first."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1948
+msgid "Filtering based on paths (see also --filename-callback)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1950
+msgid ""
+"\n"
+"           These options specify the paths to select.  Note that much "
+"like git\n"
+"           itself, renames are NOT followed so you may need to specify "
+"multiple\n"
+"           paths, e.g. `--path olddir/ --path newdir/`\n"
+"           "
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1957
+#, python-brace-format
+msgid ""
+"Invert the selection of files from the specified "
+"--path-{match,glob,regex} options below, i.e. only select files matching "
+"none of those options."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1964
+msgid ""
+"Exact paths (files or directories) to include in filtered history.  "
+"Multiple --path options can be specified to get a union of paths."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1969
+msgid ""
+"Glob of paths to include in filtered history. Multiple --path-glob "
+"options can be specified to get a union of paths."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1974
+msgid ""
+"Regex of paths to include in filtered history. Multiple --path-regex "
+"options can be specified to get a union of paths"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1978
+msgid ""
+"Match on file base name instead of full path from the top of the repo.  "
+"Incompatible with --path-rename, and incompatible with matching against "
+"directory names."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1982
+msgid "Renaming based on paths (see also --filename-callback)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1987
+msgid ""
+"Path to rename; if filename or directory matches OLD_NAME rename to "
+"NEW_NAME.  Multiple --path-rename options can be specified.  NOTE: If you"
+" combine filtering options with renaming ones, do not rely on a rename "
+"argument to select paths; you also need a filter to select them."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1993
+msgid "Path shortcuts"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:1998
+msgid ""
+"Specify several path filtering and renaming directives, one per line.  "
+"Lines with '==>' in them specify path renames, and lines can begin with "
+"'literal:' (the default), 'glob:', or 'regex:' to specify different "
+"matching styles.  Blank lines and lines starting with a '#' are ignored."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2005
+msgid ""
+"Only look at history that touches the given subdirectory and treat that "
+"directory as the project root.  Equivalent to using '--path DIRECTORY/ "
+"--path-rename DIRECTORY/:'"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2010
+msgid ""
+"Treat the project root as if it were under DIRECTORY. Equivalent to using"
+" '--path-rename :DIRECTORY/'"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2013
+msgid "Content editing filters (see also --blob-callback)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2016
+#, python-brace-format
+msgid ""
+"A file with expressions that, if found, will be replaced. By default, "
+"each expression is treated as literal text, but 'regex:' and 'glob:' "
+"prefixes are supported.  You can end the line with '==>' and some "
+"replacement text to choose a replacement choice other than the default of"
+" '{}'."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2024
+msgid "Strip blobs (files) bigger than specified size (e.g. '5M', '2G', etc)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2027
+msgid ""
+"Read git object ids from each line of the given file, and strip all of "
+"them from history"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2030
+msgid "Renaming of refs (see also --refname-callback)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2033
+msgid ""
+"Rename tags starting with OLD to start with NEW.  For example, --tag-"
+"rename foo:bar will rename tag foo-1.2.3 to bar-1.2.3; either OLD or NEW "
+"can be empty."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2037
+msgid "Filtering of commit messages (see also --message-callback)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2040
+msgid ""
+"A file with expressions that, if found in commit or tag messages, will be"
+" replaced. This file uses the same syntax as --replace-text."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2044
+msgid ""
+"By default, since commits are rewritten and thus gain new hashes, "
+"references to old commit hashes in commit messages are replaced with new "
+"commit hashes (abbreviated to the same length as the old reference).  Use"
+" this flag to turn off updating commit hashes in commit messages."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2050
+msgid ""
+"Do not reencode commit messages into UTF-8.  By default, if the commit "
+"object specifies an encoding for the commit message, the message is re-"
+"encoded into UTF-8."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2054
+msgid ""
+"Filtering of names & emails (see also --name-callback and --email-"
+"callback)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2059
+msgid ""
+"Use specified mailmap file (see git-shortlog(1) for details on the "
+"format) when rewriting author, committer, and tagger names and emails.  "
+"If the specified file is part of git history, historical versions of the "
+"file will be ignored; only the current contents are consulted."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2066
+msgid "Same as: '--mailmap .mailmap' "
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2068
+msgid "Parent rewriting"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2073
+msgid ""
+"How to handle replace refs (see git-replace(1)).  Replace refs can be "
+"added during the history rewrite as a way to allow users to pass old "
+"commit IDs (from before git-filter-repo was run) to git commands and have"
+" git know how to translate those old commit IDs to the new (post-rewrite)"
+" commit IDs.  Also, replace refs that existed before the rewrite can "
+"either be deleted or updated.  The choices to pass to --replace-refs thus"
+" need to specify both what to do with existing refs and what to do with "
+"commit rewrites.  Thus 'update-and-add' means to update existing replace "
+"refs, and for any commit rewrite (even if already pointed at by a replace"
+" ref) add a new refs/replace/ reference to map from the old commit ID to "
+"the new commit ID.  The default is update-no-add, meaning update existing"
+" replace refs but do not add any new ones.  There is also a special 'old-"
+"default' option for picking the default used in versions prior to git-"
+"filter-repo-2.45, namely 'update-and-add' upon the first run of git-"
+"filter-repo in a repository and 'update-or-add' if running git-filter-"
+"repo again on a repository."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2095
+msgid ""
+"Whether to prune empty commits.  'auto' (the default) means only prune "
+"commits which become empty (not commits which were empty in the original "
+"repo, unless their parent was pruned). When the parent of a commit is "
+"pruned, the first non-pruned ancestor becomes the new parent."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2102
+msgid ""
+"Since merge commits are needed for history topology, they are typically "
+"exempt from pruning.  However, they can become degenerate with the "
+"pruning of other commits (having fewer than two parents, having one "
+"commit serve as both parents, or having one parent as the ancestor of the"
+" other.)  If such merge commits have no file changes, they can be pruned."
+"  The default ('auto') is to only prune empty merge commits which become "
+"degenerate (not which started as such)."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2111
+msgid ""
+"Even if the first parent is or becomes an ancestor of another parent, do "
+"not prune it.  This modifies how --prune-degenerate behaves, and may be "
+"useful in projects who always use merge --no-ff."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2116
+msgid "Generic callback code snippets"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2118
+msgid "Python code body for processing filenames; see CALLBACKS sections below."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2121
+msgid ""
+"Python code body for processing file and metadata; see CALLBACKS sections"
+" below."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2124
+msgid ""
+"Python code body for processing messages (both commit messages and tag "
+"messages); see CALLBACKS section below."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2127
+msgid ""
+"Python code body for processing names of people; see CALLBACKS section "
+"below."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2130
+msgid ""
+"Python code body for processing emails addresses; see CALLBACKS section "
+"below."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2133
+msgid "Python code body for processing refnames; see CALLBACKS section below."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2137
+msgid "Python code body for processing blob objects; see CALLBACKS section below."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2140
+msgid ""
+"Python code body for processing commit objects; see CALLBACKS section "
+"below."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2143
+msgid ""
+"Python code body for processing tag objects.  Note that lightweight tags "
+"have no tag object and are thus not handled by this callback. See "
+"CALLBACKS section below."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2147
+msgid ""
+"Python code body for processing reset objects; see CALLBACKS section "
+"below."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2150
+msgid "Sensitive Data Removal Handling"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2152
+msgid ""
+"This rewrite is intended to remove sensitive data from a repository.  "
+"Gather extra information from the rewrite needed to provide additional "
+"instructions on how to clean up other copies."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2157
+msgid ""
+"By default, --sensitive-data-removal will trigger a mirror-like fetch of "
+"all refs from origin, discarding local changes, but ensuring that _all_ "
+"fetchable refs that hold on to the sensitve data are rewritten.  This "
+"flag removes that fetch, risking that other refs continue holding on to "
+"the sensitive data.  This option is implied by --partial or any flag that"
+" implies --partial."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2166
+msgid ""
+"Specifying alternate source or target locations implies --partial,\n"
+"except that the normal default for --replace-refs is used.  However,\n"
+"unlike normal uses of --partial, this doesn't risk mixing old and new\n"
+"history since the old and new histories are in different repositories."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2170
+msgid "Location to filter from/to"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2173
+msgid "Git repository to read from"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2175
+msgid "Git repository to overwrite with filtered history"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2177
+msgid "Ordering of commits"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2179
+msgid "Processes commits in commit timestamp order."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2181
+msgid "Miscellaneous options"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2183
+msgid "Show this help message and exit."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2185
+msgid "Display filter-repo's version and exit."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2187
+msgid "Avoid triggering the no-arguments-specified check."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2189
+msgid ""
+"Rewrite repository history even if the current repo does not look like a "
+"fresh clone.  History rewriting is irreversible (and includes immediate "
+"pruning of reflogs and old objects), so be cautious about using this "
+"flag."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2194
+msgid ""
+"Do a partial history rewrite, resulting in the mixture of old and new "
+"history.  This disables rewriting refs/remotes/origin/* to refs/heads/*, "
+"disables removing of the 'origin' remote, disables removing unexported "
+"refs, disables expiring the reflog, and disables the automatic post-"
+"filter gc.  Also, this modifies --tag-rename and --refname-callback "
+"options such that instead of replacing old refs with new refnames, it "
+"will instead create new refs and keep the old ones around.  Use with "
+"caution."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2204
+msgid "Do not run 'git gc' after filtering."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2211
+msgid ""
+"Limit history rewriting to the specified refs.  Implies --partial.  In "
+"addition to the normal caveats of --partial (mixing old and new history, "
+"no automatic remapping of refs/remotes/origin/* to refs/heads/*, etc.), "
+"this also may cause problems for pruning of degenerate empty merge "
+"commits when negative revisions are specified."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2219
+msgid ""
+"Do not change the repository.  Run `git fast-export` and filter its "
+"output, and save both the original and the filtered version for "
+"comparison.  This also disables rewriting commit messages due to not "
+"knowing new commit IDs and disables filtering of some empty commits due "
+"to inability to query the fast-import backend."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2226
+msgid ""
+"Print additional information about operations being performed and "
+"commands being run.  When used together with --dry-run, also show extra "
+"information about what would be run."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2248
+msgid ""
+"Instead of running `git fast-export` and filtering its output, filter the"
+" fast-export stream from stdin.    The stdin must be in the expected "
+"input format (e.g. it needs to include original-oid directives)."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2253
+msgid "Pass --quiet to other git commands called"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2259
+msgid ""
+"Error: --analyze is incompatible with --path* flags; it's a read-only "
+"operation."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2262
+msgid "Error: --analyze is incompatible with --stdin."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2277
+msgid "Error: --use-base-name and --path-rename are incompatible."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2292
+msgid "Error: need git >= 2.24.0"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2296
+msgid "Error: need git >= 2.23.0"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2309
+msgid "Error: need git >= 2.22.0"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2316
+#, python-format
+msgid "Error: could not parse --strip-blobs-bigger-than argument %s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2324
+msgid ""
+"Error: --file-info-callback is incompatible with --stdin, --blob-"
+"callback,\n"
+"and --filename-callback."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2385
+#, python-format
+msgid ""
+"Error: In %s, 'glob:' and '==>' are incompatible (renaming globs makes no"
+" sense)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2393
+msgid ""
+"Error: When rename directories, if OLDNAME and NEW_NAME are both non-"
+"empty and either ends with a slash then both must."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2416
+msgid "No arguments specified."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2545
+#, python-format
+msgid "Unhandled change type(s): %(change_type)s (in commit %(commit)s)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2564
+#, python-format
+msgid "Processed %d commits"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2574
+msgid "Nothing to analyze; repository is empty."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2631
+msgid "Error: rev-list|diff-tree pipeline failed; see above."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2638
+msgid "<present>"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2688
+msgid "Overall Statistics"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2689
+msgid "Number of commits"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2691
+msgid "Number of filenames"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2693
+msgid "Number of directories"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2695
+msgid "Number of file extensions"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2698
+msgid "Total unpacked size (bytes)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2700
+msgid "Total packed size (bytes)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2705
+msgid "Caveats"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2706
+msgid "Sizes"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2707
+msgid ""
+"\n"
+"        Packed size represents what size your repository would be if no\n"
+"        trees, commits, tags, or other metadata were included (though it "
+"may\n"
+"        fail to represent de-duplication; see below).  It also represents"
+" the\n"
+"        current packing, which may be suboptimal if you haven't gc'ed for"
+" a\n"
+"        while.\n"
+"\n"
+"        Unpacked size represents what size your repository would be if no"
+"\n"
+"        trees, commits, tags, or other metadata were included AND if no\n"
+"        files were packed; i.e., without delta-ing or compression.\n"
+"\n"
+"        Both unpacked and packed sizes can be slightly misleading.  "
+"Deleting\n"
+"        a blob from history not save as much space as the unpacked size,\n"
+"        because it is obviously normally stored in packed form.  Also,\n"
+"        deleting a blob from history may not save as much space as its "
+"packed\n"
+"        size either, because another blob could be stored as a delta "
+"against\n"
+"        that blob, so when you remove one blob another blob's packed size"
+" may\n"
+"        grow.\n"
+"\n"
+"        Also, the sum of the packed sizes can add up to more than the\n"
+"        repository size; if the same contents appeared in the repository "
+"in\n"
+"        multiple places, git will automatically de-dupe and store only "
+"one\n"
+"        copy, while the way sizes are added in this analysis adds the "
+"size\n"
+"        for each file path that has those contents.  Further, if a file "
+"is\n"
+"        ever reverted to a previous version's contents, the previous\n"
+"        version's size will be counted multiple times in this analysis, "
+"even\n"
+"        though git will only store it once.\n"
+"        "
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2736
+msgid "Deletions"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2737
+#, python-format
+msgid ""
+"\n"
+"        Whether a file is deleted is not a binary quality, since it can "
+"be\n"
+"        deleted on some branches but still exist in others.  Also, it "
+"might\n"
+"        exist in an old tag, but have been deleted in versions newer than"
+"\n"
+"        that.  More thorough tracking could be done, including looking at"
+"\n"
+"        merge commits where one side of history deleted and the other "
+"modified,\n"
+"        in order to give a more holistic picture of deletions.  However, "
+"that\n"
+"        algorithm would not only be more complex to implement, it'd also "
+"be\n"
+"        quite difficult to present and interpret by users.  Since "
+"--analyze\n"
+"        is just about getting a high-level rough picture of history, it "
+"instead\n"
+"        implements the simplistic rule that is good enough for 98% of "
+"cases:\n"
+"          A file is marked as deleted if the last commit in the fast-"
+"export\n"
+"          stream that mentions the file lists it as deleted.\n"
+"        This makes it dependent on topological ordering, but generally "
+"gives\n"
+"        the \"right\" answer.\n"
+"        "
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2754
+msgid "Renames"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2755
+msgid ""
+"\n"
+"        Renames share the same non-binary nature that deletions do, plus\n"
+"        additional challenges:\n"
+"          * If the renamed file is renamed again, instead of just two "
+"names for\n"
+"            a path you can have three or more.\n"
+"          * Rename pairs of the form (oldname, newname) that we consider "
+"to be\n"
+"            different names of the \"same file\" might only be valid over"
+" certain\n"
+"            commit ranges.  For example, if a new commit reintroduces a "
+"file\n"
+"            named oldname, then new versions of oldname aren't the \"same"
+" file\"\n"
+"            anymore.  We could try to portray this to the user, but it's "
+"easier\n"
+"            for the user to just break the pairing and only report "
+"unbroken\n"
+"            rename pairings to the user.\n"
+"          * The ability for users to rename files differently in "
+"different\n"
+"            branches means that our chains of renames will not "
+"necessarily be\n"
+"            linear but may branch out.\n"
+"        "
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2789
+msgid "Deleted directories by reverse size"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2791
+#: venv/Lib/site-packages/git_filter_repo.py:2803
+msgid "Format: unpacked size, packed size, date deleted, directory name\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2799
+#: venv/Lib/site-packages/git_filter_repo.py:2810
+msgid "<toplevel>"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2802
+msgid "All directories by reverse size"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2814
+msgid "Deleted extensions by reverse size"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2816
+#: venv/Lib/site-packages/git_filter_repo.py:2828
+msgid "Format: unpacked size, packed size, date deleted, extension name\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2824
+#: venv/Lib/site-packages/git_filter_repo.py:2835
+msgid "<no extension>"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2827
+msgid "All extensions by reverse size"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2839
+msgid "Deleted paths by reverse accumulated size"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2841
+msgid "Format: unpacked size, packed size, date deleted, path name(s)\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2853
+msgid "All paths by reverse accumulated size"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2855
+msgid "Format: unpacked size, packed size, date deleted, path name\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2867
+msgid "Files by sha and associated pathnames in reverse size"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2868
+msgid "Format: sha, unpacked size, packed size, filename(s) object stored as\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2900
+#, python-format
+msgid "Warning: Removing recursively: \"%s\""
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2903
+#, python-format
+msgid "Error: dir already exists (use --force to delete): \"%s\"\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2912
+#, python-format
+msgid "Writing reports to %s..."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:2915
+msgid "done.\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3216
+#, python-format
+msgid "Parsed %d commits"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3241
+#, python-format
+msgid "Error: Cannot pass a %s_callback to RepoFilter AND pass --%s-callback"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3246
+#, python-format
+msgid "Error: --%s-callback should have a return statement"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3297
+msgid ""
+"      Error: Cannot specify --sensitive-data-removal on a follow-up "
+"invocation\n"
+"             of git-filter-repo unless it was specified in previously "
+"runs."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3313
+msgid "Error: sensitive data removal is incompatible with --stdin"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3316
+msgid "Error: sensitive data removal is incompatible with --source and --target"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3399
+msgid ""
+"Note: when cloning local repositories, you need to pass\n"
+"      --no-local to git clone to avoid this issue.\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3402
+#, python-format
+msgid ""
+"Aborting: Refusing to destructively overwrite repo history since\n"
+"this does not look like a fresh clone.\n"
+"  (%s)\n"
+"%sPlease operate on a fresh clone instead.  If you want to proceed\n"
+"anyway, use --force."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3412
+msgid "GIT_DIR must be ."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3414
+msgid "GIT_DIR must be .git"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3427
+#, python-format
+msgid ""
+"Aborting: Cannot rewrite history on a case insensitive\n"
+"filesystem since you have refs that differ in case only:\n"
+"%s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3442
+#, python-format
+msgid ""
+"Aborting: Cannot rewrite history on a character normalizing\n"
+"filesystem since you have refs that differ in normalization:\n"
+"%s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3459
+msgid "expected freshly packed repo"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3465
+msgid "expected one remote, origin"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3475
+#, python-format
+msgid "expected at most one entry in the reflog for %s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3480
+msgid "has stashed changes"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3486
+msgid "you have uncommitted changes"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3488
+msgid "you have unstaged changes"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3498
+msgid "you have untracked changes"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3506
+#, python-format
+msgid "%s exists, but %s not found"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3509
+#, python-format
+msgid "%s does not match %s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3515
+msgid "you have multiple worktrees"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3526
+msgid "Repacking your repo and cleaning out old unneeded objects"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3925
+msgid "File renaming caused colliding pathnames!\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3926
+#, python-brace-format
+msgid "  Commit: {}\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:3927
+#, python-brace-format
+msgid "  Filename: {}"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4219
+#, python-format
+msgid "Failed loading %s from %s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4244
+#, python-format
+msgid "Failed to find %s to save to %s"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4312
+msgid "Rewrote the stash."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4415
+#: venv/Lib/site-packages/git_filter_repo.py:4530
+msgid "git update-ref failed; see above"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4445
+msgid ""
+"NOTICE: Fetching all refs from origin to make sure we rewrite\n"
+"        all history that may reference the sensitive data, via\n"
+"      "
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4452
+msgid "WARNING: Fetching all refs from origin failed"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4459
+#, python-format
+msgid ""
+"NOTICE: Removing 'origin' remote; see 'Why is my origin removed?'\n"
+"        in the manual if you want to push back there.\n"
+"        (was %s)"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4783
+#: venv/Lib/site-packages/git_filter_repo.py:4789
+msgid "old"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4783
+#: venv/Lib/site-packages/git_filter_repo.py:4789
+msgid "new"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4789
+msgid "ref"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4809
+msgid ""
+"\n"
+"          The following commits used to be merge commits but due to "
+"filtering\n"
+"          are now regular commits; they likely have suboptimal commit "
+"messages\n"
+"          (e.g. \"Merge branch next into master\").  Original commit hash"
+" on the\n"
+"          left, commit hash after filtering/rewriting on the right:\n"
+"          "
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4821
+msgid ""
+"\n"
+"          The following commits were filtered out, but referenced in "
+"another\n"
+"          commit message.  The reference to the now-nonexistent commit "
+"hash\n"
+"          (or a substring thereof) was left as-is in any commit messages:"
+"\n"
+"          "
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4831
+msgid "No filtering problems encountered.\n"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4834
+msgid ""
+"This file exists to allow you to filter again without --force,\n"
+"and to specify that metadata files should be updated instead\n"
+"of rewritten"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4898
+msgid "Error: fast-export failed; see above."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4908
+msgid "Error: fast-import failed; see above."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4922
+msgid "NOTE: Not running fast-import or cleaning up; --dry-run passed."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4924
+msgid "      Requested filtering can be seen by comparing:"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4927
+msgid "      Requested filtering can be seen at:"
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4947
+#, python-brace-format
+msgid "Completely finished after {:.2f} seconds."
+msgstr ""
+
+#: venv/Lib/site-packages/git_filter_repo.py:4955
+msgid " and LFS Objects Orphaned"
+msgstr ""
 
 #: venv/Lib/site-packages/click/_termui_impl.py:600
 #, python-brace-format
@@ -1109,4 +2313,68 @@ msgid "{len_type} values are required, but {len_value} was given."
 msgid_plural "{len_type} values are required, but {len_value} were given."
 msgstr[0] ""
 msgstr[1] ""
+
+#~ msgid "소개"
+#~ msgstr "Introduction"
+
+#~ msgid ""
+#~ "주식회사 유가는 의료기기 공급과 신기술 보급에 전문화된 "
+#~ "기업입니다. 병원의 요구에 맞춘 기기를 안정적으로 납품하고,"
+#~ " 새로운 의료기기가 출시되면 직접 찾아가 소개하며 현장에"
+#~ " 필요한 솔루션을 제공합니다."
+#~ msgstr ""
+#~ "UGA is a company specialized in "
+#~ "medical device supply and new technology"
+#~ " distribution. We reliably provide devices"
+#~ " tailored to hospital needs and "
+#~ "introduce new solutions directly to the"
+#~ " field."
+
+#~ msgid "환자와 고객의 삶의 질 향상을 위한 혁신적인 의료 솔루션을 제공합니다."
+#~ msgstr ""
+#~ "We provide innovative medical solutions "
+#~ "to improve the quality of life for"
+#~ " patients and customers."
+
+#~ msgid "글로벌 의료 시장에서 신뢰받는 리더로 자리매김하는 것을 목표로 합니다."
+#~ msgstr "Our goal is to become a trusted leader in the global medical market."
+
+#~ msgid "혁신 · 신뢰 · 협력을 핵심 가치로 삼아 함께 성장합니다."
+#~ msgstr "Innovation · Trust · Collaboration are our core values for growth."
+
+#~ msgid "연혁"
+#~ msgstr "History"
+
+#~ msgid "UGAMALL 온라인 플랫폼 공식 런칭"
+#~ msgstr "Official launch of UGAMALL online platform"
+
+#~ msgid "대형 병원 의료기기 납품 확대"
+#~ msgstr "Expanded medical device supply to major hospitals"
+
+#~ msgid "해외 제조사와 파트너십 체결"
+#~ msgstr "Partnership with overseas manufacturers"
+
+#~ msgid "UGA MEDICAL 설립"
+#~ msgstr "Founded UGA MEDICAL"
+
+#~ msgid "폼메디칼"
+#~ msgstr ""
+
+#~ msgid "혁신적인 의료기기 공급으로 병원과 의료진에게 신뢰받는 파트너"
+#~ msgstr ""
+#~ "A trusted partner supplying innovative "
+#~ "medical devices to hospitals and "
+#~ "professionals."
+
+#~ msgid "메디케이"
+#~ msgstr ""
+
+#~ msgid "첨단 기술 기반의 의료 솔루션을 제공하는 글로벌 파트너"
+#~ msgstr ""
+#~ "A global partner providing advanced "
+#~ "healthcare solutions based on cutting-"
+#~ "edge technology."
+
+#~ msgid "은 광고와 쇼핑을 결합한 플랫폼으로"
+#~ msgstr "is a platform that combines advertising and shopping."
 

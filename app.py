@@ -29,11 +29,8 @@ login_manager.login_view = "login"  # 로그인 안 된 상태에서 접근 시 
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ugahan582818@localhost:3306/ugamall'
-#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-#    'SQLALCHEMY_DATABASE_URI',
-#    'sqlite:///mydb.sqlite3'  # 로컬/비상용 폴백
-#)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ugahan582818@localhost:3306/ugamall'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL").replace("postgres://", "postgresql://")
 
 # 안정성 옵션(아이들 타임아웃 대비)
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
