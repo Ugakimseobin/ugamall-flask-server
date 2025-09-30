@@ -29,11 +29,11 @@ login_manager.login_view = "login"  # 로그인 안 된 상태에서 접근 시 
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ugahan582818@localhost:3306/ugamall'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-    'SQLALCHEMY_DATABASE_URI',
-    'sqlite:///mydb.sqlite3'  # 로컬/비상용 폴백
-)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ugahan582818@localhost:3306/ugamall'
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+#    'SQLALCHEMY_DATABASE_URI',
+#    'sqlite:///mydb.sqlite3'  # 로컬/비상용 폴백
+#)
 
 # 안정성 옵션(아이들 타임아웃 대비)
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
@@ -1128,7 +1128,7 @@ def admin_product_options(product_id):
 @app.route("/admin/products/<int:product_id>/variants", methods=["GET", "POST"])
 @login_required
 def admin_product_variants(product_id):
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         return redirect(url_for("home"))
 
     product = Product.query.get_or_404(product_id)
@@ -1162,7 +1162,7 @@ def admin_product_variants(product_id):
 @app.route("/admin/products/<int:product_id>/options/<int:option_id>/delete", methods=["POST"])
 @login_required
 def admin_delete_option(product_id, option_id):
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         return redirect(url_for("home"))
     option = ProductOption.query.get_or_404(option_id)
     db.session.delete(option)
@@ -1174,7 +1174,7 @@ def admin_delete_option(product_id, option_id):
 @app.route("/admin/products/<int:product_id>/variants/<int:variant_id>/delete", methods=["POST"])
 @login_required
 def admin_delete_variant(product_id, variant_id):
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         return redirect(url_for("home"))
     variant = ProductVariant.query.get_or_404(variant_id)
     db.session.delete(variant)
@@ -1186,7 +1186,7 @@ def admin_delete_variant(product_id, variant_id):
 @app.route("/admin/products/<int:product_id>/edit", methods=["GET", "POST"])
 @login_required
 def admin_edit_product(product_id):
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         flash("관리자만 접근할 수 있습니다.", "error")
         return redirect(url_for("home"))
 
@@ -1225,7 +1225,7 @@ def admin_edit_product(product_id):
 @app.route("/admin/products/<int:product_id>/delete", methods=["POST"])
 @login_required
 def admin_delete_product(product_id):
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         flash("관리자만 접근할 수 있습니다.", "error")
         return redirect(url_for("index"))
 
@@ -1243,7 +1243,7 @@ def admin_delete_product(product_id):
 @app.route("/admin/videos")
 @login_required
 def admin_videos():
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         return redirect(url_for("home"))
     videos = Video.query.all()
     return render_template("admin/videos.html", videos=videos)
@@ -1251,7 +1251,7 @@ def admin_videos():
 @app.route("/admin/videos/add", methods=["GET", "POST"])
 @login_required
 def admin_add_video():
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         return redirect(url_for("home"))
     if request.method == "POST":
         title = request.form["title"]
@@ -1304,7 +1304,7 @@ def admin_delete_video(video_id):
 @app.route("/admin/users", methods=["GET", "POST"])
 @login_required
 def admin_users():
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         flash("관리자만 접근할 수 있습니다.", "error")
         return redirect(url_for("index"))
 
@@ -1341,7 +1341,7 @@ def admin_users():
 @app.route("/admin/users/<int:user_id>/make_admin")
 @login_required
 def make_admin(user_id):
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         return redirect(url_for("home"))
     user = User.query.get(user_id)
     if user:
@@ -1353,7 +1353,7 @@ def make_admin(user_id):
 @app.route("/admin/orders", methods=["GET", "POST"])
 @login_required
 def admin_orders():
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
 
@@ -1424,7 +1424,7 @@ def admin_orders():
 @app.post("/admin/orders/<int:order_id>/cancel")
 @login_required
 def admin_cancel_order(order_id):
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
 
@@ -1486,7 +1486,7 @@ def admin_cancel_order(order_id):
 @login_required
 def admin_inquiries():
     # 👉 관리자 권한 체크 (원하시면 조건 강화 가능)
-    if not session.get("is_admin"):
+    if not current_user.is_admin:
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
 

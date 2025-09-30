@@ -42,6 +42,7 @@
 <!-- 소개 -->
 <section id="intro" class="py-20 bg-gray-50">
   <div class="max-w-6xl mx-auto px-6 space-y-24">
+    <h2 class="text-3xl font-bold text-center mb-16">소개</h2>
     <div class="grid md:grid-cols-2 gap-10 items-center reveal">
       <img src="{{ url_for('static', filename='images/intro1.jpg') }}" class="w-full h-64 object-cover rounded-xl shadow-lg" alt="혁신 아이디어">
       <div>
@@ -134,7 +135,10 @@
 </section>
 
 <!-- 맨 위로 -->
-<button id="backToTop" class="hidden fixed bottom-6 right-6 bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition">↑</button>
+<button id="backToTop" 
+  class="hidden fixed bottom-6 right-6 bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition hidden md:block">
+  ↑
+</button>
 
 <!-- Scripts -->
 <script>
