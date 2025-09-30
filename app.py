@@ -1382,14 +1382,19 @@ def admin_orders():
 
         order = Order.query.get(order_id)
         if order:
-            # ✅ 읽음 처리
             if not order.is_read:
-                order.is_read = True
+                order.is_read = True   # ✅ 읽음 처리
             if new_status:
                 order.status = new_status
             db.session.commit()
             flash(f"주문 {order.id} 상태가 '{new_status}'로 변경되었습니다.", "success")
         return redirect(url_for("admin_orders"))
+
+    orders = Order.query.order_by(Order.created_at.desc()).all()
+    for o in orders:
+        if not o.is_read:
+            o.is_read = True          # ✅ 목록 들어온 순간 읽음 처리
+    db.session.commit()
 
     # 주문 + 아이템 + 상품 + 결제 + 유저까지 미리 로딩(N+1 방지)
     orders = (
@@ -1526,6 +1531,12 @@ def admin_inquiries():
             flash("답변이 등록되었습니다.", "success")
 
         return redirect(url_for("admin_inquiries"))
+    
+    inquiries = Inquiry.query.order_by(Inquiry.created_at.desc()).all()
+    for iq in inquiries:
+        if not iq.is_read:
+            iq.is_read = True           # ✅ 목록 들어온 순간 읽음 처리
+    db.session.commit()
 
     inquiries = Inquiry.query.order_by(Inquiry.created_at.desc()).all()
     return render_template("admin_inquiries.html", inquiries=inquiries)
