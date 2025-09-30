@@ -59,7 +59,14 @@
         <a href="/contact" class="hover:text-indigo-600">{{ _("문의") }}</a>
         {% if current_user.is_authenticated %}
           {% if current_user.is_admin %}
-            <a href="{{ url_for('admin_dashboard') }}" class="hover:text-red-600 font-bold">관리자</a>
+            <a href="{{ url_for('admin_dashboard') }}" class="relative hover:text-red-600 font-bold">
+              관리자
+              {% if (pending_orders + new_inquiries_count) > 0 %}
+                <span class="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                  {{ pending_orders + new_inquiries_count }}
+                </span>
+              {% endif %}
+            </a>
           {% else %}
             <a href="{{ url_for('mypage') }}" class="hover:text-blue-600 font-bold">{{ _("마이페이지") }}</a>
           {% endif %}

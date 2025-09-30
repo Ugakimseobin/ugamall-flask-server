@@ -299,6 +299,14 @@ babel = Babel(app, locale_selector=select_locale)
 @app.context_processor
 def inject_get_locale():
     return {"get_locale": select_locale}
+@app.context_processor
+def inject_admin_alerts():
+    if current_user.is_authenticated and current_user.is_admin:
+        return dict(
+            pending_orders=Order.query.filter_by(status="pending").count(),
+            new_inquiries_count=Inquiry.query.filter_by(is_checked=False).count()
+        )
+    return {}
 # ----------------------------
 #-----------------------------
 def _get_iamport_token():
