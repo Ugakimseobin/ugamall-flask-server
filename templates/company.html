@@ -3,9 +3,10 @@
 
 <!-- Hero -->
 <section id="hero" class="relative h-80 md:h-[28rem] flex items-center justify-center text-white overflow-hidden">
-  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+  <!--<video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
     <source src="{{ url_for('static', filename='videos/ocean.mp4') }}" type="video/mp4">
-  </video>
+  </video>-->
+  <img src="{{ url_for('static', filename='images/company.jpg') }}" class="absolute inset-0 w-full h-full object-cover">
   <div class="absolute inset-0 bg-black/45"></div>
   <div class="relative z-10 text-center">
     <h1 class="text-3xl md:text-5xl font-extrabold drop-shadow">{{ _("유가에 대해") }}</h1>
