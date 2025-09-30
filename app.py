@@ -1373,10 +1373,6 @@ def admin_orders():
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
 
-    if not order.is_read:
-        order.is_read = True
-        db.session.commit()
-
     # 상태 변경
     if request.method == "POST":
         order_id = request.form.get("order_id", type=int)
@@ -1385,8 +1381,12 @@ def admin_orders():
             new_status = "canceled"
 
         order = Order.query.get(order_id)
-        if order and new_status:
-            order.status = new_status
+        if order:
+            # ✅ 읽음 처리
+            if not order.is_read:
+                order.is_read = True
+            if new_status:
+                order.status = new_status
             db.session.commit()
             flash(f"주문 {order.id} 상태가 '{new_status}'로 변경되었습니다.", "success")
         return redirect(url_for("admin_orders"))
@@ -1509,9 +1509,6 @@ def admin_inquiries():
     if not current_user.is_admin:
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
-    if not inquiry.is_read:
-        inquiry.is_read = True
-        db.session.commit()
 
     if request.method == "POST":
         inquiry_id = request.form.get("inquiry_id")
@@ -1519,6 +1516,9 @@ def admin_inquiries():
 
         inquiry = Inquiry.query.get(inquiry_id)
         if inquiry:
+            # ✅ 답변 시 읽음 처리
+            if not inquiry.is_read:
+                inquiry.is_read = True
             inquiry.answer = answer
             inquiry.status = "답변 완료"
             inquiry.answered_at = datetime.now(KST)
@@ -1629,4 +1629,5 @@ with app.app_context():
     print("✅ DB schema created (or already exists)")
 
 if __name__=="__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render가 주입한 PORT 사용
+    app.run(host="0.0.0.0", port=port)
