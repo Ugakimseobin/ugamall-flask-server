@@ -1575,16 +1575,18 @@ def autocomplete():
         results = [p.name for p in Product.query.filter(Product.name.contains(q)).all()]
     return jsonify(results)
 
+@app.route("/make_admin_once")
+def make_admin_once():
+    user = User.query.filter_by(email="admin@ugamall.com").first()
+    if user and not user.is_admin:
+        user.is_admin = True
+        db.session.commit()
+        return "✅ 관리자 권한 부여 완료"
+    return "ℹ️ 이미 관리자거나, 해당 유저가 없습니다."
+
 with app.app_context():
     db.create_all()
     print("✅ DB schema created (or already exists)")
-    user = User.query.filter_by(email="admin@ugamall.com").first()
-    if user:
-        user.is_admin = True   # 관리자 권한 부여
-        db.session.commit()
-        print("✅ 관리자 계정 업데이트 완료")
-    else:
-        print("❌ 해당 이메일을 가진 유저가 없습니다.")
 
 if __name__=="__main__":
     app.run(debug=True)
