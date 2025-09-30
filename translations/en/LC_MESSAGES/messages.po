@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-09-30 10:00+0900\n"
+"POT-Creation-Date: 2025-09-30 17:21+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -22,59 +22,59 @@ msgstr ""
 msgid "유가몰"
 msgstr "UGAMall"
 
-#: templates/base.html:46 templates/base.html:112
+#: templates/base.html:46 templates/base.html:119
 msgid "상품 검색"
 msgstr "Product search"
 
-#: templates/base.html:57 templates/base.html:120 templates/base.html:189
+#: templates/base.html:57 templates/base.html:127 templates/base.html:196
 msgid "회사소개"
 msgstr "Introduction"
 
-#: templates/base.html:58 templates/base.html:121
+#: templates/base.html:58 templates/base.html:128
 msgid "제품"
 msgstr "product"
 
-#: templates/base.html:59 templates/base.html:122
+#: templates/base.html:59 templates/base.html:129
 #: templates/product_detail.html:69
 msgid "문의"
 msgstr "Contact us"
 
-#: templates/base.html:64 templates/base.html:127 templates/mypage.html:6
+#: templates/base.html:71 templates/base.html:134 templates/mypage.html:6
 #: templates/order_complete.html:28
 msgid "마이페이지"
 msgstr "My Page"
 
-#: templates/base.html:66 templates/base.html:129
+#: templates/base.html:73 templates/base.html:136
 msgid "로그아웃"
 msgstr "Sign out"
 
 #: templates/auth/login.html:5 templates/auth/login.html:26
-#: templates/base.html:68 templates/base.html:131
+#: templates/base.html:75 templates/base.html:138
 msgid "로그인"
 msgstr "Sign in"
 
-#: templates/base.html:135
+#: templates/base.html:142
 msgid "장바구니"
 msgstr "Add to Cart"
 
-#: templates/base.html:139
+#: templates/base.html:146
 msgid "언어"
 msgstr ""
 
-#: templates/base.html:186
+#: templates/base.html:193
 msgid "바로가기"
 msgstr "Go to menu"
 
-#: templates/base.html:188
+#: templates/base.html:195
 msgid "상품"
 msgstr "Product Name"
 
-#: templates/base.html:190 templates/contact.html:15 templates/contact.html:42
+#: templates/base.html:197 templates/contact.html:16 templates/contact.html:43
 #: templates/index.html:99
 msgid "문의하기"
 msgstr "Contact us"
 
-#: templates/base.html:195
+#: templates/base.html:202
 msgid "부산광역시 동래구 안남로 78-3"
 msgstr "78-3, Annam-ro, Dongnae-gu, Busan, Republic of Korea"
 
@@ -125,8 +125,8 @@ msgstr "Detailed Address"
 
 #: templates/auth/login.html:11 templates/auth/register_info.html:11
 #: templates/auth/register_info.html:95 templates/checkout.html:96
-#: templates/checkout.html:97 templates/contact.html:20
-#: templates/contact.html:52 templates/guest_orders.html:5
+#: templates/checkout.html:97 templates/contact.html:21
+#: templates/contact.html:53 templates/guest_orders.html:5
 #: templates/guest_orders_search.html:8 templates/mypage.html:93
 msgid "이메일"
 msgstr "Email"
@@ -167,63 +167,118 @@ msgstr "Delete request failed"
 msgid "삭제 실패"
 msgstr "Deletion failed"
 
-#: templates/company.html:11
+#: templates/company.html:12
 msgid "유가에 대해"
 msgstr "About UGA"
 
-#: templates/company.html:12
+#: templates/company.html:13
 msgid "혁신 · 신뢰 · 협력"
-msgstr ""
+msgstr "innovation · Trust · cooperation"
 
-#: templates/company.html:127
+#: templates/company.html:30 templates/company.html:46
+#, fuzzy
+msgid "소개"
+msgstr "Introduction"
+
+#: templates/company.html:34
+msgid "연혁"
+msgstr "History"
+
+#: templates/company.html:38
+msgid "파트너"
+msgstr "partner"
+
+#: templates/company.html:50
+msgid "고객 중심"
+msgstr "Customer First"
+
+#: templates/company.html:51
+msgid ""
+"모든 제품과 서비스는 고객의 건강과 편의를 최우선으로 합니다.\n"
+"쉽고 편리한 쇼핑 경험을 제공하고, 구매 후에도 만족할 수 있도록 지속적인 관리와 지원을 약속합니다."
+msgstr "All products and services prioritize customer health and convenience.\n"
+"We provide an easy and convenient shopping experience, and promise ongoing management and support to ensure your satisfaction even after your purchase."
+
+#: templates/company.html:59
+msgid ""
+"엄격한 검증을 거친 정품 의료·건강 제품만을 취급합니다.\n"
+"투명한 정보 제공과 철저한 품질 관리로 고객이 안심하고 사용할 수 있는 쇼핑몰이 되겠습니다."
+msgstr "We only handle genuine medical and health products that have passed strict verification.\n"
+"We will become a shopping mall where customers can use our products with confidence by providing transparent information and thorough quality control."
+
+#: templates/company.html:69
+msgid ""
+"최신 기술과 데이터를 기반으로 개인 맞춤형 의료·헬스케어 솔루션을 제공합니다.\n"
+"단순한 판매를 넘어, 고객의 건강한 삶을 위한 스마트 헬스 플랫폼으로 발전해 나갑니다"
+msgstr ""
+"We provide personalized medical and healthcare solutions based on the latest technology and data.\n"
+"Beyond simple sales, we are evolving into a smart health platform that helps customers lead healthier lives."
+
+#: templates/company.html:91
+msgid "UGAMALL 온라인 플랫폼 공식 런칭"
+msgstr "UGAMALL Official launch of online platform"
+
+#: templates/company.html:101
+msgid "신규 의료기기 보급 확대 및 파트너십 체결"
+msgstr "Expanding the supply of new medical devices and establishing partnerships"
+
+#: templates/company.html:111
+msgid "관절 치료/재활 라인업 강화"
+msgstr "Strengthening the joint treatment/rehabilitation lineup"
+
+#: templates/company.html:121
+msgid "법인 설립"
+msgstr "Establishment of a corporation"
+
+#: templates/company.html:131
 msgid "함께하는 사람들"
 msgstr "Our Partners"
 
-#: templates/company.html:128
+#: templates/company.html:132
 msgid "국내외 다양한 파트너사와 함께 헬스케어의 미래를 만들어갑니다."
 msgstr ""
 "We shape the future of healthcare with diverse domestic and global "
 "partners."
 
-#: templates/contact.html:10
+#: templates/contact.html:11
 msgid "우리에게"
 msgstr "To us"
 
-#: templates/contact.html:23
+#: templates/contact.html:24
 msgid "답변 받으실 이메일 입력"
 msgstr "Enter your email address to receive a reply"
 
-#: templates/contact.html:28 templates/index.html:119
+#: templates/contact.html:29 templates/index.html:119
 msgid "제목"
 msgstr "Title"
 
-#: templates/contact.html:31
+#: templates/contact.html:32
 msgid "문의 제목"
 msgstr "Inquiry History"
 
-#: templates/contact.html:35 templates/index.html:123
+#: templates/contact.html:36 templates/index.html:123
 msgid "내용"
 msgstr "Contents"
 
-#: templates/contact.html:38
+#: templates/contact.html:39
 msgid "문의 내용을 입력하세요"
 msgstr "Please enter your inquiry details"
 
-#: templates/contact.html:48
+#: templates/contact.html:49
 msgid "오는 길"
 msgstr "Directions"
 
 #: templates/auth/register_info.html:34 templates/auth/register_info.html:123
-#: templates/contact.html:50 templates/mypage.html:101
+#: templates/contact.html:51 templates/mypage.html:101
 #: templates/order_complete.html:10
 msgid "주소"
 msgstr "Address"
 
-#: templates/contact.html:50
+#: templates/contact.html:51
 msgid "부산광역시 동래구 안남로 78-3 (더 평안빌딩 2층)"
 msgstr "78-3, Annam-ro, Dongnae-gu, Busan, Republic of Korea"
 
-#: templates/contact.html:51
+#: templates/contact.html:52
 msgid "전화"
 msgstr "Phone Number"
 
@@ -339,9 +394,11 @@ msgid ""
 "일상에서 필요한 제품을 간편하게 만나보세요.\n"
 "믿을 수 있는 품질, 합리적인 가격, 빠른 배송으로 여러분의 건강한 생활을 응원합니다 "
 msgstr ""
-"Ugamall is a medical supplies specialty store that anyone can conveniently use.\n"
+"Ugamall is a medical supplies specialty store that anyone can "
+"conveniently use.\n"
 "Easily find the products you need in your daily life.\n"
-"We support your healthy lifestyle with reliable quality, reasonable prices, and fast delivery."
+"We support your healthy lifestyle with reliable quality, reasonable "
+"prices, and fast delivery."
 
 #: templates/index.html:105
 msgid "이메일 (필수)"

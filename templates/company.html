@@ -27,15 +27,15 @@
     <!-- 링크들 -->
     <a href="#intro"    class="tl block relative py-4 md:py-8 flex items-center">
       <span class="dot"></span>
-      <span class="label">소개</span>
+      <span class="label">{{ _("소개") }}</span>
     </a>
     <a href="#history"  class="tl block relative py-4 md:py-8 flex items-center">
       <span class="dot"></span>
-      <span class="label">연혁</span>
+      <span class="label">{{ _("연혁") }}</span>
     </a>
     <a href="#partners" class="tl block relative py-4 md:py-8 flex items-center">
       <span class="dot"></span>
-      <span class="label">파트너</span>
+      <span class="label">{{ _("파트너") }}</span>
     </a>
   </div>
 </nav>
@@ -43,28 +43,31 @@
 <!-- 소개 -->
 <section id="intro" class="py-20 bg-gray-50">
   <div class="max-w-6xl mx-auto px-6 space-y-24">
-    <h2 class="text-3xl font-bold text-center mb-16">소개</h2>
+    <h2 class="text-3xl font-bold text-center mb-16">{{ _("소개") }}</h2>
     <div class="grid md:grid-cols-2 gap-10 items-center reveal">
-      <img src="{{ url_for('static', filename='images/intro1.jpg') }}" class="w-full h-64 object-cover rounded-xl shadow-lg" alt="혁신 아이디어">
+      <img src="{{ url_for('static', filename='images/intro1.jpg') }}" class="w-full h-80 object-cover rounded-xl shadow-lg" alt="혁신 아이디어">
       <div>
-        <h3 class="text-3xl font-bold text-indigo-700 mb-4">인재 경영</h3>
-        <p class="text-gray-600 leading-relaxed text-lg">열정과 능력을 바탕으로 회사와 함께 성장하는 인재와<br>함께하는 미래 지향적인 기업입니다.</p>
+        <h3 class="text-3xl font-bold text-indigo-700 mb-4">{{ _("고객 중심") }}</h3>
+        <p class="text-gray-600 leading-relaxed text-lg whitespace-pre-line">{{ _("모든 제품과 서비스는 고객의 건강과 편의를 최우선으로 합니다.
+쉽고 편리한 쇼핑 경험을 제공하고, 구매 후에도 만족할 수 있도록 지속적인 관리와 지원을 약속합니다.") }}</p>
       </div>
     </div>
 
     <div class="grid md:grid-cols-2 gap-10 items-center reveal">
       <div class="order-2 md:order-1">
-        <h3 class="text-3xl font-bold text-indigo-700 mb-4">전략적 노력</h3>
-        <p class="text-gray-600 leading-relaxed text-lg">항상 끊임없는 시도와 도전으로 고객과 함께<br>가치를 키워가는 기업이 되고자 합니다.</p>
+        <h3 class="text-3xl font-bold text-indigo-700 mb-4">{{ _("") }}신뢰와 품질</h3>
+        <p class="text-gray-600 leading-relaxed text-lg whitespace-pre-line">{{ _("엄격한 검증을 거친 정품 의료·건강 제품만을 취급합니다.
+투명한 정보 제공과 철저한 품질 관리로 고객이 안심하고 사용할 수 있는 쇼핑몰이 되겠습니다.") }}</p>
       </div>
-      <img src="{{ url_for('static', filename='images/intro2.jpg') }}" class="order-1 md:order-2 w-full h-64 object-cover rounded-xl shadow-lg" alt="노트북과 기술">
+      <img src="{{ url_for('static', filename='images/intro2.jpg') }}" class="order-1 md:order-2 w-full h-80 object-cover rounded-xl shadow-lg" alt="노트북과 기술">
     </div>
 
     <div class="grid md:grid-cols-2 gap-10 items-center reveal">
-      <img src="{{ url_for('static', filename='images/intro3.jpg') }}" class="w-full h-64 object-cover rounded-xl shadow-lg" alt="파트너십">
+      <img src="{{ url_for('static', filename='images/intro3.jpg') }}" class="w-full h-80 object-cover rounded-xl shadow-lg" alt="파트너십">
       <div>
-        <h3 class="text-3xl font-bold text-indigo-700 mb-4">파트너십</h3>
-        <p class="text-gray-600 leading-relaxed text-lg">국내외 다양한 파트너사와 협력하며<br>헬스케어 산업의 미래를 만들어갑니다.</p>
+        <h3 class="text-3xl font-bold text-indigo-700 mb-4">{{ _("") }}지속적인 혁신</h3>
+        <p class="text-gray-600 leading-relaxed text-lg whitespace-pre-line">{{ _("최신 기술과 데이터를 기반으로 개인 맞춤형 의료·헬스케어 솔루션을 제공합니다.
+단순한 판매를 넘어, 고객의 건강한 삶을 위한 스마트 헬스 플랫폼으로 발전해 나갑니다") }}.</p>
       </div>
     </div>
   </div>
@@ -73,7 +76,7 @@
 <!-- 연혁 -->
 <section id="history" class="bg-gray-50 py-20">
   <div class="max-w-5xl mx-auto px-6">
-    <h2 class="text-3xl font-bold text-center mb-16">연혁</h2>
+    <h2 class="text-3xl font-bold text-center mb-16">{{ _("") }}연혁</h2>
 
     <div class="relative">
       <!-- 중앙 라인 -->
@@ -85,7 +88,7 @@
         <div class="z-10"><div class="w-3 h-3 bg-indigo-600 rounded-full shadow"></div></div>
         <div class="w-5/12 bg-white shadow-md p-6 rounded-lg">
           <h3 class="text-lg font-bold text-indigo-600">2025</h3>
-          <p class="text-gray-600">UGAMALL 온라인 플랫폼 공식 런칭</p>
+          <p class="text-gray-600">{{ _("UGAMALL 온라인 플랫폼 공식 런칭") }}</p>
         </div>
       </div>
 
@@ -95,7 +98,7 @@
         <div class="z-10"><div class="w-3 h-3 bg-indigo-600 rounded-full shadow"></div></div>
         <div class="w-5/12 bg-white shadow-md p-6 rounded-lg text-right">
           <h3 class="text-lg font-bold text-indigo-600">2023</h3>
-          <p class="text-gray-600">신규 의료기기 보급 확대 및 파트너십 체결</p>
+          <p class="text-gray-600">{{ _("신규 의료기기 보급 확대 및 파트너십 체결") }}</p>
         </div>
       </div>
 
@@ -105,7 +108,7 @@
         <div class="z-10"><div class="w-3 h-3 bg-indigo-600 rounded-full shadow"></div></div>
         <div class="w-5/12 bg-white shadow-md p-6 rounded-lg">
           <h3 class="text-lg font-bold text-indigo-600">2020</h3>
-          <p class="text-gray-600">관절 치료/재활 라인업 강화</p>
+          <p class="text-gray-600">{{ _("관절 치료/재활 라인업 강화") }}</p>
         </div>
       </div>
 
@@ -115,7 +118,7 @@
         <div class="z-10"><div class="w-3 h-3 bg-indigo-600 rounded-full shadow"></div></div>
         <div class="w-5/12 bg-white shadow-md p-6 rounded-lg text-right">
           <h3 class="text-lg font-bold text-indigo-600">2018</h3>
-          <p class="text-gray-600">법인 설립</p>
+          <p class="text-gray-600">{{ _("법인 설립") }}</p>
         </div>
       </div>
     </div>
