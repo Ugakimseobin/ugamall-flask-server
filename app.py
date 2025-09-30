@@ -161,6 +161,7 @@ class Inquiry(db.Model):
 
     answer = db.Column(db.Text, nullable=True)
     answered_at = db.Column(db.DateTime, nullable=True)
+    is_checked = db.Column(db.Boolean, default=False)
 
     user = db.relationship("User", backref="inquiries")
 
