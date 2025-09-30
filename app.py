@@ -1338,8 +1338,6 @@ def admin_users():
 @app.route("/admin/users/<int:user_id>/make_admin")
 @login_required
 def make_admin(user_id):
-    if not current_user.is_admin:
-        return redirect(url_for("home"))
     user = User.query.get(user_id)
     if user:
         user.is_admin = True
