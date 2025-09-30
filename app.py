@@ -1582,17 +1582,19 @@ def db_tables():
     except Exception as e:
         return jsonify({"error": str(e)})
 
-@app.route("/make_admin_once")
-def make_admin_once():
-    try:
-        user = User.query.filter_by(email="admin@ugamall.com").first()
-        if user and not user.is_admin:
+@app.route("/make_admin_page", methods=["GET", "POST"])
+def make_admin_page():
+    message = None
+    if request.method == "POST":
+        email = request.form.get("email")
+        user = User.query.filter_by(email=email).first()
+        if user:
             user.is_admin = True
             db.session.commit()
-            return jsonify({"status": "success", "message": "관리자 권한 부여 완료"})
-        return jsonify({"status": "info", "message": "이미 관리자거나 해당 유저가 없습니다."})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
+            message = f"{email} → 관리자 권한 부여 완료 ✅"
+        else:
+            message = f"{email} 계정을 찾을 수 없습니다 ❌"
+    return render_template("make_admin.html", message=message)
 
 with app.app_context():
     db.create_all()

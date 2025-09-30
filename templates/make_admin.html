@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded">
+  <h2 class="text-xl font-bold mb-4">관리자 권한 부여 페이지</h2>
+
+  {% if message %}
+    <div class="mb-4 p-2 bg-gray-100 border">{{ message }}</div>
+  {% endif %}
+
+  <form method="post">
+    <label class="block mb-2 font-semibold">이메일 입력</label>
+    <input type="email" name="email" placeholder="admin@ugamall.com"
+           class="w-full border p-2 rounded mb-4" required>
+
+    <button type="submit"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      관리자 권한 부여
+    </button>
+  </form>
+</div>
+{% endblock %}
