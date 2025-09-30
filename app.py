@@ -1577,11 +1577,11 @@ def autocomplete():
 @app.route("/db_tables")
 def db_tables():
     try:
-        # users 테이블이 있다면 확인
-        tables = db.engine.table_names()
-        return f"현재 DB에 존재하는 테이블: {tables}"
+        tables = db.inspect(db.engine).get_table_names()
+        return jsonify({"tables": tables})
     except Exception as e:
-        return f"확인 실패: {e}"
+        return jsonify({"error": str(e)})
+
 @app.route("/make_admin_once")
 def make_admin_once():
     try:
@@ -1589,10 +1589,10 @@ def make_admin_once():
         if user and not user.is_admin:
             user.is_admin = True
             db.session.commit()
-            return "관리자 권한 부여 완료"
-        return "이미 관리자거나 해당 유저가 없습니다."
+            return jsonify({"status": "success", "message": "관리자 권한 부여 완료"})
+        return jsonify({"status": "info", "message": "이미 관리자거나 해당 유저가 없습니다."})
     except Exception as e:
-        return f"오류 발생: {e}"
+        return jsonify({"status": "error", "message": str(e)})
 
 with app.app_context():
     db.create_all()
