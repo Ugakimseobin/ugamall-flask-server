@@ -1578,14 +1578,13 @@ def autocomplete():
 with app.app_context():
     db.create_all()
     print("✅ DB schema created (or already exists)")
-    admin = User(
-        email="admin@ugamall.com",
-        password=generate_password_hash("1234"),
-        is_admin=True,
-        name="관리자"
-    )
-    db.session.add(admin)
-    db.session.commit()
+    user = User.query.filter_by(email="admin@ugamall.com").first()
+    if user:
+        user.is_admin = True   # 관리자 권한 부여
+        db.session.commit()
+        print("✅ 관리자 계정 업데이트 완료")
+    else:
+        print("❌ 해당 이메일을 가진 유저가 없습니다.")
 
 if __name__=="__main__":
     app.run(debug=True)
