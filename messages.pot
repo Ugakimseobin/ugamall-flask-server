@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-09-30 17:21+0900\n"
+"POT-Creation-Date: 2025-09-30 17:33+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -178,7 +178,7 @@ msgstr ""
 msgid "소개"
 msgstr ""
 
-#: templates/company.html:34
+#: templates/company.html:34 templates/company.html:79
 msgid "연혁"
 msgstr ""
 
@@ -196,10 +196,18 @@ msgid ""
 "쉽고 편리한 쇼핑 경험을 제공하고, 구매 후에도 만족할 수 있도록 지속적인 관리와 지원을 약속합니다."
 msgstr ""
 
+#: templates/company.html:58
+msgid "신뢰와 품질"
+msgstr ""
+
 #: templates/company.html:59
 msgid ""
 "엄격한 검증을 거친 정품 의료·건강 제품만을 취급합니다.\n"
 "투명한 정보 제공과 철저한 품질 관리로 고객이 안심하고 사용할 수 있는 쇼핑몰이 되겠습니다."
+msgstr ""
+
+#: templates/company.html:68
+msgid "지속적인 혁신"
 msgstr ""
 
 #: templates/company.html:69

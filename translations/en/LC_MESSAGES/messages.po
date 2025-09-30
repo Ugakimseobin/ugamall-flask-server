@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-09-30 17:21+0900\n"
+"POT-Creation-Date: 2025-09-30 17:33+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -180,7 +180,7 @@ msgstr "innovation · Trust · cooperation"
 msgid "소개"
 msgstr "Introduction"
 
-#: templates/company.html:34
+#: templates/company.html:34 templates/company.html:79
 msgid "연혁"
 msgstr "History"
 
@@ -196,23 +196,40 @@ msgstr "Customer First"
 msgid ""
 "모든 제품과 서비스는 고객의 건강과 편의를 최우선으로 합니다.\n"
 "쉽고 편리한 쇼핑 경험을 제공하고, 구매 후에도 만족할 수 있도록 지속적인 관리와 지원을 약속합니다."
-msgstr "All products and services prioritize customer health and convenience.\n"
-"We provide an easy and convenient shopping experience, and promise ongoing management and support to ensure your satisfaction even after your purchase."
+msgstr ""
+"All products and services prioritize customer health and convenience.\n"
+"We provide an easy and convenient shopping experience, and promise "
+"ongoing management and support to ensure your satisfaction even after "
+"your purchase."
+
+#: templates/company.html:58
+msgid "신뢰와 품질"
+msgstr "Trust & Quality"
 
 #: templates/company.html:59
 msgid ""
 "엄격한 검증을 거친 정품 의료·건강 제품만을 취급합니다.\n"
 "투명한 정보 제공과 철저한 품질 관리로 고객이 안심하고 사용할 수 있는 쇼핑몰이 되겠습니다."
-msgstr "We only handle genuine medical and health products that have passed strict verification.\n"
-"We will become a shopping mall where customers can use our products with confidence by providing transparent information and thorough quality control."
+msgstr ""
+"We only handle genuine medical and health products that have passed "
+"strict verification.\n"
+"We will become a shopping mall where customers can use our products with "
+"confidence by providing transparent information and thorough quality "
+"control."
+
+#: templates/company.html:68
+msgid "지속적인 혁신"
+msgstr "Innovation for the Future"
 
 #: templates/company.html:69
 msgid ""
 "최신 기술과 데이터를 기반으로 개인 맞춤형 의료·헬스케어 솔루션을 제공합니다.\n"
 "단순한 판매를 넘어, 고객의 건강한 삶을 위한 스마트 헬스 플랫폼으로 발전해 나갑니다"
 msgstr ""
-"We provide personalized medical and healthcare solutions based on the latest technology and data.\n"
-"Beyond simple sales, we are evolving into a smart health platform that helps customers lead healthier lives."
+"We provide personalized medical and healthcare solutions based on the "
+"latest technology and data.\n"
+"Beyond simple sales, we are evolving into a smart health platform that "
+"helps customers lead healthier lives."
 
 #: templates/company.html:91
 msgid "UGAMALL 온라인 플랫폼 공식 런칭"
