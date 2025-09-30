@@ -107,7 +107,7 @@ class Product(db.Model):
     __tablename__ = "product"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
-    base_price = db.Column(db.Float, nullable=False, default=0)
+    base_price = db.Column(db.Integer, nullable=False, default=0)
     description = db.Column(db.Text)
     image = db.Column(db.String(255))
     category = db.Column(db.String(50))
@@ -132,7 +132,7 @@ class ProductVariant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
     sku = db.Column(db.String(100), unique=True)
-    price = db.Column(db.Float, nullable=False, default=0)
+    price = db.Column(db.Integer, nullable=False, default=0)
     stock = db.Column(db.Integer, nullable=False, default=0)
     options = db.Column(JSON, nullable=False)  # {"사이즈": "250", "색상": "파랑"}
 
@@ -222,7 +222,7 @@ class OrderItem(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
     variant_id = db.Column(db.Integer, db.ForeignKey("product_variants.id"), nullable=False)
     quantity = db.Column(db.Integer, default=1)
-    price = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
 
     order = db.relationship("Order", back_populates="items")
     variant = db.relationship("ProductVariant", back_populates="order_items")
