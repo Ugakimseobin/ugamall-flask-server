@@ -15,12 +15,13 @@
     <table class="w-full border-collapse text-sm sm:text-base">
       <thead>
         <tr class="bg-gray-100 text-left">
-          <th class="border px-3 py-2">ID</th>
-          <th class="border px-3 py-2">상품명</th>
-          <th class="border px-3 py-2">가격</th>
-          <th class="border px-3 py-2">카테고리</th>
-          <th class="border px-3 py-2">이미지</th>
-          <th class="border px-3 py-2">관리</th>
+            <th class="border px-3 py-2">ID</th>
+            <th class="border px-3 py-2">상품명</th>
+            <th class="border px-3 py-2">가격</th>
+            <th class="border px-3 py-2">카테고리</th>
+            <th class="border px-3 py-2">이미지</th>
+            <th class="border px-3 py-2">상태</th>   <!-- ✅ 추가 -->
+            <th class="border px-3 py-2">관리</th>
         </tr>
       </thead>
       <tbody>
@@ -38,6 +39,14 @@
               <span class="text-gray-400 text-sm">없음</span>
             {% endif %}
           </td>
+          <!-- ✅ 상태 표시 -->
+            <td class="border px-3 py-2">
+            {% if p.is_active %}
+                <span class="text-green-600 font-bold">활성</span>
+            {% else %}
+                <span class="text-red-500 font-bold">숨김</span>
+            {% endif %}
+            </td>
           <td class="border px-3 py-2 space-y-1 sm:space-y-0 sm:space-x-1 sm:flex sm:flex-wrap">
             <!-- 옵션 관리 -->
             <a href="{{ url_for('admin_product_options', product_id=p.id) }}"

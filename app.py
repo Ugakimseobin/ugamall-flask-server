@@ -1081,7 +1081,8 @@ def admin_products():
     if not current_user.is_admin:
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
-    products = Product.query.all()
+    # ✅ 관리자 페이지는 전체 상품 (숨김 포함)
+    products = Product.query.order_by(Product.id.desc()).all()
     return render_template("admin/products.html", products=products)
 
 @app.route("/admin/products/add", methods=["GET", "POST"])
@@ -1264,6 +1265,19 @@ def admin_delete_product(product_id):
         db.session.rollback()
         flash(f"상품 비활성화 중 오류 발생: {str(e)}", "error")
 
+    return redirect(url_for("admin_products"))
+
+@app.route("/admin/products/<int:product_id>/toggle", methods=["POST"])
+@login_required
+def admin_toggle_product(product_id):
+    if not current_user.is_admin:
+        flash("관리자만 접근할 수 있습니다.", "error")
+        return redirect(url_for("home"))
+
+    product = Product.query.get_or_404(product_id)
+    product.is_active = not product.is_active   # ✅ 토글
+    db.session.commit()
+    flash(f"상품 '{product.name}' 상태가 {'활성' if product.is_active else '숨김'}으로 변경되었습니다.", "success")
     return redirect(url_for("admin_products"))
 
 @app.route("/admin/videos")
