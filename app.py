@@ -103,6 +103,8 @@ class User(db.Model, UserMixin):
                            onupdate=lambda: datetime.now(KST))               # 수정일
     status = db.Column(db.String(20), default="active")  
 
+    coupons = db.relationship("UserCoupon", back_populates="user", cascade="all, delete-orphan")
+
 class Product(db.Model):
     __tablename__ = "product"
     id = db.Column(db.Integer, primary_key=True)
