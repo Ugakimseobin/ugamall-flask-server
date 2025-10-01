@@ -101,22 +101,26 @@
 
             <div class="mb-4">
               <label class="block font-semibold mb-2">{{ _("쿠폰 선택") }}</label>
-              <select name="coupon_id" class="w-full border p-2 rounded text-sm sm:text-base">
+              <select id="coupon-select" name="user_coupon_id" class="w-full border p-2 rounded">
                 <option value="">{{ _("쿠폰을 선택하세요") }}</option>
                 {% for uc in available_coupons %}
-                  <option value="{{ uc.id }}">
+                  <option value="{{ uc.id }}"
+                          data-type="{{ uc.coupon.discount_type }}"
+                          data-value="{{ uc.coupon.discount_value }}"
+                          data-min="{{ uc.coupon.min_amount }}">
                     {{ uc.coupon.name }} - 
                     {% if uc.coupon.discount_type == "percent" %}
                       {{ uc.coupon.discount_value }}%
                     {% else %}
                       {{ uc.coupon.discount_value }}원
                     {% endif %}
-                    ({{ uc.coupon.valid_to.strftime('%Y-%m-%d') }}까지)
+                    ({{ uc.coupon.min_amount }}원 이상, {{ uc.coupon.valid_to.strftime('%Y-%m-%d') }}까지)
                   </option>
                 {% endfor %}
               </select>
             </div>
 
+            <!-- 하단 결제 바-->
             <div class="mb-4">
                 <label class="block font-semibold mb-2">{{ _("결제 방법") }}</label>
                 <select name="payment_method" class="w-full border p-2 rounded text-sm sm:text-base">
@@ -129,8 +133,12 @@
 
         <!-- 하단 고정 결제 바 -->
         <div class="fixed bottom-0 left-0 w-full bg-black text-white p-3 sm:p-4 flex flex-col sm:flex-row justify-between items-center shadow-lg gap-2 sm:gap-0">
-            <div class="text-base sm:text-lg font-bold">{{ _("총 금액") }}: <span id="grand-total">0</span>{{ _("원") }}</div>
-            <button id="payBtn" type="submit" class="bg-indigo-600 px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-indigo-700 w-full sm:w-auto">
+            <div>
+              총액: <span id="total-price">0</span>원 /
+              할인: <span id="discount-price">0</span>원 /
+              <strong>결제금액: <span id="final-price">0</span>원</strong>
+            </div>
+            <button type="submit" class="bg-indigo-600 px-6 py-2 rounded-lg hover:bg-indigo-700">
                 {{ _("결제하기") }}
             </button>
         </div>
@@ -138,84 +146,101 @@
 </div>
 
 <script>
-// 총 금액 업데이트
+// ==============================
+// 장바구니 합계 / 쿠폰 할인 계산
+// ==============================
 function updateTotals() {
-    let grandTotal = 0;
-    document.querySelectorAll(".cart-item").forEach(item => {
-        const checkbox = item.querySelector(".item-checkbox");
-        const quantityInput = item.querySelector("input[type='number']");
-        const price = Number(item.dataset.price) || 0;   // ✅ parseInt → Number, 기본값 0
-        const totalEl = item.querySelector(".item-total");
+  let total = 0;
 
-        let qty = parseInt(quantityInput.value) || 1;
-        let total = price * qty;
+  // 장바구니 상품 가격 합계
+  document.querySelectorAll(".cart-item").forEach(item => {
+    const checkbox = item.querySelector(".item-checkbox");
+    if (!checkbox.checked) return;   // 체크된 상품만 합산
 
-        totalEl.textContent = total.toLocaleString() + "원";   // ✅ 천단위 콤마
-        if (checkbox.checked) {
-            grandTotal += total;
+    const qty = parseInt(item.querySelector("input[type='number']").value) || 1;
+    const price = Number(item.dataset.price) || 0;
+    total += qty * price;
+
+    // 소계 표시
+    item.querySelector(".item-total").textContent = (qty * price).toLocaleString() + "원";
+  });
+
+  // 쿠폰 적용
+  let discount = 0;
+  const select = document.getElementById("coupon-select");
+  if (select) {
+    const opt = select.options[select.selectedIndex];
+    if (opt && opt.dataset.type) {
+      const minAmount = parseInt(opt.dataset.min) || 0;
+      if (total >= minAmount) {
+        if (opt.dataset.type === "percent") {
+          discount = Math.floor(total * (parseInt(opt.dataset.value) / 100));
+        } else {
+          discount = parseInt(opt.dataset.value);
         }
-    });
-    document.getElementById("grand-total").textContent = grandTotal.toLocaleString();
+        if (discount > total) discount = total; // 음수 방지
+      }
+    }
+  }
+
+  // DOM 반영
+  document.getElementById("total-price").innerText = total.toLocaleString();
+  document.getElementById("discount-price").innerText = discount.toLocaleString();
+  document.getElementById("final-price").innerText = (total - discount).toLocaleString();
 }
 
-// 수량 버튼 이벤트
+// ==============================
+// 수량 증감 버튼
+// ==============================
 document.querySelectorAll(".cart-item").forEach(item => {
-    const decreaseBtn = item.querySelector(".decrease-btn");
-    const increaseBtn = item.querySelector(".increase-btn");
-    const quantityInput = item.querySelector("input[type='number']");
+  const decreaseBtn = item.querySelector(".decrease-btn");
+  const increaseBtn = item.querySelector(".increase-btn");
+  const quantityInput = item.querySelector("input[type='number']");
 
-    decreaseBtn.addEventListener("click", () => {
-        let val = parseInt(quantityInput.value) || 1;
-        quantityInput.value = Math.max(1, val - 1);
-        updateTotals();
-    });
+  decreaseBtn.addEventListener("click", () => {
+    let val = parseInt(quantityInput.value) || 1;
+    quantityInput.value = Math.max(1, val - 1);
+    updateTotals();
+  });
 
-    increaseBtn.addEventListener("click", () => {
-        let val = parseInt(quantityInput.value) || 1;
-        quantityInput.value = val + 1;
-        updateTotals();
-    });
+  increaseBtn.addEventListener("click", () => {
+    let val = parseInt(quantityInput.value) || 1;
+    quantityInput.value = val + 1;
+    updateTotals();
+  });
 
-    quantityInput.addEventListener("input", updateTotals);
+  quantityInput.addEventListener("input", updateTotals);
 });
 
-// 체크박스 클릭 시 총 금액 업데이트
+// ==============================
+// 체크박스 선택 → 합계 갱신
+// ==============================
 document.querySelectorAll(".item-checkbox").forEach(cb => {
-    cb.addEventListener("change", updateTotals);
+  cb.addEventListener("change", updateTotals);
 });
 
-// 초기 로딩 시 총합
+// ==============================
+// 쿠폰 선택 → 합계 갱신
+// ==============================
+const couponSelect = document.getElementById("coupon-select");
+if (couponSelect) {
+  couponSelect.addEventListener("change", updateTotals);
+}
+
+// ==============================
+// 초기 실행
+// ==============================
 updateTotals();
 
-// 결제 시 체크된 상품만 전송
+// ==============================
+// 결제 버튼 눌렀을 때 체크 확인
+// ==============================
 document.getElementById("checkout-form").addEventListener("submit", function(e) {
-    const checked = document.querySelectorAll(".item-checkbox:checked");
-    if (checked.length === 0) {
-        e.preventDefault();
-        alert("결제할 상품을 선택해주세요.");
-    }
-});
-
-// 삭제 버튼 전용 처리
-document.querySelectorAll(".remove-btn").forEach(btn => {
-  btn.addEventListener("click", function(e) {
-    e.stopPropagation();
-    const url = this.dataset.url;
-    if (confirm("{{ _('이 상품을 장바구니에서 삭제하시겠습니까?') }}")) {
-      fetch(url, {
-        method: "POST",
-        headers: { "X-Requested-With": "XMLHttpRequest" }
-      })
-      .then(res => {
-        if (res.ok) {
-          window.location.reload();
-        } else {
-          alert("{{ _('삭제 요청에 실패했습니다.') }}");
-        }
-      })
-      .catch(err => console.error("{{ _('삭제 실패') }}:", err));
-    }
-  });
+  const checked = document.querySelectorAll(".item-checkbox:checked");
+  if (checked.length === 0) {
+    e.preventDefault();
+    alert("결제할 상품을 선택해주세요.");
+  }
 });
 </script>
 

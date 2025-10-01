@@ -934,26 +934,20 @@ def checkout():
         discount_amount = 0
         user_coupon_id = request.form.get("user_coupon_id", type=int)
         if current_user.is_authenticated and user_coupon_id:
-            uc = (
-                UserCoupon.query.join(Coupon)
-                .filter(
-                    UserCoupon.id == user_coupon_id,
-                    UserCoupon.user_id == current_user.id,
-                    UserCoupon.used == False,
-                    Coupon.active == True,
-                    Coupon.valid_from <= datetime.utcnow(),
-                    Coupon.valid_to >= datetime.utcnow(),
-                )
-                .first()
-            )
+            uc = (UserCoupon.query.join(Coupon)
+                  .filter(UserCoupon.id == user_coupon_id,
+                          UserCoupon.user_id == current_user.id,
+                          UserCoupon.used == False,
+                          Coupon.active == True,
+                          Coupon.valid_from <= datetime.utcnow(),
+                          Coupon.valid_to >= datetime.utcnow())
+                  .first())
             if uc and total_amount >= (uc.coupon.min_amount or 0):
                 if uc.coupon.discount_type == "percent":
                     discount_amount = total_amount * uc.coupon.discount_value // 100
                 else:
                     discount_amount = uc.coupon.discount_value
                 discount_amount = min(discount_amount, total_amount)
-
-                # 사용 처리
                 uc.used = True
                 uc.used_at = datetime.utcnow()
                 db.session.add(uc)
@@ -1003,17 +997,15 @@ def checkout():
             "phone": current_user.phone,
             "base_address": current_user.base_address,
             "detail_address": current_user.detail_address,
-            "email": current_user.email
+            "email": current_user.email,
         }
 
-    return render_template(
-        "checkout.html",
-        cart_items=cart_items,
-        total=total,
-        user_info=user_info,
-        user_id=(current_user.id if current_user.is_authenticated else None),
-        available_coupons=available_coupons,
-    )
+    return render_template("checkout.html",
+                           cart_items=cart_items,
+                           total=total,
+                           user_info=user_info,
+                           user_id=user_id,
+                           available_coupons=available_coupons)
 
 @app.route("/payment/<int:order_id>")
 def payment(order_id):
