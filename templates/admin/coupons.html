@@ -34,7 +34,7 @@
           </form>
           <!-- 사용자 지급 -->
           <form method="post" action="{{ url_for('admin_assign_coupon', coupon_id=c.id) }}" class="inline">
-            <input type="number" name="user_id" placeholder="사용자ID" class="border p-1 w-20 text-xs">
+            <input type="email" name="email" placeholder="이메일" class="border p-1 w-40 text-xs">
             <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 text-xs">지급</button>
           </form>
         </td>

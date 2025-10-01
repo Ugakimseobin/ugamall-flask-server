@@ -1251,18 +1251,32 @@ def admin_assign_coupon(coupon_id):
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
 
-    user_id = request.form.get("user_id", type=int)
-    user = User.query.get(user_id)
-    coupon = Coupon.query.get_or_404(coupon_id)
-
-    if not user:
-        flash("해당 사용자를 찾을 수 없습니다.", "error")
+    email = (request.form.get("email") or "").strip()
+    if not email:
+        flash("이메일을 입력하세요.", "error")
         return redirect(url_for("admin_coupons"))
 
-    uc = UserCoupon(user_id=user.id, coupon_id=coupon.id)
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash("해당 이메일을 가진 사용자가 존재하지 않습니다.", "error")
+        return redirect(url_for("admin_coupons"))
+
+    coupon = Coupon.query.get(coupon_id)
+    if not coupon:
+        flash("쿠폰을 찾을 수 없습니다.", "error")
+        return redirect(url_for("admin_coupons"))
+
+    # 이미 지급 여부 확인 (중복 방지)
+    existing = UserCoupon.query.filter_by(user_id=user.id, coupon_id=coupon.id).first()
+    if existing:
+        flash("이미 이 쿠폰을 지급받은 사용자입니다.", "error")
+        return redirect(url_for("admin_coupons"))
+
+    uc = UserCoupon(user_id=user.id, coupon_id=coupon.id, used=False)
     db.session.add(uc)
     db.session.commit()
-    flash(f"{user.email} 님에게 쿠폰이 지급되었습니다.", "success")
+
+    flash(f"{user.email} 님에게 쿠폰 '{coupon.name}' 지급 완료!", "success")
     return redirect(url_for("admin_coupons"))
 
 @app.route("/admin/products")
