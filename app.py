@@ -113,11 +113,33 @@ class Product(db.Model):
     category = db.Column(db.String(50))
     pamphlet = db.Column(db.String(255))
     is_active = db.Column(db.Boolean, default=True)  # ✅ 운영용: 상품 활성/비활성 상태
+    discount_percent = db.Column(db.Integer, default=0)   # ✅ 시즌 할인율 (예: 20%)
+    
+    def final_price(self):
+        if self.discount_percent and self.discount_percent > 0:
+            return int(self.base_price * (100 - self.discount_percent) / 100)
+        return self.base_price
 
     product_options = db.relationship("ProductOption", back_populates="product", cascade="all, delete-orphan")
     variants = db.relationship("ProductVariant", back_populates="product", cascade="all, delete-orphan")
     cart_items = db.relationship("CartItem", back_populates="product", cascade="all, delete-orphan")
 
+class Coupon(db.Model):
+    __tablename__ = "coupons"
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(50), unique=True, nullable=False)   # 쿠폰 코드
+    discount_type = db.Column(db.String(10), default="percent")    # percent, fixed
+    discount_value = db.Column(db.Integer, nullable=False)         # 10(%) 또는 5000(원)
+    valid_from = db.Column(db.DateTime, nullable=False)
+    valid_to = db.Column(db.DateTime, nullable=False)
+    active = db.Column(db.Boolean, default=True)
+
+    def apply_discount(self, price: int) -> int:
+        if self.discount_type == "percent":
+            return max(0, int(price * (100 - self.discount_value) / 100))
+        elif self.discount_type == "fixed":
+            return max(0, price - self.discount_value)
+        return price
 
 class ProductOption(db.Model):
     __tablename__ = "product_options"
@@ -141,6 +163,18 @@ class ProductVariant(db.Model):
     order_items = db.relationship("OrderItem", back_populates="variant")
     # ✅ cart_items 관계는 단방향으로만 사용 (필요하다면 backref 사용)
     cart_items = db.relationship("CartItem", back_populates="variant", cascade="all, delete-orphan")
+
+class Review(db.Model):
+    __tablename__ = "reviews"
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)   # 1~5
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    product = db.relationship("Product", backref="reviews")
+    user = db.relationship("User", backref="reviews")
 
 
 class Video(db.Model):
@@ -732,7 +766,21 @@ def product_detail(product_id):
         option_keys = list(first_variant.options.keys())
 
     return render_template("product_detail.html", product=product, related_products=related_products, option_keys=option_keys)
-import json
+
+@app.route("/products/<int:product_id>/review", methods=["POST"])
+@login_required
+def add_review(product_id):
+    rating = int(request.form.get("rating", 0))
+    content = request.form.get("content", "").strip()
+    if rating < 1 or rating > 5:
+        flash("평점은 1~5 사이여야 합니다.", "error")
+        return redirect(url_for("product_detail", product_id=product_id))
+
+    review = Review(product_id=product_id, user_id=current_user.id, rating=rating, content=content)
+    db.session.add(review)
+    db.session.commit()
+    flash("리뷰가 등록되었습니다.", "success")
+    return redirect(url_for("product_detail", product_id=product_id))
 
 @app.route("/add_to_cart", methods=["POST"])
 def add_to_cart():

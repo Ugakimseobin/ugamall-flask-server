@@ -588,7 +588,7 @@ msgid "장바구니에 담기"
 msgstr "Add to Cart"
 
 #: templates/product_detail.html:78
-msgid "관련 상품"
+msgid "관련 분야 상품"
 msgstr "Special Item"
 
 #: templates/product_detail.html:168
