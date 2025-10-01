@@ -1249,13 +1249,21 @@ def admin_delete_product(product_id):
 
     product = Product.query.get_or_404(product_id)
 
-    # ✅ 연결된 cart_items 먼저 삭제
-    CartItem.query.filter_by(product_id=product.id).delete()
+    try:
+        # ✅ 연결된 옵션/조합/장바구니 아이템 전부 삭제
+        ProductOption.query.filter_by(product_id=product.id).delete()
+        ProductVariant.query.filter_by(product_id=product.id).delete()
+        CartItem.query.filter_by(product_id=product.id).delete()
 
-    db.session.delete(product)
-    db.session.commit()
+        # ✅ 마지막으로 상품 삭제
+        db.session.delete(product)
+        db.session.commit()
 
-    flash("상품이 삭제되었습니다.", "success")
+        flash("상품이 삭제되었습니다.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"상품 삭제 중 오류 발생: {str(e)}", "error")
+
     return redirect(url_for("admin_products"))
 
 @app.route("/admin/videos")
