@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-lg mx-auto bg-white p-6 shadow rounded mt-6">
+  <h1 class="text-xl font-bold mb-4">쿠폰 추가</h1>
+  <form method="post" class="space-y-4">
+    <div>
+      <label class="block font-semibold">쿠폰명</label>
+      <input type="text" name="name" class="w-full border p-2 rounded" required>
+    </div>
+    <div>
+      <label class="block font-semibold">설명</label>
+      <input type="text" name="description" class="w-full border p-2 rounded">
+    </div>
+    <div>
+      <label class="block font-semibold">할인 유형</label>
+      <select name="discount_type" class="w-full border p-2 rounded">
+        <option value="percent">퍼센트(%)</option>
+        <option value="fixed">정액(원)</option>
+      </select>
+    </div>
+    <div>
+      <label class="block font-semibold">할인 값</label>
+      <input type="number" name="discount_value" class="w-full border p-2 rounded" required>
+    </div>
+    <div>
+      <label class="block font-semibold">최소 주문 금액</label>
+      <input type="number" name="min_amount" value="0" class="w-full border p-2 rounded">
+    </div>
+    <div>
+      <label class="block font-semibold">유효기간 시작</label>
+      <input type="date" name="valid_from" class="w-full border p-2 rounded" required>
+    </div>
+    <div>
+      <label class="block font-semibold">유효기간 종료</label>
+      <input type="date" name="valid_to" class="w-full border p-2 rounded" required>
+    </div>
+    <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded">쿠폰 생성</button>
+  </form>
+</div>
+{% endblock %}

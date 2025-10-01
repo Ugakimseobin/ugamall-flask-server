@@ -127,19 +127,27 @@ class Product(db.Model):
 class Coupon(db.Model):
     __tablename__ = "coupons"
     id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String(50), unique=True, nullable=False)   # 쿠폰 코드
-    discount_type = db.Column(db.String(10), default="percent")    # percent, fixed
-    discount_value = db.Column(db.Integer, nullable=False)         # 10(%) 또는 5000(원)
+    name = db.Column(db.String(100), nullable=False)              # 쿠폰명
+    description = db.Column(db.String(255))                       # 설명
+    discount_type = db.Column(db.String(10), default="percent")   # "percent" or "fixed"
+    discount_value = db.Column(db.Integer, nullable=False)        # 할인 값 (ex. 10% or 5000원)
+    min_amount = db.Column(db.Integer, default=0)                 # 최소 주문 금액
     valid_from = db.Column(db.DateTime, nullable=False)
     valid_to = db.Column(db.DateTime, nullable=False)
     active = db.Column(db.Boolean, default=True)
 
-    def apply_discount(self, price: int) -> int:
-        if self.discount_type == "percent":
-            return max(0, int(price * (100 - self.discount_value) / 100))
-        elif self.discount_type == "fixed":
-            return max(0, price - self.discount_value)
-        return price
+    user_coupons = db.relationship("UserCoupon", back_populates="coupon", cascade="all, delete-orphan")
+
+class UserCoupon(db.Model):
+    __tablename__ = "user_coupons"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
+    coupon_id = db.Column(db.Integer, db.ForeignKey("coupons.id", ondelete="CASCADE"))
+    used = db.Column(db.Boolean, default=False)
+    assigned_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", back_populates="coupons")
+    coupon = db.relationship("Coupon", back_populates="user_coupons")
 
 class ProductOption(db.Model):
     __tablename__ = "product_options"
@@ -656,6 +664,12 @@ def mypage():
 
     return render_template("mypage.html", user=user, orders=orders, inquiries=inquiries)
 
+@app.route("/my_coupons")
+@login_required
+def my_coupons():
+    user_coupons = UserCoupon.query.filter_by(user_id=current_user.id).all()
+    return render_template("my_coupons.html", user_coupons=user_coupons)
+
 @app.route("/mypage/inquiries")
 @login_required
 def my_inquiries():
@@ -842,7 +856,6 @@ def add_to_cart():
     return redirect(url_for("checkout"))
 
 
-import json
 
 @app.route("/checkout", methods=["GET", "POST"])
 def checkout():
@@ -854,6 +867,21 @@ def checkout():
             session["session_id"] = str(uuid.uuid4())
         base_q = CartItem.query.filter_by(session_id=session["session_id"])
         user_id = None
+
+    available_coupons = []
+    if current_user.is_authenticated:
+        now = datetime.utcnow()
+        available_coupons = (
+            UserCoupon.query.join(Coupon)
+            .filter(
+                UserCoupon.user_id == current_user.id,
+                UserCoupon.used == False,
+                Coupon.active == True,
+                Coupon.valid_from <= now,
+                Coupon.valid_to >= now
+            )
+            .all()
+        )
 
     if request.method == "POST":
         # 구매자 정보
@@ -896,6 +924,39 @@ def checkout():
                     ci.quantity = 1
         db.session.flush()
 
+        total_amount = sum(((ci.product.base_price or 0) + ((ci.variant.price or 0) if ci.variant else 0)) * ci.quantity
+                           for ci in cart_items)
+
+        # ✅ 쿠폰 적용
+        discount_amount = 0
+        user_coupon_id = request.form.get("user_coupon_id", type=int)
+        if current_user.is_authenticated and user_coupon_id:
+            uc = (
+                UserCoupon.query.join(Coupon)
+                .filter(
+                    UserCoupon.id == user_coupon_id,
+                    UserCoupon.user_id == current_user.id,
+                    UserCoupon.is_used == False,
+                    Coupon.active == True,
+                    Coupon.valid_from <= datetime.utcnow(),
+                    Coupon.valid_to >= datetime.utcnow(),
+                )
+                .first()
+            )
+            if uc and total_amount >= (uc.coupon.min_amount or 0):
+                if uc.coupon.discount_type == "percent":
+                    discount_amount = total_amount * uc.coupon.discount_value // 100
+                else:
+                    discount_amount = uc.coupon.discount_value
+                discount_amount = min(discount_amount, total_amount)
+
+                # 사용 처리
+                uc.is_used = True
+                uc.used_at = datetime.utcnow()
+                db.session.add(uc)
+
+        final_amount = total_amount - discount_amount
+
         # 주문 생성
         new_order = Order(
             user_id=current_user.id if current_user.is_authenticated else None,
@@ -933,7 +994,6 @@ def checkout():
                 for ci in cart_items)
 
     user_info = {}
-    user_info = {}
     if current_user.is_authenticated:
         user_info = {
             "name": current_user.name,
@@ -943,8 +1003,14 @@ def checkout():
             "email": current_user.email
         }
 
-    return render_template("checkout.html", cart_items=cart_items, total=total,
-                           user_info=user_info, user_id=(current_user.id if current_user.is_authenticated else None))
+    return render_template(
+        "checkout.html",
+        cart_items=cart_items,
+        total=total,
+        user_info=user_info,
+        user_id=(current_user.id if current_user.is_authenticated else None),
+        available_coupons=available_coupons,
+    )
 
 @app.route("/payment/<int:order_id>")
 def payment(order_id):
@@ -1122,6 +1188,80 @@ def admin_dashboard():
     return render_template("admin/dashboard.html",
         pending_orders=pending_orders,
         new_inquiries_count=new_inquiries_count)
+
+@app.route("/admin/coupons")
+@login_required
+def admin_coupons():
+    if not current_user.is_admin:
+        flash("관리자만 접근 가능합니다.", "error")
+        return redirect(url_for("home"))
+
+    coupons = Coupon.query.order_by(Coupon.id.desc()).all()
+    return render_template("admin/coupons.html", coupons=coupons)
+
+@app.route("/admin/coupons/add", methods=["GET", "POST"])
+@login_required
+def admin_add_coupon():
+    if not current_user.is_admin:
+        flash("관리자만 접근 가능합니다.", "error")
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+        name = request.form.get("name")
+        description = request.form.get("description")
+        discount_type = request.form.get("discount_type")
+        discount_value = request.form.get("discount_value", type=int)
+        min_amount = request.form.get("min_amount", type=int)
+        valid_from = datetime.strptime(request.form.get("valid_from"), "%Y-%m-%d")
+        valid_to = datetime.strptime(request.form.get("valid_to"), "%Y-%m-%d")
+
+        coupon = Coupon(
+            name=name,
+            description=description,
+            discount_type=discount_type,
+            discount_value=discount_value,
+            min_amount=min_amount,
+            valid_from=valid_from,
+            valid_to=valid_to,
+            active=True
+        )
+        db.session.add(coupon)
+        db.session.commit()
+        flash("쿠폰이 생성되었습니다.", "success")
+        return redirect(url_for("admin_coupons"))
+    return render_template("admin/add_coupon.html")
+
+@app.route("/admin/coupons/<int:coupon_id>/delete", methods=["POST"])
+@login_required
+def admin_delete_coupon(coupon_id):
+    if not current_user.is_admin:
+        return redirect(url_for("home"))
+    coupon = Coupon.query.get_or_404(coupon_id)
+    db.session.delete(coupon)
+    db.session.commit()
+    flash("쿠폰이 삭제되었습니다.", "success")
+    return redirect(url_for("admin_coupons"))
+
+@app.route("/admin/coupons/<int:coupon_id>/assign", methods=["POST"])
+@login_required
+def admin_assign_coupon(coupon_id):
+    if not current_user.is_admin:
+        flash("관리자만 접근 가능합니다.", "error")
+        return redirect(url_for("home"))
+
+    user_id = request.form.get("user_id", type=int)
+    user = User.query.get(user_id)
+    coupon = Coupon.query.get_or_404(coupon_id)
+
+    if not user:
+        flash("해당 사용자를 찾을 수 없습니다.", "error")
+        return redirect(url_for("admin_coupons"))
+
+    uc = UserCoupon(user_id=user.id, coupon_id=coupon.id)
+    db.session.add(uc)
+    db.session.commit()
+    flash(f"{user.email} 님에게 쿠폰이 지급되었습니다.", "success")
+    return redirect(url_for("admin_coupons"))
 
 @app.route("/admin/products")
 @login_required

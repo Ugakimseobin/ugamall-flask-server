@@ -8,6 +8,7 @@
       <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="orders">{{ _("주문내역") }}</button></li>
       <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-indigo-600 text-white" data-tab="info">{{ _("개인정보") }}</button></li>
       <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="inquiry">{{ _("문의내역") }}</button></li>
+      <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="inquiry">{{ _("내 쿠폰함") }}</button></li>
     </ul>
   </aside>
 
@@ -166,6 +167,49 @@
         </div>
       {% endif %}
     </section>
+
+    <section id="tab-coupons" class="tab-content hidden">
+        <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("내 쿠폰함") }}</h3>
+        {% if user.coupons|length == 0 %}
+            <p class="text-gray-500">{{ _("보유한 쿠폰이 없습니다.") }}</p>
+        {% else %}
+            <table class="w-full text-sm border">
+            <thead>
+                <tr class="bg-gray-100 text-left">
+                <th class="border px-3 py-2">쿠폰명</th>
+                <th class="border px-3 py-2">할인</th>
+                <th class="border px-3 py-2">조건</th>
+                <th class="border px-3 py-2">유효기간</th>
+                <th class="border px-3 py-2">상태</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for uc in user.coupons %}
+                <tr>
+                <td class="border px-3 py-2">{{ uc.coupon.name }}</td>
+                <td class="border px-3 py-2">
+                    {% if uc.coupon.discount_type == "percent" %}
+                    {{ uc.coupon.discount_value }}%
+                    {% else %}
+                    {{ uc.coupon.discount_value }}원
+                    {% endif %}
+                </td>
+                <td class="border px-3 py-2">최소 {{ uc.coupon.min_amount }}원 이상</td>
+                <td class="border px-3 py-2">{{ uc.coupon.valid_from.date() }} ~ {{ uc.coupon.valid_to.date() }}</td>
+                <td class="border px-3 py-2">
+                    {% if uc.used %}
+                    <span class="text-red-500">사용됨</span>
+                    {% else %}
+                    <span class="text-green-600">미사용</span>
+                    {% endif %}
+                </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        {% endif %}
+    </section>
+
   </main>
 </div>
 

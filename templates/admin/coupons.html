@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-6xl mx-auto bg-white p-6 shadow rounded mt-6">
+  <h1 class="text-2xl font-bold mb-4">쿠폰 관리</h1>
+  <a href="{{ url_for('admin_add_coupon') }}" 
+     class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 mb-4 inline-block">+ 쿠폰 추가</a>
+
+  <table class="w-full border-collapse text-sm">
+    <thead>
+      <tr class="bg-gray-100 text-left">
+        <th class="border px-3 py-2">쿠폰명</th>
+        <th class="border px-3 py-2">설명</th>
+        <th class="border px-3 py-2">할인</th>
+        <th class="border px-3 py-2">기간</th>
+        <th class="border px-3 py-2">관리</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in coupons %}
+      <tr class="hover:bg-gray-50">
+        <td class="border px-3 py-2">{{ c.name }}</td>
+        <td class="border px-3 py-2">{{ c.description }}</td>
+        <td class="border px-3 py-2">
+          {% if c.discount_type == "percent" %}
+            {{ c.discount_value }}%
+          {% else %}
+            {{ "{:,.0f}".format(c.discount_value) }}원
+          {% endif %}
+        </td>
+        <td class="border px-3 py-2">{{ c.valid_from.date() }} ~ {{ c.valid_to.date() }}</td>
+        <td class="border px-3 py-2 space-x-2">
+          <form method="post" action="{{ url_for('admin_delete_coupon', coupon_id=c.id) }}" class="inline">
+            <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs">삭제</button>
+          </form>
+          <!-- 사용자 지급 -->
+          <form method="post" action="{{ url_for('admin_assign_coupon', coupon_id=c.id) }}" class="inline">
+            <input type="number" name="user_id" placeholder="사용자ID" class="border p-1 w-20 text-xs">
+            <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 text-xs">지급</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

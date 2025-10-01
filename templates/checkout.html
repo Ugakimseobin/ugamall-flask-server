@@ -100,6 +100,24 @@
             {% endif %} 
 
             <div class="mb-4">
+              <label class="block font-semibold mb-2">{{ _("쿠폰 선택") }}</label>
+              <select name="coupon_id" class="w-full border p-2 rounded text-sm sm:text-base">
+                <option value="">{{ _("쿠폰을 선택하세요") }}</option>
+                {% for uc in available_coupons %}
+                  <option value="{{ uc.id }}">
+                    {{ uc.coupon.name }} - 
+                    {% if uc.coupon.discount_type == "percent" %}
+                      {{ uc.coupon.discount_value }}%
+                    {% else %}
+                      {{ uc.coupon.discount_value }}원
+                    {% endif %}
+                    ({{ uc.coupon.valid_to.strftime('%Y-%m-%d') }}까지)
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="mb-4">
                 <label class="block font-semibold mb-2">{{ _("결제 방법") }}</label>
                 <select name="payment_method" class="w-full border p-2 rounded text-sm sm:text-base">
                     <option value="무통장입금">{{ _("무통장입금") }}</option>
