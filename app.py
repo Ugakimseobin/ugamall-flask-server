@@ -1125,7 +1125,7 @@ def admin_add_product():
         db.session.commit()
 
         flash("상품이 추가되었습니다.", "success")
-        return redirect(url_for("admin_products_options"))
+        return redirect(url_for("admin_product_options"))
 
     return render_template("admin_add_product.html")
 
