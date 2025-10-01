@@ -40,17 +40,19 @@
             {% endif %}
           </td>
           <!-- ✅ 상태 표시 -->
+          <td class="border px-3 py-2">
             <form action="{{ url_for('admin_toggle_product', product_id=p.id) }}" method="post" class="inline">
-            {% if p.is_active %}
-            <button type="submit" class="bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600 text-xs sm:text-sm">
+              {% if p.is_active %}
+              <button type="submit" class="bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600 text-xs sm:text-sm">
                 숨김
-            </button>
-            {% else %}
-            <button type="submit" class="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 text-xs sm:text-sm">
+              </button>
+              {% else %}
+              <button type="submit" class="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 text-xs sm:text-sm">
                 활성화
-            </button>
-            {% endif %}
+              </button>
+              {% endif %}
             </form>
+          </td>
           <td class="border px-3 py-2 space-y-1 sm:space-y-0 sm:space-x-1 sm:flex sm:flex-wrap">
             <!-- 옵션 관리 -->
             <a href="{{ url_for('admin_product_options', product_id=p.id) }}"
