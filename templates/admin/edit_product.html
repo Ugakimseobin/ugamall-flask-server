@@ -15,7 +15,7 @@
     <!-- 가격 -->
     <div>
       <label class="block font-semibold mb-1">가격</label>
-      <input type="number" step="0.01" name="base_price" 
+      <input type="number" step="1" name="base_price" min="0"
              value="{{ product.base_price }}" 
              class="w-full border p-2 rounded text-sm sm:text-base" required>
     </div>
