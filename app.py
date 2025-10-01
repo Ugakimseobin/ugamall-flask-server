@@ -938,7 +938,7 @@ def checkout():
                 .filter(
                     UserCoupon.id == user_coupon_id,
                     UserCoupon.user_id == current_user.id,
-                    UserCoupon.is_used == False,
+                    UserCoupon.used == False,
                     Coupon.active == True,
                     Coupon.valid_from <= datetime.utcnow(),
                     Coupon.valid_to >= datetime.utcnow(),
@@ -953,7 +953,7 @@ def checkout():
                 discount_amount = min(discount_amount, total_amount)
 
                 # 사용 처리
-                uc.is_used = True
+                uc.used = True
                 uc.used_at = datetime.utcnow()
                 db.session.add(uc)
 
