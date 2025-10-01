@@ -17,6 +17,7 @@ from werkzeug.utils import secure_filename
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 import uuid
+import json
 from datetime import timedelta
 
 app = Flask(__name__)
