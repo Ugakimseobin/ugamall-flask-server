@@ -1094,7 +1094,7 @@ def admin_add_product():
 
     if request.method == "POST":
         name = request.form.get("name")
-        base_price = request.form.get("base_price", type=float)
+        base_price = request.form.get("base_price", type=int)
         category = request.form.get("category")
         description = request.form.get("description")
 
@@ -1165,7 +1165,7 @@ def admin_product_variants(product_id):
             if key.startswith("option_"):
                 selected_options[key.replace("option_", "")] = value
 
-        price = float(request.form.get("price", 0))
+        price = int(request.form.get("price", 0))
         stock = int(request.form.get("stock", 0))
 
         variant = ProductVariant(
@@ -1221,7 +1221,7 @@ def admin_edit_product(product_id):
     if request.method == "POST":
         # 상품 기본 정보 업데이트
         product.name = request.form.get("name")
-        product.base_price = request.form.get("base_price", type=float)
+        product.base_price = request.form.get("base_price", type=int)
         product.category = request.form.get("category")
         product.description = request.form.get("description")
 
