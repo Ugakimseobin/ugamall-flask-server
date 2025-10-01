@@ -18,7 +18,7 @@
         <!-- 상품 정보 -->
         <div id="purchase-box">
           <h1 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">{{ product.name }}</h1>
-          <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ product.base_price }}{{ _("원") }}</p>
+          <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ product.base_price|won }}{{ _("원") }}</p>
           <p class="text-gray-700 text-sm sm:text-base mb-4 sm:mb-6">{{ product.description }}</p>
           <p class="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">{{ _("카테고리") }}: {{ product.category }}</p>
 
@@ -84,7 +84,7 @@
                 alt="{{ p.name }}" 
                 class="h-32 sm:h-40 w-full object-cover rounded">
             <h3 class="mt-2 font-bold text-sm sm:text-base">{{ p.name }}</h3>
-            <p class="text-gray-600 text-xs sm:text-sm">{{ p.price }}{{ _("원") }}</p>
+            <p class="text-gray-600 text-xs sm:text-sm">{{ p.price|won }}{{ _("원") }}</p>
         </a>
         {% endfor %}
         </div>
@@ -111,7 +111,7 @@
     </div>
 
     <h3 class="font-bold text-lg sm:text-xl mb-2 sm:mb-4">{{ product.name }}</h3>
-    <p class="text-indigo-600 font-bold text-xl sm:text-2xl mb-4 sm:mb-6">{{ product.base_price }}{{ _("원") }}</p>
+    <p class="text-indigo-600 font-bold text-xl sm:text-2xl mb-4 sm:mb-6">{{ product.base_price|won  }}{{ _("원") }}</p>
 
     <!-- 수량 -->
     <div class="mb-4 flex items-center">

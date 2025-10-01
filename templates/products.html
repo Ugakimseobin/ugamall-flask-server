@@ -70,7 +70,7 @@
         <img src="{{ url_for('static', filename='images/' ~ p.image) }}" 
              class="h-28 sm:h-40 w-full object-cover rounded">
         <h3 class="mt-2 font-bold text-sm sm:text-base truncate">{{ p.name }}</h3>
-        <p class="text-gray-600 text-sm sm:text-base">{{ p.base_price }}원</p>
+        <p class="text-gray-600 text-sm sm:text-base">{{ p.base_price|won }}원</p>
       </a>
     {% endfor %}
   </main>
