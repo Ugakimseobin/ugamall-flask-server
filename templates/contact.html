@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <!-- 상단 비디오 배경 -->
-<section class="relative w-full h-80 sm:h-80 flex items-center justify-center text-white shadow-lg overflow-hidden">
+<section id="hero" class="relative h-80 md:h-[28rem] flex items-center justify-center text-white overflow-hidden">
   <!--<video autoplay muted loop playsinline 
          class="absolute inset-0 w-full h-full object-cover object-bottom">
     <source src="{{ url_for('static', filename='videos/ocean.mp4') }}" type="video/mp4">
@@ -50,6 +50,7 @@
     <div class="bg-white shadow rounded p-4 sm:p-6 text-sm sm:text-base">
       <p class="mb-2"><strong>📍 {{ _("주소") }}:</strong> {{ _("부산광역시 동래구 안남로 78-3 (더 평안빌딩 2층)") }}, UGA MEDICAL</p>
       <p class="mb-2"><strong>📞 {{ _("전화") }}:</strong> 051-522-3969</p>
+      <p class="mb-2"><strong>📠 {{ _("팩스") }}:</strong> 051-524-3969</p>
       <p class="mb-4"><strong>✉️ {{ _("이메일") }}:</strong> ugamedical@naver.com</p>
 
       <div class="w-full h-64 sm:h-96">
