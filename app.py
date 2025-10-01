@@ -112,6 +112,7 @@ class Product(db.Model):
     image = db.Column(db.String(255))
     category = db.Column(db.String(50))
     pamphlet = db.Column(db.String(255))
+    is_active = db.Column(db.Boolean, default=True)  # ✅ 운영용: 상품 활성/비활성 상태
 
     product_options = db.relationship("ProductOption", back_populates="product", cascade="all, delete-orphan")
     variants = db.relationship("ProductVariant", back_populates="product", cascade="all, delete-orphan")
@@ -416,7 +417,8 @@ def status_label(value):
 @app.route('/')
 def home():
     latest_video = Video.query.order_by(Video.id.desc()).first()
-    products = Product.query.limit(6).all()
+    # 🔽 숨김 처리된 상품은 제외
+    products = Product.query.filter_by(is_active=True).order_by(Product.id.desc()).limit(8).all()
     return render_template('index.html', latest_video=latest_video, products=products)
 
 @app.route('/set_lang/<lang>')
@@ -698,24 +700,30 @@ def products():
     category = request.args.get("category","")
     price_min = request.args.get("price_min",0,type=int)
     price_max = request.args.get("price_max",9999999,type=int)
-    query = Product.query
+
+    query = Product.query.filter(Product.is_active == True)   # 🔽 조건 추가
+
     if name:
         query = query.filter(Product.name.contains(name))
     if category:
         query = query.filter(Product.category == category)
+
     query = query.filter(Product.base_price >= price_min, Product.base_price <= price_max)
+
     products = query.all()
     categories = [c[0] for c in db.session.query(Product.category).distinct()]
     return render_template("products.html", products=products, categories=categories)
 
 @app.route('/products/<int:product_id>')
 def product_detail(product_id):
-    product = Product.query.get_or_404(product_id)
+    # 🔽 숨김 상품은 접근 불가
+    product = Product.query.filter_by(id=product_id, is_active=True).first_or_404()
 
-    # 같은 카테고리의 다른 상품 추천 (자기 자신 제외)
+    # 같은 카테고리 상품도 is_active=True 조건 추가
     related_products = Product.query.filter(
         Product.category == product.category,
-        Product.id != product.id
+        Product.id != product.id,
+        Product.is_active == True
     ).limit(4).all()
 
     option_keys = []
@@ -724,7 +732,6 @@ def product_detail(product_id):
         option_keys = list(first_variant.options.keys())
 
     return render_template("product_detail.html", product=product, related_products=related_products, option_keys=option_keys)
-
 import json
 
 @app.route("/add_to_cart", methods=["POST"])
@@ -1250,19 +1257,12 @@ def admin_delete_product(product_id):
     product = Product.query.get_or_404(product_id)
 
     try:
-        # ✅ 연결된 옵션/조합/장바구니 아이템 전부 삭제
-        ProductOption.query.filter_by(product_id=product.id).delete()
-        ProductVariant.query.filter_by(product_id=product.id).delete()
-        CartItem.query.filter_by(product_id=product.id).delete()
-
-        # ✅ 마지막으로 상품 삭제
-        db.session.delete(product)
+        product.is_active = False  # ✅ 숨김 처리
         db.session.commit()
-
-        flash("상품이 삭제되었습니다.", "success")
+        flash("상품이 비활성화(숨김 처리)되었습니다.", "success")
     except Exception as e:
         db.session.rollback()
-        flash(f"상품 삭제 중 오류 발생: {str(e)}", "error")
+        flash(f"상품 비활성화 중 오류 발생: {str(e)}", "error")
 
     return redirect(url_for("admin_products"))
 
@@ -1593,11 +1593,14 @@ def search():
     price_min = request.args.get("price_min",0,type=int)
     price_max = request.args.get("price_max",9999999,type=int)
     video = request.args.get("video","false")=="true"
-    query = Product.query
+
+    query = Product.query.filter(Product.is_active == True)   # 🔽 조건 추가
+
     if q:
         query = query.filter(Product.name.contains(q))
     if category:
         query = query.filter(Product.category==category)
+
     query = query.filter(Product.base_price>=price_min, Product.base_price<=price_max)
     products = query.all()
     
@@ -1607,6 +1610,7 @@ def search():
             videos = Video.query.filter(Video.title.contains(q)).all()
         else:
             videos = Video.query.all()
+
     categories = [c[0] for c in db.session.query(Product.category).distinct()]
     return render_template("search.html", products=products, videos=videos, categories=categories, video_filter=True,q=q)
 
@@ -1619,8 +1623,10 @@ def autocomplete():
     q = request.args.get("q","")
     results = []
     if q:
-        results = [p.name for p in Product.query.filter(Product.name.contains(q)).all()]
+        # 🔽 숨김 상품은 제외
+        results = [p.name for p in Product.query.filter(Product.name.contains(q), Product.is_active == True).all()]
     return jsonify(results)
+
 @app.route("/db_tables")
 def db_tables():
     try:
