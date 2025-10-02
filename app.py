@@ -257,6 +257,8 @@ class Order(db.Model):
     status = db.Column(db.String(20), default="주문 접수")  # 주문 상태
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_read = db.Column(db.Boolean, default=False)
+    applied_user_coupon_id = db.Column(db.Integer, db.ForeignKey("user_coupons.id"), nullable=True)
+    discount_amount        = db.Column(db.Integer, default=0)
 
     # 관계
     user = db.relationship("User", backref="orders")
@@ -932,6 +934,7 @@ def checkout():
 
         # ✅ 쿠폰 적용
         discount_amount = 0
+        applied_user_coupon_id = None
         user_coupon_id = request.form.get("user_coupon_id", type=int)
         if current_user.is_authenticated and user_coupon_id:
             uc = (UserCoupon.query.join(Coupon)
@@ -948,11 +951,12 @@ def checkout():
                 else:
                     discount_amount = uc.coupon.discount_value
                 discount_amount = min(discount_amount, total_amount)
+                applied_user_coupon_id = uc.id  # ✅ 주문에 어떤 쿠폰을 적용했는지 저장
                 uc.used = True
                 uc.used_at = datetime.utcnow()
                 db.session.add(uc)
 
-        final_amount = total_amount - discount_amount
+        final_amount = max(0, total_amount - discount_amount)
 
         # 주문 생성
         new_order = Order(
@@ -965,6 +969,8 @@ def checkout():
             payment_method=payment_method,
             status="결제대기",   # ✅ 결제 완료 전이므로 대기 상태
             created_at=datetime.now(KST)
+            applied_user_coupon_id=applied_user_coupon_id,
+            discount_amount=discount_amount
         )
         db.session.add(new_order)
         db.session.flush()  # new_order.id 확보
@@ -1009,15 +1015,16 @@ def checkout():
 @app.route("/payment/<int:order_id>")
 def payment(order_id):
     order = Order.query.get_or_404(order_id)
-    amount = sum(int(oi.price) * int(oi.quantity) for oi in order.items)  # <- amount로 계산
-    user_info = User.query.get(order.user_id) if order.user_id else None
+    items_total = sum(int(oi.price) * int(oi.quantity) for oi in order.items)
+    amount = max(0, items_total - (order.discount_amount or 0))  # ✅ 할인 반영
 
+    user_info = User.query.get(order.user_id) if order.user_id else None
     return render_template(
         "payment.html",
         order=order,
-        amount=amount,                 # <- amount 넘김
+        amount=amount,   # ✅ 할인 반영된 금액 전달
         user_info=user_info,
-        imp_code=app.config["IMP_CODE"]  # <- 결제 스크립트에서 사용
+        imp_code=app.config["IMP_CODE"]
     )
 
 
@@ -1028,7 +1035,9 @@ def pay_prepare():
     order_id = data.get("order_id")
     order = Order.query.get_or_404(order_id)
 
-    expected_amount = sum(int(i.price) * int(i.quantity) for i in order.items)
+    items_total = sum(int(i.price) * int(i.quantity) for i in order.items)
+    expected_amount = max(0, items_total - (order.discount_amount or 0))  # ✅ 할인 반영
+
     merchant_uid = f"UGA_{order.id}_{int(datetime.utcnow().timestamp())}"
 
     pay = Payment(order_id=order.id, merchant_uid=merchant_uid, amount=expected_amount, status="ready")
@@ -1052,67 +1061,53 @@ def pay_prepare():
 
 @app.route("/pay/verify", methods=["POST"])
 def pay_verify():
-    # imp_uid로 아임포트 조회 → 금액/UID 검증 → DB 반영
     data = request.get_json(silent=True) or {}
-    imp_uid = data.get("imp_uid")
     merchant_uid = data.get("merchant_uid")
-    order_id = data.get("order_id")
 
-    pay = Payment.query.filter_by(merchant_uid=merchant_uid, order_id=order_id).first()
-    if not pay:
-        return jsonify(ok=False, msg="payment not found"), 404
-
-    token = _get_iamport_token()
-    res = requests.get(
-        f"https://api.iamport.kr/payments/{imp_uid}",
-        headers={"Authorization": token},
-        timeout=7
+    # PG로부터 결제 상태 확인
+    imp_res = requests.get(
+        f"https://api.iamport.kr/payments/{merchant_uid}",
+        headers={"Authorization": app.config["IMP_TOKEN"]}
     )
-    res.raise_for_status()
-    info = res.json()["response"]
+    if imp_res.status_code != 200:
+        return jsonify(ok=False, message="결제사 검증 실패"), 400
 
-    paid_amount = int(info["amount"])
-    status      = info["status"]              # paid, ready(vbank), cancelled 등
-    method      = info.get("pay_method")
-    pg          = info.get("pg_provider")
+    imp_data = imp_res.json().get("response", {})
+    status = imp_data.get("status")
 
-    # 금액/merchant_uid 검증
-    if info["merchant_uid"] != merchant_uid:
-        return jsonify(ok=False, msg="merchant_uid mismatch"), 400
-    if paid_amount != pay.amount:
-        return jsonify(ok=False, msg="amount mismatch"), 400
-
-    # 상태 반영
-    pay.imp_uid = imp_uid
-    pay.method = method
-    pay.pg_provider = pg
-
-    order = Order.query.get_or_404(order_id)
+    pay = Payment.query.filter_by(merchant_uid=merchant_uid).first_or_404()
+    order = pay.order
 
     if status == "paid":
+        # ✅ 결제 성공
         pay.status = "paid"
         pay.paid_at = datetime.utcnow()
         order.status = "paid"
 
-        # ✅ 쿠폰 사용 처리 (checkout에서 선택한 쿠폰 ID 세션에 저장해 두면 좋음)
-        user_coupon_id = session.pop("checkout_coupon_id", None)
-        if user_coupon_id:
-            uc = UserCoupon.query.filter_by(id=user_coupon_id, user_id=order.user_id).first()
+        # ✅ 쿠폰은 결제 성공시에만 사용 처리
+        if getattr(order, "applied_user_coupon_id", None):
+            uc = UserCoupon.query.filter_by(
+                id=order.applied_user_coupon_id,
+                user_id=order.user_id
+            ).first()
             if uc and not uc.used:
                 uc.used = True
                 uc.used_at = datetime.utcnow()
                 db.session.add(uc)
 
-        # ✅ 장바구니 비우기 (회원/비회원 구분)
+        # ✅ 장바구니도 성공시에만 비움
         if order.user_id:
             CartItem.query.filter_by(user_id=order.user_id).delete()
         elif order.guest_email:
             CartItem.query.filter_by(session_id=session.get("session_id")).delete()
 
     elif status in ("ready", "vbank_issued"):
+        # 가상계좌 발급 등 → 입금 대기
         pay.status = "ready"
         order.status = "pending"
+
     else:
+        # 실패, 취소, 미결제 등
         pay.status = status
         order.status = "failed"
 
