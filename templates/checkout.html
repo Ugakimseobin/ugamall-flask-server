@@ -244,4 +244,53 @@ document.getElementById("checkout-form").addEventListener("submit", function(e) 
 });
 </script>
 
+<style>
+/* ============================
+   커스텀 체크박스 (동그라미 스타일)
+   ============================ */
+.custom-checkbox {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.custom-checkbox input {
+  display: none; /* 기본 체크박스 숨기기 */
+}
+
+.custom-checkbox .checkmark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%; /* 동그라미 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+/* 체크되었을 때 */
+.custom-checkbox input:checked + .checkmark {
+  border-color: #4f46e5; /* 인디고 */
+  background-color: #4f46e5;
+}
+
+/* 체크 아이콘 */
+.custom-checkbox .checkmark::after {
+  content: "";
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.custom-checkbox input:checked + .checkmark::after {
+  opacity: 1;
+}
+</style>
 {% endblock %}
