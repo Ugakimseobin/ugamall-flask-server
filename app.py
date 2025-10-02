@@ -952,9 +952,7 @@ def checkout():
                     discount_amount = uc.coupon.discount_value
                 discount_amount = min(discount_amount, total_amount)
                 applied_user_coupon_id = uc.id  # ✅ 주문에 어떤 쿠폰을 적용했는지 저장
-                uc.used = True
-                uc.used_at = datetime.utcnow()
-                db.session.add(uc)
+                
 
         final_amount = max(0, total_amount - discount_amount)
 
