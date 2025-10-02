@@ -963,7 +963,7 @@ def checkout():
             base_address=base_address,
             detail_address=detail_address,
             payment_method=payment_method,
-            status="주문 접수",
+            status="결제대기",   # ✅ 결제 완료 전이므로 대기 상태
             created_at=datetime.now(KST)
         )
         db.session.add(new_order)
@@ -978,7 +978,6 @@ def checkout():
                 quantity=item.quantity,
                 price=unit_price
             ))
-            db.session.delete(item)
 
         db.session.commit()
 
@@ -1094,6 +1093,22 @@ def pay_verify():
         pay.status = "paid"
         pay.paid_at = datetime.utcnow()
         order.status = "paid"
+
+        # ✅ 쿠폰 사용 처리 (checkout에서 선택한 쿠폰 ID 세션에 저장해 두면 좋음)
+        user_coupon_id = session.pop("checkout_coupon_id", None)
+        if user_coupon_id:
+            uc = UserCoupon.query.filter_by(id=user_coupon_id, user_id=order.user_id).first()
+            if uc and not uc.used:
+                uc.used = True
+                uc.used_at = datetime.utcnow()
+                db.session.add(uc)
+
+        # ✅ 장바구니 비우기 (회원/비회원 구분)
+        if order.user_id:
+            CartItem.query.filter_by(user_id=order.user_id).delete()
+        elif order.guest_email:
+            CartItem.query.filter_by(session_id=session.get("session_id")).delete()
+
     elif status in ("ready", "vbank_issued"):
         pay.status = "ready"
         order.status = "pending"
