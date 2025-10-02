@@ -132,15 +132,31 @@
         </div>
 
         <!-- 하단 고정 결제 바 -->
-        <div class="fixed bottom-0 left-0 w-full bg-black text-white p-3 sm:p-4 flex flex-col sm:flex-row justify-between items-center shadow-lg gap-2 sm:gap-0">
-            <div>
-              총액: <span id="total-price">0</span>원 /
-              할인: <span id="discount-price">0</span>원 /
-              <strong>결제금액: <span id="final-price">0</span>원</strong>
+        <div class="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg">
+          <div class="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 px-4 sm:px-6 py-3">
+
+            <!-- 가격 정보 -->
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 w-full sm:w-auto text-center sm:text-left">
+              <div class="text-gray-600 text-sm sm:text-base">
+                총 상품금액:
+                <span id="total-price" class="font-semibold text-gray-900">0</span>원
+              </div>
+              <div class="text-gray-600 text-sm sm:text-base">
+                할인금액:
+                <span id="discount-price" class="font-semibold text-red-600">0</span>원
+              </div>
+              <div class="text-gray-900 text-base sm:text-lg font-bold">
+                결제금액:
+                <span id="final-price" class="text-indigo-600 text-xl sm:text-2xl font-extrabold">0</span>원
+              </div>
             </div>
-            <button type="submit" class="bg-indigo-600 px-6 py-2 rounded-lg hover:bg-indigo-700">
-                {{ _("결제하기") }}
+
+            <!-- 결제 버튼 -->
+            <button type="submit"
+              class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg sm:text-xl px-6 sm:px-10 py-3 rounded-lg shadow-md transition">
+              결제하기
             </button>
+          </div>
         </div>
     </form>
 </div>
