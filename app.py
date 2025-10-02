@@ -968,7 +968,7 @@ def checkout():
             detail_address=detail_address,
             payment_method=payment_method,
             status="결제대기",   # ✅ 결제 완료 전이므로 대기 상태
-            created_at=datetime.now(KST)
+            created_at=datetime.now(KST),
             applied_user_coupon_id=applied_user_coupon_id,
             discount_amount=discount_amount
         )
