@@ -48,7 +48,7 @@
                     <!-- 우측: 가격 + 삭제 -->
                     <div class="w-full sm:w-32 text-right mt-2 sm:mt-0">
                         <div class="font-semibold item-total text-sm sm:text-base">
-                            {{ (item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) * item.quantity }}{{ _("원") }}
+                             {{ ((item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) * item.quantity) | int | format }}원
                         </div>
                         <button type="button" class="remove-btn mt-1 sm:mt-2 text-red-500 hover:text-red-700 text-xs sm:text-sm"
                                 data-url="{{ url_for('remove_from_cart', item_id=item.id) }}">
@@ -226,6 +226,25 @@ document.querySelectorAll(".cart-item").forEach(item => {
   });
 
   quantityInput.addEventListener("input", updateTotals);
+});
+
+// ==============================
+// 삭제 버튼 처리
+// ==============================
+document.querySelectorAll(".remove-btn").forEach(btn => {
+  btn.addEventListener("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const url = this.dataset.url;
+    if (confirm("이 상품을 장바구니에서 삭제하시겠습니까?")) {
+      fetch(url, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      })
+      .then(res => res.ok ? window.location.reload() : alert("삭제 실패"))
+      .catch(() => alert("서버 통신 오류가 발생했습니다."));
+    }
+  });
 });
 
 // ==============================
