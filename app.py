@@ -1708,6 +1708,19 @@ def admin_confirm_deposit(order_id):
         return redirect(url_for("admin_orders"))
 
     order.status = "결제완료"
+    payment = Payment.query.filter_by(order_id=order.id).first()
+    if not payment:
+        payment = Payment(
+            order_id=order.id,
+            merchant_uid=f"DEPOSIT_{order.id}_{int(datetime.utcnow().timestamp())}",
+            amount=sum(i.price * i.quantity for i in order.items),
+            status="paid",  # 실제 입금 완료 상태
+            paid_at=datetime.utcnow(),
+        )
+        db.session.add(payment)
+    else:
+        payment.status = "paid"
+        payment.paid_at = datetime.utcnow()
     order.updated_at = datetime.now()
     db.session.commit()
 
