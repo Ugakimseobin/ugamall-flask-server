@@ -168,7 +168,6 @@ const IMP = window.IMP;
 IMP.init("{{ imp_code }}");
 
 document.getElementById("checkout-form").addEventListener("submit", async function(e) {
-  e.preventDefault();
   const checked = document.querySelectorAll(".item-checkbox:checked");
   if (checked.length === 0) {
     alert("결제할 상품을 선택해주세요.");
@@ -181,10 +180,13 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
   // ✅ 무통장입금 처리
   if (paymentMethod === "무통장입금") {
     if (confirm("무통장입금으로 주문하시겠습니까?")) {
-      form.submit(); // 서버에서 바로 주문 저장 → order_complete로 이동
+      return; // ✅ 그냥 폼 기본 제출 허용 (e.preventDefault() 제거)
+    } else {
+      e.preventDefault();
+      return;
     }
-    return;
   }
+  e.preventDefault();
 
   try {
     // ✅ 주문 생성
