@@ -13,9 +13,9 @@
           <th class="border px-3 py-2">주문자</th>
           <th class="border px-3 py-2">상품/수량</th>
           <th class="border px-3 py-2">총액</th>
-          <th class="border px-3 py-2 w-[140px]">결제상태</th>
+          <th class="border px-3 py-2 w-[120px]">결제상태</th>
           <th class="border px-3 py-2">배송지</th>
-          <th class="border px-3 py-2 w-[140px]">주문상태</th>
+          <th class="border px-3 py-2 w-[120px]">주문상태</th>
           <th class="border px-3 py-2 w-[230px]">작업</th>
         </tr>
       </thead>
@@ -41,7 +41,11 @@
           <td class="border px-3 py-2">
             <span class="inline-block rounded bg-gray-100 px-2 py-[2px] text-sm">
               {% if o.payment_method == "무통장입금" %}
-                입금대기
+                {% if o._pay_status == "paid" %}
+                    입금완료
+                {% else %}
+                    입금대기
+                {% endif %}
               {% elif o._pay_status %}
                 {{ o._pay_status | status_label }}
               {% else %}
@@ -52,7 +56,7 @@
             {% if o.payment_method == "무통장입금" and o.status == "입금대기" %}
                 <form method="post" action="{{ url_for('admin_confirm_deposit', order_id=o.id) }}" class="inline">
                 <button type="submit"
-                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-[2px] rounded text-sm"
+                        class="bg-green-600 hover:bg-green-700 text-white px-2 py-[2px] rounded text-sm"
                         onclick="return confirm('주문을 결제완료로 변경합니다.');">
                     입금 확인
                 </button>
@@ -124,17 +128,21 @@
       <div class="mb-1"><span class="text-gray-500">결제</span> :
         <span class="inline-block rounded bg-gray-100 px-2 py-0.5">
           {% if o.payment_method == "무통장입금" %}
-            입금대기
+            {% if o._pay_status == "paid" %}
+                입금완료
+            {% else %}
+                입금대기
+            {% endif %}
           {% elif o._pay_status %}
             {{ o._pay_status | status_label }}
           {% else %}
             -
           {% endif %}
-          
+
           {% if o.payment_method == "무통장입금" and o.status == "입금대기" %}
                 <form method="post" action="{{ url_for('admin_confirm_deposit', order_id=o.id) }}" class="inline">
                 <button type="submit"
-                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-[2px] rounded text-sm"
+                        class="bg-green-600 hover:bg-green-700 text-white px-2 py-0.5 rounded text-sm"
                         onclick="return confirm('주문을 결제완료로 변경합니다.');">
                     입금 확인
                 </button>
