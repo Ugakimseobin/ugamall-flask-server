@@ -40,7 +40,13 @@
 
           <td class="border px-3 py-2">
             <span class="inline-block rounded bg-gray-100 px-2 py-0.5">
-              {{ o._pay_status | status_label }}
+              {% if o.payment_method == "무통장입금" %}
+                입금대기
+              {% elif o._pay_status %}
+                {{ o._pay_status | status_label }}
+              {% else %}
+                -
+              {% endif %}
             </span>
           </td>
 
@@ -107,7 +113,13 @@
       <div class="mb-1"><span class="text-gray-500">총액</span> : <b>{{ o._total_amount|won }}원</b></div>
       <div class="mb-1"><span class="text-gray-500">결제</span> :
         <span class="inline-block rounded bg-gray-100 px-2 py-0.5">
-          {{ o._pay_status | status_label }}
+          {% if o.payment_method == "무통장입금" %}
+            입금대기
+          {% elif o._pay_status %}
+            {{ o._pay_status | status_label }}
+          {% else %}
+            -
+          {% endif %}
         </span>
       </div>
       <div class="mb-1"><span class="text-gray-500">배송지</span> : {{ o._address }}</div>
