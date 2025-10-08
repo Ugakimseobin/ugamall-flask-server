@@ -23,7 +23,9 @@
         {% for o in orders %}
         <tr class="hover:bg-gray-50 align-top">
           <td class="border px-3 py-2">{{ o.id }}</td>
-          <td class="border px-3 py-2">{{ o.created_at.strftime('%Y-%m-%d %H:%M') if o.created_at else '-' }}</td>
+          <td class="border px-3 py-2">
+            {{ (o.created_at + timedelta(hours=9)).strftime('%Y-%m-%d %H:%M') if o.created_at else '-' }}
+          </td>
 
           <td class="border px-3 py-2">
             <div class="font-medium">{{ o._who }}</div>

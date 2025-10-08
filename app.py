@@ -1703,34 +1703,44 @@ def admin_confirm_deposit(order_id):
 
     order = Order.query.get_or_404(order_id)
 
+    # 무통장입금 주문만 처리
     if order.payment_method != "무통장입금":
         flash("무통장입금 주문만 입금 확인 가능합니다.", "error")
         return redirect(url_for("admin_orders"))
 
+    # ✅ 상태 변경 (주문 + 결제)
     order.status = "결제완료"
+    order.updated_at = datetime.now(KST)  # 한국시간 기준으로 갱신
+
     payment = Payment.query.filter_by(order_id=order.id).first()
+    total_amount = sum(i.price * i.quantity for i in order.items)
+
     if not payment:
+        # 결제 정보가 없으면 새로 생성
         payment = Payment(
             order_id=order.id,
             merchant_uid=f"DEPOSIT_{order.id}_{int(datetime.utcnow().timestamp())}",
-            amount=sum(i.price * i.quantity for i in order.items),
-            status="paid",  # 실제 입금 완료 상태
-            paid_at=datetime.utcnow(),
+            amount=total_amount,
+            status="paid",  # 결제 완료
+            paid_at=datetime.now(KST)
         )
         db.session.add(payment)
     else:
+        # 기존 결제정보 업데이트
         payment.status = "paid"
-        payment.paid_at = datetime.utcnow()
-    order.updated_at = datetime.now()
+        payment.paid_at = datetime.now(KST)
+        payment.amount = total_amount
+
     db.session.commit()
 
     # ✅ 이메일 발송 (비회원 / 회원 구분)
     recipient = order.guest_email or (order.user.email if order.user else None)
     if recipient:
-        send_email(
-            subject="[UGAMALL] 입금이 확인되었습니다.",
-            recipients=[recipient],
-            body=f"""
+        try:
+            send_email(
+                subject="[UGAMALL] 입금이 확인되었습니다.",
+                recipients=[recipient],
+                body=f"""
 안녕하세요, {order.name}님.
 주문번호 {order.id}의 입금이 확인되어 결제가 완료되었습니다.
 배송 준비를 시작하겠습니다.
@@ -1738,7 +1748,9 @@ def admin_confirm_deposit(order_id):
 감사합니다.
 UGAMALL 드림
 """
-        )
+            )
+        except Exception as e:
+            print("⚠️ 이메일 발송 오류:", e)
 
     flash(f"주문번호 {order.id}의 입금이 확인되어 결제완료로 변경되었습니다.", "success")
     return redirect(url_for("admin_orders"))
