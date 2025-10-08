@@ -13,10 +13,10 @@
           <th class="border px-3 py-2">주문자</th>
           <th class="border px-3 py-2">상품/수량</th>
           <th class="border px-3 py-2">총액</th>
-          <th class="border px-3 py-2">결제상태</th>
+          <th class="border px-3 py-2 w-[90px]">결제상태</th>
           <th class="border px-3 py-2">배송지</th>
-          <th class="border px-3 py-2">주문상태</th>
-          <th class="border px-3 py-2 w-[320px]">작업</th>
+          <th class="border px-3 py-2 w-[90px]">주문상태</th>
+          <th class="border px-3 py-2 w-[260px]">작업</th>
         </tr>
       </thead>
       <tbody>
@@ -48,6 +48,16 @@
                 -
               {% endif %}
             </span>
+
+            {% if o.payment_method == "무통장입금" and o.status == "입금대기" %}
+                <form method="post" action="{{ url_for('admin_confirm_deposit', order_id=o.id) }}" class="inline">
+                <button type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm"
+                        onclick="return confirm('주문을 결제완료로 변경합니다.');">
+                    입금 확인
+                </button>
+                </form>
+            {% endif %}
           </td>
 
           <td class="border px-3 py-2">{{ o._address }}</td>

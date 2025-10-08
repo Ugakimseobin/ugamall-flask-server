@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, current_app
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, current_app, abort
 from flask_babel import Babel
 from flask_login import UserMixin
 from flask_login import current_user, login_required
@@ -18,6 +18,7 @@ from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 import uuid
 import json
+from threading import Thread
 from datetime import timedelta
 
 app = Flask(__name__)
@@ -59,9 +60,8 @@ app.config.update(
     MAIL_USE_TLS=True,
     MAIL_USERNAME='fkemfem85@gmail.com',
     MAIL_PASSWORD='grte qfgm qfmf ihia',  # Gmail 앱 비밀번호
-    MAIL_DEFAULT_SENDER='fkemfem85l@gmail.com'
+    MAIL_DEFAULT_SENDER='UGAMALL <fkemfem85@gmail.com>'
 )
-
 mail = Mail(app)
 s = URLSafeTimedSerializer(app.secret_key)
 
@@ -369,6 +369,14 @@ def inject_admin_alerts():
         )
     return {}
 # ----------------------------
+# 비동기 메일 발송 함수
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+def send_email(subject, recipients, body):
+    msg = Message(subject=subject, recipients=recipients, body=body)
+    Thread(target=send_async_email, args=(app, msg)).start()
 #-----------------------------
 def _get_iamport_token():
     r = requests.post("https://api.iamport.kr/users/getToken", data={
@@ -1686,6 +1694,41 @@ def admin_orders():
     return render_template("admin/admin_orders.html",
                            orders=orders,
                            status_options=STATUS_OPTIONS)
+
+@app.route("/admin/orders/confirm_deposit/<int:order_id>", methods=["POST"])
+@login_required
+def admin_confirm_deposit(order_id):
+    if not current_user.is_admin:
+        abort(403)
+
+    order = Order.query.get_or_404(order_id)
+
+    if order.payment_method != "무통장입금":
+        flash("무통장입금 주문만 입금 확인 가능합니다.", "error")
+        return redirect(url_for("admin_orders"))
+
+    order.status = "결제완료"
+    order.updated_at = datetime.now()
+    db.session.commit()
+
+    # ✅ 이메일 발송 (비회원 / 회원 구분)
+    recipient = order.guest_email or (order.user.email if order.user else None)
+    if recipient:
+        send_email(
+            subject="[UGAMALL] 입금이 확인되었습니다.",
+            recipients=[recipient],
+            body=f"""
+안녕하세요, {order.name}님.
+주문번호 {order.id}의 입금이 확인되어 결제가 완료되었습니다.
+배송 준비를 시작하겠습니다.
+
+감사합니다.
+UGAMALL 드림
+"""
+        )
+
+    flash(f"주문번호 {order.id}의 입금이 확인되어 결제완료로 변경되었습니다.", "success")
+    return redirect(url_for("admin_orders"))
 
 @app.post("/admin/orders/<int:order_id>/cancel")
 @login_required
