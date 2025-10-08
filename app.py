@@ -991,7 +991,14 @@ def checkout():
         db.session.commit()
 
         # ✅ 결제 페이지로 이동
-        return redirect(url_for("payment", order_id=new_order.id))
+        if payment_method == "무통장입금":
+            # 무통장입금은 결제창 띄우지 않고 바로 주문완료 페이지로 이동
+            new_order.status = "입금대기"  # 상태를 명확히 설정
+            db.session.commit()
+            return redirect(url_for("order_complete", order_id=new_order.id))
+        else:
+            # 카드, 카카오, 네이버 등은 결제창으로 이동
+            return redirect(url_for("payment", order_id=new_order.id))
 
     # GET: 장바구니 화면
     cart_items = base_q.all()
