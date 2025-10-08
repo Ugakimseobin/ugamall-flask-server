@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-09-30 17:33+0900\n"
+"POT-Creation-Date: 2025-10-08 11:04+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -37,12 +37,12 @@ msgid "제품"
 msgstr ""
 
 #: templates/base.html:59 templates/base.html:129
-#: templates/product_detail.html:69
+#: templates/product_detail.html:83
 msgid "문의"
 msgstr ""
 
 #: templates/base.html:71 templates/base.html:134 templates/mypage.html:6
-#: templates/order_complete.html:28
+#: templates/order_complete.html:34
 msgid "마이페이지"
 msgstr ""
 
@@ -71,9 +71,12 @@ msgstr ""
 msgid "상품"
 msgstr ""
 
-#: templates/base.html:197 templates/contact.html:16 templates/contact.html:43
-#: templates/index.html:99
+#: templates/base.html:197 templates/contact.html:16 templates/index.html:99
 msgid "문의하기"
+msgstr ""
+
+#: templates/base.html:201 templates/contact.html:49
+msgid "오시는 길"
 msgstr ""
 
 #: templates/base.html:202
@@ -84,14 +87,8 @@ msgstr ""
 msgid "주문 / 결제"
 msgstr ""
 
-#: templates/checkout.html:35 templates/mypage.html:58
+#: templates/checkout.html:35 templates/mypage.html:59
 msgid "기본상품"
-msgstr ""
-
-#: templates/checkout.html:51 templates/checkout.html:114
-#: templates/guest_orders.html:25 templates/product_detail.html:21
-#: templates/product_detail.html:87 templates/product_detail.html:114
-msgid "원"
 msgstr ""
 
 #: templates/checkout.html:55
@@ -108,7 +105,7 @@ msgstr ""
 
 #: templates/auth/register_info.html:28 templates/auth/register_info.html:29
 #: templates/auth/register_info.html:113 templates/checkout.html:70
-#: templates/index.html:109 templates/mypage.html:97
+#: templates/index.html:109 templates/mypage.html:98
 msgid "이름"
 msgstr ""
 
@@ -128,45 +125,77 @@ msgstr ""
 #: templates/auth/login.html:11 templates/auth/register_info.html:11
 #: templates/auth/register_info.html:95 templates/checkout.html:96
 #: templates/checkout.html:97 templates/contact.html:21
-#: templates/contact.html:53 templates/guest_orders.html:5
-#: templates/guest_orders_search.html:8 templates/mypage.html:93
+#: templates/contact.html:54 templates/guest_orders.html:5
+#: templates/guest_orders_search.html:8 templates/mypage.html:94
 msgid "이메일"
 msgstr ""
 
 #: templates/checkout.html:103
-msgid "결제 방법"
+msgid "쿠폰 선택"
 msgstr ""
 
 #: templates/checkout.html:105
-msgid "무통장입금"
+msgid "쿠폰을 선택하세요"
 msgstr ""
 
-#: templates/checkout.html:106
-msgid "카드결제"
+#: templates/checkout.html:125
+msgid "결제 방법"
 msgstr ""
 
-#: templates/checkout.html:107
-msgid "간편결제"
+#: templates/checkout.html:142
+msgid "총 상품긍액"
 msgstr ""
 
-#: templates/checkout.html:114
-msgid "총 금액"
+#: templates/checkout.html:143 templates/checkout.html:147
+#: templates/guest_orders.html:25 templates/mypage.html:194
+#: templates/mypage.html:197 templates/product_detail.html:141
+#: templates/product_detail.html:168
+msgid "원"
 msgstr ""
 
-#: templates/checkout.html:116
+#: templates/checkout.html:146
+msgid "할인금액"
+msgstr ""
+
+#: templates/checkout.html:150 templates/order_complete.html:13
+#: templates/payment.html:11
+msgid "결제금액"
+msgstr ""
+
+#: templates/checkout.html:158
 msgid "결제하기"
 msgstr ""
 
-#: templates/checkout.html:186
-msgid "이 상품을 장바구니에서 삭제하시겠습니까?"
+#: templates/checkout.html:172
+msgid "결제할 상품을 선택해주세요."
 msgstr ""
 
-#: templates/checkout.html:195
-msgid "삭제 요청에 실패했습니다."
+#: templates/checkout.html:180
+msgid "무통장입금으로 주문하시겠습니까?"
 msgstr ""
 
-#: templates/checkout.html:198
-msgid "삭제 실패"
+#: templates/checkout.html:193
+msgid "주문 생성 중 오류가 발생했습니다."
+msgstr ""
+
+#: templates/checkout.html:208
+msgid "결제 준비 실패"
+msgstr ""
+
+#: templates/checkout.html:246
+msgid "결제가 완료되었습니다."
+msgstr ""
+
+#: templates/checkout.html:249
+msgid "검증 실패"
+msgstr ""
+
+#: templates/checkout.html:253
+msgid "결제 실패"
+msgstr ""
+
+#: templates/checkout.html:260
+msgid "결제 처리 중 오류가 발생했습니다."
 msgstr ""
 
 #: templates/company.html:12
@@ -269,12 +298,12 @@ msgstr ""
 msgid "문의 내용을 입력하세요"
 msgstr ""
 
-#: templates/contact.html:49
-msgid "오는 길"
+#: templates/contact.html:43 templates/index.html:127
+msgid "보내기"
 msgstr ""
 
 #: templates/auth/register_info.html:34 templates/auth/register_info.html:123
-#: templates/contact.html:51 templates/mypage.html:101
+#: templates/contact.html:51 templates/mypage.html:102
 #: templates/order_complete.html:10
 msgid "주소"
 msgstr ""
@@ -287,11 +316,15 @@ msgstr ""
 msgid "전화"
 msgstr ""
 
+#: templates/contact.html:53
+msgid "팩스"
+msgstr ""
+
 #: templates/guest_orders.html:4
 msgid "비회원 주문내역"
 msgstr ""
 
-#: templates/guest_orders.html:9 templates/mypage.html:27
+#: templates/guest_orders.html:9 templates/mypage.html:28
 #: templates/order_complete.html:7 templates/payment.html:8
 msgid "주문번호"
 msgstr ""
@@ -313,7 +346,8 @@ msgstr ""
 msgid "결제방식"
 msgstr ""
 
-#: templates/guest_orders.html:15 templates/mypage.html:156
+#: templates/guest_orders.html:15 templates/mypage.html:157
+#: templates/mypage.html:183
 msgid "상태"
 msgstr ""
 
@@ -406,11 +440,7 @@ msgstr ""
 msgid "이메일 (필수)"
 msgstr ""
 
-#: templates/index.html:127
-msgid "보내기"
-msgstr ""
-
-#: templates/mypage.html:8 templates/mypage.html:18
+#: templates/mypage.html:8 templates/mypage.html:19
 msgid "주문내역"
 msgstr ""
 
@@ -422,92 +452,132 @@ msgstr ""
 msgid "문의내역"
 msgstr ""
 
-#: templates/mypage.html:20
+#: templates/mypage.html:11 templates/mypage.html:172
+msgid "내 쿠폰함"
+msgstr ""
+
+#: templates/mypage.html:21
 msgid "주문 내역이 없습니다."
 msgstr ""
 
-#: templates/mypage.html:28
+#: templates/mypage.html:29
 msgid "주문일"
 msgstr ""
 
-#: templates/mypage.html:36 templates/products.html:12 templates/search.html:21
+#: templates/mypage.html:37 templates/products.html:12 templates/search.html:21
 msgid "상품명"
 msgstr ""
 
-#: templates/mypage.html:37 templates/product_detail.html:51
-#: templates/product_detail.html:118
+#: templates/mypage.html:38 templates/product_detail.html:65
+#: templates/product_detail.html:172
 msgid "수량"
 msgstr ""
 
-#: templates/mypage.html:38 templates/products.html:32 templates/search.html:40
+#: templates/mypage.html:39 templates/products.html:32 templates/search.html:40
 msgid "가격"
 msgstr ""
 
-#: templates/mypage.html:39
+#: templates/mypage.html:40
 msgid "재주문"
 msgstr ""
 
-#: templates/mypage.html:73 templates/product_detail.html:153
+#: templates/mypage.html:74 templates/product_detail.html:207
 msgid "장바구니 담기"
 msgstr ""
 
-#: templates/mypage.html:89
+#: templates/mypage.html:90
 msgid "개인정보 변경"
 msgstr ""
 
-#: templates/auth/register_info.html:36 templates/mypage.html:103
+#: templates/auth/register_info.html:36 templates/mypage.html:104
 msgid "우편번호"
 msgstr ""
 
-#: templates/auth/register_info.html:40 templates/mypage.html:104
+#: templates/auth/register_info.html:40 templates/mypage.html:105
 msgid "주소찾기"
 msgstr ""
 
 #: templates/auth/register_info.html:44 templates/auth/register_info.html:125
-#: templates/mypage.html:108
+#: templates/mypage.html:109
 msgid "기본주소"
 msgstr ""
 
 #: templates/auth/register_info.html:47 templates/auth/register_info.html:126
-#: templates/mypage.html:111
+#: templates/mypage.html:112
 msgid "상세주소"
 msgstr ""
 
-#: templates/mypage.html:116
+#: templates/mypage.html:117
 msgid "마케팅/혜택 수신 동의"
 msgstr ""
 
-#: templates/mypage.html:119
+#: templates/mypage.html:120
 msgid "저장"
 msgstr ""
 
-#: templates/auth/reset_password_form.html:27 templates/mypage.html:123
-#: templates/mypage.html:138
+#: templates/auth/reset_password_form.html:27 templates/mypage.html:124
+#: templates/mypage.html:139
 msgid "비밀번호 변경"
 msgstr ""
 
-#: templates/mypage.html:127
+#: templates/mypage.html:128
 msgid "현재 비밀번호"
 msgstr ""
 
-#: templates/auth/reset_password_form.html:10 templates/mypage.html:131
+#: templates/auth/reset_password_form.html:10 templates/mypage.html:132
 msgid "새 비밀번호"
 msgstr ""
 
-#: templates/auth/reset_password_form.html:18 templates/mypage.html:135
+#: templates/auth/reset_password_form.html:18 templates/mypage.html:136
 msgid "새 비밀번호 확인"
 msgstr ""
 
-#: templates/mypage.html:144
+#: templates/mypage.html:145
 msgid "문의 내역"
 msgstr ""
 
-#: templates/mypage.html:146
+#: templates/mypage.html:147
 msgid "등록된 문의가 없습니다."
 msgstr ""
 
-#: templates/mypage.html:159
+#: templates/mypage.html:160
 msgid "답변"
+msgstr ""
+
+#: templates/mypage.html:174
+msgid "보유한 쿠폰이 없습니다."
+msgstr ""
+
+#: templates/mypage.html:179
+msgid "쿠폰명"
+msgstr ""
+
+#: templates/mypage.html:180
+msgid "할인"
+msgstr ""
+
+#: templates/mypage.html:181
+msgid "조건"
+msgstr ""
+
+#: templates/mypage.html:182
+msgid "유효기간"
+msgstr ""
+
+#: templates/mypage.html:197
+msgid "최소"
+msgstr ""
+
+#: templates/mypage.html:197
+msgid "이상"
+msgstr ""
+
+#: templates/mypage.html:201
+msgid "사용됨"
+msgstr ""
+
+#: templates/mypage.html:203
+msgid "미사용"
 msgstr ""
 
 #: templates/order_complete.html:4
@@ -522,27 +592,35 @@ msgstr ""
 msgid "결제상태"
 msgstr ""
 
-#: templates/order_complete.html:13 templates/payment.html:11
-msgid "결제금액"
-msgstr ""
-
 #: templates/order_complete.html:18
 msgid "입금 안내"
 msgstr ""
 
 #: templates/order_complete.html:20
-msgid "아래 계좌로 주문금액을 입금해 주세요."
+msgid "아래 계좌로 주문금액을 입금해 주세요"
 msgstr ""
 
 #: templates/order_complete.html:21
+msgid "주문일 기준 3일 이내 미입금 시 자동으로 주문이 취소됩니다"
+msgstr ""
+
+#: templates/order_complete.html:24
+msgid "은행명"
+msgstr ""
+
+#: templates/order_complete.html:25
+msgid "계좌번호"
+msgstr ""
+
+#: templates/order_complete.html:26
 msgid "예금주"
 msgstr ""
 
-#: templates/order_complete.html:21
-msgid "계좌"
+#: templates/order_complete.html:27
+msgid "입금 확인 후 배송이 시작됩니다"
 msgstr ""
 
-#: templates/order_complete.html:27
+#: templates/order_complete.html:33
 msgid "홈으로"
 msgstr ""
 
@@ -558,31 +636,47 @@ msgstr ""
 msgid "← 뒤로가기"
 msgstr ""
 
-#: templates/product_detail.html:23
+#: templates/product_detail.html:37
 msgid "카테고리"
 msgstr ""
 
-#: templates/product_detail.html:36 templates/product_detail.html:140
+#: templates/product_detail.html:50 templates/product_detail.html:194
 msgid "선택하세요"
 msgstr ""
 
-#: templates/product_detail.html:63
+#: templates/product_detail.html:77
 msgid "장바구니에 담기"
 msgstr ""
 
-#: templates/product_detail.html:78
-msgid "관련 상품"
+#: templates/product_detail.html:112
+msgid "별점"
 msgstr ""
 
-#: templates/product_detail.html:168
+#: templates/product_detail.html:115
+msgid "점"
+msgstr ""
+
+#: templates/product_detail.html:119
+msgid "리뷰"
+msgstr ""
+
+#: templates/product_detail.html:123
+msgid "등록"
+msgstr ""
+
+#: templates/product_detail.html:132
+msgid "관련 분야 상품"
+msgstr ""
+
+#: templates/product_detail.html:222
 msgid "장바구니에 추가되었습니다"
 msgstr ""
 
-#: templates/product_detail.html:172
+#: templates/product_detail.html:226
 msgid "계속 쇼핑하기"
 msgstr ""
 
-#: templates/product_detail.html:176
+#: templates/product_detail.html:230
 msgid "장바구니로 이동"
 msgstr ""
 
@@ -2417,5 +2511,38 @@ msgstr[0] ""
 #~ msgstr ""
 
 #~ msgid "UID를 정직하게 제공"
+#~ msgstr ""
+
+#~ msgid "무통장입금"
+#~ msgstr ""
+
+#~ msgid "카드결제"
+#~ msgstr ""
+
+#~ msgid "간편결제"
+#~ msgstr ""
+
+#~ msgid "총 금액"
+#~ msgstr ""
+
+#~ msgid "이 상품을 장바구니에서 삭제하시겠습니까?"
+#~ msgstr ""
+
+#~ msgid "삭제 요청에 실패했습니다."
+#~ msgstr ""
+
+#~ msgid "삭제 실패"
+#~ msgstr ""
+
+#~ msgid "오는 길"
+#~ msgstr ""
+
+#~ msgid "아래 계좌로 주문금액을 입금해 주세요."
+#~ msgstr ""
+
+#~ msgid "계좌"
+#~ msgstr ""
+
+#~ msgid "관련 상품"
 #~ msgstr ""
 

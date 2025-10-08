@@ -176,11 +176,11 @@
             <table class="w-full text-sm border">
             <thead>
                 <tr class="bg-gray-100 text-left">
-                <th class="border px-3 py-2">쿠폰명</th>
-                <th class="border px-3 py-2">할인</th>
-                <th class="border px-3 py-2">조건</th>
-                <th class="border px-3 py-2">유효기간</th>
-                <th class="border px-3 py-2">상태</th>
+                <th class="border px-3 py-2">{{ _("쿠폰명") }}</th>
+                <th class="border px-3 py-2">{{ _("할인") }}</th>
+                <th class="border px-3 py-2">{{ _("조건") }}</th>
+                <th class="border px-3 py-2">{{ _("유효기간") }}</th>
+                <th class="border px-3 py-2">{{ _("상태") }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -191,16 +191,16 @@
                     {% if uc.coupon.discount_type == "percent" %}
                     {{ uc.coupon.discount_value }}%
                     {% else %}
-                    {{ uc.coupon.discount_value }}원
+                    {{ uc.coupon.discount_value }}{{ _("원") }}
                     {% endif %}
                 </td>
-                <td class="border px-3 py-2">최소 {{ uc.coupon.min_amount }}원 이상</td>
+                <td class="border px-3 py-2">{{ _("최소") }} {{ uc.coupon.min_amount }}{{ _("원") }} {{ _("이상") }}</td>
                 <td class="border px-3 py-2">{{ uc.coupon.valid_from.date() }} ~ {{ uc.coupon.valid_to.date() }}</td>
                 <td class="border px-3 py-2">
                     {% if uc.used %}
-                    <span class="text-red-500">사용됨</span>
+                    <span class="text-red-500">{{ _("사용됨") }}</span>
                     {% else %}
-                    <span class="text-green-600">미사용</span>
+                    <span class="text-green-600">{{ _("미사용") }}</span>
                     {% endif %}
                 </td>
                 </tr>

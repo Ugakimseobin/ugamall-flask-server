@@ -139,15 +139,15 @@
             <!-- 가격 정보 -->
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 w-full sm:w-auto text-center sm:text-left">
               <div class="text-gray-600 text-sm sm:text-base">
-                총 상품금액:
-                <span id="total-price" class="font-semibold text-gray-900">0</span>원
+                {{ _("총 상품긍액") }}:
+                <span id="total-price" class="font-semibold text-gray-900">0</span>{{ _("원") }}
               </div>
               <div class="text-gray-600 text-sm sm:text-base">
-                할인금액:
-                <span id="discount-price" class="font-semibold text-red-600">0</span>원
+                {{ _("할인금액") }}:
+                <span id="discount-price" class="font-semibold text-red-600">0</span>{{ _("원") }}
               </div>
               <div class="text-gray-900 text-base sm:text-lg font-bold">
-                결제금액:
+                {{ _("결제금액") }}:
                 <span id="final-price" class="text-indigo-600 text-xl sm:text-2xl font-extrabold">0</span>원
               </div>
             </div>
@@ -155,7 +155,7 @@
             <!-- 결제 버튼 -->
             <button type="submit"
               class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg sm:text-xl px-6 sm:px-10 py-3 rounded-lg shadow-md transition">
-              결제하기
+              {{ _("결제하기") }}
             </button>
           </div>
         </div>
@@ -169,7 +169,7 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
   const form = e.target;
   const checked = document.querySelectorAll(".item-checkbox:checked");
   if (checked.length === 0) {
-    alert("결제할 상품을 선택해주세요.");
+    alert("{{ _('결제할 상품을 선택해주세요.') }}");
     return;
   }
 
@@ -177,7 +177,7 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
 
   // ✅ 무통장입금일 경우 → 서버로 바로 제출 (결제창 X)
   if (paymentMethod === "무통장입금") {
-    if (confirm("무통장입금으로 주문하시겠습니까?")) {
+    if (confirm("{{ _('무통장입금으로 주문하시겠습니까?') }}")) {
       form.removeEventListener("submit", arguments.callee); // 이벤트 중복 방지
       form.submit(); // ✅ 기본 폼 제출로 서버 이동
     }
@@ -190,7 +190,7 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
     const formData = new FormData(form);
     const resp = await fetch("/checkout", { method: "POST", body: formData });
     if (!resp.redirected) {
-      alert("주문 생성 중 오류가 발생했습니다.");
+      alert("{{ _('주문 생성 중 오류가 발생했습니다.') }}");
       return;
     }
 
@@ -205,7 +205,7 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
     });
     const prep = await prepRes.json();
     if (!prep.ok) {
-      alert("결제 준비 실패");
+      alert("{{ _('결제 준비 실패') }}");
       location.href = "/checkout";
       return;
     }
@@ -243,21 +243,21 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
         });
         const v = await vRes.json();
         if (v.ok) {
-          alert("결제가 완료되었습니다.");
+          alert("{{ _('결제가 완료되었습니다.') }}");
           location.href = "/order-complete/" + orderId;
         } else {
-          alert("검증 실패: " + (v.msg || ""));
+          alert("{{ _('검증 실패') }}: " + (v.msg || ""));
           location.href = "/checkout";
         }
       } else {
-        alert("결제 실패: " + rsp.error_msg);
+        alert("{{ _('결제 실패') }}: " + rsp.error_msg);
         location.href = "/checkout";
       }
     });
 
   } catch (err) {
     console.error(err);
-    alert("결제 처리 중 오류가 발생했습니다.");
+    alert("{{ _('결제 처리 중 오류가 발생했습니다.') }}");
     location.href = "/checkout";
   }
 });
