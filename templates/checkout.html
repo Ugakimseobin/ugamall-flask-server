@@ -164,10 +164,9 @@
 
 <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 <script>
-const IMP = window.IMP;
-IMP.init("{{ imp_code }}");
-
 document.getElementById("checkout-form").addEventListener("submit", async function(e) {
+  e.preventDefault(); // ✅ 기본 제출 막기 (모든 케이스에서 먼저 막음)
+  const form = e.target;
   const checked = document.querySelectorAll(".item-checkbox:checked");
   if (checked.length === 0) {
     alert("결제할 상품을 선택해주세요.");
@@ -175,21 +174,19 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
   }
 
   const paymentMethod = document.getElementById("payment-method").value;
-  const form = e.target;
 
-  // ✅ 무통장입금 처리
+  // ✅ 무통장입금일 경우 → 서버로 바로 제출 (결제창 X)
   if (paymentMethod === "무통장입금") {
     if (confirm("무통장입금으로 주문하시겠습니까?")) {
-      return; // ✅ 그냥 폼 기본 제출 허용 (e.preventDefault() 제거)
-    } else {
-      e.preventDefault();
-      return;
+      form.removeEventListener("submit", arguments.callee); // 이벤트 중복 방지
+      form.submit(); // ✅ 기본 폼 제출로 서버 이동
     }
+    return;
   }
-  e.preventDefault();
 
+  // ✅ 온라인 결제 (아임포트)
   try {
-    // ✅ 주문 생성
+    // 1️⃣ 주문 생성
     const formData = new FormData(form);
     const resp = await fetch("/checkout", { method: "POST", body: formData });
     if (!resp.redirected) {
@@ -200,7 +197,7 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
     const orderUrl = resp.url;
     const orderId = orderUrl.split("/").pop();
 
-    // ✅ 결제 준비
+    // 2️⃣ 결제 사전 준비
     const prepRes = await fetch("/pay/prepare", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -213,8 +210,12 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
       return;
     }
 
-    // ✅ PG사 선택
-    let pgOption = "html5_inicis"; // 기본 카드결제
+    // 3️⃣ 아임포트 결제 호출
+    const IMP = window.IMP;
+    IMP.init(prep.imp_code || "{{ imp_code }}");
+
+    // ✅ PG사 설정
+    let pgOption = "html5_inicis";
     if (paymentMethod === "카카오페이") pgOption = "kakaopay.TC0ONETIME";
     if (paymentMethod === "네이버페이") pgOption = "naverpay.NPAY";
     if (paymentMethod === "페이코") pgOption = "payco.PAYCO";
