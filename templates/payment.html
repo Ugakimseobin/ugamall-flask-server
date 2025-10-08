@@ -17,8 +17,8 @@
 (async function(){
   const ORDER_ID = {{ order.id }};
   const IMP_CODE = "{{ imp_code }}";
+
   try {
-    // 1) 서버에서 merchant_uid/amount 확보
     const prepRes = await fetch("/pay/prepare", {
       method: "POST",
       headers: {"Content-Type":"application/json"},
@@ -31,12 +31,17 @@
       return;
     }
 
-    // 2) 아임포트 결제 호출
     const IMP = window.IMP;
     IMP.init(prep.imp_code || IMP_CODE);
 
+    // ✅ PG사 매핑
+    let pgOption = "html5_inicis"; // 기본
+    if ("{{ order.payment_method }}" === "카카오페이") pgOption = "kakaopay.TC0ONETIME";
+    if ("{{ order.payment_method }}" === "네이버페이") pgOption = "naverpay.NPAY";
+    if ("{{ order.payment_method }}" === "페이코") pgOption = "payco.PAYCO";
+
     IMP.request_pay({
-      pg: "html5_inicis",        // 샌드박스
+      pg: pgOption,
       pay_method: "card",
       merchant_uid: prep.merchant_uid,
       name: "UGAMALL 주문 결제",
@@ -47,11 +52,14 @@
       buyer_addr: "{{ order.base_address }} {{ order.detail_address or '' }}"
     }, async function (rsp) {
       if (rsp.success) {
-        // 3) 서버 검증
         const vRes = await fetch("/pay/verify", {
           method: "POST",
           headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({ imp_uid: rsp.imp_uid, merchant_uid: rsp.merchant_uid, order_id: ORDER_ID })
+          body: JSON.stringify({
+            imp_uid: rsp.imp_uid,
+            merchant_uid: rsp.merchant_uid,
+            order_id: ORDER_ID
+          })
         });
         const v = await vRes.json();
         if (v.ok) {

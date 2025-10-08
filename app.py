@@ -956,6 +956,11 @@ def checkout():
 
         final_amount = max(0, total_amount - discount_amount)
 
+        if payment_method == "무통장입금":
+            status = "입금대기"
+        else:
+            status = "결제대기"
+
         # 주문 생성
         new_order = Order(
             user_id=current_user.id if current_user.is_authenticated else None,
@@ -965,7 +970,7 @@ def checkout():
             base_address=base_address,
             detail_address=detail_address,
             payment_method=payment_method,
-            status="결제대기",   # ✅ 결제 완료 전이므로 대기 상태
+            status=status,  
             created_at=datetime.now(KST),
             applied_user_coupon_id=applied_user_coupon_id,
             discount_amount=discount_amount
@@ -1060,12 +1065,14 @@ def pay_prepare():
 @app.route("/pay/verify", methods=["POST"])
 def pay_verify():
     data = request.get_json(silent=True) or {}
+    imp_uid = data.get("imp_uid")
     merchant_uid = data.get("merchant_uid")
 
-    # PG로부터 결제 상태 확인
+    token = _get_iamport_token()
     imp_res = requests.get(
-        f"https://api.iamport.kr/payments/{merchant_uid}",
-        headers={"Authorization": app.config["IMP_TOKEN"]}
+        f"https://api.iamport.kr/payments/{imp_uid}",
+        headers={"Authorization": token},
+        timeout=7
     )
     if imp_res.status_code != 200:
         return jsonify(ok=False, message="결제사 검증 실패"), 400

@@ -123,10 +123,11 @@
             <!-- 하단 결제 바-->
             <div class="mb-4">
                 <label class="block font-semibold mb-2">{{ _("결제 방법") }}</label>
-                <select name="payment_method" class="w-full border p-2 rounded text-sm sm:text-base">
-                    <option value="무통장입금">{{ _("무통장입금") }}</option>
-                    <option value="카드결제">{{ _("카드결제") }}</option>
-                    <option value="간편결제">{{ _("간편결제") }}</option>
+                <select name="payment_method" id="payment-method" class="w-full border p-2 rounded text-sm sm:text-base">
+                  <option value="무통장입금">무통장입금</option>
+                  <option value="카드결제">카드결제</option>
+                  <option value="카카오페이">카카오페이</option>
+                  <option value="네이버페이">네이버페이</option>
                 </select>
             </div>
         </div>
@@ -161,6 +162,103 @@
     </form>
 </div>
 
+<script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+<script>
+const IMP = window.IMP;
+IMP.init("{{ imp_code }}");
+
+document.getElementById("checkout-form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const checked = document.querySelectorAll(".item-checkbox:checked");
+  if (checked.length === 0) {
+    alert("결제할 상품을 선택해주세요.");
+    return;
+  }
+
+  const paymentMethod = document.getElementById("payment-method").value;
+  const form = e.target;
+
+  // ✅ 무통장입금 처리
+  if (paymentMethod === "무통장입금") {
+    if (confirm("무통장입금으로 주문하시겠습니까?")) {
+      form.submit(); // 서버에서 바로 주문 저장 → order_complete로 이동
+    }
+    return;
+  }
+
+  try {
+    // ✅ 주문 생성
+    const formData = new FormData(form);
+    const resp = await fetch("/checkout", { method: "POST", body: formData });
+    if (!resp.redirected) {
+      alert("주문 생성 중 오류가 발생했습니다.");
+      return;
+    }
+
+    const orderUrl = resp.url;
+    const orderId = orderUrl.split("/").pop();
+
+    // ✅ 결제 준비
+    const prepRes = await fetch("/pay/prepare", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order_id: orderId })
+    });
+    const prep = await prepRes.json();
+    if (!prep.ok) {
+      alert("결제 준비 실패");
+      location.href = "/checkout";
+      return;
+    }
+
+    // ✅ PG사 선택
+    let pgOption = "html5_inicis"; // 기본 카드결제
+    if (paymentMethod === "카카오페이") pgOption = "kakaopay.TC0ONETIME";
+    if (paymentMethod === "네이버페이") pgOption = "naverpay.NPAY";
+    if (paymentMethod === "페이코") pgOption = "payco.PAYCO";
+
+    IMP.request_pay({
+      pg: pgOption,
+      pay_method: "card",
+      merchant_uid: prep.merchant_uid,
+      name: "UGAMALL 주문 결제",
+      amount: prep.amount,
+      buyer_name: "{{ user_info.name or '' }}",
+      buyer_tel: "{{ user_info.phone or '' }}",
+      buyer_email: "{{ user_info.email or '' }}",
+      buyer_addr: "{{ user_info.base_address or '' }} {{ user_info.detail_address or '' }}"
+    }, async function(rsp) {
+      if (rsp.success) {
+        const vRes = await fetch("/pay/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            imp_uid: rsp.imp_uid,
+            merchant_uid: rsp.merchant_uid,
+            order_id: orderId
+          })
+        });
+        const v = await vRes.json();
+        if (v.ok) {
+          alert("결제가 완료되었습니다.");
+          location.href = "/order-complete/" + orderId;
+        } else {
+          alert("검증 실패: " + (v.msg || ""));
+          location.href = "/checkout";
+        }
+      } else {
+        alert("결제 실패: " + rsp.error_msg);
+        location.href = "/checkout";
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    alert("결제 처리 중 오류가 발생했습니다.");
+    location.href = "/checkout";
+  }
+});
+</script>
 <script>
 // ==============================
 // 장바구니 합계 / 쿠폰 할인 계산
@@ -267,16 +365,6 @@ if (couponSelect) {
 // ==============================
 updateTotals();
 
-// ==============================
-// 결제 버튼 눌렀을 때 체크 확인
-// ==============================
-document.getElementById("checkout-form").addEventListener("submit", function(e) {
-  const checked = document.querySelectorAll(".item-checkbox:checked");
-  if (checked.length === 0) {
-    e.preventDefault();
-    alert("결제할 상품을 선택해주세요.");
-  }
-});
 </script>
 
 <style>

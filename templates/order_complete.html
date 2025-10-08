@@ -14,13 +14,16 @@
   </div>
 
   {% if order.payment_method == "무통장입금" %}
-  <div class="mt-6 bg-indigo-50 border rounded p-6">
-    <h2 class="font-semibold mb-2">{{ _("입금 안내") }}</h2>
-    <p class="text-sm text-gray-700">
-      {{ _("아래 계좌로 주문금액을 입금해 주세요.") }}<br>
-      {{ _("예금주") }}: UGA MEDICAL / {{ _("계좌") }}: 000-0000-0000 (국민은행)
-    </p>
-  </div>
+    <div class="mt-8 bg-gray-50 border rounded-lg p-6 text-center">
+    <h2 class="text-xl font-semibold mb-2">입금 안내</h2>
+    <p class="text-gray-600 mb-2">아래 계좌로 주문금액을 입금해 주세요.</p>
+    <div class="bg-white border rounded p-4 text-left inline-block text-sm leading-relaxed">
+        <p><b>은행명:</b> 국민은행</p>
+        <p><b>계좌번호:</b> 123-4567-890123</p>
+        <p><b>예금주:</b> (주)유가메디컬</p>
+        <p class="text-gray-500 mt-2">입금 확인 후 배송이 시작됩니다.</p>
+    </div>
+    </div>
   {% endif %}
 
   <div class="mt-8 flex gap-3">
