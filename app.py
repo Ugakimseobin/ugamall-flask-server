@@ -1693,7 +1693,8 @@ def admin_orders():
 
     return render_template("admin/admin_orders.html",
                            orders=orders,
-                           status_options=STATUS_OPTIONS)
+                           status_options=STATUS_OPTIONS,
+                           timedelta=timedelta)
 
 @app.route("/admin/orders/confirm_deposit/<int:order_id>", methods=["POST"])
 @login_required
