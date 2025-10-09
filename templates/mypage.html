@@ -61,7 +61,9 @@
                     </p>
                   </td>
                   <td class="py-1">{{ item.quantity }}</td>
-                  <td class="py-1">{{ (item.variant.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) * item.quantity }}원</td>
+                  <td class="py-1">
+                    {{ (item.original_price or 0) * item.quantity | won }}원
+                  </td>
                   <td class="py-1">
                     <form method="post" action="{{ url_for('add_to_cart') }}">
                         <input type="hidden" name="product_id" value="{{ item.variant.product.id }}">

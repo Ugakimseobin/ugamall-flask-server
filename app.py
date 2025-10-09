@@ -272,7 +272,9 @@ class OrderItem(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
     variant_id = db.Column(db.Integer, db.ForeignKey("product_variants.id"), nullable=False)
     quantity = db.Column(db.Integer, default=1)
-    price = db.Column(db.Integer, nullable=False)
+    original_price = db.Column(db.Integer)   # 정가
+    discount_price = db.Column(db.Integer)   # 실제 결제 단가
+    discount_reason = db.Column(db.String(100))  # 쿠폰명 등
 
     order = db.relationship("Order", back_populates="items")
     variant = db.relationship("ProductVariant", back_populates="order_items")
@@ -435,7 +437,9 @@ def _cart_items_for_current_user():
     return CartItem.query.filter_by(session_id=session_id).all(), None, session_id
 
 def _order_sum(order: "Order") -> int:
-    return sum(int(i.price) * int(i.quantity) for i in order.items)
+    # per-item 할인은 안 나눔. 주문 전체 할인만 적용.
+    items_total = sum(int(i.original_price or 0) * int(i.quantity or 0) for i in order.items)
+    return max(0, items_total - int(order.discount_amount or 0))
 #-----------------------------
 
 # -----------------------------
@@ -993,7 +997,9 @@ def checkout():
                 order_id=new_order.id,
                 variant_id=item.variant_id,
                 quantity=item.quantity,
-                price=unit_price
+                original_price=unit_price,   # ✅ 단가 저장
+                discount_price=None,         # (원하면 추후 per-item 분배 시 사용)
+                discount_reason=None
             ))
 
         db.session.commit()
@@ -1033,8 +1039,8 @@ def checkout():
 @app.route("/payment/<int:order_id>")
 def payment(order_id):
     order = Order.query.get_or_404(order_id)
-    items_total = sum(int(oi.price) * int(oi.quantity) for oi in order.items)
-    amount = max(0, items_total - (order.discount_amount or 0))  # ✅ 할인 반영
+    items_total = sum(int(oi.original_price or 0) * int(oi.quantity or 0) for oi in order.items)
+    amount = max(0, items_total - int(order.discount_amount or 0))  # ✅ 할인 반영
 
     user_info = User.query.get(order.user_id) if order.user_id else None
     return render_template(
@@ -1054,7 +1060,7 @@ def pay_prepare():
     order = Order.query.get_or_404(order_id)
 
     items_total = sum(int(i.price) * int(i.quantity) for i in order.items)
-    expected_amount = max(0, items_total - (order.discount_amount or 0))  # ✅ 할인 반영
+    expected_amount = max(0, items_total - int(order.discount_amount or 0))  
 
     merchant_uid = f"UGA_{order.id}_{int(datetime.utcnow().timestamp())}"
 
@@ -1112,14 +1118,15 @@ def pay_verify():
             ).first()
             if uc and not uc.used:
                 uc.used = True
-                uc.used_at = datetime.utcnow()
                 db.session.add(uc)
 
         # ✅ 장바구니도 성공시에만 비움
         if order.user_id:
             CartItem.query.filter_by(user_id=order.user_id).delete()
         elif order.guest_email:
-            CartItem.query.filter_by(session_id=session.get("session_id")).delete()
+            sid = session.get("session_id")
+            if sid:
+                CartItem.query.filter_by(session_id=sid).delete()
 
     elif status in ("ready", "vbank_issued"):
         # 가상계좌 발급 등 → 입금 대기
@@ -1667,8 +1674,9 @@ def admin_orders():
             names.append(product.name if product else "(삭제된 상품)")
         summary = names[0] + (f" 외 {len(names)-1}개" if len(names) > 1 else "") if names else "-"
 
-        qty_sum       = sum((it.quantity or 0) for it in o.items)
-        total_amount  = sum(int(it.price or 0) * int(it.quantity or 0) for it in o.items)
+        qty_sum      = sum((it.quantity or 0) for it in o.items)
+        items_total  = sum(int(it.original_price or 0) * int(it.quantity or 0) for it in o.items)
+        final_amount = max(0, items_total - int(o.discount_amount or 0))
 
         who    = (o.user.name if o.user else (o.name or "비회원"))
         email  = (o.user.email if o.user else (o.guest_email or "-"))
@@ -1678,16 +1686,24 @@ def admin_orders():
         pay_status = o.payment.status if o.payment else "-"
 
         # 동적 속성(템플릿에서 o._xxx로 접근)
-        o._summary      = summary
-        o._qty_sum      = int(qty_sum)
-        o._total_amount = int(total_amount)
-        o._who          = who
-        o._email        = email
-        o._phone        = phone
-        o._address      = address
-        o._pay_status   = pay_status
+        o._summary       = summary
+        o._qty_sum       = int(qty_sum)
+        o._items_total   = int(items_total)   # 정가합
+        o._discount      = int(o.discount_amount or 0)
+        o._final_amount  = int(final_amount)  # 실제 결제금액
+        o._who           = who
+        o._email         = email
+        o._phone         = phone
+        o._address       = address
+        o._pay_status    = pay_status
 
         # 철자 혼용 보정(표시용)
+        o._coupon_name = None
+        if o.applied_user_coupon_id:
+            uc = UserCoupon.query.options(joinedload(UserCoupon.coupon)).get(o.applied_user_coupon_id)
+            if uc and uc.coupon:
+                o._coupon_name = uc.coupon.name
+
         if getattr(o, "status", None) == "cancelled":
             o.status = "canceled"
 
@@ -1708,29 +1724,38 @@ def admin_confirm_deposit(order_id):
     if order.payment_method != "무통장입금":
         flash("무통장입금 주문만 입금 확인 가능합니다.", "error")
         return redirect(url_for("admin_orders"))
+    
+    items_total = sum(int(i.original_price or 0) * int(i.quantity or 0) for i in order.items)
+    final_amount = max(0, items_total - int(order.discount_amount or 0))
 
     # ✅ 상태 변경 (주문 + 결제)
     order.status = "결제완료"
     order.updated_at = datetime.now(KST)  # 한국시간 기준으로 갱신
 
     payment = Payment.query.filter_by(order_id=order.id).first()
-    total_amount = sum(i.price * i.quantity for i in order.items)
 
     if not payment:
-        # 결제 정보가 없으면 새로 생성
         payment = Payment(
             order_id=order.id,
             merchant_uid=f"DEPOSIT_{order.id}_{int(datetime.utcnow().timestamp())}",
-            amount=total_amount,
-            status="paid",  # 결제 완료
-            paid_at=datetime.now(KST)
+            amount=final_amount,
+            status="paid",
+            paid_at=datetime.utcnow(),
+            method="vbank",
+            pg_provider="manual"  # 표기용
         )
         db.session.add(payment)
     else:
-        # 기존 결제정보 업데이트
         payment.status = "paid"
-        payment.paid_at = datetime.now(KST)
-        payment.amount = total_amount
+        payment.paid_at = datetime.utcnow()
+        payment.amount = final_amount
+
+    # 쿠폰 사용 처리
+    if getattr(order, "applied_user_coupon_id", None):
+        uc = UserCoupon.query.filter_by(id=order.applied_user_coupon_id, user_id=order.user_id).first()
+        if uc and not uc.used:
+            uc.used = True
+            db.session.add(uc)
 
     db.session.commit()
 

@@ -38,7 +38,13 @@
             <div class="text-gray-500">총 {{ o._qty_sum }}개</div>
           </td>
 
-          <td class="border px-3 py-2 font-semibold">{{ o._total_amount|won }}원</td>
+          <td class="border px-3 py-2 font-semibold">
+            <div>정가합: {{ o._items_total|won }}원</div>
+            {% if o._discount > 0 %}
+                <div class="text-red-600">할인: -{{ o._discount|won }}원{% if o._coupon_name %} ({{ o._coupon_name }}){% endif %}</div>
+            {% endif %}
+            <div class="text-indigo-700">결제금액: {{ o._final_amount|won }}원</div>
+          </td>
 
           <td class="border px-3 py-2">
             <span class="inline-block rounded bg-gray-100 px-2 py-[2px] text-sm">
@@ -126,7 +132,17 @@
       <div class="mb-1"><span class="text-gray-500">주문자</span> : {{ o._who }} <span class="text-gray-500">/</span> {{ o._phone }}</div>
       <div class="mb-1 text-gray-500">{{ o._email }}</div>
       <div class="mb-1"><span class="text-gray-500">상품</span> : {{ o._summary }} (총 {{ o._qty_sum }}개)</div>
-      <div class="mb-1"><span class="text-gray-500">총액</span> : <b>{{ o._total_amount|won }}원</b></div>
+
+      <div class="mb-1">
+        <span class="text-gray-500">총액</span> : 
+        <b>{% if o.items[0].discount_price and o.items[0].discount_price < o.items[0].original_price %}
+            <span class="line-through text-gray-400">{{ o.items[0].original_price|comma }}원</span>
+            <span class="text-red-600 ml-1">{{ o.items[0].discount_price|comma }}원</span>
+            <div class="text-xs text-gray-500">({{ o.items[0].discount_reason or '할인 적용' }})</div>
+        {% else %}
+            {{ o.items[0].original_price|comma }}원
+        {% endif %}</b>
+      </div>
       <div class="mb-1"><span class="text-gray-500">결제</span> :
         <span class="inline-block rounded bg-gray-100 px-2 py-0.5">
           {% if o.payment_method == "무통장입금" %}
