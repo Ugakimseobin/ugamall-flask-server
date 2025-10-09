@@ -681,6 +681,37 @@ def mypage():
 
     return render_template("mypage.html", user=user, orders=orders, inquiries=inquiries)
 
+@app.route("/cancel_order/<int:order_id>", methods=["POST"])
+@login_required
+def cancel_order(order_id):
+    """사용자 주문취소: 배송중 이전 상태에서만 가능"""
+    order = Order.query.filter_by(id=order_id, user_id=current_user.id).first_or_404()
+
+    # 배송중 이후 상태면 거부
+    if order.status in ["배송중", "배송완료", "canceled", "취소됨"]:
+        flash("배송중 이후에는 주문을 취소할 수 없습니다.", "error")
+        return redirect(url_for("mypage"))
+
+    # 결제대기 or 입금대기 or 결제완료 상태면 취소 가능
+    order.status = "취소됨"
+
+    # 결제 정보도 취소로 표시
+    payment = Payment.query.filter_by(order_id=order.id).first()
+    if payment:
+        payment.status = "cancelled"
+
+    # ✅ 쿠폰 복구 (다시 사용 가능하게)
+    if order.applied_user_coupon_id:
+        uc = UserCoupon.query.get(order.applied_user_coupon_id)
+        if uc and uc.used:
+            uc.used = False
+            uc.used_at = None  # 복구 시점 초기화
+            db.session.add(uc)
+
+    db.session.commit()
+    flash(f"주문번호 {order.id}이(가) 취소되었습니다.", "success")
+    return redirect(url_for("mypage"))
+
 @app.route("/my_coupons")
 @login_required
 def my_coupons():
@@ -1039,6 +1070,13 @@ def checkout():
                     if not oi.discount_reason:
                         coupon = Coupon.query.join(UserCoupon).filter(UserCoupon.id == applied_user_coupon_id).first()
                         oi.discount_reason = coupon.name if coupon else "쿠폰할인"
+
+            if current_user.is_authenticated:
+                CartItem.query.filter_by(user_id=current_user.id).delete()
+            else:
+                sid = session.get("session_id")
+                if sid:
+                    CartItem.query.filter_by(session_id=sid).delete()
 
             db.session.commit()
             return redirect(url_for("order_complete", order_id=new_order.id))
