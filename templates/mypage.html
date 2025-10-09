@@ -62,7 +62,20 @@
                   </td>
                   <td class="py-1">{{ item.quantity }}</td>
                   <td class="py-1">
-                    {{ ((item.original_price or 0) * item.quantity) | won }}원
+                    {% if item.discount_price and item.discount_price < item.original_price %}
+                        <!-- ✅ 할인이 적용된 경우 -->
+                        <div>
+                        <span class="line-through text-gray-400 mr-2">
+                            {{ ((item.original_price or 0) * item.quantity) | won }}원
+                        </span>
+                        <span class="text-red-600 font-bold">
+                            {{ ((item.discount_price or 0) * item.quantity) | won }}원
+                        </span>
+                        </div>
+                    {% else %}
+                        <!-- ✅ 정가만 있는 경우 -->
+                        <span>{{ ((item.original_price or 0) * item.quantity) | won }}원</span>
+                    {% endif %}
                   </td>
                   <td class="py-1">
                     <form method="post" action="{{ url_for('add_to_cart') }}">
