@@ -992,14 +992,30 @@ def checkout():
 
         # 주문 아이템 생성 + 장바구니 제거
         for item in cart_items:
-            unit_price = (item.product.base_price or 0) + ((item.variant.price or 0) if item.variant else 0)
+            # 정가
+            original_price = (item.product.base_price or 0) + ((item.variant.price or 0) if item.variant else 0)
+            # 할인 단가 (쿠폰 적용 시)
+            discount_price = original_price
+            discount_reason = None
+
+            if discount_amount > 0 and applied_user_coupon_id:
+                # 쿠폰이 전체 주문에 적용되면 비율 계산
+                coupon = Coupon.query.join(UserCoupon).filter(UserCoupon.id == applied_user_coupon_id).first()
+                discount_reason = coupon.name if coupon else "쿠폰할인"
+
+                # 각 상품에 균등 분배 (비율 계산)
+                total_price_sum = sum(((ci.product.base_price or 0) + ((ci.variant.price or 0) if ci.variant else 0)) * ci.quantity for ci in cart_items)
+                share_ratio = (original_price * item.quantity) / total_price_sum
+                per_item_discount = int(discount_amount * share_ratio / item.quantity)
+                discount_price = max(0, original_price - per_item_discount)
+
             db.session.add(OrderItem(
                 order_id=new_order.id,
                 variant_id=item.variant_id,
                 quantity=item.quantity,
-                original_price=unit_price,   # ✅ 단가 저장
-                discount_price=None,         # (원하면 추후 per-item 분배 시 사용)
-                discount_reason=None
+                original_price=original_price,
+                discount_price=discount_price,
+                discount_reason=discount_reason
             ))
 
         db.session.commit()
@@ -1008,6 +1024,13 @@ def checkout():
         if payment_method == "무통장입금":
             # 무통장입금은 결제창 띄우지 않고 바로 주문완료 페이지로 이동
             new_order.status = "입금대기"  # 상태를 명확히 설정
+            if applied_user_coupon_id:
+                uc = UserCoupon.query.get(applied_user_coupon_id)
+                if uc and not uc.used:
+                    uc.used = True
+                    uc.used_at = datetime.utcnow()
+                    db.session.add(uc)
+
             db.session.commit()
             return redirect(url_for("order_complete", order_id=new_order.id))
         else:
