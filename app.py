@@ -645,10 +645,11 @@ def verify_code():
     return jsonify({"status": "error", "message": "인증번호가 올바르지 않습니다."})
 
 @app.route("/mypage", methods=["GET", "POST"])
-@login_required   # ✅ Flask-Login 데코레이터 사용
+@login_required
 def mypage():
     user = current_user
 
+    # ✅ POST 요청 (개인정보/비밀번호 수정)
     if request.method == "POST":
         form_type = request.form.get("form_type")
 
@@ -676,10 +677,142 @@ def mypage():
 
         return redirect(url_for("mypage"))
 
-    orders = Order.query.filter_by(user_id=user.id).order_by(Order.created_at.desc()).all()
-    inquiries = Inquiry.query.filter_by(user_id=user.id).order_by(Inquiry.created_at.desc()).all()
+    # ✅ GET 요청: 주문내역 필터링
+    period = request.args.get("period", "1m")
+    search_query = request.args.get("q", "").strip()
 
-    return render_template("mypage.html", user=user, orders=orders, inquiries=inquiries)
+    start_date_str = request.args.get("start_date")
+    end_date_str = request.args.get("end_date")
+
+    now = datetime.utcnow()
+
+    # 직접 입력한 기간이 있으면 그걸 우선 적용
+    if start_date_str and end_date_str:
+        try:
+            start_date = datetime.strptime(start_date_str, "%Y-%m")
+            # 월말 포함
+            next_month = datetime.strptime(end_date_str, "%Y-%m")
+            if next_month.month == 12:
+                next_month = next_month.replace(year=next_month.year + 1, month=1)
+            else:
+                next_month = next_month.replace(month=next_month.month + 1)
+            end_date = next_month
+        except Exception:
+            start_date = now - timedelta(days=30)
+            end_date = now
+    else:
+        # 버튼으로 선택한 기간
+        start_date = {
+            "1m": now - timedelta(days=30),
+            "3m": now - timedelta(days=90),
+            "6m": now - timedelta(days=180),
+            "5y": now - timedelta(days=5 * 365)
+        }.get(period, now - timedelta(days=30))
+        end_date = now
+
+    # 🔍 주문 필터링 쿼리
+    orders_query = Order.query.filter(
+        Order.user_id == user.id,
+        Order.created_at >= start_date,
+        Order.created_at <= end_date
+    ).order_by(Order.created_at.desc())
+
+    if search_query:
+        orders_query = (
+            orders_query.join(OrderItem)
+                        .join(ProductVariant)
+                        .join(Product)
+                        .filter(Product.name.ilike(f"%{search_query}%"))
+        )
+
+    orders = orders_query.all()
+    inquiries = Inquiry.query.filter_by(user_id=user.id).order_by(Inquiry.created_at.desc()).all()
+    user_coupons = UserCoupon.query.filter_by(user_id=user.id).all()
+
+    return render_template(
+        "mypage.html",
+        user=user,
+        orders=orders,
+        inquiries=inquiries,
+        user_coupons=user_coupons,
+        selected_period=period,
+        search_query=search_query,
+        start_date=start_date_str,
+        end_date=end_date_str
+    )
+
+@app.route("/mypage/orders")
+@login_required
+def mypage_orders_api():
+    """AJAX용 주문내역 필터 API"""
+    user = current_user
+    period = request.args.get("period", "1m")
+    search_query = request.args.get("q", "").strip()
+    start_date_str = request.args.get("start_date")
+    end_date_str = request.args.get("end_date")
+
+    now = datetime.utcnow()
+
+    # ✅ 날짜 계산
+    if start_date_str and end_date_str:
+        try:
+            start_date = datetime.strptime(start_date_str, "%Y-%m")
+            next_month = datetime.strptime(end_date_str, "%Y-%m")
+            if next_month.month == 12:
+                next_month = next_month.replace(year=next_month.year + 1, month=1)
+            else:
+                next_month = next_month.replace(month=next_month.month + 1)
+            end_date = next_month
+        except Exception:
+            start_date = now - timedelta(days=30)
+            end_date = now
+    else:
+        start_date = {
+            "1m": now - timedelta(days=30),
+            "3m": now - timedelta(days=90),
+            "6m": now - timedelta(days=180),
+            "5y": now - timedelta(days=5 * 365)
+        }.get(period, now - timedelta(days=30))
+        end_date = now
+
+    # ✅ 쿼리
+    orders_query = Order.query.filter(
+        Order.user_id == user.id,
+        Order.created_at >= start_date,
+        Order.created_at <= end_date
+    ).order_by(Order.created_at.desc())
+
+    if search_query:
+        orders_query = (
+            orders_query.join(OrderItem)
+                        .join(ProductVariant)
+                        .join(Product)
+                        .filter(Product.name.ilike(f"%{search_query}%"))
+        )
+
+    orders = orders_query.all()
+
+    # ✅ JSON 형태로 반환
+    result = []
+    for o in orders:
+        order_data = {
+            "id": o.id,
+            "created_at": (o.created_at + timedelta(hours=9)).strftime("%Y-%m-%d %H:%M"),
+            "status": o.status,
+            "status_label": STATUS_LABEL_TEXT.get(o.status, o.status),
+            "items": []
+        }
+        for item in o.items:
+            order_data["items"].append({
+                "name": item.variant.product.name,
+                "image": url_for("static", filename=f"images/{item.variant.product.image}"),
+                "quantity": item.quantity,
+                "original_price": item.original_price,
+                "discount_price": item.discount_price,
+            })
+        result.append(order_data)
+
+    return jsonify(result)
 
 @app.route("/cancel_order/<int:order_id>", methods=["POST"])
 @login_required

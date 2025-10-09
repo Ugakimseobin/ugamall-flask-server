@@ -15,99 +15,97 @@
   <!-- ✅ 오른쪽 컨텐츠 -->
   <main class="w-full md:w-3/4 bg-white shadow rounded p-4 sm:p-6">
     <!-- 주문내역 -->
-    <section id="tab-orders" class="tab-content hidden">
+    <section id="tab-orders" class="tab-content">
       <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("주문내역") }}</h3>
-      {% if orders|length == 0 %}
-        <p class="text-gray-500">{{ _("주문 내역이 없습니다.") }}</p>
-      {% else %}
-        <div class="space-y-6">
-          {% for order in orders %}
-          <div class="border rounded-lg shadow p-4">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
-              <div>
-                <h4 class="font-bold text-sm sm:text-base">{{ _("주문번호") }}: {{ order.id }}</h4>
-                <p class="text-xs sm:text-sm text-gray-500">{{ _("주문일") }}: {{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
-              </div>
-              <div class="text-right">
-                <p class="text-gray-600 text-sm mb-1">{{ order.status | status_label }}</p>
 
-                {% if order.status in ["결제대기", "입금대기", "결제완료"] %}
-                <form method="post" action="{{ url_for('cancel_order', order_id=order.id) }}" onsubmit="return confirm('정말 이 주문을 취소하시겠습니까?');">
-                  <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-xs sm:text-sm hover:bg-red-600">
-                    {{ _("주문취소") }}
+      <!-- 필터 영역 -->
+      <div class="bg-gray-50 p-4 rounded-lg shadow-sm mb-5">
+        <div class="flex flex-wrap items-center gap-2">
+            <!-- 기간 버튼 -->
+            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '5y' %}bg-green-100 text-green-700{% endif %}" data-range="5y">최대(5년)</button>
+            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '6m' %}bg-green-100 text-green-700{% endif %}" data-range="6m">6개월</button>
+            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '3m' %}bg-green-100 text-green-700{% endif %}" data-range="3m">3개월</button>
+            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '1m' %}bg-green-100 text-green-700{% endif %}" data-range="1m">1개월</button>
+
+            <!-- 직접 날짜 입력 -->
+            <div class="flex items-center gap-1 ml-2">
+            <input type="month" id="startDate" class="border rounded p-1 text-sm" value="{{ start_date or '' }}">
+            <span class="text-gray-500">~</span>
+            <input type="month" id="endDate" class="border rounded p-1 text-sm" value="{{ end_date or '' }}">
+            </div>
+
+            <!-- 검색창 -->
+            <input type="text" id="searchOrder" placeholder="주문 상품명을 입력하세요"
+                class="border rounded px-2 py-1 flex-1 min-w-[150px] text-sm ml-2"
+                value="{{ search_query or '' }}">
+
+            <!-- 조회 버튼 -->
+            <button id="filterSearch" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm">조회하기</button>
+        </div>
+      </div>
+
+      {% if orders|length == 0 %}
+        <div class="text-center py-10 text-gray-500">
+          <p>최근 한달 간 주문내역이 없습니다.</p>
+          <button class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">주문내역 전체보기</button>
+        </div>
+      {% else %}
+        <div id="order-list" class="space-y-5">
+          {% for order in orders %}
+          <div class="bg-white border rounded-lg shadow-sm p-4 hover:shadow-md transition">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 border-b pb-2">
+              <div>
+                <h4 class="font-semibold text-sm sm:text-base">주문번호: {{ order.id }}</h4>
+                <p class="text-xs text-gray-500">{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+              </div>
+              <div class="flex items-center gap-2 mt-2 sm:mt-0">
+                <span class="text-sm font-semibold text-indigo-600">{{ order.status | status_label }}</span>
+                {% if order.status in ["결제대기","입금대기","결제완료"] %}
+                <form method="post" action="{{ url_for('cancel_order', order_id=order.id) }}" onsubmit="return confirm('정말 주문을 취소하시겠습니까?');">
+                  <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">
+                    주문취소
                   </button>
                 </form>
                 {% endif %}
               </div>
             </div>
-            <table class="w-full text-left mb-3 text-xs sm:text-sm">
-              <thead>
-                <tr class="text-gray-600 border-b">
-                  <th class="w-[70px] sm:w-[90px]"></th>
-                  <th class="py-1">{{ _("상품명") }}</th>
-                  <th class="py-1">{{ _("수량") }}</th>
-                  <th class="py-1">{{ _("가격") }}</th>
-                  <th class="py-1">{{ _("재주문") }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in order.items %}
-                <tr class="border-b">
-                  <td class="w-[70px] sm:w-[90px]">
-                    <img src="{{ url_for('static', filename='images/' ~ item.variant.product.image) }}" 
-                         alt="{{ item.variant.product.name }}" 
-                         class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded">
-                  </td>
-                  <td class="py-1 text-xs sm:text-sm">
-                    {{ item.variant.product.name }}
-                    <p class="text-gray-500 text-xs">
-                      {% if item.variant %}
-                          {% for key, val in item.variant.options.items() %}
-                              {{ key }}: {{ val }}
-                          {% endfor %}
-                      {% else %}
-                          {{ _("기본상품") }}
-                      {% endif %}
-                    </p>
-                  </td>
-                  <td class="py-1">{{ item.quantity }}</td>
-                  <td class="py-1">
-                    {% if item.discount_price and item.discount_price < item.original_price %}
-                        <!-- ✅ 할인이 적용된 경우 -->
-                        <div>
-                        <span class="line-through text-gray-400 mr-2">
-                            {{ ((item.original_price or 0) * item.quantity) | won }}원
-                        </span>
-                        <span class="text-red-600 font-bold">
-                            {{ ((item.discount_price or 0) * item.quantity) | won }}원
-                        </span>
-                        </div>
-                    {% else %}
-                        <!-- ✅ 정가만 있는 경우 -->
-                        <span>{{ ((item.original_price or 0) * item.quantity) | won }}원</span>
-                    {% endif %}
-                  </td>
-                  <td class="py-1">
-                    <form method="post" action="{{ url_for('add_to_cart') }}">
-                        <input type="hidden" name="product_id" value="{{ item.variant.product.id }}">
-                        <input type="hidden" name="quantity" value="{{ item.quantity }}">
-                        {% for key, val in item.variant.options.items() %}
-                        <input type="hidden" name="option_{{ key }}" value="{{ val }}">
-                        {% endfor %}
-                        <button type="submit"
-                                class="bg-indigo-600 text-white px-2 sm:px-3 py-1 rounded hover:bg-indigo-700 text-xs sm:text-sm">
-                        {{ _("장바구니 담기") }}
-                        </button>
-                    </form>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+
+            <!-- 주문 상품 -->
+            <div class="divide-y mt-2">
+              {% for item in order.items %}
+              <div class="flex items-center gap-3 py-2">
+                <img src="{{ url_for('static', filename='images/' ~ item.variant.product.image) }}" 
+                     alt="{{ item.variant.product.name }}" 
+                     class="w-16 h-16 rounded object-cover border">
+                <div class="flex-1">
+                  <p class="font-semibold text-sm sm:text-base">{{ item.variant.product.name }}</p>
+                  <p class="text-xs text-gray-500">
+                    {% for key, val in item.variant.options.items() %}
+                      {{ key }}: {{ val }}
+                    {% endfor %}
+                  </p>
+                </div>
+                <div class="text-right text-sm">
+                  <p>{{ item.quantity }}개</p>
+                  {% if item.discount_price and item.discount_price < item.original_price %}
+                    <p><span class="line-through text-gray-400 mr-1">{{ item.original_price | won }}원</span>
+                       <span class="text-red-600 font-semibold">{{ item.discount_price | won }}원</span></p>
+                  {% else %}
+                    <p>{{ item.original_price | won }}원</p>
+                  {% endif %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
           </div>
           {% endfor %}
         </div>
       {% endif %}
+      <!-- 로딩 스피너 -->
+      <div id="loading-spinner" class="hidden text-center text-gray-500 py-4">
+            <div class="animate-spin inline-block w-6 h-6 border-2 border-t-transparent border-gray-400 rounded-full mr-2"></div>
+            불러오는 중...
+      </div>
     </section>
 
     <!-- 개인정보 변경 -->
@@ -241,14 +239,7 @@
 <!-- JS 탭 전환 그대로 유지 -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.classList.remove("bg-indigo-600","text-white");
-    btn.classList.add("bg-gray-200");
-  });
-  document.querySelector('[data-tab="orders"]').classList.add("bg-indigo-600","text-white");
-  document.querySelectorAll(".tab-content").forEach(c => c.classList.add("hidden"));
-  document.getElementById("tab-orders").classList.remove("hidden");
-
+  // 탭 전환
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("bg-indigo-600","text-white"));
@@ -258,6 +249,109 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".tab-content").forEach(c => c.classList.add("hidden"));
       document.getElementById("tab-" + btn.dataset.tab).classList.remove("hidden");
     });
+  });
+
+  // 기간 버튼 클릭
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const range = btn.getAttribute("data-range");
+      const url = new URL(window.location.href);
+      url.searchParams.set("period", range);
+      url.searchParams.delete("start_date");
+      url.searchParams.delete("end_date");
+      url.searchParams.set("tab", "orders");
+      window.location.href = url.toString();
+    });
+  });
+
+  // 조회 버튼 클릭 (검색 + 날짜)
+  document.getElementById("filterSearch").addEventListener("click", () => {
+    const start = document.getElementById("startDate").value;
+    const end = document.getElementById("endDate").value;
+    const query = document.getElementById("searchOrder").value.trim();
+
+    const url = new URL(window.location.href);
+    if (start && end) {
+      url.searchParams.set("start_date", start);
+      url.searchParams.set("end_date", end);
+      url.searchParams.delete("period");
+    }
+    if (query) url.searchParams.set("q", query);
+    url.searchParams.set("tab", "orders");
+    window.location.href = url.toString();
+  });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // 필터 클릭 or 조회 시 호출
+  async function loadOrders(params) {
+    const list = document.getElementById("orders-list");
+    const spinner = document.getElementById("loading-spinner");
+
+    list.classList.add("hidden");
+    spinner.classList.remove("hidden");
+
+    const query = new URLSearchParams(params).toString();
+    const res = await fetch(`/mypage/orders?${query}`);
+    const data = await res.json();
+
+    spinner.classList.add("hidden");
+    list.classList.remove("hidden");
+
+    if (data.length === 0) {
+      list.innerHTML = `<p class="text-gray-500 text-center py-6">주문 내역이 없습니다.</p>`;
+      return;
+    }
+
+    list.innerHTML = data.map(o => `
+      <div class="border rounded-lg shadow p-4">
+        <div class="flex justify-between mb-2">
+          <div>
+            <h4 class="font-bold text-sm sm:text-base">주문번호: ${o.id}</h4>
+            <p class="text-xs sm:text-sm text-gray-500">주문일: ${o.created_at}</p>
+          </div>
+          <p class="text-gray-600 text-sm">${o.status_label}</p>
+        </div>
+        <table class="w-full text-left text-xs sm:text-sm">
+          <tbody>
+            ${o.items.map(item => `
+              <tr class="border-t">
+                <td class="w-[70px] sm:w-[90px] py-2">
+                  <img src="${item.image}" class="w-16 h-16 object-cover rounded">
+                </td>
+                <td class="py-2">
+                  <b>${item.name}</b><br>
+                  <span class="text-gray-500 text-xs">${item.quantity}개</span>
+                </td>
+                <td class="py-2 text-right">
+                  ${item.discount_price && item.discount_price < item.original_price
+                    ? `<span class="line-through text-gray-400 mr-1">${item.original_price}원</span>
+                       <span class="text-red-600 font-bold">${item.discount_price}원</span>`
+                    : `${item.original_price}원`}
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `).join("");
+  }
+
+  // 버튼 이벤트
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const range = btn.dataset.range;
+      loadOrders({ period: range });
+    });
+  });
+
+  document.getElementById("filterSearch").addEventListener("click", () => {
+    const start = document.getElementById("startDate").value;
+    const end = document.getElementById("endDate").value;
+    const q = document.getElementById("searchOrder").value.trim();
+    loadOrders({ start_date: start, end_date: end, q });
   });
 });
 </script>
