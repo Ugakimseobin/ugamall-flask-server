@@ -236,59 +236,36 @@
   </main>
 </div>
 
-<!-- JS 탭 전환 그대로 유지 -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // 탭 전환
-  document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("bg-indigo-600","text-white"));
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.add("bg-gray-200"));
-      btn.classList.add("bg-indigo-600","text-white");
+  const tabContents = document.querySelectorAll(".tab-content");
+  const tabButtons = document.querySelectorAll(".tab-btn");
 
-      document.querySelectorAll(".tab-content").forEach(c => c.classList.add("hidden"));
-      document.getElementById("tab-" + btn.dataset.tab).classList.remove("hidden");
-    });
+  // ✅ 공통 함수: 탭 전환
+  function showTab(tabName) {
+    tabContents.forEach(c => c.classList.add("hidden"));
+    document.getElementById("tab-" + tabName).classList.remove("hidden");
+
+    tabButtons.forEach(b => b.classList.remove("bg-indigo-600","text-white"));
+    tabButtons.forEach(b => b.classList.add("bg-gray-200"));
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add("bg-indigo-600","text-white");
+  }
+
+  // 기본 탭 (주문내역)
+  showTab("orders");
+
+  // 탭 버튼 클릭 시
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => showTab(btn.dataset.tab));
   });
 
-  // 기간 버튼 클릭
-  document.querySelectorAll(".filter-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const range = btn.getAttribute("data-range");
-      const url = new URL(window.location.href);
-      url.searchParams.set("period", range);
-      url.searchParams.delete("start_date");
-      url.searchParams.delete("end_date");
-      url.searchParams.set("tab", "orders");
-      window.location.href = url.toString();
-    });
-  });
-
-  // 조회 버튼 클릭 (검색 + 날짜)
-  document.getElementById("filterSearch").addEventListener("click", () => {
-    const start = document.getElementById("startDate").value;
-    const end = document.getElementById("endDate").value;
-    const query = document.getElementById("searchOrder").value.trim();
-
-    const url = new URL(window.location.href);
-    if (start && end) {
-      url.searchParams.set("start_date", start);
-      url.searchParams.set("end_date", end);
-      url.searchParams.delete("period");
-    }
-    if (query) url.searchParams.set("q", query);
-    url.searchParams.set("tab", "orders");
-    window.location.href = url.toString();
-  });
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  // 필터 클릭 or 조회 시 호출
+  // ✅ AJAX 주문내역 갱신 함수
   async function loadOrders(params) {
-    const list = document.getElementById("orders-list");
+    const list = document.getElementById("order-list");
     const spinner = document.getElementById("loading-spinner");
+
+    // 다른 탭 숨기고 주문내역 탭만 보여주기
+    showTab("orders");
 
     list.classList.add("hidden");
     spinner.classList.remove("hidden");
@@ -305,21 +282,22 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // 주문내역 렌더링
     list.innerHTML = data.map(o => `
-      <div class="border rounded-lg shadow p-4">
-        <div class="flex justify-between mb-2">
+      <div class="border rounded-lg shadow p-4 bg-white hover:shadow-md transition">
+        <div class="flex justify-between mb-2 border-b pb-2">
           <div>
             <h4 class="font-bold text-sm sm:text-base">주문번호: ${o.id}</h4>
             <p class="text-xs sm:text-sm text-gray-500">주문일: ${o.created_at}</p>
           </div>
           <p class="text-gray-600 text-sm">${o.status_label}</p>
         </div>
-        <table class="w-full text-left text-xs sm:text-sm">
+        <table class="w-full text-left text-xs sm:text-sm mt-2">
           <tbody>
             ${o.items.map(item => `
               <tr class="border-t">
                 <td class="w-[70px] sm:w-[90px] py-2">
-                  <img src="${item.image}" class="w-16 h-16 object-cover rounded">
+                  <img src="${item.image}" class="w-16 h-16 object-cover rounded border">
                 </td>
                 <td class="py-2">
                   <b>${item.name}</b><br>
@@ -339,7 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
   }
 
-  // 버튼 이벤트
+  // ✅ 기간 버튼 클릭 시
   document.querySelectorAll(".filter-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const range = btn.dataset.range;
@@ -347,6 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // ✅ 조회 버튼 클릭 시
   document.getElementById("filterSearch").addEventListener("click", () => {
     const start = document.getElementById("startDate").value;
     const end = document.getElementById("endDate").value;
@@ -355,6 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
 
 <!-- 카카오 주소검색 그대로 -->
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
