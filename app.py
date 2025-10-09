@@ -1966,20 +1966,22 @@ def admin_confirm_deposit(order_id):
     recipient = order.guest_email or (order.user.email if order.user else None)
     if recipient:
         try:
-            send_email(
+            msg = Message(
                 subject="[UGAMALL] 입금이 확인되었습니다.",
-                recipients=[recipient],
-                body=f"""
-안녕하세요, {order.name}님.
-주문번호 {order.id}의 입금이 확인되어 결제가 완료되었습니다.
-배송 준비를 시작하겠습니다.
-
-감사합니다.
-UGAMALL 드림
-"""
+                sender=("UGAMALL", app.config['MAIL_USERNAME']),
+                recipients=[recipient]
             )
+            msg.body = f"""
+        안녕하세요, {order.name}님.
+        주문번호 {order.id}의 입금이 확인되어 결제가 완료되었습니다.
+        배송 준비를 시작하겠습니다.
+
+        감사합니다.
+        UGAMALL 드림
+        """
+            mail.send(msg)
         except Exception as e:
-            print("⚠️ 이메일 발송 오류:", e)
+            print("⚠️ 이메일 발송 실패:", e)
 
     flash(f"주문번호 {order.id}의 입금이 확인되어 결제완료로 변경되었습니다.", "success")
     return redirect(url_for("admin_orders"))
