@@ -1031,6 +1031,15 @@ def checkout():
                     uc.used_at = datetime.utcnow()
                     db.session.add(uc)
 
+            # ✅ 모든 order_items의 할인 금액/사유가 null이면 다시 계산 반영
+            for oi in new_order.items:
+                if oi.discount_price is None:
+                    oi.discount_price = oi.original_price
+                if discount_amount > 0 and applied_user_coupon_id:
+                    if not oi.discount_reason:
+                        coupon = Coupon.query.join(UserCoupon).filter(UserCoupon.id == applied_user_coupon_id).first()
+                        oi.discount_reason = coupon.name if coupon else "쿠폰할인"
+
             db.session.commit()
             return redirect(url_for("order_complete", order_id=new_order.id))
         else:
