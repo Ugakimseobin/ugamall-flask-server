@@ -351,14 +351,20 @@ babel = Babel(app, locale_selector=select_locale)
 @app.context_processor
 def inject_get_locale():
     return {"get_locale": select_locale}
+
 @app.context_processor
 def inject_admin_alerts():
     if current_user.is_authenticated and current_user.is_admin:
+        pending_orders = Order.query.filter(
+            Order.status.in_(["pending", "ready", "입금대기", "결제대기"])
+        ).count()
+        new_inquiries_count = Inquiry.query.filter_by(is_read=False).count()
         return dict(
-            pending_orders=Order.query.filter_by(status="pending").count(),
-            new_inquiries_count=Inquiry.query.filter_by(is_read=False).count()
+            pending_orders=pending_orders,
+            new_inquiries_count=new_inquiries_count
         )
     return {}
+
 @app.context_processor
 def inject_admin_alerts():
     if current_user.is_authenticated and current_user.is_admin:
@@ -370,6 +376,7 @@ def inject_admin_alerts():
             admin_total_alerts=unread_orders + unread_inquiries
         )
     return {}
+
 # ----------------------------
 # 비동기 메일 발송 함수
 def send_async_email(app, msg):
@@ -1417,7 +1424,9 @@ def admin_dashboard():
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
     # 주문 중 결제 대기중 개수
-    pending_orders = Order.query.filter_by(status="pending").count()
+    pending_orders = Order.query.filter(
+        Order.status.in_(["pending", "ready", "입금대기", "결제대기"])
+    ).count()
     # 답변 대기중 문의 개수
     new_inquiries_count = Inquiry.query.filter_by(status="답변 대기").count()
     return render_template("admin/dashboard.html",
