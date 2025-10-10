@@ -248,8 +248,14 @@ document.querySelectorAll(".option-select, .option-select-side").forEach(select 
   select.addEventListener("change", () => {
     const key = select.dataset.key;
     const value = select.value;
-    const hidden = document.getElementById("cart-option-main-" + key);
-    if (hidden) hidden.value = value;
+
+    // 메인 hidden input 동기화
+    const hiddenMain = document.getElementById("cart-option-main-" + key);
+    if (hiddenMain) hiddenMain.value = value;
+
+    // 사이드 hidden input도 같이 동기화
+    const hiddenSide = document.querySelector(`#cart-form-side select[data-key="${key}"]`);
+    if (hiddenSide) hiddenSide.value = value;
   });
 });
 
