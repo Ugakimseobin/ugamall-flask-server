@@ -1,33 +1,89 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="max-w-3xl mx-auto mt-12">
-    <h2 class="text-2xl font-bold mb-6">{{ _("비회원 주문내역") }}</h2>
-    <p class="mb-6 text-gray-600">{{ _("이메일") }}: {{ email }}</p>
 
-  {% for order in orders %}
-  <div class="bg-white shadow-md rounded p-6 mb-6">
-    <p><strong>{{ _("주문번호") }}:</strong> {{ order.id }}</p>
-    <p><strong>{{ _("주문자") }}:</strong> {{ order.name }}</p>
-    <p><strong>{{ _("전화번호") }}:</strong> {{ order.phone }}</p>
-    <p><strong>{{ _("배송지") }}:</strong> {{ order.base_address }}</p>
-    <p><strong>{{ _("배송지상세") }}:</strong> {{ order.detail_address }}</p>
-    <p><strong>{{ _("결제방식") }}:</strong> {{ order.payment_method }}</p>
-    <p><strong>{{ _("상태") }}:</strong> {{ order.status }}</p>
-    <p><strong>{{ _("주문일자") }}:</strong> {{ order.created_at|kst }}</p>
-
-    <div class="mt-4">
-      <h3 class="font-semibold mb-2">{{ _("주문 상품") }}</h3>
-      <ul class="list-disc pl-6">
-        {% for item in order.items %}
-        <li>
-          {{ item.variant.product.name }}
-          {% if item.variant.options %} ({{ _("옵션") }}: {{ item.variant.options }}) {% endif %}
-          - {{ item.quantity }}{{ _("개") }} / {{ item.price }}{{ _("원") }}
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
+<!-- 전체 컨테이너 -->
+<div class="max-w-4xl mx-auto mt-12 mb-20 px-4 sm:px-6">
+  <!-- 타이틀 -->
+  <div class="text-center mb-10">
+    <h2 class="text-3xl font-extrabold text-gray-900 mb-2">{{ _("비회원 주문내역") }}</h2>
+    <p class="text-gray-500">{{ _("입력하신 이메일 주소로 조회된 주문 내역입니다.") }}</p>
   </div>
-  {% endfor %}
+
+  <!-- 이메일 표시 -->
+  <div class="bg-indigo-50 text-indigo-700 px-5 py-3 rounded-lg shadow-sm mb-8">
+    <span class="font-semibold">{{ _("이메일") }}:</span> {{ email }}
+  </div>
+
+  {% if orders|length == 0 %}
+    <div class="bg-white shadow rounded-lg p-10 text-center text-gray-500">
+      <p class="text-lg">{{ _("조회된 주문 내역이 없습니다.") }}</p>
+      <p class="mt-2 text-sm">{{ _("입력하신 정보가 정확한지 다시 확인해주세요.") }}</p>
+    </div>
+  {% else %}
+    {% for order in orders %}
+    <div class="bg-white border border-gray-200 rounded-xl shadow-md p-6 mb-8 hover:shadow-lg transition">
+      
+      <!-- 상단: 주문번호 / 상태 / 날짜 -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-3 mb-4">
+        <div>
+          <h3 class="text-lg font-bold text-gray-800">
+            {{ _("주문번호") }}: <span class="text-indigo-700">{{ order.id }}</span>
+          </h3>
+          <p class="text-sm text-gray-500 mt-1">{{ _("주문일자") }}: {{ order.created_at|kst }}</p>
+        </div>
+        <div class="mt-2 sm:mt-0">
+          {% if order.status == "결제완료" %}
+            <span class="bg-green-100 text-green-700 text-sm font-semibold px-3 py-1 rounded-full">{{ order.status }}</span>
+          {% elif order.status == "배송중" %}
+            <span class="bg-blue-100 text-blue-700 text-sm font-semibold px-3 py-1 rounded-full">{{ order.status }}</span>
+          {% elif order.status == "배송완료" %}
+            <span class="bg-gray-100 text-gray-600 text-sm font-semibold px-3 py-1 rounded-full">{{ order.status }}</span>
+          {% elif order.status == "취소" %}
+            <span class="bg-red-100 text-red-600 text-sm font-semibold px-3 py-1 rounded-full">{{ order.status }}</span>
+          {% else %}
+            <span class="bg-yellow-100 text-yellow-700 text-sm font-semibold px-3 py-1 rounded-full">{{ order.status }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- 주문자 정보 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-700 mb-5">
+        <p><strong>{{ _("주문자") }}:</strong> {{ order.name }}</p>
+        <p><strong>{{ _("전화번호") }}:</strong> {{ order.phone }}</p>
+        <p><strong>{{ _("결제방식") }}:</strong> {{ order.payment_method }}</p>
+        <p><strong>{{ _("배송지") }}:</strong> {{ order.base_address }} {{ order.detail_address }}</p>
+      </div>
+
+      <!-- 상품 리스트 -->
+      <div class="mt-4 bg-gray-50 border-t rounded-b-lg p-4">
+        <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-1 13H4L3 3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 16a2 2 0 100 4 2 2 0 000-4zM8 16a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          {{ _("주문 상품") }}
+        </h4>
+        <ul class="divide-y divide-gray-200">
+          {% for item in order.items %}
+          <li class="py-3 flex items-start sm:items-center justify-between flex-col sm:flex-row">
+            <div>
+              <p class="font-medium text-gray-900">{{ item.variant.product.name }}</p>
+              {% if item.variant.options %}
+                <p class="text-sm text-gray-500">{{ _("옵션") }}: {{ item.variant.options }}</p>
+              {% endif %}
+              <p class="text-sm text-gray-500">{{ item.quantity }}{{ _("개") }}</p>
+            </div>
+            <p class="mt-2 sm:mt-0 text-right text-indigo-700 font-semibold">
+              {{ item.original_price|comma }}{{ _("원") }}
+            </p>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </div>
+    {% endfor %}
+  {% endif %}
 </div>
+
 {% endblock %}
