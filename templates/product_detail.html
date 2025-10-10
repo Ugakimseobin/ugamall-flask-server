@@ -3,73 +3,72 @@
 <div class="max-w-6xl mx-auto py-10 px-4 sm:px-6 relative">
 
   <!-- 뒤로가기 -->
-  <button onclick="history.back()"
-          class="absolute -top-3 sm:top-2 left-4 text-gray-500 hover:text-indigo-600 text-sm font-semibold">
+  <button onclick="history.back()" 
+          class="absolute top-2 left-3 text-gray-500 hover:text-indigo-600 text-sm sm:text-base font-medium transition">
     ← {{ _("뒤로가기") }}
   </button>
 
   <!-- 상품 상세 -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white shadow-2xl rounded-2xl p-6 sm:p-10 border border-gray-100 mt-10">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white shadow-xl rounded-2xl p-6 sm:p-10 mt-10 border border-gray-100">
     <!-- 이미지 -->
     <div class="flex justify-center">
-      <img src="{{ url_for('static', filename='images/' ~ product.image) }}"
-           alt="{{ product.name }}"
+      <img src="{{ url_for('static', filename='images/' ~ product.image) }}" 
+           alt="{{ product.name }}" 
            class="rounded-2xl shadow-lg w-full h-80 sm:h-[28rem] object-cover">
     </div>
 
     <!-- 상품 정보 -->
-    <div id="purchase-box">
-      <h1 class="text-2xl sm:text-4xl font-extrabold mb-4 text-gray-800">{{ product.name }}</h1>
+    <div id="purchase-box" class="flex flex-col justify-between">
+      <div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold mb-3 text-gray-800">{{ product.name }}</h1>
 
-      {% if product.discount_percent > 0 %}
-        <p class="text-gray-400 line-through text-sm">{{ product.base_price|won }}원</p>
-        <p class="text-red-600 font-bold text-2xl sm:text-3xl mb-3">
-          {{ product.final_price()|won }}원
-          <span class="ml-2 text-base text-red-500">(-{{ product.discount_percent }}%)</span>
-        </p>
-      {% else %}
-        <p class="text-indigo-600 font-bold text-2xl sm:text-3xl mb-3">{{ product.base_price|won }}원</p>
-      {% endif %}
+        {% if product.discount_percent > 0 %}
+          <p class="text-gray-400 line-through text-sm">{{ product.base_price|won }}원</p>
+          <p class="text-red-600 font-bold text-2xl sm:text-3xl mb-3">
+            {{ product.final_price()|won }}원 
+            <span class="ml-2 text-base text-red-500">(-{{ product.discount_percent }}%)</span>
+          </p>
+        {% else %}
+          <p class="text-indigo-600 font-bold text-2xl sm:text-3xl mb-3">{{ product.base_price|won }}원</p>
+        {% endif %}
 
-      <p class="text-gray-700 text-sm sm:text-base mb-5 leading-relaxed">{{ product.description }}</p>
-      <p class="text-xs sm:text-sm text-gray-500 mb-6">{{ _("카테고리") }}: {{ product.category }}</p>
+        <p class="text-gray-700 text-sm sm:text-base mb-5 leading-relaxed">{{ product.description }}</p>
+        <p class="text-xs sm:text-sm text-gray-500 mb-6">{{ _("카테고리") }}: {{ product.category }}</p>
 
-      <!-- 옵션 -->
-      {% if option_keys %}
-      <div class="mb-6">
-        {% for key in option_keys %}
-        <label class="block font-semibold mb-2 text-sm text-gray-700">{{ key }}</label>
-        <select name="option_{{ key }}"
-                class="border border-gray-300 rounded-lg w-full p-2 mb-4 focus:ring-2 focus:ring-indigo-300 text-sm option-select"
-                data-key="{{ key }}">
-          <option value="">-- {{ _("선택하세요") }} --</option>
-          {% set values = [] %}
-          {% for v in product.variants %}
-            {% if v.options[key] not in values %}
-              <option value="{{ v.options[key] }}">{{ v.options[key] }}</option>
-              {% set _ = values.append(v.options[key]) %}
-            {% endif %}
+        {% if option_keys %}
+        <div class="mb-6">
+          {% for key in option_keys %}
+          <label class="block font-semibold mb-2 text-sm text-gray-700">{{ key }}</label>
+          <select name="option_{{ key }}" 
+                  class="border border-gray-300 rounded-lg w-full p-2 mb-4 focus:ring-2 focus:ring-indigo-300 text-sm option-select"
+                  data-key="{{ key }}">
+            <option value="">-- {{ _("선택하세요") }} --</option>
+            {% set values = [] %}
+            {% for v in product.variants %}
+              {% if v.options[key] not in values %}
+                <option value="{{ v.options[key] }}">{{ v.options[key] }}</option>
+                {% set _ = values.append(v.options[key]) %}
+              {% endif %}
+            {% endfor %}
+          </select>
+          <input type="hidden" id="cart-option-main-{{ key }}" name="option_{{ key }}">
           {% endfor %}
-        </select>
-        <input type="hidden" id="cart-option-main-{{ key }}" name="option_{{ key }}">
-        {% endfor %}
-      </div>
-      {% endif %}
+        </div>
+        {% endif %}
 
-      <!-- 수량 -->
-      <div class="flex items-center mb-6">
-        <span class="font-semibold mr-3 text-sm sm:text-base text-gray-700">{{ _("수량") }}</span>
-        <div class="flex items-center border rounded-lg overflow-hidden">
-          <button type="button" onclick="changeQuantity('main', -1)"
-                  class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-2">−</button>
-          <input id="quantity-main" type="number" value="1" min="1"
-                 class="w-16 text-center border-x p-2 text-sm focus:ring-0">
-          <button type="button" onclick="changeQuantity('main', 1)"
-                  class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-2">＋</button>
+        <div class="flex items-center mb-6">
+          <span class="font-semibold mr-3 text-sm sm:text-base text-gray-700">{{ _("수량") }}</span>
+          <div class="flex items-center border rounded-lg overflow-hidden">
+            <button type="button" onclick="changeQuantity('main', -1)"
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-2">−</button>
+            <input id="quantity-main" type="number" value="1" min="1"
+                   class="w-16 text-center border-x p-2 text-sm focus:ring-0">
+            <button type="button" onclick="changeQuantity('main', 1)"
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-2">＋</button>
+          </div>
         </div>
       </div>
 
-      <!-- 버튼 -->
       <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <form id="cart-form-main" method="post" action="/add_to_cart" class="flex-1">
           <input type="hidden" name="product_id" value="{{ product.id }}">
@@ -94,7 +93,7 @@
     <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-800">📝 {{ _("상품 리뷰") }}</h2>
     {% if product.reviews %}
       {% for r in product.reviews %}
-        <div class="border-b pb-3 mb-4 bg-white shadow-sm rounded-lg p-4">
+        <div class="border-b pb-3 mb-4 bg-white shadow-sm rounded-lg p-4 hover:shadow-md transition">
           <p class="text-yellow-500 text-lg">
             {% for i in range(r.rating) %}★{% endfor %}
             {% for i in range(5 - r.rating) %}☆{% endfor %}
@@ -176,18 +175,20 @@
 
     {% if option_keys %}
       {% for key in option_keys %}
-      <label class="block font-semibold mb-2 text-sm text-gray-700">{{ key }}</label>
-      <select name="option_{{ key }}" class="border rounded w-full p-2 mb-2 text-sm option-select-side" data-key="{{ key }}">
-        <option value="">-- {{ _("선택하세요") }} --</option>
-        {% set values = [] %}
-        {% for v in product.variants %}
-          {% if v.options[key] not in values %}
-            <option value="{{ v.options[key] }}">{{ v.options[key] }}</option>
-            {% set _ = values.append(v.options[key]) %}
-          {% endif %}
-        {% endfor %}
-      </select>
-      <input type="hidden" name="option_{{ key }}" id="cart-option-side-{{ key }}">
+        <label class="block font-semibold mb-2 text-sm text-gray-700">{{ key }}</label>
+        <select name="option_{{ key }}" 
+                class="border rounded w-full p-2 mb-4 text-sm option-select-side"
+                data-key="{{ key }}">
+          <option value="">-- {{ _("선택하세요") }} --</option>
+          {% set values = [] %}
+          {% for v in product.variants %}
+            {% if v.options[key] not in values %}
+              <option value="{{ v.options[key] }}">{{ v.options[key] }}</option>
+              {% set _ = values.append(v.options[key]) %}
+            {% endif %}
+          {% endfor %}
+        </select>
+        <input type="hidden" id="cart-option-side-{{ key }}" name="option_{{ key }}">
       {% endfor %}
     {% endif %}
 
@@ -205,13 +206,15 @@
             class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 shadow transition">
       {{ _("장바구니 담기") }}
     </button>
-
-    <!-- 위로가기 버튼 복원 -->
-    <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
-      class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-200 hover:bg-indigo-500 hover:text-white text-gray-600 rounded-full w-10 h-10 flex items-center justify-center shadow-lg">
-      ↑
-    </button>
   </form>
+
+  <!-- 위로가기 버튼 복구 -->
+  <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    class="absolute bottom-6 left-1/2 transform -translate-x-1/2 
+           bg-gray-200 hover:bg-indigo-500 hover:text-white text-gray-600 
+           rounded-full w-10 sm:w-12 h-10 sm:h-12 flex items-center justify-center shadow-lg text-sm sm:text-base">
+    ↑
+  </button>
 </div>
 
 <!-- 🟣 토글 버튼 -->
@@ -221,48 +224,50 @@
   🛒
 </button>
 
-<!-- 🛒 모달 -->
-<div id="cart-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
-  <div class="bg-white p-6 rounded-xl shadow-xl text-center w-72 sm:w-80">
-    <p class="mb-4 text-base font-semibold">{{ _("장바구니에 추가되었습니다!") }}</p>
-    <div class="flex gap-3">
-      <button onclick="closeModal()" class="flex-1 bg-gray-200 rounded-lg px-4 py-2 hover:bg-gray-300">
-        {{ _("계속 쇼핑하기") }}
-      </button>
-      <a href="/checkout" class="flex-1 bg-indigo-600 text-white rounded-lg px-4 py-2 hover:bg-indigo-700">
-        {{ _("장바구니로 이동") }}
-      </a>
-    </div>
-  </div>
-</div>
-
 <script>
-let userClosed = false;
+let userClosed = false; // 사용자가 닫았는지 여부
 
-// 사이드바 토글
 function toggleCart() {
   const cart = document.getElementById("floating-cart");
+  const icon = document.getElementById("cart-toggle-icon");
+
   cart.classList.toggle("translate-x-full");
-  userClosed = cart.classList.contains("translate-x-full");
+
+  if (cart.classList.contains("translate-x-full")) {
+    icon.textContent = "⮞"; // 닫힘
+    userClosed = true;
+  } else {
+    icon.textContent = "⮜"; // 열림
+    userClosed = false;
+  }
 }
 
-// 스크롤 자동 열기 (PC만)
-window.addEventListener("scroll", function () {
+// 스크롤 자동 열기
+window.addEventListener("scroll", function() {
   const cart = document.getElementById("floating-cart");
-  if (window.innerWidth >= 1024 && window.scrollY > 800 && cart.classList.contains("translate-x-full") && !userClosed) {
+  const icon = document.getElementById("cart-toggle-icon");
+
+  // ✅ PC(1024px 이상)에서만 자동 열림
+  if (window.innerWidth >= 1024 && window.scrollY > 1000 && cart.classList.contains("translate-x-full") && !userClosed) {
     cart.classList.remove("translate-x-full");
+    icon.textContent = "⮜";
   }
 });
 
-// 옵션 선택 시 hidden input 반영
+
+// 옵션 선택 시 hidden input에 반영
 document.querySelectorAll(".option-select, .option-select-side").forEach(select => {
   select.addEventListener("change", () => {
     const key = select.dataset.key;
     const value = select.value;
-    const mainHidden = document.getElementById("cart-option-main-" + key);
-    const sideHidden = document.getElementById("cart-option-side-" + key);
-    if (mainHidden) mainHidden.value = value;
-    if (sideHidden) sideHidden.value = value;
+
+    // 메인 hidden 업데이트
+    const cartMain = document.getElementById("cart-option-main-" + key);
+    if (cartMain) cartMain.value = value;
+
+    // 사이드 hidden 업데이트
+    const cartSide = document.getElementById("cart-option-side-" + key);
+    if (cartSide) cartSide.value = value;
   });
 });
 
@@ -273,38 +278,35 @@ function changeQuantity(target, delta) {
   let value = parseInt(input.value) || 1;
   value = Math.max(1, value + delta);
   input.value = value;
+
   const cartQty = document.getElementById(`cart-quantity-${target}`);
   if (cartQty) cartQty.value = value;
 }
 
-// Ajax 장바구니 추가
+// Ajax로 장바구니 담기
 function attachCartHandler(formId) {
   const form = document.getElementById(formId);
   if (!form) return;
 
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", function(e) {
     e.preventDefault();
+    const formData = new FormData(this);
 
-    const selects = form.querySelectorAll("select");
-    for (const s of selects) {
-      if (!s.value) {
-        alert("모든 옵션을 선택해주세요.");
-        return;
-      }
-    }
-
-    const formData = new FormData(form);
-    const res = await fetch("/add_to_cart", {
+    fetch("/add_to_cart", {
       method: "POST",
       body: formData,
       headers: { "X-Requested-With": "XMLHttpRequest" }
-    });
-    const data = await res.json();
-    if (data.status === "ok") {
-      document.getElementById("cart-modal").classList.remove("hidden");
-    } else {
-      alert(data.message);
-    }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "ok") {
+        document.dispatchEvent(new CustomEvent('cart:added'));
+        document.getElementById("cart-modal").classList.remove("hidden");
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch(err => console.error("에러 발생:", err));
   });
 }
 
