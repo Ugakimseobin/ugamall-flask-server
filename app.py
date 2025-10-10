@@ -301,6 +301,16 @@ def won(n):
     except Exception:
         return "0"
 
+@app.template_filter('kst')
+def format_kst(dt):
+    """서버 UTC datetime을 KST로 변환해서 YYYY-MM-DD HH:MM 형태로 반환"""
+    if not dt:
+        return ''
+    try:
+        return dt.astimezone(ZoneInfo('Asia/Seoul')).strftime('%Y-%m-%d %H:%M')
+    except Exception:
+        return dt.strftime('%Y-%m-%d %H:%M')
+    
 def allowed_file_ext(filename, allowed_exts):
     _, ext = os.path.splitext(filename or "")
     return ext.lower() in allowed_exts and len(ext) > 0
