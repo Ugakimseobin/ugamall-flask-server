@@ -176,16 +176,14 @@
 <!-- 🛒 사이드바 -->
 <div id="floating-cart"
      class="fixed top-0 right-0 h-full w-72 sm:w-80 bg-white border-l shadow-2xl transform translate-x-full transition-transform duration-300 z-50 p-6 overflow-y-auto">
-     <button id="cart-handle"
-      class="fixed top-1/2 -translate-y-1/2 right-0 z-[60]
-            w-10 h-24 sm:w-12 sm:h-28
-            bg-indigo-600 text-white
-            rounded-l-full shadow-xl
-            flex items-center justify-center
-            cursor-pointer select-none"
-      aria-label="장바구니 열고 닫기" aria-expanded="false" type="button">
-      <span class="text-xl">🛒</span>
-    </button>
+     <div id="cart-handle"
+          class="absolute top-1/2 -left-6 sm:-left-8 transform -translate-y-1/2
+                  w-10 h-24 sm:w-12 sm:h-28
+                  bg-indigo-600 text-white 
+                  rounded-r-full shadow-xl 
+                  flex items-center justify-center cursor-pointer select-none z-[60]">
+        <span class="text-xl">🛒</span>
+    </div>
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-bold text-gray-800">{{ _("빠른 장바구니") }}</h3>
     <button onclick="toggleCart()" class="text-gray-500 hover:text-indigo-600 text-xl font-bold">×</button>
@@ -278,32 +276,37 @@
 </style>
 
 <script>
-let userClosed = false; // 사용자가 닫았는지 여부
+const cart = document.getElementById("floating-cart");
+const handle = document.getElementById("cart-handle");
+let userClosed = false;
+let autoOpened = false;
+
+function openCart() {
+  cart.classList.remove("translate-x-full");
+  userClosed = false;
+}
+
+function closeCart() {
+  cart.classList.add("translate-x-full");
+  userClosed = true;
+}
 
 function toggleCart() {
-  const cart = document.getElementById("floating-cart");
-  const icon = document.getElementById("cart-toggle-icon");
-
-  cart.classList.toggle("translate-x-full");
-
   if (cart.classList.contains("translate-x-full")) {
-    icon.textContent = "⮞"; // 닫힘
-    userClosed = true;
+    openCart();
   } else {
-    icon.textContent = "⮜"; // 열림
-    userClosed = false;
+    closeCart();
   }
 }
 
-// 스크롤 자동 열기
-window.addEventListener("scroll", function() {
-  const cart = document.getElementById("floating-cart");
-  const icon = document.getElementById("cart-toggle-icon");
+// 🟣 반원 핸들 클릭으로 토글
+handle.addEventListener("click", toggleCart);
 
-  // ✅ PC(1024px 이상)에서만 자동 열림
-  if (window.innerWidth >= 1024 && window.scrollY > 1000 && cart.classList.contains("translate-x-full") && !userClosed) {
-    cart.classList.remove("translate-x-full");
-    icon.textContent = "⮜";
+// 🟢 일정 스크롤 후 자동 열기 (1회만)
+window.addEventListener("scroll", () => {
+  if (window.innerWidth >= 1024 && window.scrollY > 800 && !autoOpened && !userClosed) {
+    openCart();
+    autoOpened = true;
   }
 });
 
