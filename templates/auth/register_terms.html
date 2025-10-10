@@ -28,11 +28,11 @@
     <!-- ✅ 약관 항목들 -->
     <div class="space-y-3">
       {% set terms_list = [
-        ('agree_terms', '유가몰 구매회원 이용약관 (필수)', 'terms1', True),
-        ('agree_finance', '전자금융서비스 이용약관 동의 (필수)', 'terms2', True),
-        ('agree_privacy', '개인정보 수집 및 이용동의 (필수)', 'terms3', True),
-        ('agree_age', '만 14세 이상입니다. (필수)', 'terms4', True),
-        ('agree_marketing', '혜택 알림 이메일, 문자, 앱 푸시 수신 (선택)', 'terms5', False)
+        ('agree_terms', '{{ _("유가몰 구매회원 이용약관 (필수)") }}', 'terms1', True),
+        ('agree_finance', '{{ _("전자금융 서비스 이용약관 동의 (필수)") }}', 'terms2', True),
+        ('agree_privacy', '{{ _("개인정보 수집 및 이용동의 (필수)") }}', 'terms3', True),
+        ('agree_age', '{{ _("만 14세 이상입니다. (필수)") }}', 'terms4', True),
+        ('agree_marketing', '{{ _("혜택 알림 이메일, 문자, 앱 푸시 수신 (선택)") }}', 'terms5', False)
       ] %}
       
       {% for name, label, key, required in terms_list %}

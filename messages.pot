@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-10 15:07+0900\n"
+"POT-Creation-Date: 2025-10-10 15:19+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -829,6 +829,10 @@ msgstr ""
 
 #: templates/auth/register_info.html:18
 msgid "중복확인"
+msgstr ""
+
+#: templates/auth/register_info.html:35
+msgid "8자 이상이며 숫자와 특수문자를 포함해야 합니다"
 msgstr ""
 
 #: templates/auth/register_info.html:40 templates/auth/register_info.html:41
