@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_babel import Babel
 from flask_login import UserMixin
 from flask_login import current_user, login_required
+import re
 from sqlalchemy.orm import joinedload
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
@@ -547,9 +548,9 @@ def register_info():
             return redirect(url_for("register_info"))
 
         # ✅ 비밀번호 보안 정책 검증 (8자 이상, 대문자/숫자/특수문자 포함)
-        pw_policy = re.compile(r"^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$")
+        pw_policy = re.compile(r"^(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$")
         if not pw_policy.match(password):
-            flash("비밀번호는 8자 이상이며, 대문자/숫자/특수문자를 모두 포함해야 합니다.", "error")
+            flash("비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다.", "error")
             return redirect(url_for("register_info"))
 
         # ✅ 휴대폰 인증 여부 확인

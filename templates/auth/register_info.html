@@ -1,51 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="max-w-md mx-auto p-6 sm:p-8 bg-white shadow-2xl rounded-2xl mt-14 border border-gray-100">
+<div class="max-w-2xl mx-auto p-10 bg-white shadow-2xl rounded-2xl mt-16 border border-gray-100">
 
   <!-- ✅ PC 전용 -->
   <div class="hidden sm:block">
-    <h2 class="text-3xl font-extrabold text-center text-indigo-700 mb-8">{{ _("회원 정보 입력") }}</h2>
+    <h2 class="text-3xl font-extrabold text-center text-indigo-700 mb-10">{{ _("회원 정보 입력") }}</h2>
 
-    <form method="post" class="space-y-5 text-sm sm:text-base">
+    <form method="post" id="register-form" class="space-y-6 text-base">
       <!-- 이메일 -->
       <div>
-        <label class="block font-semibold mb-1 text-gray-700">{{ _("이메일") }}</label>
-        <div class="flex space-x-2">
+        <label class="block font-semibold mb-2 text-gray-700">{{ _("이메일") }}</label>
+        <div class="flex gap-3">
           <input type="email" id="email" name="email" placeholder="{{ _('이메일 입력') }}"
-                 required class="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
+                 required class="flex-1 border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
           <button type="button" onclick="checkEmail()"
-                  class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 active:scale-[0.97] transition">
+                  class="px-5 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 active:scale-[0.97] transition">
             {{ _("중복확인") }}
           </button>
         </div>
-        <p id="email-status" class="text-xs mt-1 text-gray-500"></p>
+        <p id="email-status" class="text-sm mt-1 text-gray-500"></p>
       </div>
 
       <!-- 비밀번호 -->
       <div>
-        <label class="block font-semibold mb-1 text-gray-700">{{ _("비밀번호") }}</label>
+        <label class="block font-semibold mb-2 text-gray-700">{{ _("비밀번호") }}</label>
         <input type="password" id="password" name="password" placeholder="{{ _('비밀번호') }}"
-               required class="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition"
+               required class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition"
                oninput="checkPasswordStrength(this.value)">
-        <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+        <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
           <div id="pw-strength" class="h-2 rounded-full transition-all duration-300"></div>
         </div>
-        <p id="pw-strength-text" class="text-xs text-gray-600 mt-1"></p>
-
-        <!-- ✅ 비밀번호 정책 표시 -->
-        <ul class="text-xs text-gray-500 mt-2 list-disc list-inside space-y-1">
-          <li>8자 이상이어야 합니다.</li>
-          <li>영문 대문자를 포함해야 합니다.</li>
-          <li>숫자를 포함해야 합니다.</li>
-          <li>특수문자를 포함해야 합니다.</li>
-        </ul>
+        <p id="pw-strength-text" class="text-sm text-gray-600 mt-2"></p>
+        <!-- ✅ 한 줄 설명 -->
+        <p class="text-xs text-gray-500 mt-1">8자 이상이며 숫자와 특수문자를 포함해야 합니다.</p>
       </div>
 
       <!-- 비밀번호 확인 -->
       <div>
-        <label class="block font-semibold mb-1 text-gray-700">{{ _("비밀번호 확인") }}</label>
+        <label class="block font-semibold mb-2 text-gray-700">{{ _("비밀번호 확인") }}</label>
         <input type="password" id="password_confirm" name="password_confirm" placeholder="{{ _('비밀번호 확인') }}"
-               required class="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
+               required class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
       </div>
 
       <!-- 이름 -->
@@ -159,31 +153,29 @@ function checkPasswordStrength(password) {
   const bar = document.getElementById("pw-strength");
   const text = document.getElementById("pw-strength-text");
 
-  // 정책 검사
   const hasLength = password.length >= 8;
-  const hasUpper = /[A-Z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
   const hasSymbol = /[^A-Za-z0-9]/.test(password);
 
-  let score = [hasLength, hasUpper, hasNumber, hasSymbol].filter(Boolean).length;
+  let score = [hasLength, hasNumber, hasSymbol].filter(Boolean).length;
   const colors = ["#f87171", "#facc15", "#34d399"];
   const labels = ["약함", "보통", "강함"];
 
   bar.style.width = ["25%", "50%", "100%"][Math.min(score - 1, 2)] || "0%";
   bar.style.background = colors[Math.min(score - 1, 2)] || "#d1d5db";
-  text.textContent = score < 4 ? `비밀번호 강도: ${labels[Math.min(score - 1, 2)] || '약함'}` : "비밀번호 강도: 매우 강함";
-  text.className = `text-xs mt-1 ${score < 2 ? 'text-red-500' : score === 2 ? 'text-yellow-600' : 'text-green-600'}`;
+  text.textContent = score < 3 ? `비밀번호 강도: ${labels[Math.min(score - 1, 2)] || '약함'}` : "비밀번호 강도: 매우 강함";
+  text.className = `text-sm mt-1 ${score < 2 ? 'text-red-500' : score === 2 ? 'text-yellow-600' : 'text-green-600'}`;
 }
 
-// ✅ 클라이언트 검증 (제출 시)
+// 제출 전 검증
 document.getElementById("register-form").addEventListener("submit", e => {
   const pw = document.getElementById("password").value;
   const pwc = document.getElementById("password_confirm").value;
-  const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+  const regex = /^(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/;
 
   if (!regex.test(pw)) {
     e.preventDefault();
-    alert("비밀번호는 8자 이상, 대문자/숫자/특수문자를 포함해야 합니다.");
+    alert("비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다.");
     return false;
   }
   if (pw !== pwc) {
