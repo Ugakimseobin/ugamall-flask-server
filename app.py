@@ -527,28 +527,37 @@ def register_terms():
 @app.route("/register/info", methods=["GET", "POST"])
 def register_info():
     if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-        password_confirm = request.form["password_confirm"]
-        name = request.form["name"]
-        base_address = request.form["address"]
-        detail_address = request.form["detail_address"]
-        phone = request.form["phone"]
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "")
+        password_confirm = request.form.get("password_confirm", "")
+        name = request.form.get("name", "").strip()
+        base_address = request.form.get("address", "").strip()
+        detail_address = request.form.get("detail_address", "").strip()
+        phone = request.form.get("phone", "").strip()
 
         # ✅ 이메일 중복 체크
         existing = User.query.filter_by(email=email).first()
         if existing:
             flash("이미 사용 중인 이메일입니다.", "error")
             return redirect(url_for("register_info"))
-        
+
+        # ✅ 비밀번호 일치 확인
         if password != password_confirm:
             flash("비밀번호가 일치하지 않습니다.", "error")
             return redirect(url_for("register_info"))
-        
+
+        # ✅ 비밀번호 보안 정책 검증 (8자 이상, 대문자/숫자/특수문자 포함)
+        pw_policy = re.compile(r"^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$")
+        if not pw_policy.match(password):
+            flash("비밀번호는 8자 이상이며, 대문자/숫자/특수문자를 모두 포함해야 합니다.", "error")
+            return redirect(url_for("register_info"))
+
+        # ✅ 휴대폰 인증 여부 확인
         if not session.get("phone_verified"):
             flash("휴대폰 인증을 완료해야 회원가입이 가능합니다.", "error")
             return redirect(url_for("register_info"))
 
+        # ✅ 회원 생성
         user = User(
             email=email,
             name=name,
@@ -562,14 +571,21 @@ def register_info():
             agree_age=session.get("agreements", {}).get("agree_age", False),
             agree_marketing=session.get("agreements", {}).get("agree_marketing", False),
         )
-        user.set_password(password)
+        user.set_password(password)  # User 모델에 set_password(해시) 함수 필요
+
         db.session.add(user)
         db.session.commit()
 
-        flash("회원가입 완료! 로그인해주세요.", "success")
+        flash("회원가입이 완료되었습니다. 로그인해주세요.", "success")
         return redirect(url_for("login"))
 
     return render_template("auth/register_info.html")
+
+@app.route("/check_email", methods=["POST"])
+def check_email():
+    email = request.form.get("email")
+    exists = User.query.filter_by(email=email).first() is not None
+    return jsonify({"exists": exists})
 
 @app.route("/guest_orders", methods=["GET", "POST"])
 def guest_orders():
