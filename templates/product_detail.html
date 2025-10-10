@@ -177,11 +177,14 @@
 <div id="floating-cart"
      class="fixed top-0 right-0 h-full w-72 sm:w-80 bg-white border-l shadow-2xl transform translate-x-full transition-transform duration-300 z-50 p-6 overflow-y-auto">
      <div id="cart-handle"
-          class="absolute top-1/2 -left-6 sm:-left-8 transform -translate-y-1/2
+          class="fixed top-1/2 right-0 transform -translate-y-1/2 
                   w-10 h-24 sm:w-12 sm:h-28
                   bg-indigo-600 text-white 
-                  rounded-r-full shadow-xl 
-                  flex items-center justify-center cursor-pointer select-none z-[60]">
+                  rounded-l-full shadow-xl 
+                  flex items-center justify-center 
+                  cursor-pointer select-none 
+                  transition hover:scale-105
+                  z-[9999]"> <!-- ✅ z-index를 아주 높게 -->
         <span class="text-xl">🛒</span>
     </div>
   <div class="flex justify-between items-center mb-4">
