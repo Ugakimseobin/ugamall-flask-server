@@ -222,21 +222,24 @@
 </div>
 
 <!-- ✅ 장바구니 추가 완료 모달 -->
-  <div id="cart-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-xl p-6 text-center w-80 animate-fadeIn">
-      <h3 class="text-lg font-bold text-gray-800 mb-2">✅ {{ _("장바구니에 추가되었습니다!") }}</h3>
-      <div class="flex justify-center gap-3 mt-4">
-        <button onclick="closeModal()" 
-                class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-medium">
-          {{ _("계속 쇼핑하기") }}
-        </button>
-        <a href="/checkout" 
-           class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium">
-          {{ _("장바구니로 이동") }}
-        </a>
-      </div>
+<div id="cart-modal"
+     class="fixed inset-0 bg-black/50 hidden z-[9999] flex items-center justify-center">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 text-center w-80 animate-fadeIn transform transition-all duration-300">
+    <h3 class="text-lg font-bold text-gray-800 mb-2">
+      ✅ {{ _("장바구니에 추가되었습니다!") }}
+    </h3>
+    <div class="flex justify-center gap-3 mt-4">
+      <button onclick="closeModal()"
+              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-medium">
+        {{ _("계속 쇼핑하기") }}
+      </button>
+      <a href="/checkout"
+         class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium">
+        {{ _("장바구니로 이동") }}
+      </a>
     </div>
   </div>
+</div>
 
 <!-- 🟣 토글 버튼 -->
 <button id="cart-toggle"
@@ -244,6 +247,30 @@
         class="fixed bottom-6 right-6 sm:right-10 bg-indigo-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-2xl hover:bg-indigo-700 transition">
   🛒
 </button>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out;
+}
+
+/* ✅ 모달 중앙 정렬 고정 */
+#cart-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+}
+#cart-modal.flex {
+  display: flex !important;
+}
+</style>
 
 <script>
 let userClosed = false; // 사용자가 닫았는지 여부
