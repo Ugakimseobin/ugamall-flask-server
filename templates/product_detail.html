@@ -221,6 +221,23 @@
   </button>
 </div>
 
+<!-- ✅ 장바구니 추가 완료 모달 -->
+  <div id="cart-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl p-6 text-center w-80 animate-fadeIn">
+      <h3 class="text-lg font-bold text-gray-800 mb-2">✅ {{ _("장바구니에 추가되었습니다!") }}</h3>
+      <div class="flex justify-center gap-3 mt-4">
+        <button onclick="closeModal()" 
+                class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-medium">
+          {{ _("계속 쇼핑하기") }}
+        </button>
+        <a href="/checkout" 
+           class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium">
+          {{ _("장바구니로 이동") }}
+        </a>
+      </div>
+    </div>
+  </div>
+
 <!-- 🟣 토글 버튼 -->
 <button id="cart-toggle"
         onclick="toggleCart()"
