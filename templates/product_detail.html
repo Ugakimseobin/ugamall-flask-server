@@ -177,7 +177,7 @@
     {% if option_keys %}
       {% for key in option_keys %}
       <label class="block font-semibold mb-2 text-sm text-gray-700">{{ key }}</label>
-      <select name="option_{{ key }}" class="border rounded w-full p-2 mb-4 text-sm">
+      <select name="option_{{ key }}" class="border rounded w-full p-2 mb-2 text-sm option-select-side" data-key="{{ key }}">
         <option value="">-- {{ _("선택하세요") }} --</option>
         {% set values = [] %}
         {% for v in product.variants %}
@@ -187,6 +187,7 @@
           {% endif %}
         {% endfor %}
       </select>
+      <input type="hidden" name="option_{{ key }}" id="cart-option-side-{{ key }}">
       {% endfor %}
     {% endif %}
 
@@ -204,6 +205,12 @@
             class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 shadow transition">
       {{ _("장바구니 담기") }}
     </button>
+
+    <!-- 위로가기 버튼 복원 -->
+    <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-200 hover:bg-indigo-500 hover:text-white text-gray-600 rounded-full w-10 h-10 flex items-center justify-center shadow-lg">
+      ↑
+    </button>
   </form>
 </div>
 
@@ -214,69 +221,78 @@
   🛒
 </button>
 
-<script>
-let userClosed = false; // 사용자가 닫았는지 여부
+<!-- 🛒 모달 -->
+<div id="cart-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+  <div class="bg-white p-6 rounded-xl shadow-xl text-center w-72 sm:w-80">
+    <p class="mb-4 text-base font-semibold">{{ _("장바구니에 추가되었습니다!") }}</p>
+    <div class="flex gap-3">
+      <button onclick="closeModal()" class="flex-1 bg-gray-200 rounded-lg px-4 py-2 hover:bg-gray-300">
+        {{ _("계속 쇼핑하기") }}
+      </button>
+      <a href="/checkout" class="flex-1 bg-indigo-600 text-white rounded-lg px-4 py-2 hover:bg-indigo-700">
+        {{ _("장바구니로 이동") }}
+      </a>
+    </div>
+  </div>
+</div>
 
+<script>
+let userClosed = false;
+
+// 사이드바 토글
 function toggleCart() {
   const cart = document.getElementById("floating-cart");
-  const icon = document.getElementById("cart-toggle-icon");
-
   cart.classList.toggle("translate-x-full");
-
-  if (cart.classList.contains("translate-x-full")) {
-    icon.textContent = "⮞";
-    userClosed = true;
-  } else {
-    icon.textContent = "⮜";
-    userClosed = false;
-  }
+  userClosed = cart.classList.contains("translate-x-full");
 }
 
-// ✅ 스크롤 자동 열기
-window.addEventListener("scroll", function() {
+// 스크롤 자동 열기 (PC만)
+window.addEventListener("scroll", function () {
   const cart = document.getElementById("floating-cart");
-  const icon = document.getElementById("cart-toggle-icon");
-
   if (window.innerWidth >= 1024 && window.scrollY > 800 && cart.classList.contains("translate-x-full") && !userClosed) {
     cart.classList.remove("translate-x-full");
-    icon.textContent = "⮜";
   }
 });
 
-// ✅ 옵션 선택
+// 옵션 선택 시 hidden input 반영
 document.querySelectorAll(".option-select, .option-select-side").forEach(select => {
   select.addEventListener("change", () => {
     const key = select.dataset.key;
     const value = select.value;
-
-    // 메인 hidden input 동기화
-    const hiddenMain = document.getElementById("cart-option-main-" + key);
-    if (hiddenMain) hiddenMain.value = value;
-
-    // 사이드 hidden input도 같이 동기화
-    const hiddenSide = document.querySelector(`#cart-form-side select[data-key="${key}"]`);
-    if (hiddenSide) hiddenSide.value = value;
+    const mainHidden = document.getElementById("cart-option-main-" + key);
+    const sideHidden = document.getElementById("cart-option-side-" + key);
+    if (mainHidden) mainHidden.value = value;
+    if (sideHidden) sideHidden.value = value;
   });
 });
 
-// ✅ 수량 변경
+// 수량 변경
 function changeQuantity(target, delta) {
   const input = document.getElementById(`quantity-${target}`);
+  if (!input) return;
   let value = parseInt(input.value) || 1;
   value = Math.max(1, value + delta);
   input.value = value;
-
-  const hidden = document.getElementById(`cart-quantity-${target}`);
-  if (hidden) hidden.value = value;
+  const cartQty = document.getElementById(`cart-quantity-${target}`);
+  if (cartQty) cartQty.value = value;
 }
 
-// ✅ Ajax 장바구니
+// Ajax 장바구니 추가
 function attachCartHandler(formId) {
   const form = document.getElementById(formId);
   if (!form) return;
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    const selects = form.querySelectorAll("select");
+    for (const s of selects) {
+      if (!s.value) {
+        alert("모든 옵션을 선택해주세요.");
+        return;
+      }
+    }
+
     const formData = new FormData(form);
     const res = await fetch("/add_to_cart", {
       method: "POST",
