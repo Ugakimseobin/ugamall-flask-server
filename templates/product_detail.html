@@ -223,8 +223,8 @@
 
 <!-- ✅ 장바구니 추가 완료 모달 -->
 <div id="cart-modal"
-     class="hidden fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center">
-  <div class="bg-white rounded-2xl shadow-2xl p-6 text-center w-80 animate-fadeIn transform transition-all duration-300">
+     class="hidden fixed inset-0 bg-black/50 z-[9999] items-center justify-center">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 text-center w-80 animate-fadeIn">
     <h3 class="text-lg font-bold text-gray-800 mb-2">
       ✅ {{ _("장바구니에 추가되었습니다!") }}
     </h3>
@@ -257,18 +257,9 @@
   animation: fadeIn 0.25s ease-out;
 }
 
-/* ✅ 모달 중앙 정렬 고정 */
-#cart-modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background-color: rgba(0, 0, 0, 0.5);
-  align-items: center;
-  justify-content: center;
-}
-#cart-modal.flex {
-  display: flex !important;
+/* ✅ 모달 완전 숨김 (Tailwind hidden 우선 적용) */
+#cart-modal.hidden {
+  display: none !important;
 }
 </style>
 
@@ -357,14 +348,14 @@ attachCartHandler("cart-form-side");
 
 function openModal() {
   const modal = document.getElementById("cart-modal");
-  modal.classList.remove("hidden");
-  modal.style.display = "flex"; // ✅ 강제 표시
+  modal.classList.remove("hidden"); // hidden 제거
+  modal.style.display = "flex"; // 중앙 표시
 }
 
 function closeModal() {
   const modal = document.getElementById("cart-modal");
-  modal.classList.add("hidden");
-  modal.style.display = "none"; // ✅ 완전 숨김
+  modal.classList.add("hidden"); // hidden 다시 추가
+  modal.style.display = "none"; // 완전 숨김
 }
 </script>
 {% endblock %}
