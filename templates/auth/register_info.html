@@ -264,6 +264,90 @@ function verifyCode() {
 }
 </script>
 
+<script>
+let currentStep = 1;
+const totalSteps = 5;
+
+// 진행바 업데이트
+function updateProgress() {
+  const percent = (currentStep / totalSteps) * 100;
+  document.getElementById("progress-bar").style.width = percent + "%";
+  document.getElementById("step-label").innerText = `진행상황 ${currentStep} / ${totalSteps}`;
+}
+
+// 현재 스텝 검증
+function validateStep(step) {
+  if (step === 1) {
+    const email = document.querySelector("#step1 input[name='email']").value.trim();
+    if (!email) {
+      alert("이메일을 입력해주세요.");
+      return false;
+    }
+    const pattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!pattern.test(email)) {
+      alert("올바른 이메일 형식을 입력해주세요.");
+      return false;
+    }
+  }
+  if (step === 2) {
+    const pw = document.querySelector("#step2 input[name='password']").value.trim();
+    const pwc = document.querySelector("#step2 input[name='password_confirm']").value.trim();
+    const regex = /^(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/;
+    if (!regex.test(pw)) {
+      alert("비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다.");
+      return false;
+    }
+    if (pw !== pwc) {
+      alert("비밀번호 확인이 일치하지 않습니다.");
+      return false;
+    }
+  }
+  if (step === 3) {
+    const name = document.querySelector("#step3 input[name='name']").value.trim();
+    if (!name) {
+      alert("이름을 입력해주세요.");
+      return false;
+    }
+  }
+  if (step === 4) {
+    const addr = document.querySelector("#address_m").value.trim();
+    const detail = document.querySelector("#detailAddress_m").value.trim();
+    if (!addr || !detail) {
+      alert("주소와 상세주소를 입력해주세요.");
+      return false;
+    }
+  }
+  if (step === 5) {
+    const phone = document.querySelector("#phone_m").value.trim();
+    if (!/^\d{10,11}$/.test(phone)) {
+      alert("올바른 휴대폰 번호를 입력해주세요.");
+      return false;
+    }
+  }
+  return true;
+}
+
+// 다음 단계
+function nextStep(step) {
+  if (!validateStep(currentStep)) return;
+  document.getElementById(`step${currentStep}`).classList.add("hidden");
+  document.getElementById(`step${step}`).classList.remove("hidden");
+  currentStep = step;
+  updateProgress();
+}
+
+// 이전 단계
+function prevStep(step) {
+  document.getElementById(`step${currentStep}`).classList.add("hidden");
+  document.getElementById(`step${step}`).classList.remove("hidden");
+  currentStep = step;
+  updateProgress();
+}
+
+// 초기화
+updateProgress();
+</script>
+
 <style>
 input:focus { outline: none !important; box-shadow: 0 0 0 2px rgba(99,102,241,0.3); }
 button { transition: all 0.2s ease; }
