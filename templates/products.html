@@ -3,7 +3,7 @@
 <div class="flex flex-col md:flex-row max-w-7xl mx-auto min-h-[70vh] py-8 md:py-12 px-4 md:px-6 gap-8">
 
   <!-- ✅ 왼쪽 필터 -->
-  <aside class="w-full md:w-1/4 bg-white shadow-lg rounded-2xl p-6 border border-gray-100">
+  <aside class="w-full md:w-1/4 bg-white shadow-lg rounded-2xl p-6 border border-gray-100 sticky top-24 h-fit">
     <h3 class="font-bold text-xl text-indigo-700 mb-6 flex items-center gap-2">
       <i class="fa-solid fa-sliders-h text-indigo-500"></i> {{ _("상품 필터") }}
     </h3>
@@ -53,8 +53,7 @@
 
   <!-- ✅ 오른쪽 상품 목록 -->
   <main class="w-full md:w-3/4">
-
-    <!-- ✅ 정렬 바 -->
+    <!-- 정렬 바 -->
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 bg-white shadow rounded-xl p-4 border border-gray-100">
       <div class="text-gray-700 font-semibold text-sm sm:text-base">
         총 <span class="text-indigo-600">{{ products|length }}</span>개 상품
@@ -74,17 +73,12 @@
     {% if products|length == 0 %}
       <div class="text-center text-gray-500 py-20 text-lg">등록된 상품이 없습니다.</div>
     {% else %}
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {% for p in products %}
         <a href="{{ url_for('product_detail', product_id=p.id) }}"
-           class="block bg-white rounded-2xl shadow hover:shadow-2xl overflow-hidden transform hover:-translate-y-1 transition duration-300">
-          <div class="relative">
-            <img src="{{ url_for('static', filename='images/' ~ p.image) }}"
-                 class="h-40 sm:h-48 w-full object-cover transition-transform duration-300 hover:scale-105">
-            <span class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded-full shadow">
-              NEW
-            </span>
-          </div>
+           class="block bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transform hover:-translate-y-1 transition duration-300">
+          <img src="{{ url_for('static', filename='images/' ~ p.image) }}"
+               class="h-48 sm:h-56 w-full object-cover transition-transform duration-300 hover:scale-105">
           <div class="p-4">
             <h3 class="font-bold text-gray-800 text-sm sm:text-base truncate">{{ p.name }}</h3>
             <p class="text-indigo-600 font-semibold text-sm sm:text-base mt-1">{{ p.base_price|won }}원</p>
@@ -98,7 +92,7 @@
 
 <!-- ✅ 안내사항 팝업 -->
 <div id="notice-popup"
-     class="fixed top-24 right-5 sm:right-16 md:right-20 w-64 sm:w-72 bg-yellow-100 shadow-2xl rounded-xl p-4 sm:p-5 z-50 hidden animate-fade-in"
+     class="fixed top-24 right-6 md:right-20 w-64 sm:w-72 bg-yellow-100 shadow-2xl rounded-xl p-4 sm:p-5 z-50 hidden animate-fade-in cursor-move"
      style="font-family: 'Nanum Pen Script', cursive;">
   <div class="flex justify-between items-center mb-2">
     <h3 class="font-bold text-lg sm:text-xl text-gray-800">{{ _("안내사항 💬") }}</h3>
@@ -158,6 +152,35 @@ window.addEventListener("DOMContentLoaded", () => {
   if (!saved || now > parseInt(saved)) {
     popup.classList.remove("hidden");
   }
+  makeDraggable(popup);
 });
+
+// ✅ 팝업 드래그 가능하게
+function makeDraggable(el) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  el.onmousedown = dragMouseDown;
+  function dragMouseDown(e) {
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+  function elementDrag(e) {
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    el.style.top = (el.offsetTop - pos2) + "px";
+    el.style.left = (el.offsetLeft - pos1) + "px";
+    el.style.bottom = "auto";
+    el.style.right = "auto";
+  }
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
 </script>
 {% endblock %}
