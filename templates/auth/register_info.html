@@ -98,14 +98,71 @@
   </div>
 
   <!-- ✅ 모바일 전용 (진행바 + 단계별 폼) -->
-  <div class="block sm:hidden mt-6">
-    <h2 class="text-2xl font-bold mb-4 text-center text-indigo-700">{{ _("회원가입") }}</h2>
+  <div class="block sm:hidden">
+    <h2 class="text-2xl font-bold mb-6 text-center text-indigo-700">{{ _("회원가입") }}</h2>
+
+    <!-- 진행 표시 -->
     <div class="mb-6">
       <div id="step-label" class="text-center text-sm font-semibold mb-2 text-gray-600">{{ _("진행상황") }} 1 / 5</div>
       <div class="w-full bg-gray-200 rounded-full h-2">
         <div id="progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width:20%"></div>
       </div>
     </div>
+
+    <!-- 단계별 폼 -->
+    <form method="post" id="mobile-register-form">
+      <!-- STEP 1 -->
+      <div class="step" id="step1">
+        <label class="block font-semibold mb-2">{{ _("이메일") }}</label>
+        <input type="email" name="email" required class="w-full border p-2 rounded mb-4">
+        <button type="button" onclick="nextStep(2)" class="w-full bg-indigo-600 text-white py-2 rounded">{{ _("다음") }}</button>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step hidden" id="step2">
+        <label class="block font-semibold mb-2">{{ _("비밀번호") }}</label>
+        <input type="password" name="password" required class="w-full border p-2 rounded mb-2">
+        <input type="password" name="password_confirm" required class="w-full border p-2 rounded mb-4">
+        <div class="flex justify-between">
+          <button type="button" onclick="prevStep(1)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
+          <button type="button" onclick="nextStep(3)" class="bg-indigo-600 text-white px-4 py-2 rounded">{{ _("다음") }}</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step hidden" id="step3">
+        <label class="block font-semibold mb-2">{{ _("이름") }}</label>
+        <input type="text" name="name" required class="w-full border p-2 rounded mb-4">
+        <div class="flex justify-between">
+          <button type="button" onclick="prevStep(2)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
+          <button type="button" onclick="nextStep(4)" class="bg-indigo-600 text-white px-4 py-2 rounded">{{ _("다음") }}</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step hidden" id="step4">
+        <label class="block font-semibold mb-2">{{ _("주소") }}</label>
+        <button type="button" onclick="execDaumPostcode()" class="w-full bg-indigo-600 text-white py-2 rounded mb-2">{{ _("주소 찾기") }}</button>
+        <input type="text" id="address_m" name="address" readonly placeholder="{{ _('기본주소') }}" class="w-full border p-2 rounded mb-2">
+        <input type="text" id="detailAddress_m" name="detail_address" placeholder="{{ _('상세주소') }}" class="w-full border p-2 rounded mb-4">
+        <div class="flex justify-between">
+          <button type="button" onclick="prevStep(3)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
+          <button type="button" onclick="nextStep(5)" class="bg-indigo-600 text-white px-4 py-2 rounded">{{ _("다음") }}</button>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step hidden" id="step5">
+        <label class="block font-semibold mb-2">{{ _("휴대폰 번호") }}</label>
+        <input type="text" id="phone_m" name="phone" placeholder="01012345678" class="w-full border p-2 rounded mb-2">
+        <button type="button" onclick="sendCode()" class="w-full bg-indigo-600 text-white py-2 rounded mb-2">{{ _("인증번호 받기") }}</button>
+        <input type="text" id="verify_code_m" placeholder="{{ _('인증번호 입력') }}" class="w-full border p-2 rounded mb-4">
+        <div class="flex justify-between">
+          <button type="button" onclick="prevStep(4)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
+          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">{{ _("가입하기") }}</button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>
 
