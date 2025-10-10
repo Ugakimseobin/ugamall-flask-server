@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-10 15:19+0900\n"
+"POT-Creation-Date: 2025-10-10 15:42+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -714,6 +714,14 @@ msgstr ""
 msgid "필터 적용"
 msgstr ""
 
+#: templates/products.html:60
+msgid "총"
+msgstr ""
+
+#: templates/products.html:60
+msgid "개 상품"
+msgstr ""
+
 #: templates/products.html:63 templates/search.html:82
 msgid "정렬"
 msgstr ""
@@ -887,6 +895,26 @@ msgstr ""
 
 #: templates/auth/register_terms.html:19
 msgid "모두 동의합니다"
+msgstr ""
+
+#: templates/auth/register_terms.html:31
+msgid "유가몰 구매회원 이용약관 (필수)"
+msgstr ""
+
+#: templates/auth/register_terms.html:32
+msgid "전자금융서비스 이용약관 동의 (필수)"
+msgstr ""
+
+#: templates/auth/register_terms.html:33
+msgid "개인정보 수집 및 이용동의 (필수)"
+msgstr ""
+
+#: templates/auth/register_terms.html:34
+msgid "만 14세 이상입니다. (필수)"
+msgstr ""
+
+#: templates/auth/register_terms.html:35
+msgid "혜택 알림 이메일, 문자, 앱 푸시 수신 (선택)"
 msgstr ""
 
 #: templates/auth/register_terms.html:48

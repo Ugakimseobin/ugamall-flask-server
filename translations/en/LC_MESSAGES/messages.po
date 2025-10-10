@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-10 15:19+0900\n"
+"POT-Creation-Date: 2025-10-10 15:42+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -737,6 +737,14 @@ msgstr "price range"
 msgid "필터 적용"
 msgstr "Apply"
 
+#: templates/products.html:60
+msgid "총"
+msgstr "A total of"
+
+#: templates/products.html:60
+msgid "개 상품"
+msgstr "products"
+
 #: templates/products.html:63 templates/search.html:82
 msgid "정렬"
 msgstr "array"
@@ -911,6 +919,29 @@ msgstr "Please agree to the terms and conditions below to register."
 #: templates/auth/register_terms.html:19
 msgid "모두 동의합니다"
 msgstr "all agree"
+
+#: templates/auth/register_terms.html:31
+msgid "유가몰 구매회원 이용약관 (필수)"
+msgstr "Ugamall Purchase Member Terms of Use (Required)"
+
+#: templates/auth/register_terms.html:32
+msgid "전자금융서비스 이용약관 동의 (필수)"
+msgstr "Agree to the Electronic Financial Services Terms of Use (Required)"
+
+#: templates/auth/register_terms.html:33
+msgid "개인정보 수집 및 이용동의 (필수)"
+msgstr "Consent to collection and use of personal information (required)"
+
+#: templates/auth/register_terms.html:34
+msgid "만 14세 이상입니다. (필수)"
+msgstr "You must be 14 years or older (required)"
+
+#: templates/auth/register_terms.html:35
+msgid "혜택 알림 이메일, 문자, 앱 푸시 수신 (선택)"
+msgstr ""
+"Receive benefit notification emails, text "
+"messages, and app push notifications "
+"(optional)"
 
 #: templates/auth/register_terms.html:48
 msgid "보기"
