@@ -223,7 +223,7 @@
 
 <!-- ✅ 장바구니 추가 완료 모달 -->
 <div id="cart-modal"
-     class="fixed inset-0 bg-black/50 hidden z-[9999] flex items-center justify-center">
+     class="hidden fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center">
   <div class="bg-white rounded-2xl shadow-2xl p-6 text-center w-80 animate-fadeIn transform transition-all duration-300">
     <h3 class="text-lg font-bold text-gray-800 mb-2">
       ✅ {{ _("장바구니에 추가되었습니다!") }}
@@ -343,7 +343,7 @@ function attachCartHandler(formId) {
     .then(data => {
       if (data.status === "ok") {
         document.dispatchEvent(new CustomEvent('cart:added'));
-        document.getElementById("cart-modal").classList.remove("hidden");
+        openModal(); // ✅ 여기에 변경
       } else {
         alert(data.message);
       }
@@ -355,8 +355,16 @@ function attachCartHandler(formId) {
 attachCartHandler("cart-form-main");
 attachCartHandler("cart-form-side");
 
+function openModal() {
+  const modal = document.getElementById("cart-modal");
+  modal.classList.remove("hidden");
+  modal.style.display = "flex"; // ✅ 강제 표시
+}
+
 function closeModal() {
-  document.getElementById("cart-modal").classList.add("hidden");
+  const modal = document.getElementById("cart-modal");
+  modal.classList.add("hidden");
+  modal.style.display = "none"; // ✅ 완전 숨김
 }
 </script>
 {% endblock %}
