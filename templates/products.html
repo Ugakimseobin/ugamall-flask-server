@@ -1,123 +1,153 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="flex flex-col md:flex-row max-w-7xl mx-auto min-h-[70vh] py-6 md:py-10 px-4 md:px-0">
-  <!-- 왼쪽 필터 (모바일에서는 상단, 아코디언처럼) -->
-  <aside class="w-full md:w-1/4 md:pr-6 mb-6 md:mb-0">
-    <h3 class="font-bold text-lg mb-4">{{ _("필터") }}</h3>
+<div class="flex flex-col md:flex-row max-w-7xl mx-auto min-h-[70vh] py-8 md:py-12 px-4 md:px-6 gap-8">
+
+  <!-- ✅ 왼쪽 필터 -->
+  <aside class="w-full md:w-1/4 bg-white shadow-lg rounded-2xl p-6 border border-gray-100">
+    <h3 class="font-bold text-xl text-indigo-700 mb-6 flex items-center gap-2">
+      <i class="fa-solid fa-sliders-h text-indigo-500"></i> {{ _("상품 필터") }}
+    </h3>
 
     <!-- 상품명 -->
-    <div class="mb-4">
-      <input id="filter-name" name="name" 
-             class="border p-2 w-full text-sm md:text-base" 
-             placeholder="{{ _('상품명') }}"
+    <div class="mb-5">
+      <label class="block text-sm font-semibold mb-1 text-gray-700">{{ _("상품명") }}</label>
+      <input id="filter-name" name="name"
+             class="border border-gray-300 p-2 w-full rounded-lg focus:ring-2 focus:ring-indigo-300"
+             placeholder="{{ _('예: 밴드, 보호대') }}"
              value="{{ request.args.get('name', '') }}">
     </div>
 
     <!-- 분야 -->
-    <div class="mb-4">
-      <label class="block font-semibold mb-1 text-sm md:text-base">{{ _("분야") }}</label>
-      <select id="filter-category" name="category" class="border p-2 w-full text-sm md:text-base">
-        <option value="">{{ _("전체") }}</option>
+    <div class="mb-5">
+      <label class="block text-sm font-semibold mb-1 text-gray-700">{{ _("분야") }}</label>
+      <select id="filter-category" name="category"
+              class="border border-gray-300 p-2 w-full rounded-lg focus:ring-2 focus:ring-indigo-300">
+        <option value="">{{ _("전체 보기") }}</option>
         {% for cat in categories %}
-          <option value="{{ cat }}" 
-            {% if request.args.get('category') == cat %}selected{% endif %}>
-            {{cat}}
-          </option>
+          <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
         {% endfor %}
       </select>
     </div>
 
     <!-- 가격 -->
     <div class="mb-6">
-      <label class="block font-semibold mb-2 text-gray-700 text-sm md:text-base">{{ _("가격") }}</label>
+      <label class="block text-sm font-semibold mb-2 text-gray-700">{{ _("가격 범위") }}</label>
       <div id="price-slider" class="mb-3"></div>
 
-      <!-- 입력 필드 -->
-      <div class="flex items-center space-x-3">
-        <div class="flex items-center border rounded px-2 py-1 w-1/2 bg-white shadow-sm">
-          <span class="text-sm text-gray-500 mr-1">₩</span>
-          <input id="price-min-input" 
-                type="number" 
-                class="w-full outline-none text-sm" 
-                value="{{ request.args.get('price_min', 0) }}" 
-                min="0" max="1000000" step="1000">
-        </div>
-
+      <div class="flex items-center justify-between gap-2">
+        <input id="price-min-input" type="number"
+               class="w-1/2 border border-gray-300 p-2 rounded-lg text-sm focus:ring-2 focus:ring-indigo-300"
+               value="{{ request.args.get('price_min', 0) }}" min="0" step="1000">
         <span class="text-gray-400">~</span>
-
-        <div class="flex items-center border rounded px-2 py-1 w-1/2 bg-white shadow-sm">
-          <span class="text-sm text-gray-500 mr-1">₩</span>
-          <input id="price-max-input" 
-                type="number" 
-                class="w-full outline-none text-sm" 
-                value="{{ request.args.get('price_max', 1000000) }}" 
-                min="0" max="1000000" step="1000">
-        </div>
+        <input id="price-max-input" type="number"
+               class="w-1/2 border border-gray-300 p-2 rounded-lg text-sm focus:ring-2 focus:ring-indigo-300"
+               value="{{ request.args.get('price_max', 1000000) }}" max="1000000" step="1000">
       </div>
     </div>
 
     <button id="apply-filters" data-baseurl="{{ url_for('products') }}"
-      class="bg-indigo-600 text-white px-4 py-2 rounded w-full mt-4 text-sm md:text-base">
-      {{ _("적용") }}
+      class="w-full bg-indigo-600 text-white font-semibold py-2.5 rounded-lg shadow hover:bg-indigo-700 transition">
+      {{ _("필터 적용") }}
     </button>
   </aside>
 
-  <!-- 오른쪽 상품 목록 -->
-  <main class="w-full md:w-3/4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6" id="product-list">
-    {% for p in products %}
-      <a href="{{ url_for('product_detail', product_id=p.id) }}" 
-         class="block bg-white p-3 sm:p-4 shadow rounded hover:shadow-lg transition h-56 sm:h-64">
-        <img src="{{ url_for('static', filename='images/' ~ p.image) }}" 
-             class="h-28 sm:h-40 w-full object-cover rounded">
-        <h3 class="mt-2 font-bold text-sm sm:text-base truncate">{{ p.name }}</h3>
-        <p class="text-gray-600 text-sm sm:text-base">{{ p.base_price|won }}원</p>
-      </a>
-    {% endfor %}
+  <!-- ✅ 오른쪽 상품 목록 -->
+  <main class="w-full md:w-3/4">
+
+    <!-- ✅ 정렬 바 -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 bg-white shadow rounded-xl p-4 border border-gray-100">
+      <div class="text-gray-700 font-semibold text-sm sm:text-base">
+        총 <span class="text-indigo-600">{{ products|length }}</span>개 상품
+      </div>
+      <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+        <label for="sort" class="text-sm font-medium text-gray-600">{{ _("정렬") }}</label>
+        <select id="sort" name="sort"
+                class="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:ring-2 focus:ring-indigo-300">
+          <option value="new" {% if request.args.get('sort') == 'new' %}selected{% endif %}>{{ _("최신순") }}</option>
+          <option value="low" {% if request.args.get('sort') == 'low' %}selected{% endif %}>{{ _("낮은 가격순") }}</option>
+          <option value="high" {% if request.args.get('sort') == 'high' %}selected{% endif %}>{{ _("높은 가격순") }}</option>
+          <option value="name" {% if request.args.get('sort') == 'name' %}selected{% endif %}>{{ _("이름순") }}</option>
+        </select>
+      </div>
+    </div>
+
+    {% if products|length == 0 %}
+      <div class="text-center text-gray-500 py-20 text-lg">등록된 상품이 없습니다.</div>
+    {% else %}
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {% for p in products %}
+        <a href="{{ url_for('product_detail', product_id=p.id) }}"
+           class="block bg-white rounded-2xl shadow hover:shadow-2xl overflow-hidden transform hover:-translate-y-1 transition duration-300">
+          <div class="relative">
+            <img src="{{ url_for('static', filename='images/' ~ p.image) }}"
+                 class="h-40 sm:h-48 w-full object-cover transition-transform duration-300 hover:scale-105">
+            <span class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded-full shadow">
+              NEW
+            </span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-gray-800 text-sm sm:text-base truncate">{{ p.name }}</h3>
+            <p class="text-indigo-600 font-semibold text-sm sm:text-base mt-1">{{ p.base_price|won }}원</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
   </main>
 </div>
 
 <!-- ✅ 안내사항 팝업 -->
 <div id="notice-popup"
-     class="fixed top-20 right-6 md:right-24 w-64 sm:w-72 md:w-80 bg-yellow-200 shadow-lg rounded-lg p-4 sm:p-6 z-50 hidden"
+     class="fixed top-24 right-5 sm:right-16 md:right-20 w-64 sm:w-72 bg-yellow-100 shadow-2xl rounded-xl p-4 sm:p-5 z-50 hidden animate-fade-in"
      style="font-family: 'Nanum Pen Script', cursive;">
-  <div class="flex justify-between items-center mb-2 sm:mb-3">
-    <h3 class="font-bold text-lg sm:text-xl text-gray-800">{{ _("안내사항") }}</h3>
-    <button onclick="closeNotice()" class="text-gray-600 hover:text-gray-900 font-bold text-lg">✕</button>
+  <div class="flex justify-between items-center mb-2">
+    <h3 class="font-bold text-lg sm:text-xl text-gray-800">{{ _("안내사항 💬") }}</h3>
+    <button onclick="closeNotice()" class="text-gray-500 hover:text-gray-800 text-lg font-bold">×</button>
   </div>
   <p class="text-gray-700 text-sm sm:text-base leading-relaxed">
-    {{ _("저희 제품은") }} <span class="font-semibold">{{ _("UDI를 정직하게 제공") }}</span>{{ _("하고 있습니다.") }}<br>
-    {{ _("안심하고 사용하세요 😊") }}
+    {{ _("유가몰은 모든 제품에") }}  
+    <span class="font-bold text-indigo-700">{{ _("정품 UDI") }}</span>{{ _("를 제공합니다.") }}<br>
+    {{ _("신뢰할 수 있는 의료 쇼핑몰, 유가몰입니다 💙") }}
   </p>
 </div>
 
+<style>
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.6s ease forwards; }
+</style>
+
 <script>
-document.getElementById("apply-filters").addEventListener("click", function() {
-    const name = document.getElementById("filter-name").value;
-    const category = document.getElementById("filter-category").value;
-    const priceMin = document.getElementById("price-min").textContent;
-    const priceMax = document.getElementById("price-max").textContent;
-    const video = document.getElementById("filter-video")?.checked ? "true" : "false";
+// ✅ 필터 및 정렬 적용
+document.getElementById("apply-filters").addEventListener("click", applyFilters);
+document.getElementById("sort").addEventListener("change", applyFilters);
 
-    let url = new URL("{{ url_for('products') }}", window.location.origin);
-    url.searchParams.set("name", name);
-    url.searchParams.set("category", category);
-    url.searchParams.set("price_min", priceMin);
-    url.searchParams.set("price_max", priceMax);
+function applyFilters() {
+  const name = document.getElementById("filter-name").value;
+  const category = document.getElementById("filter-category").value;
+  const priceMin = document.getElementById("price-min-input").value;
+  const priceMax = document.getElementById("price-max-input").value;
+  const sort = document.getElementById("sort").value;
 
-    if (document.getElementById("filter-video")) {
-        url.searchParams.set("video", video);
-    }
+  let url = new URL("{{ url_for('products') }}", window.location.origin);
+  url.searchParams.set("name", name);
+  url.searchParams.set("category", category);
+  url.searchParams.set("price_min", priceMin);
+  url.searchParams.set("price_max", priceMax);
+  url.searchParams.set("sort", sort);
 
-    window.location.href = url.toString();
-});
+  window.location.href = url.toString();
+}
 
-// ✅ 팝업 로직
+// ✅ 안내 팝업 로직
 const popupKey = "uga_notice_seen";
 
 function closeNotice() {
-  document.getElementById("notice-popup").style.display = "none";
+  document.getElementById("notice-popup").classList.add("hidden");
   const today = new Date();
-  today.setHours(23,59,59,999); 
+  today.setHours(23,59,59,999);
   localStorage.setItem(popupKey, today.getTime());
 }
 
@@ -126,34 +156,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const saved = localStorage.getItem(popupKey);
   const now = new Date().getTime();
   if (!saved || now > parseInt(saved)) {
-    popup.style.display = "block";
+    popup.classList.remove("hidden");
   }
-  makeDraggable(popup);
 });
-
-function makeDraggable(el) {
-  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  el.onmousedown = dragMouseDown;
-  function dragMouseDown(e) {
-    e.preventDefault();
-    pos3 = e.clientX; pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    document.onmousemove = elementDrag;
-  }
-  function elementDrag(e) {
-    e.preventDefault();
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX; pos4 = e.clientY;
-    el.style.top = (el.offsetTop - pos2) + "px";
-    el.style.left = (el.offsetLeft - pos1) + "px";
-    el.style.bottom = "auto";
-    el.style.right = "auto";
-  }
-  function closeDragElement() {
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
 </script>
 {% endblock %}
