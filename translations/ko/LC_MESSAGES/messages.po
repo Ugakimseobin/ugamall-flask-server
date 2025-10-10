@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-10 14:38+0900\n"
+"POT-Creation-Date: 2025-10-10 15:07+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -140,6 +140,22 @@ msgstr ""
 
 #: templates/checkout.html:125
 msgid "결제 방법"
+msgstr ""
+
+#: templates/checkout.html:127
+msgid "무통장입금"
+msgstr ""
+
+#: templates/checkout.html:128
+msgid "카드결제"
+msgstr ""
+
+#: templates/checkout.html:129
+msgid "카카오페이"
+msgstr ""
+
+#: templates/checkout.html:130
+msgid "네이버페이"
 msgstr ""
 
 #: templates/checkout.html:142
@@ -726,7 +742,7 @@ msgid "이름순"
 msgstr ""
 
 #: templates/products.html:99
-msgid "안내사항 💬"
+msgid "안내사항"
 msgstr ""
 
 #: templates/products.html:103
@@ -2641,5 +2657,8 @@ msgstr[0] ""
 #~ msgstr ""
 
 #~ msgid "약관 상세"
+#~ msgstr ""
+
+#~ msgid "안내사항 💬"
 #~ msgstr ""
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-10 14:38+0900\n"
+"POT-Creation-Date: 2025-10-10 15:07+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -58,7 +58,7 @@ msgstr "Add to Cart"
 
 #: templates/base.html:146
 msgid "언어"
-msgstr ""
+msgstr "Language"
 
 #: templates/base.html:193
 msgid "바로가기"
@@ -139,6 +139,22 @@ msgstr "Please select"
 #: templates/checkout.html:125
 msgid "결제 방법"
 msgstr "Payment Method"
+
+#: templates/checkout.html:127
+msgid "무통장입금"
+msgstr "Deposit without passbook"
+
+#: templates/checkout.html:128
+msgid "카드결제"
+msgstr "Deposit with card"
+
+#: templates/checkout.html:129
+msgid "카카오페이"
+msgstr "kakao pay"
+
+#: templates/checkout.html:130
+msgid "네이버페이"
+msgstr "naver pay"
 
 #: templates/checkout.html:142
 msgid "총 상품긍액"
@@ -335,12 +351,10 @@ msgid "비회원 주문내역"
 msgstr "Guest Order History"
 
 #: templates/guest_orders.html:9
-#, fuzzy
 msgid "입력하신 이메일 주소로 조회된 주문 내역입니다."
 msgstr "A password reset link will be sent to the email address you entered."
 
 #: templates/guest_orders.html:19
-#, fuzzy
 msgid "조회된 주문 내역이 없습니다."
 msgstr "No order history available."
 
@@ -595,7 +609,9 @@ msgstr "Please deposit the order amount into the account below."
 
 #: templates/order_complete.html:21
 msgid "주문일 기준 3일 이내 미입금 시 자동으로 주문이 취소됩니다"
-msgstr "If payment is not made within 3 days from the order date, the order will be automatically cancelled."
+msgstr ""
+"If payment is not made within 3 days from the order date, the order will "
+"be automatically cancelled."
 
 #: templates/order_complete.html:24
 msgid "은행명"
@@ -626,7 +642,6 @@ msgid "잠시만 기다려 주세요. 결제창이 곧 열립니다."
 msgstr "Please wait a moment. The payment window will open shortly."
 
 #: templates/product_detail.html:8
-#, fuzzy
 msgid "뒤로가기"
 msgstr "Go back"
 
@@ -647,18 +662,16 @@ msgid "장바구니 담기"
 msgstr "Add to Cart"
 
 #: templates/product_detail.html:100
-#, fuzzy
 msgid "상품 리뷰"
-msgstr "Product search"
+msgstr "Product review"
 
 #: templates/product_detail.html:113
-#, fuzzy
 msgid "아직 리뷰가 없습니다."
-msgstr "No videos registered yet."
+msgstr "There are no reviews yet"
 
 #: templates/product_detail.html:120
 msgid "리뷰 작성하기"
-msgstr ""
+msgstr "Write a review"
 
 #: templates/product_detail.html:121
 msgid "별점"
@@ -669,9 +682,8 @@ msgid "점"
 msgstr ""
 
 #: templates/product_detail.html:128
-#, fuzzy
 msgid "리뷰 내용"
-msgstr "Terms and conditions"
+msgstr "contents"
 
 #: templates/product_detail.html:132
 msgid "등록"
@@ -682,12 +694,10 @@ msgid "관련 분야 상품"
 msgstr "Special Item"
 
 #: templates/product_detail.html:169
-#, fuzzy
 msgid "빠른 장바구니"
 msgstr "Add to Cart"
 
 #: templates/product_detail.html:229
-#, fuzzy
 msgid "장바구니에 추가되었습니다!"
 msgstr "Added to cart"
 
@@ -700,7 +710,6 @@ msgid "장바구니로 이동"
 msgstr "Add to Cart"
 
 #: templates/products.html:9
-#, fuzzy
 msgid "상품 필터"
 msgstr "Product search"
 
@@ -717,7 +726,6 @@ msgid "분야"
 msgstr "field"
 
 #: templates/products.html:26 templates/search.html:35
-#, fuzzy
 msgid "전체 보기"
 msgstr "Totally agree"
 
@@ -746,13 +754,11 @@ msgid "높은 가격순"
 msgstr "high price"
 
 #: templates/products.html:69 templates/search.html:89
-#, fuzzy
 msgid "이름순"
 msgstr "Name"
 
 #: templates/products.html:99
-#, fuzzy
-msgid "안내사항 💬"
+msgid "안내사항"
 msgstr "Notification"
 
 #: templates/products.html:103
@@ -776,12 +782,10 @@ msgid "검색 결과"
 msgstr "Search results"
 
 #: templates/search.html:13
-#, fuzzy
 msgid "필터 열기 / 닫기"
 msgstr "Open/close filter"
 
 #: templates/search.html:18
-#, fuzzy
 msgid "검색 필터"
 msgstr "Search results"
 
@@ -794,12 +798,10 @@ msgid "관련순"
 msgstr "In order of relevance"
 
 #: templates/search.html:96
-#, fuzzy
 msgid " 에 대한 검색 결과가 없습니다."
 msgstr "There are no results for your search term."
 
 #: templates/search.html:116
-#, fuzzy
 msgid "관련 영상"
 msgstr "Special Item"
 
@@ -911,12 +913,10 @@ msgid "보기"
 msgstr "view"
 
 #: templates/auth/register_terms.html:58
-#, fuzzy
 msgid "다음 단계로 이동"
 msgstr "next"
 
 #: templates/auth/register_terms.html:71
-#, fuzzy
 msgid "약관 상세보기"
 msgstr "Terms and conditions details"
 
