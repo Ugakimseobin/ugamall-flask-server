@@ -10,7 +10,7 @@
 
     <!-- 작성일 -->
     <p class="text-xs sm:text-sm text-gray-500">
-      작성일: {{ q.created_at.strftime("%Y-%m-%d %H:%M") }}
+      작성일: {{ q.created_at|kst }}
     </p>
 
     <!-- 작성자 -->
@@ -31,7 +31,7 @@
       <div class="mt-3 border-t pt-2">
         <p class="font-bold text-indigo-600">[답변]</p>
         <p class="whitespace-pre-line">{{ q.answer }}</p>
-        <p class="text-xs text-gray-500">{{ q.answered_at.strftime("%Y-%m-%d %H:%M") }}</p>
+        <p class="text-xs text-gray-500">{{ q.answered_at|kst }}</p>
       </div>
     {% else %}
       <form method="POST" class="mt-3 space-y-2">

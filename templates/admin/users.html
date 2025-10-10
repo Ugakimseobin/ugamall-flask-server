@@ -32,7 +32,7 @@
           </td>
           <td class="border px-3 py-2 text-gray-600">
             {% if u.last_login %}
-              {{ u.last_login.strftime('%Y-%m-%d %H:%M') }}
+              {{ u.last_login|kst }}
             {% else %}
               기록 없음
             {% endif %}

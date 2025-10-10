@@ -13,7 +13,7 @@
     <p><strong>{{ _("배송지상세") }}:</strong> {{ order.detail_address }}</p>
     <p><strong>{{ _("결제방식") }}:</strong> {{ order.payment_method }}</p>
     <p><strong>{{ _("상태") }}:</strong> {{ order.status }}</p>
-    <p><strong>{{ _("주문일자") }}:</strong> {{ order.created_at.strftime("%Y-%m-%d %H:%M") }}</p>
+    <p><strong>{{ _("주문일자") }}:</strong> {{ order.created_at|kst }}</p>
 
     <div class="mt-4">
       <h3 class="font-semibold mb-2">{{ _("주문 상품") }}</h3>
