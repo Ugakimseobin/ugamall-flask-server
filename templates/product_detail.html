@@ -51,7 +51,6 @@
               {% endif %}
             {% endfor %}
           </select>
-          <input type="hidden" id="cart-option-main-{{ key }}" name="option_{{ key }}">
           {% endfor %}
         </div>
         {% endif %}
@@ -69,10 +68,18 @@
         </div>
       </div>
 
+      <!-- 장바구니/문의 -->
       <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <form id="cart-form-main" method="post" action="/add_to_cart" class="flex-1">
           <input type="hidden" name="product_id" value="{{ product.id }}">
           <input type="hidden" id="cart-quantity-main" name="quantity" value="1">
+
+          {% if option_keys %}
+            {% for key in option_keys %}
+              <input type="hidden" id="cart-option-main-{{ key }}" name="option_{{ key }}">
+            {% endfor %}
+          {% endif %}
+
           <button type="submit"
                   class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 shadow-md transition">
             🛒 {{ _("장바구니 담기") }}
@@ -175,20 +182,17 @@
 
     {% if option_keys %}
       {% for key in option_keys %}
-        <label class="block font-semibold mb-2 text-sm text-gray-700">{{ key }}</label>
-        <select name="option_{{ key }}" 
-                class="border rounded w-full p-2 mb-4 text-sm option-select-side"
-                data-key="{{ key }}">
-          <option value="">-- {{ _("선택하세요") }} --</option>
-          {% set values = [] %}
-          {% for v in product.variants %}
-            {% if v.options[key] not in values %}
-              <option value="{{ v.options[key] }}">{{ v.options[key] }}</option>
-              {% set _ = values.append(v.options[key]) %}
-            {% endif %}
-          {% endfor %}
-        </select>
-        <input type="hidden" id="cart-option-side-{{ key }}" name="option_{{ key }}">
+      <label class="block font-semibold mb-2 text-sm text-gray-700">{{ key }}</label>
+      <select name="option_{{ key }}" class="border rounded w-full p-2 mb-4 text-sm option-select-side" data-key="{{ key }}">
+        <option value="">-- {{ _("선택하세요") }} --</option>
+        {% set values = [] %}
+        {% for v in product.variants %}
+          {% if v.options[key] not in values %}
+            <option value="{{ v.options[key] }}">{{ v.options[key] }}</option>
+            {% set _ = values.append(v.options[key]) %}
+          {% endif %}
+        {% endfor %}
+      </select>
       {% endfor %}
     {% endif %}
 
@@ -260,14 +264,8 @@ document.querySelectorAll(".option-select, .option-select-side").forEach(select 
   select.addEventListener("change", () => {
     const key = select.dataset.key;
     const value = select.value;
-
-    // 메인 hidden 업데이트
-    const cartMain = document.getElementById("cart-option-main-" + key);
-    if (cartMain) cartMain.value = value;
-
-    // 사이드 hidden 업데이트
-    const cartSide = document.getElementById("cart-option-side-" + key);
-    if (cartSide) cartSide.value = value;
+    const mainHidden = document.getElementById("cart-option-main-" + key);
+    if (mainHidden) mainHidden.value = value;
   });
 });
 
