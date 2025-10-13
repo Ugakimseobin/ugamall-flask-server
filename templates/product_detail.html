@@ -176,12 +176,11 @@
 <!-- 🛒 사이드바 -->
 <div id="floating-cart"
      class="fixed top-0 right-0 h-full w-72 sm:w-80 bg-white border-l shadow-2xl transform translate-x-full transition-transform duration-300 z-50 p-6 overflow-y-auto">
-     <div id="cart-toggle"
-        onclick="toggleCart()"
-        class="absolute top-1/2 -left-6 transform -translate-y-1/2 
+     <div id="cart-handle"
+       class="absolute top-1/2 -left-6 transform -translate-y-1/2 
                 w-6 h-16 bg-[#f9fafb] text-white flex items-center justify-center 
-                cursor-pointer rounded-l-full shadow-lg transition-all duration-500">
-        <span class="text-gray-400" id="cart-toggle-icon">⮞</span>
+                cursor-pointer rounded-l-full shadow-lg transition-all duration-500 z-[9999]">
+    <span class="text-xl">🛒</span>
     </div>
   </div>
   <div class="flex justify-between items-center mb-4">
