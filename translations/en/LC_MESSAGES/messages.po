@@ -706,7 +706,7 @@ msgid "계속 쇼핑하기"
 msgstr "Keep shopping"
 
 #: templates/product_detail.html:238
-msgid "장바구니로 이동"
+msgid "장바구니 이동"
 msgstr "Add to Cart"
 
 #: templates/products.html:9
