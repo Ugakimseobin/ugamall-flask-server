@@ -95,94 +95,29 @@
     </div>
   </div>
 
-  <!-- 관련상품 -->
-  {% if related_products %}
-  <div class="mt-14 sm:mt-16">
-    <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-800">{{ _("관련 분야 상품") }}</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-      {% for p in related_products %}
-      <a href="{{ url_for('product_detail', product_id=p.id) }}"
-         class="block bg-white p-3 sm:p-4 shadow rounded hover:shadow-lg transition">
-        <img src="{{ url_for('static', filename='images/' ~ p.image) }}"
-             alt="{{ p.name }}"
-             class="h-36 sm:h-44 w-full object-cover rounded">
-        <h3 class="mt-2 font-bold text-sm sm:text-base truncate">{{ p.name }}</h3>
-        <p class="text-gray-600 text-xs sm:text-sm mt-1">{{ p.price|won }}{{ _("원") }}</p>
-      </a>
-      {% endfor %}
-    </div>
+  <!-- 팸플릿 -->
+  {% if product.pamphlet %}
+  <div class="mt-10 sm:mt-12">
+    <img src="{{ url_for('static', filename='pamphlets/' ~ product.pamphlet) }}"
+         class="w-full rounded-xl shadow-lg">
   </div>
   {% endif %}
-
-  <!-- ✅ 상세/리뷰 탭 -->
-  <div class="mt-16 bg-white shadow rounded-2xl border border-gray-100">
-    <div class="flex border-b text-center">
-      <button class="tab-btn flex-1 py-3 sm:py-4 text-gray-600 font-semibold border-b-2 border-transparent hover:text-indigo-600 active-tab"
-              data-tab="details">{{ _("상세보기") }}</button>
-      <button class="tab-btn flex-1 py-3 sm:py-4 text-gray-600 font-semibold border-b-2 border-transparent hover:text-indigo-600"
-              data-tab="reviews">{{ _("리뷰") }}</button>
-    </div>
-
-    <!-- 상세보기 -->
-    <div id="tab-details" class="tab-content p-6 sm:p-8">
-      {% if product.pamphlet %}
-      <img src="{{ url_for('static', filename='pamphlets/' ~ product.pamphlet) }}" 
-           class="w-full rounded-xl shadow-lg mb-8">
-      {% endif %}
-      <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ product.description }}</p>
-    </div>
-
-    <!-- 리뷰 -->
-    <div id="tab-reviews" class="tab-content p-6 sm:p-8 hidden">
-      <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-800">📝 {{ _("상품 리뷰") }}</h2>
-      {% if product.reviews %}
-        {% for r in product.reviews %}
-        <div class="border-b pb-3 mb-4 bg-white shadow-sm rounded-lg p-4 hover:shadow-md transition">
-          <p class="text-yellow-500 text-lg">
-            {% for i in range(r.rating) %}★{% endfor %}
-            {% for i in range(5 - r.rating) %}☆{% endfor %}
-          </p>
-          <p class="text-gray-800 text-sm sm:text-base mt-1">{{ r.content }}</p>
-          <p class="text-sm text-gray-500 mt-2">{{ r.user.name }} · {{ r.created_at.strftime("%Y-%m-%d") }}</p>
-        </div>
-        {% endfor %}
-      {% else %}
-        <p class="text-gray-500">{{ _("아직 리뷰가 없습니다.") }}</p>
-      {% endif %}
-
-      {% if current_user.is_authenticated %}
-      <form method="post" action="{{ url_for('add_review', product_id=product.id) }}" class="mt-6 bg-gray-50 p-6 shadow rounded-xl">
-        <h3 class="font-bold text-lg mb-3">{{ _("리뷰 작성하기") }}</h3>
-        <label class="block font-semibold text-sm mb-1">{{ _("별점") }}</label>
-        <select name="rating" class="border rounded p-2 mb-3 w-28">
-          {% for i in range(1,6) %}
-            <option value="{{ i }}">{{ i }}{{ _("점") }}</option>
-          {% endfor %}
-        </select>
-
-        <label class="block font-semibold text-sm mb-1">{{ _("리뷰 내용") }}</label>
-        <textarea name="content" class="border rounded w-full p-3 mb-3 focus:ring-2 focus:ring-indigo-300" rows="3"></textarea>
-
-        <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 shadow">
-          {{ _("등록") }}
-        </button>
-      </form>
-      {% endif %}
-    </div>
-  </div>
-
 </div>
 
 <!-- 🛒 사이드바 -->
 <div id="floating-cart"
-     class="fixed top-0 right-0 h-full w-72 sm:w-80 bg-white border-l shadow-2xl transform translate-x-full transition-transform duration-300 z-50 p-6 overflow-y-auto">
-     <div id="cart-handle"
-       class="absolute top-1/2 -left-6 transform -translate-y-1/2 
-                w-6 h-16 bg-[#f9fafb] text-white flex items-center justify-center 
-                cursor-pointer rounded-l-full shadow-lg transition-all duration-500 z-[9999]">
-    <span class="text-xl">🛒</span>
-    </div>
-  </div>
+     class="fixed top-0 right-0 h-full w-72 sm:w-80 bg-white border-l shadow-2xl transform translate-x-full 
+            transition-transform duration-300 z-50 p-6 overflow-y-auto">
+
+  <!-- 반원 토글 -->
+  <button id="cart-toggle-icon"
+          onclick="toggleCart()"
+          class="absolute top-1/2 left-0 transform -translate-x-1/2 -translate-y-1/2 
+                 w-10 h-24 bg-indigo-600 text-white rounded-l-full shadow-xl 
+                 flex items-center justify-center text-2xl font-bold hover:bg-indigo-700 transition">
+    🛒
+  </button>
+
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-bold text-gray-800">{{ _("빠른 장바구니") }}</h3>
     <button onclick="toggleCart()" class="text-gray-500 hover:text-indigo-600 text-xl font-bold">×</button>
@@ -230,7 +165,7 @@
     </button>
   </form>
 
-  <!-- 위로가기 버튼 복구 -->
+  <!-- 위로가기 버튼 -->
   <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
     class="absolute bottom-6 left-1/2 transform -translate-x-1/2 
            bg-gray-200 hover:bg-indigo-500 hover:text-white text-gray-600 
@@ -239,93 +174,39 @@
   </button>
 </div>
 
-<!-- ✅ 장바구니 추가 완료 모달 -->
-<div id="cart-modal"
-     class="hidden fixed inset-0 bg-black/50 z-[9999] items-center justify-center">
-  <div class="bg-white rounded-2xl shadow-2xl p-6 text-center w-80 animate-fadeIn">
-    <h3 class="text-lg font-bold text-gray-800 mb-2">
-      ✅ {{ _("장바구니에 추가되었습니다!") }}
-    </h3>
-    <div class="flex justify-center gap-3 mt-4">
-      <button onclick="closeModal()"
-              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-medium">
-        {{ _("계속 쇼핑하기") }}
-      </button>
-      <a href="/checkout"
-         class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium">
-        {{ _("장바구니로 이동") }}
-      </a>
-    </div>
-  </div>
-</div>
-
-<style>
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95) translateY(-10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-.animate-fadeIn {
-  animation: fadeIn 0.25s ease-out;
-}
-
-/* ✅ 모달 완전 숨김 (Tailwind hidden 우선 적용) */
-#cart-modal.hidden {
-  display: none !important;
-}
-</style>
-
-
-
 <script>
-const cart = document.getElementById("floating-cart");
-const handle = document.getElementById("cart-handle");
 let userClosed = false;
-let autoOpened = false;
 
-function openCart() {
-  cart.classList.remove("translate-x-full");
-  userClosed = false;
-}
-
-function closeCart() {
-  cart.classList.add("translate-x-full");
-  userClosed = true;
-}
-
+// 반원 토글 버튼으로 열고 닫기
 function toggleCart() {
+  const cart = document.getElementById("floating-cart");
+  const icon = document.getElementById("cart-toggle-icon");
+
+  cart.classList.toggle("translate-x-full");
+
   if (cart.classList.contains("translate-x-full")) {
-    openCart();
+    icon.style.left = "0";
+    userClosed = true;
   } else {
-    closeCart();
+    icon.style.left = "-40px";
+    userClosed = false;
   }
 }
 
-// 🟣 반원 핸들 클릭으로 토글
-handle.addEventListener("click", toggleCart);
+// 스크롤 시 자동 열기 (PC 전용)
+window.addEventListener("scroll", function() {
+  const cart = document.getElementById("floating-cart");
+  const icon = document.getElementById("cart-toggle-icon");
 
-// 🟢 일정 스크롤 후 자동 열기 (1회만)
-window.addEventListener("scroll", () => {
-  if (window.innerWidth >= 1024 && window.scrollY > 800 && !autoOpened && !userClosed) {
-    openCart();
-    autoOpened = true;
+  if (window.innerWidth >= 1024 && window.scrollY > 1000 && cart.classList.contains("translate-x-full") && !userClosed) {
+    cart.classList.remove("translate-x-full");
+    icon.style.left = "-40px";
   }
 });
 
-
-// 옵션 선택 시 hidden input에 반영
-document.querySelectorAll(".option-select, .option-select-side").forEach(select => {
-  select.addEventListener("change", () => {
-    const key = select.dataset.key;
-    const value = select.value;
-    const mainHidden = document.getElementById("cart-option-main-" + key);
-    if (mainHidden) mainHidden.value = value;
-  });
-});
-
-// 수량 변경
+// 수량 조정
 function changeQuantity(target, delta) {
   const input = document.getElementById(`quantity-${target}`);
-  if (!input) return;
   let value = parseInt(input.value) || 1;
   value = Math.max(1, value + delta);
   input.value = value;
@@ -333,64 +214,5 @@ function changeQuantity(target, delta) {
   const cartQty = document.getElementById(`cart-quantity-${target}`);
   if (cartQty) cartQty.value = value;
 }
-
-// Ajax로 장바구니 담기
-function attachCartHandler(formId) {
-  const form = document.getElementById(formId);
-  if (!form) return;
-
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-
-    fetch("/add_to_cart", {
-      method: "POST",
-      body: formData,
-      headers: { "X-Requested-With": "XMLHttpRequest" }
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === "ok") {
-        document.dispatchEvent(new CustomEvent('cart:added'));
-        openModal(); // ✅ 여기에 변경
-      } else {
-        alert(data.message);
-      }
-    })
-    .catch(err => console.error("에러 발생:", err));
-  });
-}
-
-attachCartHandler("cart-form-main");
-attachCartHandler("cart-form-side");
-
-function openModal() {
-  const modal = document.getElementById("cart-modal");
-  modal.classList.remove("hidden"); // hidden 제거
-  modal.style.display = "flex"; // 중앙 표시
-}
-
-function closeModal() {
-  const modal = document.getElementById("cart-modal");
-  modal.classList.add("hidden"); // hidden 다시 추가
-  modal.style.display = "none"; // 완전 숨김
-}
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const tabs = document.querySelectorAll(".tab-btn");
-  const contents = document.querySelectorAll(".tab-content");
-
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("text-indigo-600", "border-indigo-600", "active-tab"));
-      contents.forEach(c => c.classList.add("hidden"));
-
-      tab.classList.add("text-indigo-600", "border-indigo-600");
-      document.getElementById(`tab-${tab.dataset.tab}`).classList.remove("hidden");
-    });
-  });
-});
 </script>
 {% endblock %}
