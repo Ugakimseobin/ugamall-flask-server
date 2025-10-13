@@ -162,7 +162,6 @@
     </form>
 </div>
 
-<script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 <script>
 document.getElementById("checkout-form").addEventListener("submit", async function(e) {
   e.preventDefault(); // ✅ 기본 제출 막기 (모든 케이스에서 먼저 막음)
@@ -173,6 +172,7 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
     return;
   }
 
+  // 결제 방식 확인
   const paymentMethod = document.getElementById("payment-method").value;
 
   // ✅ 무통장입금일 경우 → 서버로 바로 제출 (결제창 X)
@@ -193,68 +193,8 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
       alert("{{ _('주문 생성 중 오류가 발생했습니다.') }}");
       return;
     }
-
-    const orderUrl = resp.url;
-    const orderId = orderUrl.split("/").pop();
-
-    // 2️⃣ 결제 사전 준비
-    const prepRes = await fetch("/pay/prepare", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ order_id: orderId })
-    });
-    const prep = await prepRes.json();
-    if (!prep.ok) {
-      alert("{{ _('결제 준비 실패') }}");
-      location.href = "/checkout";
-      return;
-    }
-
-    // 3️⃣ 아임포트 결제 호출
-    const IMP = window.IMP;
-    IMP.init(prep.imp_code || "{{ imp_code }}");
-
-    // ✅ PG사 설정
-    let pgOption = "html5_inicis.INIpayTest";
-    if (paymentMethod === "카카오페이") pgOption = "kakaopay";
-    else if (paymentMethod === "네이버페이") pgOption = "naverpay.NPAY";
-    else if (paymentMethod === "페이코") pgOption = "payco";
-    else if (paymentMethod === "토스페이") pgOption = "tosspayments";
-
-    IMP.request_pay({
-      pg: pgOption,
-      pay_method: "card",
-      merchant_uid: prep.merchant_uid,
-      name: "UGAMALL 주문 결제",
-      amount: prep.amount,
-      buyer_name: "{{ user_info.name or '' }}",
-      buyer_tel: "{{ user_info.phone or '' }}",
-      buyer_email: "{{ user_info.email or '' }}",
-      buyer_addr: "{{ user_info.base_address or '' }} {{ user_info.detail_address or '' }}"
-    }, async function(rsp) {
-      if (rsp.success) {
-        const vRes = await fetch("/pay/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            imp_uid: rsp.imp_uid,
-            merchant_uid: rsp.merchant_uid,
-            order_id: orderId
-          })
-        });
-        const v = await vRes.json();
-        if (v.ok) {
-          alert("{{ _('결제가 완료되었습니다.') }}");
-          location.href = "/order-complete/" + orderId;
-        } else {
-          alert("{{ _('검증 실패') }}: " + (v.msg || ""));
-          location.href = "/checkout";
-        }
-      } else {
-        alert("{{ _('결제 실패') }}: " + rsp.error_msg);
-        location.href = "/checkout";
-      }
-    });
+    // 2️⃣ 주문 생성 성공 → 결제 페이지로 이동
+    window.location.href = resp.url;
 
   } catch (err) {
     console.error(err);
@@ -263,6 +203,7 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
   }
 });
 </script>
+
 <script>
 // ==============================
 // 장바구니 합계 / 쿠폰 할인 계산

@@ -31,14 +31,17 @@
       return;
     }
 
+    // 아임포트 초기화
     const IMP = window.IMP;
     IMP.init(prep.imp_code || IMP_CODE);
 
     // ✅ PG사 매핑
     let pgOption = "html5_inicis.INIpayTest"; // 기본
-    if ("{{ order.payment_method }}" === "카카오페이") pgOption = "kakaopay";
-    if ("{{ order.payment_method }}" === "네이버페이") pgOption = "naverpay.NPAY";
-    if ("{{ order.payment_method }}" === "페이코") pgOption = "payco.PAYCO";
+    const method = "{{ order.payment_method }}";
+    if (method === "카카오페이") pgOption = "kakaopay";
+    else if (method === "네이버페이") pgOption = "naverpay.NPAY";
+    else if (method === "페이코") pgOption = "payco";
+    else if (method === "토스페이") pgOption = "tosspayments";
 
     IMP.request_pay({
       pg: pgOption,
