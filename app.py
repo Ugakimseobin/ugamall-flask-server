@@ -991,12 +991,29 @@ def product_detail(product_id):
         Product.is_active == True
     ).limit(4).all()
 
+    # ✅ 옵션 키 추출 (첫 번째 variant 기준)
     option_keys = []
     if product.variants:
         first_variant = product.variants[0]
         option_keys = list(first_variant.options.keys())
 
-    return render_template("product_detail.html", product=product, related_products=related_products, option_keys=option_keys)
+    # ✅ variants JSON 직렬화 (Object of type ProductVariant 에러 방지)
+    variant_list = []
+    for v in product.variants:
+        variant_list.append({
+            "id": v.id,
+            "options": v.options or {},   # JSON 그대로 전달
+            "price": v.price or 0,
+            "stock": v.stock or 0
+        })
+
+    return render_template(
+        "product_detail.html",
+        product=product,
+        related_products=related_products,
+        option_keys=option_keys,
+        variants_json=variant_list  # 🔹 추가된 부분
+    )
 
 @app.route("/products/<int:product_id>/review", methods=["POST"])
 @login_required
