@@ -1333,7 +1333,27 @@ def payment(order_id):
 # 모바일 결제시 아래 코드가 없으면 404 오류가 남 팝업 방식이 아닌 모바일 방식으로 나오기 때문에
 @app.route("/payment-complete/<int:order_id>")
 def payment_complete(order_id):
-    return redirect(url_for("order_complete", order_id=order_id))
+    imp_uid = request.args.get("imp_uid")
+    merchant_uid = request.args.get("merchant_uid")
+
+    # 필요 시 결제 검증 수행
+    if imp_uid:
+        try:
+            verify_res = requests.post(
+                f"{request.url_root}pay/verify",
+                json={"imp_uid": imp_uid, "merchant_uid": merchant_uid, "order_id": order_id},
+                headers={"Content-Type": "application/json"},
+                timeout=7
+            )
+            if verify_res.status_code == 200:
+                v = verify_res.json()
+                if v.get("ok"):
+                    return redirect(url_for("order_complete", order_id=order_id))
+        except Exception as e:
+            print("모바일 검증 실패:", e)
+
+    # 기본 이동
+    return redirect(url_for("checkout"))
 
 @app.route("/pay/prepare", methods=["POST"])
 def pay_prepare():
