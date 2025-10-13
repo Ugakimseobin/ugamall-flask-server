@@ -402,7 +402,7 @@ def send_email(subject, recipients, body):
 #-----------------------------
 def _get_iamport_token():
     """
-    아임포트 Access Token 발급 함수 (안정화 버전)
+    아임포트 Access Token 발급 함수 (정식 API 규격)
     """
     url = "https://api.iamport.kr/users/getToken"
     payload = {
@@ -411,14 +411,23 @@ def _get_iamport_token():
     }
 
     try:
-        res = requests.post(url, json=payload, timeout=7)
+        # ✅ 반드시 'data=' 로 보내야 함 (x-www-form-urlencoded)
+        res = requests.post(url, data=payload, timeout=7)
         res.raise_for_status()
+
         data = res.json()
-        return data["response"]["access_token"]
+        if data.get("code") != 0:
+            print("❌ [아임포트 응답 오류]", data)
+            return None
+
+        token = data["response"]["access_token"]
+        print("✅ IAMPORT TOKEN 발급 성공:", token[:10], "...")
+        return token
+
     except requests.exceptions.RequestException as e:
         print("❌ [아임포트 토큰 요청 실패]", str(e))
-    except KeyError:
-        print("❌ [응답 구조 이상] response.access_token 없음:", res.text)
+    except Exception as e:
+        print("❌ [토큰 파싱 오류]", str(e))
     return None
 
 def cancel_portone_payment(imp_uid, amount=None, reason="관리자 취소",
