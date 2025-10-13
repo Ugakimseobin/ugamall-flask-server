@@ -401,13 +401,25 @@ def send_email(subject, recipients, body):
     Thread(target=send_async_email, args=(app, msg)).start()
 #-----------------------------
 def _get_iamport_token():
-    r = requests.post("https://api.iamport.kr/users/getToken", data={
-        "imp_key": app.config["IMP_KEY"],
-        "imp_secret": app.config["IMP_SECRET"],
-    }, timeout=7)
-    r.raise_for_status()
-    data = r.json()
-    return data["response"]["access_token"]
+    """
+    아임포트 Access Token 발급 함수 (안정화 버전)
+    """
+    url = "https://api.iamport.kr/users/getToken"
+    payload = {
+        "imp_key": current_app.config["IMP_KEY"],
+        "imp_secret": current_app.config["IMP_SECRET"]
+    }
+
+    try:
+        res = requests.post(url, json=payload, timeout=7)
+        res.raise_for_status()
+        data = res.json()
+        return data["response"]["access_token"]
+    except requests.exceptions.RequestException as e:
+        print("❌ [아임포트 토큰 요청 실패]", str(e))
+    except KeyError:
+        print("❌ [응답 구조 이상] response.access_token 없음:", res.text)
+    return None
 
 def cancel_portone_payment(imp_uid, amount=None, reason="관리자 취소",
                            refund_bank=None, refund_account=None, refund_holder=None):
