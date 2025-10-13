@@ -401,34 +401,36 @@ def send_email(subject, recipients, body):
     Thread(target=send_async_email, args=(app, msg)).start()
 #-----------------------------
 def _get_iamport_token():
-    """
-    아임포트 Access Token 발급 함수 (정식 API 규격)
-    """
     url = "https://api.iamport.kr/users/getToken"
-    payload = {
-        "imp_key": current_app.config["IMP_KEY"],
-        "imp_secret": current_app.config["IMP_SECRET"]
-    }
+    # 혹시 모를 앞뒤 공백/줄바꿈 제거
+    imp_key = (current_app.config["IMP_KEY"] or "").strip()
+    imp_secret = (current_app.config["IMP_SECRET"] or "").strip()
 
+    payload = {"imp_key": imp_key, "imp_secret": imp_secret}
     try:
-        # ✅ 반드시 'data=' 로 보내야 함 (x-www-form-urlencoded)
-        res = requests.post(url, data=payload, timeout=7)
-        res.raise_for_status()
+        res = requests.post(
+            url,
+            data=payload,  # x-www-form-urlencoded
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            timeout=7,
+        )
+        # 200이 아니면, 포트원에서 주는 본문 그대로 찍어서 원인 확인
+        if res.status_code != 200:
+            print("❌ [토큰 HTTP 오류]", res.status_code, res.text)
+            return None
 
         data = res.json()
         if data.get("code") != 0:
-            print("❌ [아임포트 응답 오류]", data)
+            # 예: {"code":-1,"message":"imp_key/imp_secret not matched", ...}
+            print("❌ [토큰 응답 오류]", data)
             return None
 
         token = data["response"]["access_token"]
-        print("✅ IAMPORT TOKEN 발급 성공:", token[:10], "...")
+        print("✅ TOKEN OK:", token[:12], "…")
         return token
-
-    except requests.exceptions.RequestException as e:
-        print("❌ [아임포트 토큰 요청 실패]", str(e))
     except Exception as e:
-        print("❌ [토큰 파싱 오류]", str(e))
-    return None
+        print("❌ [토큰 예외]", repr(e))
+        return None
 
 def cancel_portone_payment(imp_uid, amount=None, reason="관리자 취소",
                            refund_bank=None, refund_account=None, refund_holder=None):
