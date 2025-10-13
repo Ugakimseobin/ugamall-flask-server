@@ -360,21 +360,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const priceDisplayMain = document.querySelector("#purchase-box .text-indigo-600");
   const priceDisplaySide = document.querySelector("#floating-cart .text-indigo-600");
 
-  // 💡 가격 갱신 함수 (취소선 + 새 가격 표시)
+  // 💡 가격 갱신 함수 (옵션 조합 완료 시에만 새가격 표시)
   function updatePrice(target = "main") {
     const optionSelects = target === "main" ? optionSelectsMain : optionSelectsSide;
     const priceDisplay = target === "main" ? priceDisplayMain : priceDisplaySide;
 
     // 선택된 옵션 조합
     const selected = {};
+    let allSelected = true;
     optionSelects.forEach(sel => {
-      if (sel.value) selected[sel.dataset.key] = sel.value;
+      if (!sel.value) allSelected = false;
+      selected[sel.dataset.key] = sel.value;
     });
 
     let newPrice = basePrice;
     let matchedVariant = null;
 
-    if (Object.keys(selected).length > 0) {
+    if (allSelected) {
+      // 모든 옵션이 선택된 경우만 가격 조합 검사
       for (const v of variants) {
         let match = true;
         for (const k of Object.keys(selected)) {
@@ -388,18 +391,20 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
         }
       }
+
       if (matchedVariant && matchedVariant.price) {
         newPrice += parseInt(matchedVariant.price);
       }
     }
 
-    // ✅ 가격 표시 갱신
-    if (newPrice !== basePrice) {
+    // ✅ 가격 표시 로직
+    if (allSelected && newPrice !== basePrice) {
       priceDisplay.innerHTML = `
         <span class="old-price">${basePrice.toLocaleString()}원</span>
         <span class="new-price">${newPrice.toLocaleString()}원</span>
       `;
     } else {
+      // 아직 모든 옵션이 선택되지 않았으면 기본가만 표시
       priceDisplay.textContent = basePrice.toLocaleString() + "원";
     }
   }
@@ -408,21 +413,25 @@ document.addEventListener("DOMContentLoaded", () => {
   optionSelectsMain.forEach(sel => sel.addEventListener("change", () => updatePrice("main")));
   optionSelectsSide.forEach(sel => sel.addEventListener("change", () => updatePrice("side")));
 
-  // 페이지 진입 시 기본가격 표시
-  updatePrice("main");
-  updatePrice("side");
+  // 페이지 진입 시 기본가 표시
+  priceDisplayMain.textContent = basePrice.toLocaleString() + "원";
+  priceDisplaySide.textContent = basePrice.toLocaleString() + "원";
 });
 </script>
 
+
 <style>
-.price-change {
-  animation: pricePulse 0.6s ease;
+.old-price {
+  text-decoration: line-through;
+  color: #9ca3af; /* gray-400 */
+  margin-right: 8px;
+  font-size: 0.95em;
 }
 
-@keyframes pricePulse {
-  0%   { transform: scale(1); color: #4f46e5; }
-  30%  { transform: scale(1.25); color: #ef4444; }
-  100% { transform: scale(1); color: #4f46e5; }
+.new-price {
+  color: #4f46e5; /* indigo-600 */
+  font-weight: 700;
+  font-size: 1.1em;
 }
 </style>
 {% endblock %}
