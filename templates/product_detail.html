@@ -350,4 +350,67 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const optionSelects = document.querySelectorAll(".option-select, .option-select-side");
+  const basePrice = {{ product.base_price }};
+  const variants = {{ product.variants|tojson }};
+  const mainPriceDisplay = document.querySelector("#purchase-box .text-indigo-600");
+  const sidePriceDisplay = document.querySelector("#floating-cart .text-indigo-600");
+
+  // ✅ 가격 갱신 함수 (공용)
+  function updatePrice() {
+    const selectedMain = {};
+    const selectedSide = {};
+
+    // 메인 옵션
+    document.querySelectorAll(".option-select").forEach(sel => {
+      if (sel.value) selectedMain[sel.dataset.key] = sel.value;
+    });
+
+    // 사이드 옵션
+    document.querySelectorAll(".option-select-side").forEach(sel => {
+      if (sel.value) selectedSide[sel.dataset.key] = sel.value;
+    });
+
+    // 계산 함수
+    function calcPrice(selected) {
+      let newPrice = basePrice;
+      let matchedVariant = null;
+      if (Object.keys(selected).length > 0) {
+        for (const v of variants) {
+          if (Object.keys(v.options).length === Object.keys(selected).length) {
+            let match = true;
+            for (const k of Object.keys(selected)) {
+              if (v.options[k] !== selected[k]) {
+                match = false;
+                break;
+              }
+            }
+            if (match) {
+              matchedVariant = v;
+              break;
+            }
+          }
+        }
+        if (matchedVariant) newPrice += matchedVariant.price;
+      }
+      return newPrice;
+    }
+
+    const mainPrice = calcPrice(selectedMain);
+    const sidePrice = calcPrice(selectedSide);
+
+    if (mainPriceDisplay) mainPriceDisplay.textContent = mainPrice.toLocaleString() + "원";
+    if (sidePriceDisplay) sidePriceDisplay.textContent = sidePrice.toLocaleString() + "원";
+  }
+
+  // ✅ 모든 옵션 select에 이벤트 부착
+  optionSelects.forEach(sel => sel.addEventListener("change", updatePrice));
+
+  // 페이지 진입 시 초기 가격 표시
+  updatePrice();
+});
+</script>
 {% endblock %}
