@@ -355,8 +355,8 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const optionSelectsMain = document.querySelectorAll(".option-select");
   const optionSelectsSide = document.querySelectorAll(".option-select-side");
-  const basePrice = {{ product.base_price }};
-  const variants = {{ variants_json|tojson }};
+  const basePrice = parseInt({{ product.base_price|int }});
+  const variants = {{ variants_json|safe }};
   const priceDisplayMain = document.querySelector("#purchase-box .text-indigo-600");
   const priceDisplaySide = document.querySelector("#floating-cart .text-indigo-600");
 
@@ -403,10 +403,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // UI 반영
     priceDisplay.textContent = newPrice.toLocaleString() + "원";
+    // 애니메이션 트리거
+    animatePriceChange(priceDisplay);
   }
-
-  // 애니메이션 트리거
-  animatePriceChange(priceDisplay);
 
   // 옵션 변경 시 즉시 반영
   optionSelectsMain.forEach(sel => sel.addEventListener("change", () => updatePrice("main")));
