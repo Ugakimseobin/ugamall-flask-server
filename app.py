@@ -49,6 +49,8 @@ app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 app.config["IMP_CODE"]   = os.getenv("IMP_CODE",   "imp84085058")  # 아임포트 가맹점 코드
 app.config["IMP_KEY"]    = os.getenv("IMP_KEY",    "5725674101821141")
 app.config["IMP_SECRET"] = os.getenv("IMP_SECRET", "fmHPJ9V9k8TkXerskLSMd4byOKJp13IGYBoL849Y4HtLnDX2oYlrzuLTZaW0geEddnrZHAYBUEl5hVqY")
+app.config["IMP_CHANNEL_INICIS"] = "channel-key-118c4252-6530-47be-a654-9507aef9727d" 
+app.config["IMP_CHANNEL_KAKAOPAY"] = "channel-key-ead5b764-4db4-45b7-b468-677e634649a2"
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -1296,7 +1298,8 @@ def pay_prepare():
     order_id = data.get("order_id")
     order = Order.query.get_or_404(order_id)
 
-    items_total = sum(int(i.price) * int(i.quantity) for i in order.items)
+    items_total = sum(int(i.discount_price or i.original_price or 0) * int(i.quantity or 0)
+        for i in order.items)
     expected_amount = max(0, items_total - int(order.discount_amount or 0))  
 
     merchant_uid = f"UGA_{order.id}_{int(datetime.utcnow().timestamp())}"

@@ -35,7 +35,7 @@
     IMP.init(prep.imp_code || IMP_CODE);
 
     // ✅ PG사 매핑
-    let pgOption = "html5_inicis"; // 기본
+    let pgOption = "html5_inicis.INIpayTest"; // 기본
     if ("{{ order.payment_method }}" === "카카오페이") pgOption = "kakaopay";
     if ("{{ order.payment_method }}" === "네이버페이") pgOption = "naverpay.NPAY";
     if ("{{ order.payment_method }}" === "페이코") pgOption = "payco.PAYCO";

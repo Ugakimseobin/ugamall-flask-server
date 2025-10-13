@@ -215,7 +215,7 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
     IMP.init(prep.imp_code || "{{ imp_code }}");
 
     // ✅ PG사 설정
-    let pgOption = "html5_inicis";
+    let pgOption = "html5_inicis.INIpayTest";
     if (paymentMethod === "카카오페이") pgOption = "kakaopay";
     else if (paymentMethod === "네이버페이") pgOption = "naverpay.NPAY";
     else if (paymentMethod === "페이코") pgOption = "payco";
