@@ -417,4 +417,16 @@ document.addEventListener("DOMContentLoaded", () => {
   updatePrice("side");
 });
 </script>
+
+<style>
+.price-change {
+  animation: pricePulse 0.6s ease;
+}
+
+@keyframes pricePulse {
+  0%   { transform: scale(1); color: #4f46e5; }
+  30%  { transform: scale(1.25); color: #ef4444; }
+  100% { transform: scale(1); color: #4f46e5; }
+}
+</style>
 {% endblock %}
