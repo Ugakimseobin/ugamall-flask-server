@@ -1347,8 +1347,11 @@ def payment_complete(order_id):
             )
             if verify_res.status_code == 200:
                 v = verify_res.json()
+                print("🔍 검증 응답:", v) 
                 if v.get("ok"):
                     return redirect(url_for("order_complete", order_id=order_id))
+                else:
+                    print("❌ 검증 실패: ", v.get("msg"))
         except Exception as e:
             print("모바일 검증 실패:", e)
 
