@@ -216,9 +216,10 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
 
     // ✅ PG사 설정
     let pgOption = "html5_inicis";
-    if (paymentMethod === "카카오페이") pgOption = "kakaopay.TC0ONETIME";
-    if (paymentMethod === "네이버페이") pgOption = "naverpay.NPAY";
-    if (paymentMethod === "페이코") pgOption = "payco.PAYCO";
+    if (paymentMethod === "카카오페이") pgOption = "kakaopay";
+    else if (paymentMethod === "네이버페이") pgOption = "naverpay.NPAY";
+    else if (paymentMethod === "페이코") pgOption = "payco";
+    else if (paymentMethod === "토스페이") pgOption = "tosspayments";
 
     IMP.request_pay({
       pg: pgOption,
