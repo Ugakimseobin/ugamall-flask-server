@@ -108,7 +108,6 @@
       <img src="{{ url_for('static', filename='pamphlets/' ~ product.pamphlet) }}" 
            class="w-full rounded-xl shadow-lg mb-8">
       {% endif %}
-      <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ product.description }}</p>
     </div>
 
     <!-- 리뷰 -->
@@ -153,8 +152,7 @@
 
 <!-- 🛒 사이드바 -->
 <div id="floating-cart"
-     class="fixed top-0 right-0 h-full w-72 sm:w-80 bg-white border-l shadow-2xl transform translate-x-full 
-            transition-transform duration-300 z-50 p-6 overflow-y-auto">
+     class="fixed top-0 right-0 h-full w-72 sm:w-80 bg-white border-l shadow-2xl transform translate-x-full transition-transform duration-300 z-50 p-4 sm:p-6">
 
   <!-- 반원 토글 -->
     <div id="cart-toggle"
@@ -183,7 +181,7 @@
                 class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 sm:px-3 py-1 sm:py-2 rounded-r">+</button>
       </div>
     </div>
-    
+
   <form id="cart-form-side" method="post" action="/add_to_cart">
     <input type="hidden" name="product_id" value="{{ product.id }}">
     <input type="hidden" id="cart-quantity-side" name="quantity" value="1">
@@ -257,10 +255,10 @@ function toggleCart() {
   cart.classList.toggle("translate-x-full");
 
   if (cart.classList.contains("translate-x-full")) {
-    icon.style.left = "0";
+    icon.textContent = "⮞"; // 닫힘
     userClosed = true;
   } else {
-    icon.style.left = "-40px";
+    icon.textContent = "⮜"; // 열림
     userClosed = false;
   }
 }
@@ -270,9 +268,10 @@ window.addEventListener("scroll", function() {
   const cart = document.getElementById("floating-cart");
   const icon = document.getElementById("cart-toggle-icon");
 
+  // ✅ PC(1024px 이상)에서만 자동 열림
   if (window.innerWidth >= 1024 && window.scrollY > 1000 && cart.classList.contains("translate-x-full") && !userClosed) {
     cart.classList.remove("translate-x-full");
-    icon.style.left = "-40px";
+    icon.textContent = "⮜";
   }
 });
 
@@ -285,14 +284,13 @@ document.querySelectorAll(".option-select, .option-select-side").forEach(select 
     // 메인 hidden 업데이트
     const cartMain = document.getElementById("cart-option-main-" + key);
     if (cartMain) cartMain.value = value;
-
-    // ❌ 사이드 hidden 업데이트는 삭제
   });
 });
 
 // 수량 조정
 function changeQuantity(target, delta) {
   const input = document.getElementById(`quantity-${target}`);
+  if (!input) return;
   let value = parseInt(input.value) || 1;
   value = Math.max(1, value + delta);
   input.value = value;
