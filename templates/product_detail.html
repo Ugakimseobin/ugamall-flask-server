@@ -360,12 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const priceDisplayMain = document.querySelector("#purchase-box .text-indigo-600");
   const priceDisplaySide = document.querySelector("#floating-cart .text-indigo-600");
 
-  function animatePriceChange(element) {
-    element.classList.add("price-change");
-    setTimeout(() => element.classList.remove("price-change"), 600);
-  }
-
-  // 💡 가격 갱신 공통 함수
+  // 💡 가격 갱신 함수 (취소선 + 새 가격 표시)
   function updatePrice(target = "main") {
     const optionSelects = target === "main" ? optionSelectsMain : optionSelectsSide;
     const priceDisplay = target === "main" ? priceDisplayMain : priceDisplaySide;
@@ -381,37 +376,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (Object.keys(selected).length > 0) {
       for (const v of variants) {
-        if (Object.keys(v.options).length === Object.keys(selected).length) {
-          let match = true;
-          for (const k of Object.keys(selected)) {
-            if (v.options[k] !== selected[k]) {
-              match = false;
-              break;
-            }
-          }
-          if (match) {
-            matchedVariant = v;
+        let match = true;
+        for (const k of Object.keys(selected)) {
+          if (v.options[k] !== selected[k]) {
+            match = false;
             break;
           }
         }
+        if (match) {
+          matchedVariant = v;
+          break;
+        }
       }
-
-      if (matchedVariant) {
-        newPrice += matchedVariant.price; // ✅ 추가금 반영
+      if (matchedVariant && matchedVariant.price) {
+        newPrice += parseInt(matchedVariant.price);
       }
     }
 
-    // UI 반영
-    priceDisplay.textContent = newPrice.toLocaleString() + "원";
-    // 애니메이션 트리거
-    animatePriceChange(priceDisplay);
+    // ✅ 가격 표시 갱신
+    if (newPrice !== basePrice) {
+      priceDisplay.innerHTML = `
+        <span class="old-price">${basePrice.toLocaleString()}원</span>
+        <span class="new-price">${newPrice.toLocaleString()}원</span>
+      `;
+    } else {
+      priceDisplay.textContent = basePrice.toLocaleString() + "원";
+    }
   }
 
   // 옵션 변경 시 즉시 반영
   optionSelectsMain.forEach(sel => sel.addEventListener("change", () => updatePrice("main")));
   optionSelectsSide.forEach(sel => sel.addEventListener("change", () => updatePrice("side")));
 
-  // 페이지 진입 시 기본가 표시 (혹시 옵션 없을 때 대비)
+  // 페이지 진입 시 기본가격 표시
   updatePrice("main");
   updatePrice("side");
 });
