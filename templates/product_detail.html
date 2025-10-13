@@ -157,25 +157,33 @@
             transition-transform duration-300 z-50 p-6 overflow-y-auto">
 
   <!-- 반원 토글 -->
-  <button id="cart-toggle-icon"
-          onclick="toggleCart()"
-          class="absolute top-1/2 left-0 transform -translate-x-1/2 -translate-y-1/2 
-                 w-10 h-24 bg-indigo-600 text-white rounded-l-full shadow-xl 
-                 flex items-center justify-center text-2xl font-bold hover:bg-indigo-700 transition">
-    🛒
-  </button>
+    <div id="cart-toggle"
+        onclick="toggleCart()"
+        class="absolute top-1/2 -left-6 transform -translate-y-1/2 
+                w-6 h-16 bg-[#f9fafb] text-white flex items-center justify-center 
+                cursor-pointer rounded-l-full shadow-lg transition-all duration-500">
+        <span class="text-gray-400" id="cart-toggle-icon">⮞</span>
+    </div>
 
-  <div class="flex justify-between items-center mb-4">
-    <h3 class="text-lg font-bold text-gray-800">{{ _("빠른 장바구니") }}</h3>
-    <button onclick="toggleCart()" class="text-gray-500 hover:text-indigo-600 text-xl font-bold">×</button>
-  </div>
-
-  <img src="{{ url_for('static', filename='images/' ~ product.image) }}"
+    <img src="{{ url_for('static', filename='images/' ~ product.image) }}"
        class="rounded-lg shadow mb-4 object-cover h-40 w-full">
 
-  <h4 class="text-base font-bold mb-1">{{ product.name }}</h4>
-  <p class="text-indigo-600 font-semibold mb-4">{{ product.base_price|won }}원</p>
+    <h4 class="text-base font-bold mb-1">{{ product.name }}</h4>
+    <p class="text-indigo-600 font-semibold mb-4">{{ product.base_price|won }}원</p>
 
+    <!-- 수량 -->
+    <div class="mb-4 flex items-center">
+      <label class="mr-3 font-semibold text-sm sm:text-base">{{ _("수량") }}</label>
+      <div class="flex items-center">
+        <button type="button" onclick="changeQuantity('side', -1)"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 sm:px-3 py-1 sm:py-2 rounded-l">-</button>
+        <input id="quantity-side" type="number" value="1" min="1" 
+              class="w-14 sm:w-16 text-center border-t border-b p-1 sm:p-2 text-sm sm:text-base">
+        <button type="button" onclick="changeQuantity('side', 1)"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 sm:px-3 py-1 sm:py-2 rounded-r">+</button>
+      </div>
+    </div>
+    
   <form id="cart-form-side" method="post" action="/add_to_cart">
     <input type="hidden" name="product_id" value="{{ product.id }}">
     <input type="hidden" id="cart-quantity-side" name="quantity" value="1">
