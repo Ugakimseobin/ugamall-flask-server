@@ -1330,6 +1330,10 @@ def payment(order_id):
         imp_code=app.config["IMP_CODE"]
     )
 
+# 모바일 결제시 아래 코드가 없으면 404 오류가 남 팝업 방식이 아닌 모바일 방식으로 나오기 때문에
+@app.route("/payment-complete/<int:order_id>")
+def payment_complete(order_id):
+    return redirect(url_for("order_complete", order_id=order_id))
 
 @app.route("/pay/prepare", methods=["POST"])
 def pay_prepare():

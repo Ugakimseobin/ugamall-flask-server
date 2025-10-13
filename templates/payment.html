@@ -52,7 +52,8 @@
       buyer_name: "{{ order.name }}",
       buyer_tel: "{{ order.phone }}",
       buyer_email: "{{ order.guest_email or '' }}",
-      buyer_addr: "{{ order.base_address }} {{ order.detail_address or '' }}"
+      buyer_addr: "{{ order.base_address }} {{ order.detail_address or '' }}",
+      m_redirect_url: "{{ url_for('payment_complete', order_id=order.id, _external=True) }}"
     }, async function (rsp) {
       if (rsp.success) {
         const vRes = await fetch("/pay/verify", {
