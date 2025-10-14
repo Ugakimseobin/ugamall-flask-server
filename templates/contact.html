@@ -17,13 +17,20 @@
 
   <form method="POST" class="space-y-4 bg-white p-4 sm:p-6 shadow rounded">
     {% if not current_user.is_authenticated %}
+      <!-- ✅ 비회원일 경우 표시 -->
       <div>
-        <label class="block font-semibold mb-1 text-sm sm:text-base">{{ _("이메일") }}</label>
-        <input type="email" name="email" required
-               class="w-full border rounded p-2 text-sm sm:text-base"
-               placeholder="{{ _('답변 받으실 이메일 입력') }}">
+        <label class="block text-sm font-semibold mb-1">{{ _("이메일 (필수)") }}</label>
+        <input type="email" name="email" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-[#007AFF]" required>
       </div>
-    {% endif %}
+      <div>
+        <label class="block text-sm font-semibold mb-1">{{ _("이름") }}</label>
+        <input type="text" name="guest_name" class="w-full border border-gray-300 rounded-lg p-2.5">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold mb-1">{{ _("전화번호") }}</label>
+        <input type="text" name="guest_phone" class="w-full border border-gray-300 rounded-lg p-2.5">
+      </div>
+      {% endif %}
 
     <div>
       <label class="block font-semibold mb-1 text-sm sm:text-base">{{ _("제목") }}</label>
