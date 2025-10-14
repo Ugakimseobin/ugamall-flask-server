@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'DesignHouse';
+  src: url('../fonts/designhouseLight.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DesignHouse';
+  src: url('../fonts/designhouseBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
 body {
     font-family: 'Noto Sans KR', 'Roboto', sans-serif;
   }
