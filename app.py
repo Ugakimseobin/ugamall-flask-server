@@ -2132,18 +2132,29 @@ def admin_orders():
 @app.route("/admin/order_items/<int:order_id>")
 @login_required
 def admin_order_items(order_id):
-    order = Order.query.options(joinedload(Order.items).joinedload(OrderItem.product)).get(order_id)
+    # ✅ 관계를 variant → product까지 타고 들어감
+    order = (
+        Order.query
+        .options(joinedload(Order.items)
+                 .joinedload(OrderItem.variant)
+                 .joinedload(ProductVariant.product))
+        .get(order_id)
+    )
+
     if not order:
         return jsonify({"error": "Order not found"}), 404
 
     items = []
     for item in order.items:
+        product_name = item.variant.product.name if item.variant and item.variant.product else "상품정보 없음"
+        variant_info = item.variant.name if item.variant else ""
         items.append({
-            "name": item.product.name if item.product else "상품정보 없음",
-            "variant": item.variant_text or "",
+            "name": product_name,
+            "variant": variant_info,
             "qty": item.quantity,
             "price": item.price,
         })
+
     return jsonify({"items": items})
 
 @app.route("/admin/orders/confirm_deposit/<int:order_id>", methods=["POST"])
