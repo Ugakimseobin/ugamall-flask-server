@@ -11,8 +11,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* ------------------------- */
+/* 기본 색상 / 버튼 스타일 */
+/* ------------------------- */
+:root {
+  --primary-color: #007aff;
+  --primary-hover: #0063cc;
+  --accent-color: #00c6a2;
+  --gray-text: #555;
+}
 
-/* 툴팁  */
+/* 툴팁 */
 .noUi-tooltip {
   background: #f9fafb;
   color: #000;
@@ -24,19 +33,60 @@
   transition: opacity 0.3s ease;
 }
 
+/* 장바구니 애니메이션 */
 @keyframes cart-bounce {
   0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
-  40% { transform: translateY(-8px) scale(1.02); }
+  40% { transform: translateY(-8px) scale(1.03); }
   60% { transform: translateY(-4px) scale(1.01); }
 }
 .animate-cart-bounce {
   animation: cart-bounce 1.2s ease;
 }
+
+/* 버튼 공통 */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  background: white;
+  transition: 0.3s ease;
+}
+.btn-outline:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Header / Footer 섬세 조정 */
+header {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Flash message */
+.flash-message {
+  transition: all 0.3s ease;
+}
+
+/* Footer link hover */
+footer a:hover {
+  color: var(--accent-color);
+  transition: color 0.3s ease;
+}
 </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-['Noto Sans KR',sans-serif]">
   <!-- Header -->
-  <header class="fixed w-full bg-white shadow z-50">
+  <header class="fixed w-full shadow z-50 border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center h-16">
       <a href="/" class="text-xl md:text-2xl font-bold text-indigo-600">{{ _("유가몰") }}</a>
 
@@ -45,34 +95,34 @@
         <input type="text" id="search-input" name="name"
               placeholder="{{ _('상품 검색') }}..."
               value="{{ request.args.get('name','') }}"
-              class="w-full border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              class="w-full border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]">
         <button type="submit"
-                class="border border-gray-300 bg-white text-gray-600 px-2 rounded-r-lg hover:bg-gray-200 flex items-center justify-center">
+                class="border border-gray-300 bg-white text-gray-600 px-2 rounded-r-lg hover:bg-gray-100 flex items-center justify-center">
           <img src="{{ url_for('static', filename='images/search_logo.png') }}">
         </button>
       </form>
 
       <!-- 네비게이션 (데스크탑) -->
       <nav class="hidden md:flex space-x-6 text-sm md:text-base">
-        <a href="/company" class="hover:text-indigo-600">{{ _("회사소개") }}</a>
-        <a href="/products" class="hover:text-indigo-600">{{ _("제품") }}</a>
-        <a href="/contact" class="hover:text-indigo-600">{{ _("문의") }}</a>
+        <a href="/company" class="hover:text-[var(--primary-color)]">{{ _("회사소개") }}</a>
+        <a href="/products" class="hover:text-[var(--primary-color)]">{{ _("제품") }}</a>
+        <a href="/contact" class="hover:text-[var(--primary-color)]">{{ _("문의") }}</a>
         {% if current_user.is_authenticated %}
           {% if current_user.is_admin %}
-            <a href="{{ url_for('admin_dashboard') }}" class="relative hover:text-red-600 font-bold">
+            <a href="{{ url_for('admin_dashboard') }}" class="relative text-red-500 font-bold hover:text-red-600">
               관리자
               {% if admin_total_alerts > 0 %}
-                <span class="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                <span class="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{{ admin_total_alerts }}</span>
                   {{ admin_total_alerts }}
                 </span>
               {% endif %}
             </a>
           {% else %}
-            <a href="{{ url_for('mypage') }}" class="hover:text-blue-600 font-bold">{{ _("마이페이지") }}</a>
+            <a href="{{ url_for('mypage') }}" class="font-semibold hover:text-[var(--primary-color)]">{{ _("마이페이지") }}</a>
           {% endif %}
-          <a href="{{ url_for('logout') }}" class="hover:text-indigo-600">{{ _("로그아웃") }}</a>
+          <a href="{{ url_for('logout') }}" class="hover:text-[var(--primary-color)]">{{ _("로그아웃") }}</a>
         {% else %}
-          <a href="{{ url_for('login') }}" class="hover:text-indigo-600">{{ _("로그인") }}</a>
+          <a href="{{ url_for('login') }}" class="hover:text-[var(--primary-color)]">{{ _("로그인") }}</a>
         {% endif %}
         <a href="/checkout" class="relative" aria-label="장바구니">
           <span id="cart-icon-desktop" class="inline-block align-middle">🛒</span>
@@ -123,19 +173,19 @@
           <img src="{{ url_for('static', filename='images/search_logo.png') }}">
         </button>
       </form>
-      <nav class="flex flex-col px-4 py-2 space-y-2 text-sm">
-        <a href="/company" class="hover:text-indigo-600">{{ _("회사소개") }}</a>
-        <a href="/products" class="hover:text-indigo-600">{{ _("제품") }}</a>
-        <a href="/contact" class="hover:text-indigo-600">{{ _("문의") }}</a>
+      <nav class="flex flex-col px-4 py-3 space-y-2 text-sm">
+        <a href="/company" class="hover:text-[var(--primary-color)]">{{ _("회사소개") }}</a>
+        <a href="/products" class="hover:text-[var(--primary-color)]">{{ _("제품") }}</a>
+        <a href="/contact" class="hover:text-[var(--primary-color)]">{{ _("문의") }}</a>
         {% if current_user.is_authenticated %}
           {% if current_user.is_admin %}
             <a href="{{ url_for('admin_dashboard') }}" class="hover:text-red-600 font-bold">관리자</a>
           {% else %}
-            <a href="{{ url_for('mypage') }}" class="hover:text-blue-600 font-bold">{{ _("마이페이지") }}</a>
+            <a href="{{ url_for('mypage') }}" class="hover:text-[var(--primary-color)]">{{ _("마이페이지") }}</a>
           {% endif %}
-          <a href="{{ url_for('logout') }}" class="hover:text-indigo-600">{{ _("로그아웃") }}</a>
+          <a href="{{ url_for('logout') }}" class="hover:text-[var(--primary-color)]">{{ _("로그아웃") }}</a>
         {% else %}
-          <a href="{{ url_for('login') }}" class="hover:text-indigo-600">{{ _("로그인") }}</a>
+          <a href="{{ url_for('login') }}" class="hover:text-[var(--primary-color)]">{{ _("로그인") }}</a>
         {% endif %}
         <a href="/checkout" class="flex items-center gap-2" aria-label="장바구니">
           <span id="cart-icon-mobile" class="inline-block align-middle">🛒</span>
@@ -165,10 +215,10 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <div class="flash-message mb-3 px-4 py-3 rounded-lg shadow-lg
-                      {% if category == 'success' %} bg-green-100 text-green-800 border border-green-300
-                      {% elif category == 'error' %} bg-red-100 text-red-800 border border-red-300
-                      {% else %} bg-gray-100 text-gray-800 border border-gray-300 {% endif %}">
+          <div class="flash-message mb-3 px-4 py-3 rounded-lg shadow-md border
+                      {% if category == 'success' %} bg-green-50 text-green-700 border-green-200
+                      {% elif category == 'error' %} bg-red-50 text-red-700 border-red-200
+                      {% else %} bg-gray-50 text-gray-700 border-gray-200 {% endif %}">
             {{ message }}
           </div>
         {% endfor %}
@@ -181,13 +231,13 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-900 text-gray-300 py-10 mt-16">
+  <footer class="bg-[#0F172A] text-gray-300 py-12 mt-16">
     <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm md:text-base">
       <div>
         <a href="/" class="inline-block mb-3 bg-white p-1">
           <img src="{{ url_for('static', filename='images/Uga_logo.png') }}" class="w-32" alt="UGA MEDICAL">
         </a>
-        <p class="text-sm leading-relaxed">Your trusted partner in healthcare solutions.</p>
+        <p class="text-gray-400 leading-relaxed">Your trusted partner in healthcare solutions.</p>
       </div>
       <div>
         <h6 class="text-white font-semibold mb-3">{{ _("바로가기") }}</h6>
