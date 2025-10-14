@@ -2147,7 +2147,7 @@ def admin_order_items(order_id):
     items = []
     for item in order.items:
         product_name = item.variant.product.name if item.variant and item.variant.product else "상품정보 없음"
-        variant_info = item.variant.name if item.variant else ""
+        variant_info = ", ".join([f"{k}: {v}" for k, v in (item.variant.options or {}).items()]) if item.variant else ""
         items.append({
             "name": product_name,
             "variant": variant_info,
