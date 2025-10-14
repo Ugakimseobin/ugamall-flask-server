@@ -1335,12 +1335,22 @@ def payment(order_id):
 def payment_complete(order_id):
     imp_uid = request.args.get("imp_uid")
     merchant_uid = request.args.get("merchant_uid")
-
     print("📦 [모바일 콜백] imp_uid:", imp_uid, "merchant_uid:", merchant_uid)
 
     try:
         if not imp_uid:
-            # 🔹 imp_uid가 안 들어왔을 때, merchant_uid로 아임포트에서 조회 시도
+            # 🔹 imp_uid가 없을 경우: DB에 사전등록된 merchant_uid로 Payment 검색
+            pay = Payment.query.filter_by(order_id=order_id).order_by(Payment.id.desc()).first()
+            if pay:
+                merchant_uid = pay.merchant_uid
+                print("✅ DB에서 merchant_uid 복구:", merchant_uid)
+
+        if not merchant_uid:
+            print("❌ merchant_uid 누락, 복구 불가")
+            return redirect(url_for("checkout"))
+
+        # 🔹 아임포트에서 imp_uid 조회 (merchant_uid 기반)
+        if not imp_uid:
             token = _get_iamport_token()
             res = requests.get(
                 f"https://api.iamport.kr/payments/find/{merchant_uid}",
@@ -1351,9 +1361,9 @@ def payment_complete(order_id):
                 data = res.json().get("response")
                 if data and data.get("imp_uid"):
                     imp_uid = data["imp_uid"]
-                    print("✅ imp_uid 복구:", imp_uid)
+                    print("✅ imp_uid 복구 성공:", imp_uid)
         
-        # imp_uid가 확보되면 검증 요청
+        # imp_uid 확보 후 검증 요청
         if imp_uid:
             verify_res = requests.post(
                 f"{request.url_root}pay/verify",
@@ -1367,11 +1377,9 @@ def payment_complete(order_id):
                 return redirect(url_for("order_complete", order_id=order_id))
             else:
                 print("❌ 검증 실패:", v)
-
     except Exception as e:
         print("❌ 모바일 검증 예외:", e)
 
-    # imp_uid가 끝내 없거나 오류 시
     print("⚠️ imp_uid 또는 검증 실패, checkout으로 이동")
     return redirect(url_for("checkout"))
 
