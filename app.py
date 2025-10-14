@@ -2129,6 +2129,23 @@ def admin_orders():
         search_query=q,
     )
 
+@app.route("/admin/order_items/<int:order_id>")
+@login_required
+def admin_order_items(order_id):
+    order = Order.query.options(joinedload(Order.items).joinedload(OrderItem.product)).get(order_id)
+    if not order:
+        return jsonify({"error": "Order not found"}), 404
+
+    items = []
+    for item in order.items:
+        items.append({
+            "name": item.product.name if item.product else "상품정보 없음",
+            "variant": item.variant_text or "",
+            "qty": item.quantity,
+            "price": item.price,
+        })
+    return jsonify({"items": items})
+
 @app.route("/admin/orders/confirm_deposit/<int:order_id>", methods=["POST"])
 @login_required
 def admin_confirm_deposit(order_id):

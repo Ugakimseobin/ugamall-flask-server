@@ -141,7 +141,7 @@ footer a:hover {
             <a href="{{ url_for('admin_dashboard') }}" class="relative text-red-500 font-bold hover:text-red-600">
               관리자
               {% if admin_total_alerts > 0 %}
-                <span class="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{{ admin_total_alerts }}</span>
+                <span class="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
                   {{ admin_total_alerts }}
                 </span>
               {% endif %}

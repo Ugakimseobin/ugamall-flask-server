@@ -61,7 +61,7 @@
             <div class="text-gray-500">{{ o._phone }}</div>
           </td>
 
-          <td class="border px-3 py-2">
+          <td class="border px-3 py-2 hover:underline" onclick="openItemsModal({{ o.id }})">
             <div class="font-medium">{{ o._summary }}</div>
             <div class="text-gray-500">총 {{ o._qty_sum }}개</div>
           </td>
@@ -147,6 +147,15 @@
         {% endfor %}
       </tbody>
     </table>
+    <div id="itemsModal"
+            class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl w-11/12 max-w-md p-6 relative animate-fadeIn">
+            <h3 class="text-lg font-bold mb-4 text-indigo-700">주문 상품 상세</h3>
+            <div id="itemsList" class="text-sm text-gray-700 space-y-2 max-h-80 overflow-y-auto"></div>
+            <button onclick="closeItemsModal()"
+                    class="absolute top-3 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+        </div>
+    </div>
   </div>
 
   <!-- 모바일 : 카드 -->
@@ -258,5 +267,37 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+</script>
+
+<script>
+function openItemsModal(orderId) {
+  // 서버에서 해당 주문의 상품 목록을 JSON으로 요청
+  fetch(`/admin/order_items/${orderId}`)
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("itemsList");
+      list.innerHTML = "";
+      if (data.items && data.items.length > 0) {
+        data.items.forEach(it => {
+          const el = document.createElement("div");
+          el.innerHTML = `
+            <div class="flex justify-between border-b pb-1">
+              <span>${it.name} (${it.variant || ""}) × ${it.qty}개</span>
+              <span class="font-semibold">${it.price.toLocaleString()}원</span>
+            </div>
+          `;
+          list.appendChild(el);
+        });
+      } else {
+        list.innerHTML = "<p class='text-gray-500 text-center py-4'>상품 정보가 없습니다.</p>";
+      }
+      document.getElementById("itemsModal").classList.remove("hidden");
+    })
+    .catch(err => console.error(err));
+}
+
+function closeItemsModal() {
+  document.getElementById("itemsModal").classList.add("hidden");
+}
 </script>
 {% endblock %}
