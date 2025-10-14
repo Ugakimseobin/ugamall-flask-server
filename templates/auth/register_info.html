@@ -4,7 +4,7 @@
 
   <!-- ✅ PC 전용 -->
   <div class="hidden sm:block">
-    <h2 class="text-3xl font-extrabold text-center text-indigo-700 mb-10">{{ _("회원 정보 입력") }}</h2>
+    <h2 class="text-3xl font-extrabold text-center text-[#222] mb-10">{{ _("회원 정보 입력") }}</h2>
 
     <form method="post" id="register-form" class="space-y-6 text-base">
       <!-- 이메일 -->
@@ -14,7 +14,7 @@
           <input type="email" id="email" name="email" placeholder="{{ _('이메일 입력') }}"
                  required class="flex-1 border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
           <button type="button" onclick="checkEmail()"
-                  class="px-5 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 active:scale-[0.97] transition">
+                  class="px-5 py-3 btn-dark text-white font-semibold rounded-lg hover:opacity-90 active:scale-[0.97] transition">
             {{ _("중복확인") }}
           </button>
         </div>
@@ -56,7 +56,7 @@
           <input type="text" id="postcode" placeholder="{{ _('우편번호') }}"
                  class="border p-2 rounded-lg w-1/2 bg-gray-100" readonly>
           <button type="button" onclick="execDaumPostcode()"
-                  class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 active:scale-[0.97] transition">
+                  class="px-3 py-2 bg-white border-gray-300 text-[#222] rounded-lg hover:opacity-90 active:scale-[0.97] transition">
             {{ _("주소찾기") }}
           </button>
         </div>
@@ -73,7 +73,7 @@
           <input type="text" id="phone" name="phone" placeholder="예: 01012345678"
                  class="border border-gray-300 p-2 rounded-lg flex-1 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
           <button type="button" onclick="sendCode()"
-                  class="bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 active:scale-[0.97] transition">
+                  class="btn-dark text-white px-3 py-2 rounded-lg hover:opacity-90 active:scale-[0.97] transition">
             {{ _("인증번호 받기") }}
           </button>
         </div>
@@ -91,7 +91,7 @@
 
       <!-- 가입 버튼 -->
       <button type="submit"
-              class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-md mt-5">
+              class="w-full btn-dark text-white py-3 rounded-xl font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-md mt-5">
         {{ _("가입하기") }}
       </button>
     </form>
