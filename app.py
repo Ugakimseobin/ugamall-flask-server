@@ -1336,26 +1336,43 @@ def payment_complete(order_id):
     imp_uid = request.args.get("imp_uid")
     merchant_uid = request.args.get("merchant_uid")
 
-    # 필요 시 결제 검증 수행
-    if imp_uid:
-        try:
+    print("📦 [모바일 콜백] imp_uid:", imp_uid, "merchant_uid:", merchant_uid)
+
+    try:
+        if not imp_uid:
+            # 🔹 imp_uid가 안 들어왔을 때, merchant_uid로 아임포트에서 조회 시도
+            token = _get_iamport_token()
+            res = requests.get(
+                f"https://api.iamport.kr/payments/find/{merchant_uid}",
+                headers={"Authorization": token},
+                timeout=7
+            )
+            if res.status_code == 200:
+                data = res.json().get("response")
+                if data and data.get("imp_uid"):
+                    imp_uid = data["imp_uid"]
+                    print("✅ imp_uid 복구:", imp_uid)
+        
+        # imp_uid가 확보되면 검증 요청
+        if imp_uid:
             verify_res = requests.post(
                 f"{request.url_root}pay/verify",
                 json={"imp_uid": imp_uid, "merchant_uid": merchant_uid, "order_id": order_id},
                 headers={"Content-Type": "application/json"},
                 timeout=7
             )
-            if verify_res.status_code == 200:
-                v = verify_res.json()
-                print("🔍 검증 응답:", v) 
-                if v.get("ok"):
-                    return redirect(url_for("order_complete", order_id=order_id))
-                else:
-                    print("❌ 검증 실패: ", v.get("msg"))
-        except Exception as e:
-            print("모바일 검증 실패:", e)
+            v = verify_res.json()
+            if v.get("ok"):
+                print("✅ 검증 성공:", v)
+                return redirect(url_for("order_complete", order_id=order_id))
+            else:
+                print("❌ 검증 실패:", v)
 
-    # 기본 이동
+    except Exception as e:
+        print("❌ 모바일 검증 예외:", e)
+
+    # imp_uid가 끝내 없거나 오류 시
+    print("⚠️ imp_uid 또는 검증 실패, checkout으로 이동")
     return redirect(url_for("checkout"))
 
 @app.route("/pay/prepare", methods=["POST"])
