@@ -115,7 +115,7 @@ footer a:hover {
 </head>
 <body class="bg-gray-50 text-gray-800 font-['Noto Sans KR',sans-serif]">
   <!-- Header -->
-  <header class="fixed w-full shadow z-50 border-b border-gray-100 z-51">
+  <header class="fixed w-full shadow z-50 border-b border-gray-100" style="z-index: 9999;">
     <div class="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center h-16">
       <a href="/" class="text-xl md:text-2xl font-bold tracking-tight" style="font-family: 'DesignHouse', sans-serif; letter-spacing:-0.5px; color:#222;">{{ _("유가몰") }}</a>
 
@@ -192,7 +192,7 @@ footer a:hover {
     </div>
 
     <!-- 모바일 메뉴 -->
-    <div id="mobile-menu" class="hidden bg-white border-t shadow-md md:hidden">
+    <div id="mobile-menu" class="hidden bg-white border-t shadow-md md:hidden" style="z-index: 10000;>
       <form id="mobile-search" action="{{ url_for('search') }}" class="flex px-4 py-2">
         <input type="text" name="name"
               placeholder="{{ _('상품 검색') }}..."
