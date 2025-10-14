@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="max-w-7xl mx-auto py-10 px-4 md:px-6">
-  <h2 class="text-2xl sm:text-3xl font-extrabold text-center text-indigo-700 mb-10">
+  <h2 class="text-2xl sm:text-3xl font-extrabold text-center text-[#222] mb-10">
     🔍 {{ _("검색 결과") }}
   </h2>
 
@@ -42,14 +42,16 @@
         <!-- 가격 -->
         <div class="mb-6">
           <label class="block text-sm font-semibold mb-2 text-gray-700">{{ _("가격 범위") }}</label>
+          <div id="price-slider" class="mb-3"></div>
+
           <div class="flex items-center justify-between gap-2">
             <input id="price-min-input" type="number"
-                   class="w-1/2 border border-gray-300 p-2 rounded-lg text-sm focus:ring-2 focus:ring-indigo-300"
-                   value="{{ request.args.get('price_min', 0) }}" min="0" step="1000">
+                  class="w-1/2 border border-gray-300 p-2 rounded-lg text-sm focus:ring-2 focus:ring-[#222]"
+                  value="{{ request.args.get('price_min', 0) }}" min="0" step="1000">
             <span class="text-gray-400">~</span>
             <input id="price-max-input" type="number"
-                   class="w-1/2 border border-gray-300 p-2 rounded-lg text-sm focus:ring-2 focus:ring-indigo-300"
-                   value="{{ request.args.get('price_max', 1000000) }}" max="1000000" step="1000">
+                  class="w-1/2 border border-gray-300 p-2 rounded-lg text-sm focus:ring-2 focus:ring-[#222]"
+                  value="{{ request.args.get('price_max', 1000000) }}" max="1000000" step="1000">
           </div>
         </div>
 
