@@ -2152,7 +2152,7 @@ def admin_order_items(order_id):
             "name": product_name,
             "variant": variant_info,
             "qty": item.quantity,
-            "price": item.price,
+            "price": item.discount_price or item.original_price or 0,
         })
 
     return jsonify({"items": items})
