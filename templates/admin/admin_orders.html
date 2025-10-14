@@ -3,6 +3,34 @@
 <div class="max-w-7xl mx-auto bg-white p-4 sm:p-6 shadow rounded mt-6 sm:mt-8">
   <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">주문 관리</h1>
 
+  <!-- ✅ 주문 필터 영역 -->
+  <div class="bg-gray-50 p-4 rounded-lg shadow-sm mb-5">
+    <form id="filterForm" method="get" action="{{ url_for('admin_orders') }}" class="flex flex-wrap items-center gap-2">
+      <!-- 기간 버튼 -->
+      <button type="button" class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '5y' %}bg-green-100 text-green-700{% endif %}" data-range="5y">최대(5년)</button>
+      <button type="button" class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '6m' %}bg-green-100 text-green-700{% endif %}" data-range="6m">6개월</button>
+      <button type="button" class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '3m' %}bg-green-100 text-green-700{% endif %}" data-range="3m">3개월</button>
+      <button type="button" class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '1m' %}bg-green-100 text-green-700{% endif %}" data-range="1m">1개월</button>
+
+      <!-- 직접 날짜 입력 -->
+      <div class="flex items-center gap-1 ml-2">
+        <input type="month" id="startDate" name="start_date" class="border rounded p-1 text-sm" value="{{ start_date or '' }}">
+        <span class="text-gray-500">~</span>
+        <input type="month" id="endDate" name="end_date" class="border rounded p-1 text-sm" value="{{ end_date or '' }}">
+      </div>
+
+      <!-- 검색창 -->
+      <input type="text" name="q" id="searchOrder" placeholder="주문자명, 이메일, 상품명 검색"
+             class="border rounded px-2 py-1 flex-1 min-w-[200px] text-sm ml-2"
+             value="{{ search_query or '' }}">
+
+      <!-- 조회 버튼 -->
+      <button type="submit" id="filterSearch" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm">
+        조회하기
+      </button>
+    </form>
+  </div>
+
   <!-- 데스크탑 : 테이블 -->
   <div class="overflow-x-auto hidden md:block">
     <table class="w-full border-collapse text-sm">
@@ -213,4 +241,22 @@
     {% endfor %}
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // 기간 버튼 클릭 시 자동 폼 전송
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const range = btn.dataset.range;
+      const form = document.getElementById("filterForm");
+      const hidden = document.createElement("input");
+      hidden.type = "hidden";
+      hidden.name = "period";
+      hidden.value = range;
+      form.appendChild(hidden);
+      form.submit();
+    });
+  });
+});
+</script>
 {% endblock %}

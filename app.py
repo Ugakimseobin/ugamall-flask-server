@@ -4,6 +4,7 @@ from flask_login import UserMixin
 from flask_login import current_user, login_required
 import re
 from sqlalchemy.orm import joinedload
+from sqlalchemy import or_, cast, String
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
 import requests
@@ -484,7 +485,25 @@ def _order_sum(order: "Order") -> int:
     items_total = sum(int(i.original_price or 0) * int(i.quantity or 0) for i in order.items)
     return max(0, items_total - int(order.discount_amount or 0))
 #-----------------------------
+# -----------------------------
+# 날짜 계산 헬퍼
+# -----------------------------
+def _compute_date_range(period: str | None, start_date_str: str | None, end_date_str: str | None):
+    now = datetime.utcnow()
+    if start_date_str and end_date_str:
+        try:
+            start_dt = datetime.strptime(start_date_str, "%Y-%m")
+            end_base = datetime.strptime(end_date_str, "%Y-%m")
+            if end_base.month == 12:
+                end_dt = end_base.replace(year=end_base.year + 1, month=1)
+            else:
+                end_dt = end_base.replace(month=end_base.month + 1)
+            return start_dt, end_dt
+        except Exception:
+            pass
 
+    days = {"1m": 30, "3m": 90, "6m": 180, "5y": 5 * 365}.get(period or "1m", 30)
+    return now - timedelta(days=days), now
 # -----------------------------
 # 주문 상태 한국어 변환
 # -----------------------------
@@ -1979,7 +1998,9 @@ def admin_orders():
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
 
-    # 상태 변경
+    # -----------------
+    # 상태 변경 (POST)
+    # -----------------
     if request.method == "POST":
         order_id = request.form.get("order_id", type=int)
         new_status = request.form.get("status")
@@ -1989,26 +2010,55 @@ def admin_orders():
         order = Order.query.get(order_id)
         if order:
             if not order.is_read:
-                order.is_read = True   # ✅ 읽음 처리
+                order.is_read = True   # 읽음 처리
             if new_status:
                 order.status = new_status
             db.session.commit()
             flash(f"주문 {order.id} 상태가 '{new_status}'로 변경되었습니다.", "success")
         return redirect(url_for("admin_orders"))
 
-    orders = Order.query.order_by(Order.created_at.desc()).all()
-    for o in orders:
-        if not o.is_read:
-            o.is_read = True          # ✅ 목록 들어온 순간 읽음 처리
-    db.session.commit()
+    # -----------------
+    # 필터 (GET)
+    # -----------------
+    q = (request.args.get("q") or "").strip()
+    period = request.args.get("period")            # '1m' | '3m' | '6m' | '5y'
+    start_date_str = request.args.get("start_date")  # 'YYYY-MM'
+    end_date_str   = request.args.get("end_date")    # 'YYYY-MM'
 
-    # 주문 + 아이템 + 상품 + 결제 + 유저까지 미리 로딩(N+1 방지)
-    orders = (
+    start_dt, end_dt = _compute_date_range(period, start_date_str, end_date_str)
+
+    # 기본 쿼리 + 기간
+    query = (
         Order.query
+        .filter(Order.created_at >= start_dt, Order.created_at < end_dt)
+    )
+
+    # 검색(주문자명, 회원이메일, 비회원이메일, 주문번호, 상품명)
+    if q:
+        query = (
+            query
+            .outerjoin(User, Order.user_id == User.id)
+            .outerjoin(OrderItem, OrderItem.order_id == Order.id)
+            .outerjoin(ProductVariant, ProductVariant.id == OrderItem.variant_id)
+            .outerjoin(Product, Product.id == ProductVariant.product_id)
+            .filter(
+                or_(
+                    User.name.ilike(f"%{q}%"),
+                    User.email.ilike(f"%{q}%"),
+                    Order.guest_email.ilike(f"%{q}%"),
+                    cast(Order.id, String).ilike(f"%{q}%"),
+                    Product.name.ilike(f"%{q}%"),
+                )
+            )
+        )
+
+    # 정렬 + N+1 방지 로딩
+    orders = (
+        query
         .options(
             joinedload(Order.items)
-              .joinedload(OrderItem.variant)
-              .joinedload(ProductVariant.product),
+                .joinedload(OrderItem.variant)
+                .joinedload(ProductVariant.product),
             joinedload(Order.payment),
             joinedload(Order.user),
         )
@@ -2016,7 +2066,16 @@ def admin_orders():
         .all()
     )
 
-    # 템플릿에서 바로 쓰기 편하게 요약 필드 계산
+    # 이번에 조회된 주문들을 '읽음'으로 처리 (알림 뱃지 감소)
+    any_unread = False
+    for o in orders:
+        if not o.is_read:
+            o.is_read = True
+            any_unread = True
+    if any_unread:
+        db.session.commit()
+
+    # 템플릿에서 쓰기 쉬운 요약 필드 구성
     for o in orders:
         names = []
         for it in o.items:
@@ -2038,29 +2097,37 @@ def admin_orders():
         # 동적 속성(템플릿에서 o._xxx로 접근)
         o._summary       = summary
         o._qty_sum       = int(qty_sum)
-        o._items_total   = int(items_total)   # 정가합
+        o._items_total   = int(items_total)
         o._discount      = int(o.discount_amount or 0)
-        o._final_amount  = int(final_amount)  # 실제 결제금액
+        o._final_amount  = int(final_amount)
         o._who           = who
         o._email         = email
         o._phone         = phone
         o._address       = address
         o._pay_status    = pay_status
 
-        # 철자 혼용 보정(표시용)
+        # 쿠폰명(표시용)
         o._coupon_name = None
         if o.applied_user_coupon_id:
             uc = UserCoupon.query.options(joinedload(UserCoupon.coupon)).get(o.applied_user_coupon_id)
             if uc and uc.coupon:
                 o._coupon_name = uc.coupon.name
 
+        # 철자 혼용 보정
         if getattr(o, "status", None) == "cancelled":
             o.status = "canceled"
 
-    return render_template("admin/admin_orders.html",
-                           orders=orders,
-                           status_options=STATUS_OPTIONS,
-                           timedelta=timedelta)
+    return render_template(
+        "admin/admin_orders.html",
+        orders=orders,
+        status_options=STATUS_OPTIONS,
+        timedelta=timedelta,
+        # ▶ 템플릿 필터 상태 기억용
+        selected_period=period,
+        start_date=start_date_str,
+        end_date=end_date_str,
+        search_query=q,
+    )
 
 @app.route("/admin/orders/confirm_deposit/<int:order_id>", methods=["POST"])
 @login_required
