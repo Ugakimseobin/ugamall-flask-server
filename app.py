@@ -1395,6 +1395,7 @@ def pay_verify():
     data = request.get_json(silent=True) or {}
     imp_uid = data.get("imp_uid")
     merchant_uid = data.get("merchant_uid")
+    order_id = data.get("order_id")
 
     token = _get_iamport_token()
     imp_res = requests.get(
@@ -1407,8 +1408,21 @@ def pay_verify():
 
     imp_data = imp_res.json().get("response", {})
     status = imp_data.get("status")
+    amount = imp_data.get("amount")
+    pg_provider = imp_data.get("pg_provider")
+    pay_method = imp_data.get("pay_method")
 
     pay = Payment.query.filter_by(merchant_uid=merchant_uid).first_or_404()
+    if not pay:
+        pay = Payment(order_id=order_id, merchant_uid=merchant_uid, amount=amount)
+        db.session.add(pay)
+
+    # ✅ 반드시 imp_uid 저장
+    pay.imp_uid = imp_uid
+    pay.pg_provider = pg_provider
+    pay.method = pay_method
+    pay.amount = amount
+    
     order = pay.order
 
     if status == "paid":
