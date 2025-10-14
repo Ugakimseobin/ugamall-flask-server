@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <!-- Shorts Section -->
-<section class="relative w-full h-[500px] md:h-[800px] bg-black overflow-hidden">
+<section class="relative w-full h-[500px] md:h-[800px] bg-[#f2f2f2] overflow-hidden">
   {% if latest_video %}
     <div class="relative w-full h-full">
       <!-- 영상 -->
@@ -17,10 +17,10 @@
                   flex items-center p-4 sm:p-6 text-white cursor-pointer">
 
         <div class="text-sm sm:text-base md:text-lg">
-          <h2 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3">{{ _("UGAMALL 홍보 영상") }}</h2>
-          <p class="mb-3 sm:mb-4 text-gray-200 text-xs sm:text-sm md:text-base">{{ _("UGAMALL의 최신 소식과 스토리를 만나보세요.") }}</p>
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-[#222] mb-2 sm:mb-3">{{ _("UGAMALL 홍보 영상") }}</h2>
+          <p class="mb-3 sm:mb-4 text-gray-200 text-xs text-[#555] sm:text-sm md:text-base">{{ _("UGAMALL의 최신 소식과 스토리를 만나보세요.") }}</p>
           <a href="/videos" 
-             class="inline-block bg-gradient-to-r from-[#007AFF] to-[#005FCC] px-5 py-2.5 rounded-full shadow hover:opacity-90 transition text-sm sm:text-base font-medium">
+             class="inline-block btn-dark px-5 py-2.5 rounded-full shadow hover:opacity-90 transition text-sm sm:text-base font-medium">
             {{ _("영상 더 보기 →") }}
           </a>
         </div>
@@ -47,13 +47,13 @@
 <section class="bg-gray-50 max-w-full mx-auto px-4 sm:px-10 md:px-16 py-14 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
   <!-- 왼쪽 텍스트 -->
   <div>
-    <h2 class="text-3xl sm:text-4xl font-extrabold text-[#007AFF] mb-3 sm:mb-4">{{ _("신제품 프로모션") }}</h2>
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-[#222] mb-4 sm:mb-4">{{ _("신제품 프로모션") }}</h2>
     <p class="text-gray-600 mb-6 text-sm sm:text-base leading-relaxed">
       {{ _("최신 의료용품, 합리적인 가격으로 만나보세요.") }}<br>
       {{ _("지금 바로 특별 혜택을 확인하세요!") }}
     </p>
     <a href="/products/1" target="_blank"
-       class="inline-block bg-gradient-to-r from-[#007AFF] to-[#005FCC] text-white px-6 py-3 rounded-full shadow hover:opacity-90 text-sm sm:text-base transition">
+       class="inline-block btn-dark px-6 py-2 text-white rounded-full shadow hover:opacity-90 text-sm sm:text-base transition">
       {{ _("자세히 보러가기 →") }}
     </a>
   </div>
@@ -85,7 +85,7 @@
 
 <!-- Company Section -->
 <section class="py-12 sm:py-16 text-center">
-  <h2 class="text-3xl sm:text-4xl font-bold mb-5 text-[#007AFF] sm:mb-6">{{ _("유가몰 소개") }}</h2>
+  <h2 class="text-3xl sm:text-4xl font-bold mb-5 text-[#222] sm:mb-6">{{ _("유가몰 소개") }}</h2>
   <p class="max-w-2xl mx-auto text-gray-600 text-sm sm:text-base leading-relaxed whitespace-pre-line">
     {{ _("유가몰은 누구나 편리하게 이용할 수 있는 의료용품 전문 스토어입니다.
 일상에서 필요한 제품을 간편하게 만나보세요.
@@ -94,9 +94,9 @@
 </section>
 
 <!-- Contact Section -->
-<section class="bg-gray-100 py-16 sm:py-16">
+<section class="bg-[#f7f7f7] py-20 sm:py-16">
   <div class="max-w-3xl mx-auto px-4">
-    <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#007AFF]">{{ _("문의하기") }}</h2>
+    <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#222]">{{ _("문의하기") }}</h2>
     <form method="POST" action="{{ url_for('contact') }}" class="bg-white shadow-lg rounded-2xl p-6 sm:p-8 space-y-5">
 
       {% if not current_user.is_authenticated %}
@@ -123,7 +123,7 @@
         <label class="block text-sm font-semibold mb-1">{{ _("내용") }}</label>
         <textarea name="content" rows="5" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-[#007AFF]" required></textarea>
       </div>
-      <button type="submit" class="w-full bg-gradient-to-r from-[#007AFF] to-[#005FCC] text-white py-3 rounded-full text-sm sm:text-base font-semibold shadow hover:opacity-90 transition">
+      <button type="submit" class="w-full btn-dark px-8 py-2.5 text-white rounded-full text-sm sm:text-base font-semibold shadow hover:opacity-90 transition">
         {{ _("보내기") }}
       </button>
     </form>

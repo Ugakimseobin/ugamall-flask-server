@@ -437,8 +437,8 @@ msgid "아직 등록된 영상이 없습니다."
 msgstr "No videos registered yet."
 
 #: templates/index.html:50
-msgid "🔥 신제품 프로모션"
-msgstr "🔥 New Product Promotion"
+msgid "신제품 프로모션"
+msgstr "New Product Promotion"
 
 #: templates/index.html:52
 msgid "특별 상품"

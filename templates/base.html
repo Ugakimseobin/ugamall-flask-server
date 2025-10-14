@@ -15,10 +15,22 @@
 /* 기본 색상 / 버튼 스타일 */
 /* ------------------------- */
 :root {
-  --primary-color: #007aff;
-  --primary-hover: #0063cc;
-  --accent-color: #00c6a2;
-  --gray-text: #555;
+  --main-bg: #f8f8f8;
+  --card-bg: #ffffff;
+  --line: #e6e6e6;
+  --text-main: #222222;
+  --text-sub: #666666;
+  --accent: #bfbfbf;
+  --btn-bg: #444444;
+  --btn-hover: #222222;
+}
+
+body {
+  background-color: var(--main-bg);
+  color: var(--text-main);
+  font-family: 'Noto Sans KR', sans-serif;
+  line-height: 1.6;
+  letter-spacing: -0.3px;
 }
 
 /* 툴팁 */
@@ -33,6 +45,19 @@
   transition: opacity 0.3s ease;
 }
 
+header {
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.9);
+  border-bottom: 1px solid var(--line);
+}
+header a {
+  color: var(--text-main);
+  transition: 0.2s;
+}
+header a:hover {
+  color: var(--text-sub);
+}
+
 /* 장바구니 애니메이션 */
 @keyframes cart-bounce {
   0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
@@ -44,43 +69,47 @@
 }
 
 /* 버튼 공통 */
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+.btn-dark {
+  background: var(--btn-bg);
   color: white;
-  border: none;
-  transition: all 0.3s ease;
+  border-radius: 6px;
+  transition: 0.3s;
 }
-.btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+.btn-dark:hover {
+  background: var(--btn-hover);
 }
 
-.btn-outline {
-  border: 1px solid var(--primary-color);
-  color: var(--primary-color);
-  background: white;
-  transition: 0.3s ease;
+/* 카드 */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: box-shadow 0.3s ease;
 }
-.btn-outline:hover {
-  background: var(--primary-color);
-  color: white;
+.card:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Header / Footer 섬세 조정 */
-header {
-  backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.9);
+/* Footer */
+footer {
+  background: #f2f2f2;
+  color: var(--text-sub);
+  font-size: 14px;
+}
+footer a:hover {
+  color: var(--text-main);
 }
 
 /* Flash message */
 .flash-message {
-  transition: all 0.3s ease;
-}
-
-/* Footer link hover */
-footer a:hover {
-  color: var(--accent-color);
-  transition: color 0.3s ease;
+  background: white;
+  border: 1px solid var(--line);
+  color: var(--text-main);
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
 }
 </style>
 </head>
@@ -88,7 +117,7 @@ footer a:hover {
   <!-- Header -->
   <header class="fixed w-full shadow z-50 border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center h-16">
-      <a href="/" class="text-xl md:text-2xl font-bold text-[var(--primary-color)]">{{ _("유가몰") }}</a>
+      <a href="/" class="text-xl md:text-2xl font-bold tracking-tight">{{ _("유가몰") }}</a>
 
       <!-- 검색창 -->
       <form id="search-form" action="{{ url_for('search') }}" class="hidden md:flex relative w-1/3">
