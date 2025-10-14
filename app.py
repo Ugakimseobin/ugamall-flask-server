@@ -1412,17 +1412,19 @@ def pay_verify():
     pg_provider = imp_data.get("pg_provider")
     pay_method = imp_data.get("pay_method")
 
-    pay = Payment.query.filter_by(merchant_uid=merchant_uid).first_or_404()
+    pay = Payment.query.filter_by(merchant_uid=merchant_uid).first()
     if not pay:
         pay = Payment(order_id=order_id, merchant_uid=merchant_uid, amount=amount)
         db.session.add(pay)
 
-    # ✅ 반드시 imp_uid 저장
-    pay.imp_uid = imp_uid
+    # ✅ 반드시 imp_uid 저장 (덮어쓰기 포함)
+    if not pay.imp_uid or pay.imp_uid != imp_uid:
+        pay.imp_uid = imp_uid
+
     pay.pg_provider = pg_provider
     pay.method = pay_method
     pay.amount = amount
-    
+
     order = pay.order
 
     if status == "paid":
