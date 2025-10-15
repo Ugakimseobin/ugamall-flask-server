@@ -1007,6 +1007,7 @@ def products():
     category = request.args.get("category","")
     price_min = request.args.get("price_min",0,type=int)
     price_max = request.args.get("price_max",9999999,type=int)
+    sort = request.args.get("sort", "new")
 
     query = Product.query.filter(Product.is_active == True)   # 🔽 조건 추가
 
@@ -1017,9 +1018,19 @@ def products():
 
     query = query.filter(Product.base_price >= price_min, Product.base_price <= price_max)
 
+    # ✅ 정렬 조건 추가
+    if sort == "low":
+        query = query.order_by(Product.base_price.asc())
+    elif sort == "high":
+        query = query.order_by(Product.base_price.desc())
+    elif sort == "name":
+        query = query.order_by(Product.name.asc())
+    else:
+        query = query.order_by(Product.id.desc())  # 최신순 (id 기준)
+
     products = query.all()
     categories = [c[0] for c in db.session.query(Product.category).distinct()]
-    return render_template("products.html", products=products, categories=categories)
+    return render_template("products.html", products=products, categories=categories,selected_sort=sort)
 
 @app.route('/products/<int:product_id>')
 def product_detail(product_id):
@@ -2367,6 +2378,7 @@ def search():
     price_min = request.args.get("price_min",0,type=int)
     price_max = request.args.get("price_max",9999999,type=int)
     video = request.args.get("video","false")=="true"
+    sort = request.args.get("sort", "new")
 
     query = Product.query.filter(Product.is_active == True)   # 🔽 조건 추가
 
@@ -2376,6 +2388,16 @@ def search():
         query = query.filter(Product.category==category)
 
     query = query.filter(Product.base_price>=price_min, Product.base_price<=price_max)
+
+    if sort == "low":
+        query = query.order_by(Product.base_price.asc())
+    elif sort == "high":
+        query = query.order_by(Product.base_price.desc())
+    elif sort == "name":
+        query = query.order_by(Product.name.asc())
+    else:
+        query = query.order_by(Product.id.desc())
+
     products = query.all()
     
     videos = []
@@ -2386,7 +2408,7 @@ def search():
             videos = Video.query.all()
 
     categories = [c[0] for c in db.session.query(Product.category).distinct()]
-    return render_template("search.html", products=products, videos=videos, categories=categories, video_filter=True,q=q)
+    return render_template("search.html", products=products, videos=videos, categories=categories, video_filter=True,q=q,selected_sort=sort)
 
 @app.route("/debug")
 def debug():
