@@ -114,15 +114,15 @@
       <!-- STEP 1 -->
       <div class="step" id="step1">
         <label class="block font-semibold mb-2">{{ _("이메일") }}</label>
-        <input type="email" name="email" required class="w-full border p-2 rounded mb-4">
+        <input type="email" name="email" required class="w-full border p-2 rounded mb-4" placeholder="{{ _('이메일') }}">
         <button type="button" onclick="nextStep(2)" class="w-full bg-indigo-600 text-white py-2 rounded">{{ _("다음") }}</button>
       </div>
 
       <!-- STEP 2 -->
       <div class="step hidden" id="step2">
         <label class="block font-semibold mb-2">{{ _("비밀번호") }}</label>
-        <input type="password" name="password" required class="w-full border p-2 rounded mb-2">
-        <input type="password" name="password_confirm" required class="w-full border p-2 rounded mb-4">
+        <input type="password" name="password" required class="w-full border p-2 rounded mb-2" placeholder="{{ _('비밀번호') }}">
+        <input type="password" name="password_confirm" required class="w-full border p-2 rounded mb-4" placeholder="{{ _('비밀번호 확인') }}">
         <div class="flex justify-between">
           <button type="button" onclick="prevStep(1)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
           <button type="button" onclick="nextStep(3)" class="bg-indigo-600 text-white px-4 py-2 rounded">{{ _("다음") }}</button>
@@ -132,7 +132,7 @@
       <!-- STEP 3 -->
       <div class="step hidden" id="step3">
         <label class="block font-semibold mb-2">{{ _("이름") }}</label>
-        <input type="text" name="name" required class="w-full border p-2 rounded mb-4">
+        <input type="text" name="name" required class="w-full border p-2 rounded mb-4" placeholder="{{ _('이름') }}">
         <div class="flex justify-between">
           <button type="button" onclick="prevStep(2)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
           <button type="button" onclick="nextStep(4)" class="bg-indigo-600 text-white px-4 py-2 rounded">{{ _("다음") }}</button>
@@ -172,9 +172,27 @@
 function execDaumPostcode() {
   new daum.Postcode({
     oncomplete: function(data) {
-      document.getElementById("postcode").value = data.zonecode;
-      document.getElementById("address").value = data.roadAddress || data.jibunAddress;
-      document.getElementById("detailAddress").focus();
+      const fullAddress = data.roadAddress || data.jibunAddress;
+
+      // ✅ PC 입력 필드 존재 시 (데스크탑)
+      const pcPostcode = document.getElementById("postcode");
+      const pcAddress = document.getElementById("address");
+      const pcDetail = document.getElementById("detailAddress");
+
+      if (pcPostcode && pcAddress && pcDetail) {
+        pcPostcode.value = data.zonecode;
+        pcAddress.value = fullAddress;
+        pcDetail.focus();
+      }
+
+      // ✅ 모바일 입력 필드 존재 시
+      const mAddress = document.getElementById("address_m");
+      const mDetail = document.getElementById("detailAddress_m");
+
+      if (mAddress && mDetail) {
+        mAddress.value = fullAddress;
+        mDetail.focus();
+      }
     }
   }).open();
 }
