@@ -172,13 +172,17 @@
 
       <div class="mb-1">
         <span class="text-gray-500">총액</span> : 
-        <b>{% if o.items[0].discount_price and o.items[0].discount_price < o.items[0].original_price %}
+        <b>
+        {% if o.items and o.items[0].discount_price and o.items[0].discount_price < o.items[0].original_price %}
             <span class="line-through text-gray-400">{{ o.items[0].original_price|comma }}원</span>
             <span class="text-red-600 ml-1">{{ o.items[0].discount_price|comma }}원</span>
             <div class="text-xs text-gray-500">({{ o.items[0].discount_reason or '할인 적용' }})</div>
-        {% else %}
+        {% elif o.items %}
             {{ o.items[0].original_price|comma }}원
-        {% endif %}</b>
+        {% else %}
+            -
+        {% endif %}
+        </b>
       </div>
       <div class="mb-1"><span class="text-gray-500">결제</span> :
         <span class="inline-block rounded bg-gray-100 px-2 py-0.5">

@@ -74,8 +74,8 @@
             <div class="divide-y mt-2">
               {% for item in order.items %}
               <div class="flex items-center gap-3 py-2">
-                <img src="{{ url_for('static', filename='images/' ~ item.variant.product.image) }}" 
-                     alt="{{ item.variant.product.name }}" 
+                <img src="{{ url_for('serve_product_image', product_id=item.variant.product.id) }}"
++                    alt="{{ item.variant.product.name }}"
                      class="w-16 h-16 rounded object-cover border">
                 <div class="flex-1">
                   <p class="font-semibold text-sm sm:text-base">{{ item.variant.product.name }}</p>

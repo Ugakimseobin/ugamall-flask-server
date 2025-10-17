@@ -6,7 +6,7 @@
     <div class="relative w-full h-full">
       <!-- 영상 -->
       <video class="w-full h-full object-cover" autoplay muted loop playsinline>
-        <source src="{{ url_for('static', filename='videos/' ~ latest_video.file_path) }}" type="video/mp4">
+        <source src="{{ url_for('serve_video', video_id=latest_video.id) }}" type="{{ latest_video.video_mime or 'video/mp4' }}">
       </video>
 
       <!-- 검은색 오버레이 -->

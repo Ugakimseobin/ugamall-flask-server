@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 import re
 from sqlalchemy.orm import joinedload
 from sqlalchemy import or_, cast, String
+from sqlalchemy.dialects.mysql import LONGBLOB
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
 import requests
@@ -35,6 +36,8 @@ def load_user(user_id):
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ugahan582818@localhost:3306/ugamall'
 #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL").replace("postgres://", "postgresql://")
+
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 
 # 안정성 옵션(아이들 타임아웃 대비)
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
@@ -116,9 +119,12 @@ class Product(db.Model):
     name = db.Column(db.String(120), nullable=False)
     base_price = db.Column(db.Integer, nullable=False, default=0)
     description = db.Column(db.Text)
-    image = db.Column(db.String(255))
+    image_data = db.Column(LONGBLOB)
+    image_mime = db.Column(db.String(50))
     category = db.Column(db.String(50))
-    pamphlet = db.Column(db.String(255))
+    pamphlet_data = db.Column(LONGBLOB)
+    pamphlet_mime = db.Column(db.String(50))
+    pamphlet_name = db.Column(db.String(255))
     is_active = db.Column(db.Boolean, default=True)  # ✅ 운영용: 상품 활성/비활성 상태
     discount_percent = db.Column(db.Integer, default=0)   # ✅ 시즌 할인율 (예: 20%)
     
@@ -196,7 +202,10 @@ class Video(db.Model):
     __tablename__ = 'video'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
-    file_path = db.Column(db.String(200))
+
+    # ✅ DB에 대용량 바이너리 저장 가능하도록 확장
+    video_data = db.Column(LONGBLOB)         # <-- 여기!
+    video_mime = db.Column(db.String(50))
 
 class Inquiry(db.Model):
     __tablename__ = "inquiries"
@@ -1721,19 +1730,16 @@ def admin_add_product():
 
         # ✅ 이미지 업로드
         image_file = request.files.get("image")
-        if image_file and image_file.filename:
-            filename = secure_filename(image_file.filename)
-            image_path = os.path.join(current_app.root_path, "static", "images", filename)
-            image_file.save(image_path)
-            new_product.image = filename
+        if image_file:
+            new_product.image_data = image_file.read()
+            new_product.image_mime = image_file.mimetype  # 예: image/png
 
         # ✅ 팜플렛 업로드
-        pamphlet_file = request.files.get("pamphlet")
-        if pamphlet_file and pamphlet_file.filename:
-            filename = secure_filename(pamphlet_file.filename)
-            pamphlet_path = os.path.join(current_app.root_path, "static", "pamphlets", filename)
-            pamphlet_file.save(pamphlet_path)
-            new_product.pamphlet = filename
+        pamphlet = request.files.get("pamphlet")
+        if pamphlet:
+            new_product.pamphlet_data = pamphlet.read()
+            new_product.pamphlet_mime = pamphlet.mimetype
+            new_product.pamphlet_name = pamphlet.filename
 
         db.session.add(new_product)
         db.session.commit()
@@ -1894,6 +1900,61 @@ def admin_toggle_product(product_id):
     flash(f"상품 '{product.name}' 상태가 {'활성' if product.is_active else '숨김'}으로 변경되었습니다.", "success")
     return redirect(url_for("admin_products"))
 
+from flask import send_file
+from io import BytesIO
+
+@app.route("/image/<int:product_id>")
+def serve_product_image(product_id):
+    product = Product.query.get_or_404(product_id)
+    if not product.image_data:
+        abort(404)
+    return send_file(
+        BytesIO(product.image_data),
+        mimetype=product.image_mime
+    )
+from flask import Response, stream_with_context
+from urllib.parse import quote
+
+@app.route("/video/<int:video_id>")
+def serve_video(video_id):
+    video = Video.query.get_or_404(video_id)
+    if not video.video_data:
+        abort(404)
+
+    # ✅ 한글 제목 안전 처리 (UTF-8 → RFC5987 표준 방식)
+    safe_filename = "video.mp4"
+    if video.title:
+        safe_filename = f"{video.title}.mp4" if not video.title.lower().endswith(".mp4") else video.title
+    safe_filename_encoded = quote(safe_filename)  # URL-safe 인코딩
+
+    def generate():
+        chunk_size = 1024 * 1024  # 1MB씩 전송
+        data = video.video_data
+        for i in range(0, len(data), chunk_size):
+            yield data[i:i + chunk_size]
+
+    response = Response(
+        stream_with_context(generate()),
+        mimetype=video.video_mime or "video/mp4",
+    )
+
+    # ✅ 표준 UTF-8 헤더로 지정 (latin-1 깨짐 방지)
+    response.headers["Content-Disposition"] = f"inline; filename*=UTF-8''{safe_filename_encoded}"
+    response.headers["Accept-Ranges"] = "bytes"
+    return response
+
+@app.route("/pamphlet/<int:product_id>")
+def serve_pamphlet(product_id):
+    product = Product.query.get_or_404(product_id)
+    if not product.pamphlet_data:
+        abort(404)
+    return send_file(
+        BytesIO(product.pamphlet_data),
+        mimetype=product.pamphlet_mime,
+        as_attachment=True,
+        download_name=product.pamphlet_name
+    )
+
 @app.route("/admin/videos")
 @login_required
 def admin_videos():
@@ -1910,9 +1971,12 @@ def admin_add_video():
     if request.method == "POST":
         title = request.form["title"]
         file = request.files["video"]
-        filename = file.filename
-        file.save(os.path.join("static/videos", filename))
-        video = Video(title=title, file_path=filename)
+
+        video = Video(
+            title=title,
+            video_data=file.read(),
+            video_mime=file.mimetype
+        )
         db.session.add(video)
         db.session.commit()
         flash("영상이 추가되었습니다.", "success")
@@ -1943,16 +2007,16 @@ def admin_edit_video(video_id):
 @app.route("/admin/videos/<int:video_id>/delete", methods=["POST"])
 @login_required
 def admin_delete_video(video_id):
+    if not current_user.is_admin:
+        abort(403)
+
     video = Video.query.get_or_404(video_id)
 
-    # 실제 파일도 같이 삭제 (선택)
-    file_path = os.path.join("static/videos", video.file_path)
-    if os.path.exists(file_path):
-        os.remove(file_path)
-
+    # ✅ 파일 경로 접근 불필요 (DB에만 저장하므로)
     db.session.delete(video)
     db.session.commit()
-    flash("영상이 삭제되었습니다.", "success")
+
+    flash("영상이 성공적으로 삭제되었습니다.", "success")
     return redirect(url_for("admin_videos"))
 
 @app.route("/admin/users", methods=["GET", "POST"])

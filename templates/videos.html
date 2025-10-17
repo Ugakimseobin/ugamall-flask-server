@@ -6,7 +6,7 @@
     {% for video in videos %}
     <div class="bg-white shadow rounded overflow-hidden">
       <video class="w-full h-48 object-cover" controls>
-        <source src="{{ url_for('static', filename='videos/' ~ video.file_path) }}" type="video/mp4">
+        <source src="{{ url_for('serve_video', video_id=video.id) }}" type="{{ video.video_mime }}">
       </video>
       <div class="p-4">
         <h3 class="font-semibold">{{ video.title }}</h3>

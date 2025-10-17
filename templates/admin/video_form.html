@@ -37,6 +37,13 @@
 document.querySelector("input[name='video']").addEventListener("change", function(e) {
   const file = e.target.files[0];
   if (file) {
+    // ✅ 300MB 이상이면 경고
+    if (file.size > 300 * 1024 * 1024) {
+      alert("300MB 이하의 영상만 업로드 가능합니다.");
+      e.target.value = "";
+      return;
+    }
+    // ✅ 미리보기
     const preview = document.getElementById("video-preview");
     const video = preview.querySelector("video");
     video.src = URL.createObjectURL(file);

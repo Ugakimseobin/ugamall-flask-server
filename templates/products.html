@@ -78,7 +78,8 @@
       {% for p in products %}
         <a href="{{ url_for('product_detail', product_id=p.id) }}"
            class="block bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transform hover:-translate-y-1 transition duration-300">
-          <img src="{{ url_for('static', filename='images/' ~ p.image) }}"
+          <img src="{{ url_for('serve_product_image', product_id=p.id) }}"
+               alt="{{ p.name }}"
                class="h-48 sm:h-56 w-full object-cover transition-transform duration-300 hover:scale-105">
           <div class="p-4">
             <h3 class="font-bold text-gray-800 text-sm sm:text-base truncate">{{ p.name }}</h3>
