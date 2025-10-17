@@ -22,6 +22,7 @@ from itsdangerous import URLSafeTimedSerializer
 import uuid
 import json
 from threading import Thread
+import socket
 from datetime import timedelta
 
 app = Flask(__name__)
@@ -34,8 +35,17 @@ login_manager.login_view = "login"  # 로그인 안 된 상태에서 접근 시 
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# 현재 실행 중인 호스트 이름 확인
+HOSTNAME = socket.gethostname()
+
 from dotenv import load_dotenv
-load_dotenv()  # ✅ .env 파일 자동 로드
+if "ugamall-server" in HOSTNAME or "ubuntu" in HOSTNAME:
+    # ✅ 서버용 환경파일
+    dotenv_path = "/var/www/ugamall-flask-server/.env"
+else:
+    # ✅ 로컬 개발용 환경파일
+    dotenv_path = os.path.join(os.path.dirname(__file__), ".env.local")
+load_dotenv(dotenv_path=dotenv_path)  # ✅ .env 파일 자동 로드
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL").replace("postgres://", "postgresql://")

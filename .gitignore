@@ -1,5 +1,7 @@
 static/videos/ocean.mp4
 .env
+.env.local
+.env.*
 *.pyc
 __pycache__/
 instance/
