@@ -19,8 +19,8 @@
                     </label>
 
                     <!-- 제품 이미지 -->
-                    <img src="{{ url_for('static', filename='images/' ~ item.variant.product.image) }}" 
-                         alt="{{ item.variant.product.name }}" 
+                    <img src="{{ url_for('serve_product_image', product_id=item.product.id) }}"
+                        alt="{{ item.product.name }}"
                          class="w-20 h-20 object-cover rounded sm:mr-4">
 
                     <!-- 중앙: 제품명 + 옵션 -->

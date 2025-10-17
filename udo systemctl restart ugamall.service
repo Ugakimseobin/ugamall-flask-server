@@ -1,0 +1,17 @@
+[0;1;31m×[0m ugamall.service - Gunicorn instance to serve UgaMall Flask app
+     Loaded: loaded (/etc/systemd/system/ugamall.service; enabled; vendor preset: enabled)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Fri 2025-10-17 16:23:09 KST; 40s ago
+    Process: 7800 ExecStart=/var/www/ugamall-flask-server/venv/bin/gunicorn -b 127.0.0.1:5000 app:app [0;1;31m(code=exited, status=3)[0m
+   Main PID: 7800 (code=exited, status=3)
+        CPU: 128ms
+
+10월 17 16:23:09 ugamall-server gunicorn[7802]:   File "/var/www/ugamall-flask-server/app.py", line 42
+10월 17 16:23:09 ugamall-server gunicorn[7802]:     <<<<<<< Updated upstream
+10월 17 16:23:09 ugamall-server gunicorn[7802]:     ^^
+10월 17 16:23:09 ugamall-server gunicorn[7802]: SyntaxError: invalid syntax
+10월 17 16:23:09 ugamall-server gunicorn[7802]: [2025-10-17 16:23:09 +0900] [7802] [INFO] Worker exiting (pid: 7802)
+10월 17 16:23:09 ugamall-server gunicorn[7800]: [2025-10-17 16:23:09 +0900] [7800] [ERROR] Worker (pid:7802) exited with code 3
+10월 17 16:23:09 ugamall-server gunicorn[7800]: [2025-10-17 16:23:09 +0900] [7800] [ERROR] Shutting down: Master
+10월 17 16:23:09 ugamall-server gunicorn[7800]: [2025-10-17 16:23:09 +0900] [7800] [ERROR] Reason: Worker failed to boot.
+10월 17 16:23:09 ugamall-server systemd[1]: [0;1;39m[0;1;31m[0;1;39mugamall.service: Main process exited, code=exited, status=3/NOTIMPLEMENTED[0m
+10월 17 16:23:09 ugamall-server systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mugamall.service: Failed with result 'exit-code'.[0m
