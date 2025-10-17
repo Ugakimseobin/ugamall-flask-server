@@ -50,9 +50,9 @@ app.config['SECRET_KEY'] = 'ugamall_secret_key'
 app.config['BABEL_DEFAULT_LOCALE'] = 'ko'
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 
-app.config["IMP_CODE"]   = os.getenv("IMP_CODE",   "imp84085058")  # 아임포트 가맹점 코드
-app.config["IMP_KEY"]    = os.getenv("IMP_KEY",    "5725674101821141")
-app.config["IMP_SECRET"] = os.getenv("IMP_SECRET", "fmHPJ9V9k8TkXerskLSMd4byOKJp13IGYBoL849Y4HtLnDX2oYlrzuLTZaW0geEddnrZHAYBUEl5hVqY")
+app.config["IMP_CODE"]   = os.getenv("IMP_CODE",   "imp88687282")  # 아임포트 가맹점 코드
+app.config["IMP_KEY"]    = os.getenv("IMP_KEY",    "5222330061156315")
+app.config["IMP_SECRET"] = os.getenv("IMP_SECRET", "EcJcy3EOl6yb1EjYrbgnJvSEXhQHrfd91rMmNfdR0aWKhtcuKzGHWNxstjttKUYZkyOwa44ney5ll8ur")
 app.config["IMP_CHANNEL_INICIS"] = "channel-key-118c4252-6530-47be-a654-9507aef9727d" 
 app.config["IMP_CHANNEL_KAKAOPAY"] = "channel-key-ead5b764-4db4-45b7-b468-677e634649a2"
 
@@ -409,6 +409,46 @@ def send_async_email(app, msg):
 def send_email(subject, recipients, body):
     msg = Message(subject=subject, recipients=recipients, body=body)
     Thread(target=send_async_email, args=(app, msg)).start()
+# -----------------------------
+import time, hmac, hashlib, base64, requests, json, os
+
+def send_sms(phone, code):
+    """네이버 클라우드 SENS로 인증번호 전송"""
+    access_key = os.getenv("NCP_ACCESS_KEY")
+    secret_key = os.getenv("NCP_SECRET_KEY")
+    service_id = os.getenv("NCP_SERVICE_ID")
+    sender = os.getenv("NCP_SENDER_NUMBER")
+
+    url = f"https://sens.apigw.ntruss.com/sms/v2/services/{service_id}/messages"
+    timestamp = str(int(time.time() * 1000))
+    method = "POST"
+    uri = f"/sms/v2/services/{service_id}/messages"
+    message = f"{method} {uri}\n{timestamp}\n{access_key}"
+
+    signature = base64.b64encode(
+        hmac.new(
+            bytes(secret_key, "utf-8"),
+            bytes(message, "utf-8"),
+            digestmod=hashlib.sha256,
+        ).digest()
+    ).decode("utf-8")
+
+    body = {
+        "type": "SMS",
+        "from": sender,
+        "content": f"[유가몰] 인증번호 [{code}] 를 입력해주세요.",
+        "messages": [{"to": phone}],
+    }
+
+    headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        "x-ncp-apigw-timestamp": timestamp,
+        "x-ncp-iam-access-key": access_key,
+        "x-ncp-apigw-signature-v2": signature,
+    }
+
+    response = requests.post(url, headers=headers, data=json.dumps(body))
+    return response.json()
 #-----------------------------
 def _get_iamport_token():
     url = "https://api.iamport.kr/users/getToken"
@@ -704,12 +744,12 @@ def send_verification_code():
     session["verification_code"] = code
     session["verification_expiry"] = int(time.time()) + 300  # 5분 유효
 
-    # 테스트용: 콘솔 출력
-    print(f"[DEBUG] {phone} 로 발송된 인증번호: {code}")
-
-    # 추후: 여기서 NCP SMS API 호출로 교체 가능
-    return jsonify({"status": "ok", "message": "인증번호가 발송되었습니다. (테스트용 콘솔 확인)"})
-
+    res = send_sms(phone, code)
+    if res.get("statusCode") == "202":
+        return jsonify({"status": "ok"})
+    else:
+        return jsonify({"status": "error", "msg": res})
+    
 # 인증번호 확인
 @app.route("/verify_code", methods=["POST"])
 def verify_code():
@@ -1424,35 +1464,44 @@ def payment_complete(order_id):
 
 @app.route("/pay/prepare", methods=["POST"])
 def pay_prepare():
-    # 결제창 열기 전에 서버에서 merchant_uid 발급 & 금액 사전등록(선택)
-    data = request.get_json(silent=True) or {}
+    data = request.get_json()
     order_id = data.get("order_id")
-    order = Order.query.get_or_404(order_id)
+    order = Order.query.get(order_id)
+    if not order:
+        return jsonify({"ok": False, "msg": "주문을 찾을 수 없습니다."}), 404
 
-    items_total = sum(int(i.discount_price or i.original_price or 0) * int(i.quantity or 0)
-        for i in order.items)
-    expected_amount = max(0, items_total - int(order.discount_amount or 0))  
+    # ✅ Access Token 발급
+    imp_key = app.config['IMP_KEY']
+    imp_secret = app.config['IMP_SECRET']
+    token_res = requests.post(
+        "https://api.iamport.kr/users/getToken",
+        data={"imp_key": imp_key, "imp_secret": imp_secret}
+    ).json()
 
-    merchant_uid = f"UGA_{order.id}_{int(datetime.utcnow().timestamp())}"
+    if token_res['code'] != 0:
+        return jsonify({"ok": False, "msg": "토큰 발급 실패"}), 400
 
-    pay = Payment(order_id=order.id, merchant_uid=merchant_uid, amount=expected_amount, status="ready")
-    db.session.add(pay)
-    db.session.commit()
+    access_token = token_res['response']['access_token']
 
-    # 아임포트 사전등록(선택)
-    try:
-        token = _get_iamport_token()
-        requests.post(
-            "https://api.iamport.kr/payments/prepare",
-            headers={"Authorization": token},
-            data={"merchant_uid": merchant_uid, "amount": expected_amount},
-            timeout=7
-        )
-    except Exception:
-        pass
+    # ✅ merchant_uid 생성
+    merchant_uid = f"order_{order.id}_{int(datetime.utcnow().timestamp())}"
 
-    return jsonify(ok=True, merchant_uid=merchant_uid, amount=expected_amount, imp_code=app.config["IMP_CODE"])
+    # ✅ 사전 등록 (금액 검증용)
+    res = requests.post(
+        "https://api.iamport.kr/payments/prepare",
+        headers={"Authorization": access_token},
+        data={"merchant_uid": merchant_uid, "amount": order.total_price}
+    ).json()
 
+    if res['code'] != 0:
+        return jsonify({"ok": False, "msg": res.get('message', '사전등록 실패')}), 400
+
+    return jsonify({
+        "ok": True,
+        "imp_code": app.config['IMP_CODE'],
+        "merchant_uid": merchant_uid,
+        "amount": order.total_price
+    })
 
 @app.route("/pay/verify", methods=["POST"])
 def pay_verify():
