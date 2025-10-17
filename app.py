@@ -34,7 +34,10 @@ login_manager.login_view = "login"  # 로그인 안 된 상태에서 접근 시 
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ugahan582818@localhost:3306/ugamall'
+from dotenv import load_dotenv
+load_dotenv()  # ✅ .env 파일 자동 로드
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL").replace("postgres://", "postgresql://")
 
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
@@ -45,16 +48,16 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     'pool_recycle': 280
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'ugamall_secret_key'
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 app.config['BABEL_DEFAULT_LOCALE'] = 'ko'
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 
-app.config["IMP_CODE"]   = os.getenv("IMP_CODE",   "imp88687282")  # 아임포트 가맹점 코드
-app.config["IMP_KEY"]    = os.getenv("IMP_KEY",    "5222330061156315")
-app.config["IMP_SECRET"] = os.getenv("IMP_SECRET", "EcJcy3EOl6yb1EjYrbgnJvSEXhQHrfd91rMmNfdR0aWKhtcuKzGHWNxstjttKUYZkyOwa44ney5ll8ur")
-app.config["IMP_CHANNEL_INICIS"] = "channel-key-118c4252-6530-47be-a654-9507aef9727d" 
-app.config["IMP_CHANNEL_KAKAOPAY"] = "channel-key-ead5b764-4db4-45b7-b468-677e634649a2"
+app.config["IMP_CODE"]   = os.getenv("IMP_CODE")
+app.config["IMP_KEY"]    = os.getenv("IMP_KEY")
+app.config["IMP_SECRET"] = os.getenv("IMP_SECRET")
+app.config["IMP_CHANNEL_INICIS"] = os.getenv("IMP_CHANNEL_INICIS")
+app.config["IMP_CHANNEL_KAKAOPAY"] = os.getenv("IMP_CHANNEL_KAKAOPAY")
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -65,9 +68,9 @@ app.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME='fkemfem85@gmail.com',
-    MAIL_PASSWORD='grte qfgm qfmf ihia',  # Gmail 앱 비밀번호
-    MAIL_DEFAULT_SENDER='UGAMALL <fkemfem85@gmail.com>'
+    MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
+    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
+    MAIL_DEFAULT_SENDER=f"UGAMALL <{os.getenv('MAIL_USERNAME')}>"
 )
 mail = Mail(app)
 s = URLSafeTimedSerializer(app.secret_key)
