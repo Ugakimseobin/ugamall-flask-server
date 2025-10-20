@@ -48,7 +48,7 @@
             <span class="text-gray-400">~</span>
             <input id="price-max-input" type="number"
                   class="w-1/2 border border-gray-300 p-2 rounded-lg text-sm focus:ring-2 focus:ring-[#222]"
-                  value="{{ request.args.get('price_max', 1000000) }}" max="1000000" step="1000">
+                  value="{{ request.args.get('price_max', 100000) }}" max="100000" step="1000">
           </div>
         </div>
 
@@ -113,19 +113,22 @@
       {% endif %}
 
       {% if videos %}
-      <h2 class="font-bold text-xl sm:text-2xl mt-12 mb-6 text-center text-indigo-700">{{ _("관련 영상") }}</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {% for v in videos %}
-        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition">
-          <video controls class="w-full h-48 object-cover">
-            <source src="{{ url_for('serve_video', video_id=video.id) }}" type="{{ video.video_mime }}">
-          </video>
-          <div class="p-4">
-            <h3 class="font-semibold text-gray-800 text-sm sm:text-base truncate">{{ v.title }}</h3>
-          </div>
+      <section class="mt-10">
+        <h2 class="text-xl font-bold mb-4">관련 영상</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for video in videos %}
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+              <video controls class="w-full">
+                <source src="{{ url_for('serve_video', video_id=video.id) }}" type="{{ video.video_mime }}">
+                {{ _("브라우저가 비디오를 지원하지 않습니다.") }}
+              </video>
+              <div class="p-3">
+                <p class="font-semibold text-gray-800 text-sm">{{ video.title }}</p>
+              </div>
+            </div>
+          {% endfor %}
         </div>
-        {% endfor %}
-      </div>
+      </section>
       {% endif %}
     </section>
   </div>
