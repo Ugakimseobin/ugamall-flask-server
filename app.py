@@ -2571,6 +2571,19 @@ def make_admin_page():
             message = f"{email} 계정을 찾을 수 없습니다 ❌"
     return render_template("make_admin.html", message=message)
 
+@app.route("/verify_password", methods=["POST"])
+@login_required
+def verify_password():
+    data = request.get_json()
+    if not data or "password" not in data:
+        return jsonify({"success": False}), 400
+
+    # ✅ 여기 수정 (password → password_hash)
+    if hasattr(current_user, "password_hash") and check_password_hash(current_user.password_hash, data["password"]):
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False})
+
 with app.app_context():
     db.create_all()
     print("✅ DB schema created (or already exists)")

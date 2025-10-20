@@ -111,56 +111,75 @@
     <!-- 개인정보 변경 -->
     <section id="tab-info" class="tab-content">
       <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("개인정보 변경") }}</h3>
-      <form method="post" class="space-y-4 text-sm sm:text-base">
-        <input type="hidden" name="form_type" value="info">
-        <div>
-          <label class="block font-semibold">{{ _("이메일") }}</label>
-          <input type="email" value="{{ user.email }}" readonly class="w-full border p-2 rounded bg-gray-100 text-sm sm:text-base">
-        </div>
-        <div>
-          <label class="block font-semibold">{{ _("이름") }}</label>
-          <input type="text" name="name" value="{{ user.name }}" class="w-full border p-2 rounded">
-        </div>
-        <div>
-          <label class="block font-semibold">{{ _("주소") }}</label>
-          <div class="flex flex-col sm:flex-row sm:space-x-2 mb-2">
-            <input type="text" id="postcode" placeholder="{{ _('우편번호') }}" class="border p-2 rounded w-full sm:w-1/2 mb-2 sm:mb-0" readonly>
-            <button type="button" onclick="execDaumPostcode()" class="px-3 py-2 bg-indigo-600 text-white rounded text-sm sm:text-base">{{ _("주소찾기") }}</button>
+        <!-- ✅ 비밀번호 확인 폼 -->
+      <div id="verify-section" class="space-y-4 text-sm sm:text-base">
+        <p class="text-gray-600 text-sm mb-2">
+          개인정보 보호를 위해 비밀번호를 다시 입력해주세요.
+        </p>
+        <form id="verify-form" method="post" action="{{ url_for('verify_password') }}" class="space-y-3">
+          <input type="password" name="verify_password" placeholder="현재 비밀번호" required
+                class="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-400">
+          <button type="submit"
+                  class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 text-sm">
+            {{ _("확인") }}
+          </button>
+        </form>
+      </div>
+      <div id="edit-section" class="hidden">
+        <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("개인정보 변경") }}</h3>
+        <form method="post" class="space-y-4 text-sm sm:text-base">
+          <input type="hidden" name="form_type" value="info">
+          <div>
+            <label class="block font-semibold">{{ _("이메일") }}</label>
+            <input type="email" value="{{ user.email }}" readonly
+                  class="w-full border p-2 rounded bg-gray-100 text-sm sm:text-base">
           </div>
-          <input type="text" id="baseAddress" name="base_address"
-                 value="{{ user.base_address or '' }}"
-                 placeholder="{{ _('기본주소') }}" class="w-full border p-2 rounded mb-2" readonly>
-          <input type="text" id="detailAddress" name="detail_address"
-                 value="{{ user.detail_address or '' }}"
-                 placeholder="{{ _('상세주소') }}" class="w-full border p-2 rounded">
-        </div>
-        <div>
-          <label class="text-sm sm:text-base">
-            <input type="checkbox" name="agree_marketing" {% if user.agree_marketing %}checked{% endif %}>
-            {{ _("마케팅/혜택 수신 동의") }}
-          </label>
-        </div>
-        <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded">{{ _("저장") }}</button>
-      </form>
+          <div>
+            <label class="block font-semibold">{{ _("이름") }}</label>
+            <input type="text" name="name" value="{{ user.name }}" class="w-full border p-2 rounded">
+          </div>
+          <div>
+            <label class="block font-semibold">{{ _("주소") }}</label>
+            <div class="flex flex-col sm:flex-row sm:space-x-2 mb-2">
+              <input type="text" id="baseAddress" name="base_address"
+                    value="{{ user.base_address or '' }}" placeholder="{{ _('기본주소') }}"
+                    class="border p-2 rounded w-full sm:w-1/2 mb-2 sm:mb-0" readonly>
+              <button type="button" onclick="execDaumPostcode()"
+                      class="px-3 py-2 bg-indigo-600 text-white rounded text-sm sm:text-base">{{ _("주소찾기") }}</button>
+            </div>
+            <input type="text" id="detailAddress" name="detail_address"
+                  value="{{ user.detail_address or '' }}" placeholder="{{ _('상세주소') }}"
+                  class="w-full border p-2 rounded">
+          </div>
+          <div>
+            <label class="text-sm sm:text-base">
+              <input type="checkbox" name="agree_marketing" {% if user.agree_marketing %}checked{% endif %}>
+              {{ _("마케팅/혜택 수신 동의") }}
+            </label>
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded">{{ _("저장") }}</button>
+        </form>
 
-      <hr class="my-8">
-      <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("비밀번호 변경") }}</h3>
-      <form method="post" class="space-y-4 text-sm sm:text-base">
-        <input type="hidden" name="form_type" value="password">
-        <div>
-          <label class="block font-semibold">{{ _("현재 비밀번호") }}</label>
-          <input type="password" name="current_password" class="w-full border p-2 rounded" required>
-        </div>
-        <div>
-          <label class="block font-semibold">{{ _("새 비밀번호") }}</label>
-          <input type="password" name="new_password" class="w-full border p-2 rounded" required>
-        </div>
-        <div>
-          <label class="block font-semibold">{{ _("새 비밀번호 확인") }}</label>
-          <input type="password" name="new_password_confirm" class="w-full border p-2 rounded" required>
-        </div>
-        <button type="submit" class="w-full bg-red-600 text-white py-2 rounded">{{ _("비밀번호 변경") }}</button>
-      </form>
+        <hr class="my-8">
+
+        <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("비밀번호 변경") }}</h3>
+        <form method="post" class="space-y-4 text-sm sm:text-base">
+          <input type="hidden" name="form_type" value="password">
+          <div>
+            <label class="block font-semibold">{{ _("현재 비밀번호") }}</label>
+            <input type="password" name="current_password" class="w-full border p-2 rounded" required>
+          </div>
+          <div>
+            <label class="block font-semibold">{{ _("새 비밀번호") }}</label>
+            <input type="password" name="new_password" class="w-full border p-2 rounded" required>
+          </div>
+          <div>
+            <label class="block font-semibold">{{ _("새 비밀번호 확인") }}</label>
+            <input type="password" name="new_password_confirm" class="w-full border p-2 rounded" required>
+          </div>
+          <button type="submit" class="w-full bg-red-600 text-white py-2 rounded">{{ _("비밀번호 변경") }}</button>
+        </form>
+      </div>
     </section>
 
     <!-- 문의내역 -->
@@ -349,4 +368,37 @@ function execDaumPostcode() {
   }).open();
 }
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const verifyForm = document.getElementById("verify-form");
+  if (!verifyForm) return;
+
+  verifyForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const pw = e.target.verify_password.value.trim();
+    if (!pw) return alert("비밀번호를 입력해주세요.");
+
+    const res = await fetch("{{ url_for('verify_password') }}", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: pw })
+    });
+
+    if (!res.ok) {
+      alert("서버 응답 오류 (" + res.status + ")");
+      return;
+    }
+
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById("verify-section").classList.add("hidden");
+      document.getElementById("edit-section").classList.remove("hidden");
+    } else {
+      alert("비밀번호가 올바르지 않습니다.");
+    }
+  });
+});
+</script>
+
 {% endblock %}
