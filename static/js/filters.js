@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (slider && minInput && maxInput) {
     const minVal = parseInt(minInput.value) || 0;
-    const maxVal = parseInt(maxInput.value) || 500000;
+    const maxVal = parseInt(maxInput.value) || 100000;
 
     noUiSlider.create(slider, {
       start: [minVal, maxVal],
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
       step: 1000,
       range: {
         min: 0,
-        max: 500000
+        max: 100000
       },
       tooltips: [true, true], // 툴팁 반드시 켜기
       format: {
