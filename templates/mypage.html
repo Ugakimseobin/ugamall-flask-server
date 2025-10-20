@@ -22,10 +22,10 @@
       <div class="bg-gray-50 p-4 rounded-lg shadow-sm mb-5">
         <div class="flex flex-wrap items-center gap-2">
             <!-- 기간 버튼 -->
-            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '5y' %}bg-green-100 text-green-700{% endif %}" data-range="5y">최대(5년)</button>
-            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '6m' %}bg-green-100 text-green-700{% endif %}" data-range="6m">6개월</button>
-            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '3m' %}bg-green-100 text-green-700{% endif %}" data-range="3m">3개월</button>
-            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '1m' %}bg-green-100 text-green-700{% endif %}" data-range="1m">1개월</button>
+            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '5y' %}bg-green-100 text-green-700{% endif %}" data-range="5y">{{ _("최대(5년)") }}</button>
+            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '6m' %}bg-green-100 text-green-700{% endif %}" data-range="6m">6{{ _("개월") }}</button>
+            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '3m' %}bg-green-100 text-green-700{% endif %}" data-range="3m">3{{ _("개월") }}</button>
+            <button class="filter-btn px-3 py-1 rounded border border-gray-300 {% if selected_period == '1m' %}bg-green-100 text-green-700{% endif %}" data-range="1m">1{{ _("개월") }}</button>
 
             <!-- 직접 날짜 입력 -->
             <div class="flex items-center gap-1 ml-2">
@@ -35,19 +35,19 @@
             </div>
 
             <!-- 검색창 -->
-            <input type="text" id="searchOrder" placeholder="주문 상품명을 입력하세요"
+            <input type="text" id="searchOrder" placeholder="{{ _('주문 상품명을 입력하세요') }}"
                 class="border rounded px-2 py-1 flex-1 min-w-[150px] text-sm ml-2"
                 value="{{ search_query or '' }}">
 
             <!-- 조회 버튼 -->
-            <button id="filterSearch" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm">조회하기</button>
+            <button id="filterSearch" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm">{{ _("조회하기") }}</button>
         </div>
       </div>
 
       {% if orders|length == 0 %}
         <div class="text-center py-10 text-gray-500">
-          <p>최근 한달 간 주문내역이 없습니다.</p>
-          <button class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">주문내역 전체보기</button>
+          <p>{{ _("최근 한달 간 주문내역이 없습니다") }}.</p>
+          <button class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">{{ _("주문내역 전체보기") }}</button>
         </div>
       {% else %}
         <div id="order-list" class="space-y-5">
@@ -55,7 +55,7 @@
           <div class="bg-white border rounded-lg shadow-sm p-4 hover:shadow-md transition">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 border-b pb-2">
               <div>
-                <h4 class="font-semibold text-sm sm:text-base">주문번호: {{ order.id }}</h4>
+                <h4 class="font-semibold text-sm sm:text-base">{{ _("주문번호") }}: {{ order.id }}</h4>
                 <p class="text-xs text-gray-500">{{ order.created_at|kst }}</p>
               </div>
               <div class="flex items-center gap-2 mt-2 sm:mt-0">
@@ -63,7 +63,7 @@
                 {% if order.status in ["결제대기","입금대기","결제완료"] %}
                 <form method="post" action="{{ url_for('cancel_order', order_id=order.id) }}" onsubmit="return confirm('정말 주문을 취소하시겠습니까?');">
                   <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">
-                    주문취소
+                    {{ _("주문취소") }}
                   </button>
                 </form>
                 {% endif %}
@@ -88,10 +88,10 @@
                 <div class="text-right text-sm">
                   <p>{{ item.quantity }}개</p>
                   {% if item.discount_price and item.discount_price < item.original_price %}
-                    <p><span class="line-through text-gray-400 mr-1">{{ item.original_price | won }}원</span>
-                       <span class="text-red-600 font-semibold">{{ item.discount_price | won }}원</span></p>
+                    <p><span class="line-through text-gray-400 mr-1">{{ item.original_price | won }}{{ _("원") }}</span>
+                       <span class="text-red-600 font-semibold">{{ item.discount_price | won }}{{ _("원") }}</span></p>
                   {% else %}
-                    <p>{{ item.original_price | won }}원</p>
+                    <p>{{ item.original_price | won }}{{ _("원") }}</p>
                   {% endif %}
                 </div>
               </div>
@@ -104,7 +104,7 @@
       <!-- 로딩 스피너 -->
       <div id="loading-spinner" class="hidden text-center text-gray-500 py-4">
             <div class="animate-spin inline-block w-6 h-6 border-2 border-t-transparent border-gray-400 rounded-full mr-2"></div>
-            불러오는 중...
+            {{ _("불러오는 중") }}...
       </div>
     </section>
 
@@ -114,7 +114,7 @@
         <!-- ✅ 비밀번호 확인 폼 -->
       <div id="verify-section" class="space-y-4 text-sm sm:text-base">
         <p class="text-gray-600 text-sm mb-2">
-          개인정보 보호를 위해 비밀번호를 다시 입력해주세요.
+          {{ _("개인정보 보호를 위해 비밀번호를 다시 입력해주세요") }}.
         </p>
         <form id="verify-form" method="post" action="{{ url_for('verify_password') }}" class="space-y-3">
           <input type="password" name="verify_password" placeholder="현재 비밀번호" required
@@ -377,7 +377,7 @@ document.addEventListener("DOMContentLoaded", () => {
   verifyForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const pw = e.target.verify_password.value.trim();
-    if (!pw) return alert("비밀번호를 입력해주세요.");
+    if (!pw) return alert("{{ _('비밀번호를 입력해주세요') }}.");
 
     const res = await fetch("{{ url_for('verify_password') }}", {
       method: "POST",
@@ -395,7 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("verify-section").classList.add("hidden");
       document.getElementById("edit-section").classList.remove("hidden");
     } else {
-      alert("비밀번호가 올바르지 않습니다.");
+      alert("{{ _('비밀번호가 올바르지 않습니다') }}.");
     }
   });
 });
