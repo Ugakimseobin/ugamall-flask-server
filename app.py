@@ -551,11 +551,11 @@ def _order_sum(order: "Order") -> int:
 # 날짜 계산 헬퍼
 # -----------------------------
 def _compute_date_range(period: str | None, start_date_str: str | None, end_date_str: str | None):
-    now = datetime.utcnow()
+    now = datetime.now(KST)
     if start_date_str and end_date_str:
         try:
-            start_dt = datetime.strptime(start_date_str, "%Y-%m")
-            end_base = datetime.strptime(end_date_str, "%Y-%m")
+            start_dt = datetime.strptime(start_date_str, "%Y-%m").replace(tzinfo=KST)
+            end_base = datetime.strptime(end_date_str, "%Y-%m").replace(tzinfo=KST)
             if end_base.month == 12:
                 end_dt = end_base.replace(year=end_base.year + 1, month=1)
             else:
@@ -565,7 +565,10 @@ def _compute_date_range(period: str | None, start_date_str: str | None, end_date
             pass
 
     days = {"1m": 30, "3m": 90, "6m": 180, "5y": 5 * 365}.get(period or "1m", 30)
-    return now - timedelta(days=days), now
+    start_dt = now - timedelta(days=days)
+    end_dt = now + timedelta(days=1)  # ✅ 오늘 포함 (UTC 문제 방지)
+
+    return start_dt, end_dt
 # -----------------------------
 # 주문 상태 한국어 변환
 # -----------------------------
@@ -2158,7 +2161,7 @@ def admin_orders():
     # 필터 (GET)
     # -----------------
     q = (request.args.get("q") or "").strip()
-    period = request.args.get("period")            # '1m' | '3m' | '6m' | '5y'
+    period = request.args.get("period") or "1m"            # '1m' | '3m' | '6m' | '5y'
     start_date_str = request.args.get("start_date")  # 'YYYY-MM'
     end_date_str   = request.args.get("end_date")    # 'YYYY-MM'
 
@@ -2429,18 +2432,18 @@ def admin_cancel_order(order_id):
 @app.route("/admin/inquiries", methods=["GET", "POST"])
 @login_required
 def admin_inquiries():
-    # 👉 관리자 권한 체크 (원하시면 조건 강화 가능)
+    # ✅ 관리자 권한 체크
     if not current_user.is_admin:
         flash("관리자만 접근 가능합니다.", "error")
         return redirect(url_for("home"))
 
+    # ✅ 답변 등록 처리
     if request.method == "POST":
         inquiry_id = request.form.get("inquiry_id")
         answer = request.form.get("answer")
 
         inquiry = Inquiry.query.get(inquiry_id)
         if inquiry:
-            # ✅ 답변 시 읽음 처리
             if not inquiry.is_read:
                 inquiry.is_read = True
             inquiry.answer = answer
@@ -2448,17 +2451,78 @@ def admin_inquiries():
             inquiry.answered_at = datetime.now(KST)
             db.session.commit()
             flash("답변이 등록되었습니다.", "success")
-
         return redirect(url_for("admin_inquiries"))
-    
-    inquiries = Inquiry.query.order_by(Inquiry.created_at.desc()).all()
+
+    # ✅ 검색 및 기간 필터
+    q = request.args.get("q", "").strip()
+    period = request.args.get("period", "1m") # ✅ 기본값 1개월
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+
+    inquiries = Inquiry.query
+
+    # 🔍 검색 필터
+    if q:
+        like = f"%{q}%"
+        from sqlalchemy import or_
+        inquiries = (
+            inquiries.outerjoin(User)
+            .filter(
+                or_(
+                    Inquiry.title.ilike(like),
+                    Inquiry.content.ilike(like),
+                    Inquiry.guest_email.ilike(like),
+                    User.name.ilike(like),
+                    User.email.ilike(like),
+                )
+            )
+        )
+
+    # 📅 기간 필터
+    from datetime import datetime, timedelta
+    now = datetime.now(KST)
+
+    if period == "1m":
+        inquiries = inquiries.filter(Inquiry.created_at >= now - timedelta(days=30))
+    elif period == "3m":
+        inquiries = inquiries.filter(Inquiry.created_at >= now - timedelta(days=90))
+    elif period == "6m":
+        inquiries = inquiries.filter(Inquiry.created_at >= now - timedelta(days=180))
+    elif period == "5y":
+        pass  # 전체 보기
+
+    # 📆 직접 입력한 기간 필터
+    if start_date:
+        try:
+            start_dt = datetime.strptime(start_date + "-01", "%Y-%m-%d")
+            inquiries = inquiries.filter(Inquiry.created_at >= start_dt)
+        except Exception:
+            pass
+    if end_date:
+        try:
+            end_dt = datetime.strptime(end_date + "-28", "%Y-%m-%d")
+            inquiries = inquiries.filter(Inquiry.created_at <= end_dt)
+        except Exception:
+            pass
+
+    # ✅ 정렬 및 조회
+    inquiries = inquiries.order_by(Inquiry.created_at.desc()).all()
+
+    # ✅ 읽음 처리
     for iq in inquiries:
         if not iq.is_read:
-            iq.is_read = True           # ✅ 목록 들어온 순간 읽음 처리
+            iq.is_read = True
     db.session.commit()
 
-    inquiries = Inquiry.query.order_by(Inquiry.created_at.desc()).all()
-    return render_template("admin_inquiries.html", inquiries=inquiries)
+    # ✅ 렌더링
+    return render_template(
+        "admin_inquiries.html",
+        inquiries=inquiries,
+        selected_period=period,
+        start_date=start_date,
+        end_date=end_date,
+        search_query=q,
+    )
 
 
 @app.route('/company')
