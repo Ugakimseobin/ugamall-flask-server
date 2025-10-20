@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-20 14:44+0900\n"
+"POT-Creation-Date: 2025-10-20 15:56+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -69,9 +69,21 @@ msgstr "Contact us"
 msgid "오시는 길"
 msgstr "LOCATION"
 
+#: templates/base.html:288
+msgid "대표자"
+msgstr "Representative"
+
 #: templates/base.html:289
 msgid "부산광역시 동래구 안남로 78-3"
 msgstr "78-3, Annam-ro, Dongnae-gu, Busan, Republic of Korea"
+
+#: templates/base.html:290
+msgid "사업자등록번호"
+msgstr "Business registration number"
+
+#: templates/base.html:291
+msgid "통신판매업신고번호"
+msgstr "Mail order number"
 
 #: templates/checkout.html:4
 msgid "주문 / 결제"
@@ -154,9 +166,10 @@ msgid "총 상품긍액"
 msgstr "total amount"
 
 #: templates/checkout.html:143 templates/checkout.html:147
-#: templates/guest_orders.html:77 templates/mypage.html:236
-#: templates/mypage.html:239 templates/product_detail.html:29
-#: templates/product_detail.html:95
+#: templates/guest_orders.html:77 templates/mypage.html:91
+#: templates/mypage.html:92 templates/mypage.html:94 templates/mypage.html:236
+#: templates/mypage.html:239 templates/payment.html:11
+#: templates/product_detail.html:29 templates/product_detail.html:95
 msgid "원"
 msgstr "KRW"
 
@@ -340,8 +353,8 @@ msgstr "No order history available."
 msgid "입력하신 정보가 정확한지 다시 확인해주세요."
 msgstr "Please check the information you entered again."
 
-#: templates/guest_orders.html:30 templates/order_complete.html:7
-#: templates/payment.html:8
+#: templates/guest_orders.html:30 templates/mypage.html:58
+#: templates/order_complete.html:7 templates/payment.html:8
 msgid "주문번호"
 msgstr "Order Number"
 
@@ -390,7 +403,7 @@ msgstr "Order Number (Optional)"
 msgid "주문번호가 있다면 입력"
 msgstr "Enter if you have an order number"
 
-#: templates/guest_orders_search.html:21
+#: templates/guest_orders_search.html:21 templates/mypage.html:43
 msgid "조회하기"
 msgstr "Search"
 
@@ -462,9 +475,46 @@ msgstr "Inquiry History"
 msgid "내 쿠폰함"
 msgstr "my coupon"
 
+#: templates/mypage.html:25
+msgid "최대(5년)"
+msgstr "max 5 years"
+
+#: templates/mypage.html:26 templates/mypage.html:27 templates/mypage.html:28
+#, fuzzy
+msgid "개월"
+msgstr "month"
+
+#: templates/mypage.html:38
+#, fuzzy
+msgid "주문 상품명을 입력하세요"
+msgstr "Please enter your inquiry details"
+
+#: templates/mypage.html:49
+#, fuzzy
+msgid "최근 한달 간 주문내역이 없습니다"
+msgstr "No order history available."
+
+#: templates/mypage.html:50
+#, fuzzy
+msgid "주문내역 전체보기"
+msgstr "Order History"
+
+#: templates/mypage.html:66
+#, fuzzy
+msgid "주문취소"
+msgstr "Address"
+
+#: templates/mypage.html:107
+msgid "불러오는 중"
+msgstr "Bringing in"
+
 #: templates/mypage.html:113 templates/mypage.html:129
 msgid "개인정보 변경"
 msgstr "Edit Personal Info"
+
+#: templates/mypage.html:117
+msgid "개인정보 보호를 위해 비밀번호를 다시 입력해주세요"
+msgstr "Please re-enter your password to protect your personal information"
 
 #: templates/mypage.html:124
 #, fuzzy
@@ -562,6 +612,15 @@ msgstr "used"
 msgid "미사용"
 msgstr "Not used"
 
+#: templates/mypage.html:380
+#, fuzzy
+msgid "비밀번호를 입력해주세요"
+msgstr "Password"
+
+#: templates/mypage.html:398
+msgid "비밀번호가 올바르지 않습니다"
+msgstr "Invalid password"
+
 #: templates/order_complete.html:4
 msgid "주문이 접수되었습니다"
 msgstr "No order history available."
@@ -615,6 +674,10 @@ msgstr "Preparing payment"
 #: templates/payment.html:5
 msgid "잠시만 기다려 주세요. 결제창이 곧 열립니다."
 msgstr "Please wait a moment. The payment window will open shortly."
+
+#: templates/payment.html:69
+msgid "결제가 완료되었습니다"
+msgstr "Payment completed"
 
 #: templates/product_detail.html:8
 msgid "뒤로가기"
@@ -737,7 +800,7 @@ msgstr "price range"
 msgid "필터 적용"
 msgstr "Apply"
 
-#: templates/products.html:60
+#: templates/products.html:60 templates/search.html:78
 msgid "총"
 msgstr "A total of"
 
@@ -775,11 +838,11 @@ msgstr "ugamall provides"
 
 #: templates/products.html:105
 msgid "정품 UDI"
-msgstr "genuine UDIs"
+msgstr "genuine UDI"
 
 #: templates/products.html:105
 msgid "를 제공합니다."
-msgstr "for all products."
+msgstr " for all products."
 
 #: templates/products.html:106
 #, fuzzy
@@ -793,6 +856,10 @@ msgstr "Open/close filter"
 #: templates/search.html:61
 msgid "영상 포함"
 msgstr "video included"
+
+#: templates/search.html:78
+msgid "개 결과"
+msgstr "results"
 
 #: templates/search.html:84
 msgid "관련순"

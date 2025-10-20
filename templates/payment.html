@@ -8,7 +8,7 @@
     <div><b>{{ _("주문번호") }}</b> : {{ order.id }}</div>
     <div><b>{{ _("주문자") }}</b> : {{ order.name }} ({{ order.phone }})</div>
     {% if order.guest_email %}<div><b>Email</b> : {{ order.guest_email }}</div>{% endif %}
-    <div><b>{{ _("결제금액") }}</b> : {{ amount|comma }}원</div>
+    <div><b>{{ _("결제금액") }}</b> : {{ amount|comma }}{{ _("원") }}</div>
   </div>
 </div>
 
@@ -66,7 +66,7 @@
         });
         const v = await vRes.json();
         if (v.ok) {
-          alert("결제가 완료되었습니다.");
+          alert("{{ _('결제가 완료되었습니다') }}.");
           location.href = "/order-complete/" + ORDER_ID;
         } else {
           alert("검증 실패: " + (v.msg || ""));
