@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="max-w-7xl mx-auto py-10 px-4 md:px-6">
-  <h2 class="text-2xl sm:text-3xl font-extrabold text-center text-[#222] mb-10">
-    🔍 {{ _("검색 결과") }}
-  </h2>
 
   <div class="flex flex-col md:flex-row gap-8">
     <!-- ✅ 왼쪽 필터 -->
@@ -14,8 +11,8 @@
       </button>
 
       <div id="filter-box" class="hidden md:block">
-        <h3 class="font-bold text-lg text-indigo-700 mb-6 flex items-center gap-2">
-          <i class="fa-solid fa-filter text-[#222]"></i> {{ _("검색 필터") }}
+        <h3 class="font-bold text-xl text-indigo-700 mb-6 flex items-center gap-2">
+          <i class="font-bold text-[#222]">{{ _("상품 필터") }}</i> 
         </h3>
 
         <!-- 상품명 -->
