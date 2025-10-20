@@ -480,27 +480,22 @@ msgid "최대(5년)"
 msgstr "max 5 years"
 
 #: templates/mypage.html:26 templates/mypage.html:27 templates/mypage.html:28
-#, fuzzy
 msgid "개월"
 msgstr "month"
 
 #: templates/mypage.html:38
-#, fuzzy
 msgid "주문 상품명을 입력하세요"
 msgstr "Please enter your inquiry details"
 
 #: templates/mypage.html:49
-#, fuzzy
 msgid "최근 한달 간 주문내역이 없습니다"
 msgstr "No order history available."
 
 #: templates/mypage.html:50
-#, fuzzy
 msgid "주문내역 전체보기"
 msgstr "Order History"
 
 #: templates/mypage.html:66
-#, fuzzy
 msgid "주문취소"
 msgstr "Address"
 
@@ -517,7 +512,6 @@ msgid "개인정보 보호를 위해 비밀번호를 다시 입력해주세요"
 msgstr "Please re-enter your password to protect your personal information"
 
 #: templates/mypage.html:124
-#, fuzzy
 msgid "확인"
 msgstr "Check for duplicates"
 
@@ -613,7 +607,6 @@ msgid "미사용"
 msgstr "Not used"
 
 #: templates/mypage.html:380
-#, fuzzy
 msgid "비밀번호를 입력해주세요"
 msgstr "Password"
 
@@ -701,7 +694,6 @@ msgid "수량"
 msgstr "Quantity"
 
 #: templates/product_detail.html:71
-#, fuzzy
 msgid "장바구니에 담기"
 msgstr "Add to Cart"
 
@@ -710,7 +702,6 @@ msgid "관련 분야 상품"
 msgstr "Special Item"
 
 #: templates/product_detail.html:106
-#, fuzzy
 msgid "상세보기"
 msgstr "Terms and conditions details"
 
@@ -723,7 +714,6 @@ msgid "팜플렛 다운로드"
 msgstr "Download pamphlets"
 
 #: templates/product_detail.html:143
-#, fuzzy
 msgid "등록된 팜플렛이 없습니다."
 msgstr "No inquiries registered."
 
@@ -760,7 +750,6 @@ msgid "장바구니 담기"
 msgstr "Add to Cart"
 
 #: templates/product_detail.html:334
-#, fuzzy
 msgid "장바구니에 추가되었습니다"
 msgstr "Added to cart"
 
@@ -845,7 +834,6 @@ msgid "를 제공합니다."
 msgstr " for all products."
 
 #: templates/products.html:106
-#, fuzzy
 msgid "신뢰할 수 있는 의료 쇼핑몰, 유가몰입니다"
 msgstr "ugamall is a trusted medical shopping mall."
 
