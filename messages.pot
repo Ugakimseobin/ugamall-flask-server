@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-10 15:42+0900\n"
+"POT-Creation-Date: 2025-10-20 14:44+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,66 +17,58 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: templates/base.html:41
-msgid "유가몰"
-msgstr ""
-
-#: templates/base.html:46 templates/base.html:119
+#: templates/base.html:132 templates/base.html:205
 msgid "상품 검색"
 msgstr ""
 
-#: templates/base.html:57 templates/base.html:127 templates/base.html:196
+#: templates/base.html:143 templates/base.html:213 templates/base.html:282
 msgid "회사소개"
 msgstr ""
 
-#: templates/base.html:58 templates/base.html:128
+#: templates/base.html:144 templates/base.html:214 templates/base.html:281
 msgid "제품"
 msgstr ""
 
-#: templates/base.html:59 templates/base.html:129
+#: templates/base.html:145 templates/base.html:215
+#: templates/product_detail.html:77
 msgid "문의"
 msgstr ""
 
-#: templates/base.html:71 templates/base.html:134 templates/mypage.html:6
+#: templates/base.html:157 templates/base.html:220 templates/mypage.html:6
 #: templates/order_complete.html:34
 msgid "마이페이지"
 msgstr ""
 
-#: templates/base.html:73 templates/base.html:136
+#: templates/base.html:159 templates/base.html:222
 msgid "로그아웃"
 msgstr ""
 
 #: templates/auth/login.html:5 templates/auth/login.html:26
-#: templates/base.html:75 templates/base.html:138
+#: templates/base.html:161 templates/base.html:224
 msgid "로그인"
 msgstr ""
 
-#: templates/base.html:142
+#: templates/base.html:228
 msgid "장바구니"
 msgstr ""
 
-#: templates/base.html:146
+#: templates/base.html:232
 msgid "언어"
 msgstr ""
 
-#: templates/base.html:193
+#: templates/base.html:279
 msgid "바로가기"
 msgstr ""
 
-#: templates/base.html:195
-msgid "상품"
-msgstr ""
-
-#: templates/base.html:197 templates/contact.html:16 templates/index.html:99
-#: templates/product_detail.html:91
+#: templates/base.html:283 templates/contact.html:16 templates/index.html:99
 msgid "문의하기"
 msgstr ""
 
-#: templates/base.html:201 templates/contact.html:49
+#: templates/base.html:287 templates/contact.html:56
 msgid "오시는 길"
 msgstr ""
 
-#: templates/base.html:202
+#: templates/base.html:289
 msgid "부산광역시 동래구 안남로 78-3"
 msgstr ""
 
@@ -101,13 +93,14 @@ msgid "구매자 정보"
 msgstr ""
 
 #: templates/auth/register_info.html:47 templates/auth/register_info.html:48
-#: templates/auth/register_info.html:134 templates/checkout.html:70
-#: templates/index.html:109 templates/mypage.html:121
+#: templates/auth/register_info.html:134 templates/auth/register_info.html:135
+#: templates/checkout.html:70 templates/contact.html:26
+#: templates/index.html:109 templates/mypage.html:138
 msgid "이름"
 msgstr ""
 
-#: templates/checkout.html:77 templates/guest_orders.html:52
-#: templates/index.html:113
+#: templates/checkout.html:77 templates/contact.html:30
+#: templates/guest_orders.html:52 templates/index.html:113
 msgid "전화번호"
 msgstr ""
 
@@ -120,10 +113,10 @@ msgid "상세 주소"
 msgstr ""
 
 #: templates/auth/login.html:11 templates/auth/register_info.html:12
-#: templates/auth/register_info.html:116 templates/checkout.html:96
-#: templates/checkout.html:97 templates/contact.html:21
-#: templates/contact.html:54 templates/guest_orders.html:14
-#: templates/guest_orders_search.html:8 templates/mypage.html:117
+#: templates/auth/register_info.html:116 templates/auth/register_info.html:117
+#: templates/checkout.html:96 templates/checkout.html:97
+#: templates/contact.html:61 templates/guest_orders.html:14
+#: templates/guest_orders_search.html:8 templates/mypage.html:133
 msgid "이메일"
 msgstr ""
 
@@ -152,7 +145,7 @@ msgid "카카오페이"
 msgstr ""
 
 #: templates/checkout.html:130
-msgid "네이버페이"
+msgid "토스페이"
 msgstr ""
 
 #: templates/checkout.html:142
@@ -160,8 +153,9 @@ msgid "총 상품긍액"
 msgstr ""
 
 #: templates/checkout.html:143 templates/checkout.html:147
-#: templates/guest_orders.html:77 templates/mypage.html:217
-#: templates/mypage.html:220 templates/product_detail.html:149
+#: templates/guest_orders.html:77 templates/mypage.html:236
+#: templates/mypage.html:239 templates/product_detail.html:29
+#: templates/product_detail.html:95
 msgid "원"
 msgstr ""
 
@@ -178,7 +172,7 @@ msgstr ""
 msgid "결제하기"
 msgstr ""
 
-#: templates/checkout.html:172
+#: templates/checkout.html:171
 msgid "결제할 상품을 선택해주세요."
 msgstr ""
 
@@ -190,23 +184,7 @@ msgstr ""
 msgid "주문 생성 중 오류가 발생했습니다."
 msgstr ""
 
-#: templates/checkout.html:208
-msgid "결제 준비 실패"
-msgstr ""
-
-#: templates/checkout.html:246
-msgid "결제가 완료되었습니다."
-msgstr ""
-
-#: templates/checkout.html:249
-msgid "검증 실패"
-msgstr ""
-
-#: templates/checkout.html:253
-msgid "결제 실패"
-msgstr ""
-
-#: templates/checkout.html:260
+#: templates/checkout.html:201
 msgid "결제 처리 중 오류가 발생했습니다."
 msgstr ""
 
@@ -288,45 +266,45 @@ msgstr ""
 msgid "우리에게"
 msgstr ""
 
-#: templates/contact.html:24
-msgid "답변 받으실 이메일 입력"
+#: templates/contact.html:22 templates/index.html:105
+msgid "이메일 (필수)"
 msgstr ""
 
-#: templates/contact.html:29 templates/index.html:119
+#: templates/contact.html:36 templates/index.html:119
 msgid "제목"
 msgstr ""
 
-#: templates/contact.html:32
+#: templates/contact.html:39
 msgid "문의 제목"
 msgstr ""
 
-#: templates/contact.html:36 templates/index.html:123
+#: templates/contact.html:43 templates/index.html:123
 msgid "내용"
 msgstr ""
 
-#: templates/contact.html:39
+#: templates/contact.html:46
 msgid "문의 내용을 입력하세요"
 msgstr ""
 
-#: templates/contact.html:43 templates/index.html:127
+#: templates/contact.html:50 templates/index.html:127
 msgid "보내기"
 msgstr ""
 
 #: templates/auth/register_info.html:54 templates/auth/register_info.html:144
-#: templates/contact.html:51 templates/mypage.html:125
+#: templates/contact.html:58 templates/mypage.html:142
 #: templates/order_complete.html:10
 msgid "주소"
 msgstr ""
 
-#: templates/contact.html:51
+#: templates/contact.html:58
 msgid "부산광역시 동래구 안남로 78-3 (더 평안빌딩 2층)"
 msgstr ""
 
-#: templates/contact.html:52
+#: templates/contact.html:59
 msgid "전화"
 msgstr ""
 
-#: templates/contact.html:53
+#: templates/contact.html:60
 msgid "팩스"
 msgstr ""
 
@@ -400,36 +378,36 @@ msgstr ""
 msgid "조회하기"
 msgstr ""
 
-#: templates/index.html:19
+#: templates/index.html:20
 msgid "UGAMALL 홍보 영상"
 msgstr ""
 
-#: templates/index.html:20
+#: templates/index.html:21
 msgid "UGAMALL의 최신 소식과 스토리를 만나보세요."
 msgstr ""
 
-#: templates/index.html:23
+#: templates/index.html:24
 msgid "영상 더 보기 →"
 msgstr ""
 
-#: templates/index.html:34
+#: templates/index.html:35
 msgid "자세히 보기"
 msgstr ""
 
-#: templates/index.html:40
+#: templates/index.html:41
 msgid "아직 등록된 영상이 없습니다."
 msgstr ""
 
 #: templates/index.html:50
-msgid "🔥 신제품 프로모션"
+msgid "신제품 프로모션"
 msgstr ""
 
 #: templates/index.html:52
-msgid "특별 상품"
+msgid "최신 의료용품, 합리적인 가격으로 만나보세요."
 msgstr ""
 
 #: templates/index.html:53
-msgid "지금 즉시 구매"
+msgid "지금 바로 특별 혜택을 확인하세요!"
 msgstr ""
 
 #: templates/index.html:57
@@ -447,10 +425,6 @@ msgid ""
 "믿을 수 있는 품질, 합리적인 가격, 빠른 배송으로 여러분의 건강한 생활을 응원합니다 "
 msgstr ""
 
-#: templates/index.html:105
-msgid "이메일 (필수)"
-msgstr ""
-
 #: templates/mypage.html:8 templates/mypage.html:19
 msgid "주문내역"
 msgstr ""
@@ -463,106 +437,106 @@ msgstr ""
 msgid "문의내역"
 msgstr ""
 
-#: templates/mypage.html:11 templates/mypage.html:195
+#: templates/mypage.html:11 templates/mypage.html:214
 msgid "내 쿠폰함"
 msgstr ""
 
-#: templates/mypage.html:113
+#: templates/mypage.html:113 templates/mypage.html:129
 msgid "개인정보 변경"
 msgstr ""
 
-#: templates/auth/register_info.html:56 templates/mypage.html:127
-msgid "우편번호"
-msgstr ""
-
-#: templates/auth/register_info.html:60 templates/mypage.html:128
-msgid "주소찾기"
+#: templates/mypage.html:124
+msgid "확인"
 msgstr ""
 
 #: templates/auth/register_info.html:63 templates/auth/register_info.html:146
-#: templates/mypage.html:132
+#: templates/mypage.html:145
 msgid "기본주소"
 msgstr ""
 
+#: templates/auth/register_info.html:60 templates/mypage.html:148
+msgid "주소찾기"
+msgstr ""
+
 #: templates/auth/register_info.html:65 templates/auth/register_info.html:147
-#: templates/mypage.html:135
+#: templates/mypage.html:151
 msgid "상세주소"
 msgstr ""
 
-#: templates/mypage.html:140
+#: templates/mypage.html:157
 msgid "마케팅/혜택 수신 동의"
 msgstr ""
 
-#: templates/mypage.html:143
+#: templates/mypage.html:160
 msgid "저장"
 msgstr ""
 
-#: templates/auth/reset_password_form.html:27 templates/mypage.html:147
-#: templates/mypage.html:162
+#: templates/auth/reset_password_form.html:27 templates/mypage.html:165
+#: templates/mypage.html:180
 msgid "비밀번호 변경"
 msgstr ""
 
-#: templates/mypage.html:151
+#: templates/mypage.html:169
 msgid "현재 비밀번호"
 msgstr ""
 
-#: templates/auth/reset_password_form.html:10 templates/mypage.html:155
+#: templates/auth/reset_password_form.html:10 templates/mypage.html:173
 msgid "새 비밀번호"
 msgstr ""
 
-#: templates/auth/reset_password_form.html:18 templates/mypage.html:159
+#: templates/auth/reset_password_form.html:18 templates/mypage.html:177
 msgid "새 비밀번호 확인"
 msgstr ""
 
-#: templates/mypage.html:168
+#: templates/mypage.html:187
 msgid "문의 내역"
 msgstr ""
 
-#: templates/mypage.html:170
+#: templates/mypage.html:189
 msgid "등록된 문의가 없습니다."
 msgstr ""
 
-#: templates/mypage.html:180 templates/mypage.html:206
+#: templates/mypage.html:199 templates/mypage.html:225
 msgid "상태"
 msgstr ""
 
-#: templates/mypage.html:183
+#: templates/mypage.html:202
 msgid "답변"
 msgstr ""
 
-#: templates/mypage.html:197
+#: templates/mypage.html:216
 msgid "보유한 쿠폰이 없습니다."
 msgstr ""
 
-#: templates/mypage.html:202
+#: templates/mypage.html:221
 msgid "쿠폰명"
 msgstr ""
 
-#: templates/mypage.html:203
+#: templates/mypage.html:222
 msgid "할인"
 msgstr ""
 
-#: templates/mypage.html:204
+#: templates/mypage.html:223
 msgid "조건"
 msgstr ""
 
-#: templates/mypage.html:205
+#: templates/mypage.html:224
 msgid "유효기간"
 msgstr ""
 
-#: templates/mypage.html:220
+#: templates/mypage.html:239
 msgid "최소"
 msgstr ""
 
-#: templates/mypage.html:220
+#: templates/mypage.html:239
 msgid "이상"
 msgstr ""
 
-#: templates/mypage.html:224
+#: templates/mypage.html:243
 msgid "사용됨"
 msgstr ""
 
-#: templates/mypage.html:226
+#: templates/mypage.html:245
 msgid "미사용"
 msgstr ""
 
@@ -622,95 +596,116 @@ msgstr ""
 msgid "뒤로가기"
 msgstr ""
 
-#: templates/product_detail.html:36
+#: templates/product_detail.html:21
+msgid "이미지 없음"
+msgstr ""
+
+#: templates/product_detail.html:31
 msgid "카테고리"
 msgstr ""
 
-#: templates/product_detail.html:45 templates/product_detail.html:187
+#: templates/product_detail.html:44 templates/product_detail.html:294
 msgid "선택하세요"
 msgstr ""
 
-#: templates/product_detail.html:59 templates/product_detail.html:200
+#: templates/product_detail.html:59 templates/product_detail.html:275
+#: templates/product_detail.html:307
 msgid "수량"
 msgstr ""
 
-#: templates/product_detail.html:85 templates/product_detail.html:211
-msgid "장바구니 담기"
+#: templates/product_detail.html:71
+msgid "장바구니에 담기"
 msgstr ""
 
-#: templates/product_detail.html:100
-msgid "상품 리뷰"
-msgstr ""
-
-#: templates/product_detail.html:113
-msgid "아직 리뷰가 없습니다."
-msgstr ""
-
-#: templates/product_detail.html:120
-msgid "리뷰 작성하기"
-msgstr ""
-
-#: templates/product_detail.html:121
-msgid "별점"
-msgstr ""
-
-#: templates/product_detail.html:124
-msgid "점"
-msgstr ""
-
-#: templates/product_detail.html:128
-msgid "리뷰 내용"
-msgstr ""
-
-#: templates/product_detail.html:132
-msgid "등록"
-msgstr ""
-
-#: templates/product_detail.html:140
+#: templates/product_detail.html:86
 msgid "관련 분야 상품"
 msgstr ""
 
-#: templates/product_detail.html:169
-msgid "빠른 장바구니"
+#: templates/product_detail.html:106
+msgid "상세보기"
+msgstr ""
+
+#: templates/product_detail.html:108
+msgid "리뷰"
+msgstr ""
+
+#: templates/product_detail.html:139
+msgid "팜플렛 다운로드"
+msgstr ""
+
+#: templates/product_detail.html:143
+msgid "등록된 팜플렛이 없습니다."
+msgstr ""
+
+#: templates/product_detail.html:216
+msgid "상품 리뷰"
 msgstr ""
 
 #: templates/product_detail.html:229
-msgid "장바구니에 추가되었습니다!"
+msgid "아직 리뷰가 없습니다."
 msgstr ""
 
 #: templates/product_detail.html:234
-msgid "계속 쇼핑하기"
+msgid "리뷰 작성하기"
+msgstr ""
+
+#: templates/product_detail.html:235
+msgid "별점"
 msgstr ""
 
 #: templates/product_detail.html:238
-msgid "장바구니로 이동"
+msgid "점"
 msgstr ""
 
-#: templates/products.html:9
+#: templates/product_detail.html:242
+msgid "리뷰 내용"
+msgstr ""
+
+#: templates/product_detail.html:246
+msgid "등록"
+msgstr ""
+
+#: templates/product_detail.html:318
+msgid "장바구니 담기"
+msgstr ""
+
+#: templates/product_detail.html:334
+msgid "장바구니에 추가되었습니다"
+msgstr ""
+
+#: templates/product_detail.html:338
+msgid "계속 쇼핑하기"
+msgstr ""
+
+#: templates/product_detail.html:342
+msgid "장바구니 이동"
+msgstr ""
+
+#: templates/products.html:9 templates/search.html:15
 msgid "상품 필터"
 msgstr ""
 
-#: templates/products.html:14 templates/search.html:23
+#: templates/products.html:14 templates/search.html:20
 msgid "상품명"
 msgstr ""
 
-#: templates/products.html:17 templates/search.html:26
+#: templates/products.html:17 templates/search.html:23
 msgid "예: 밴드, 보호대"
 msgstr ""
 
-#: templates/products.html:23 templates/search.html:32
+#: templates/products.html:23 templates/search.html:29
 msgid "분야"
 msgstr ""
 
-#: templates/products.html:26 templates/search.html:35
+#: templates/products.html:26 templates/search.html:32
 msgid "전체 보기"
 msgstr ""
 
-#: templates/products.html:35 templates/search.html:44
+#: templates/products.html:35 templates/search.html:41
 msgid "가격 범위"
 msgstr ""
 
-#: templates/products.html:51 templates/search.html:69
+#: templates/products.html:51 templates/search.html:68
 msgid "필터 적용"
 msgstr ""
 
@@ -722,67 +717,59 @@ msgstr ""
 msgid "개 상품"
 msgstr ""
 
-#: templates/products.html:63 templates/search.html:82
+#: templates/products.html:63 templates/search.html:81
 msgid "정렬"
 msgstr ""
 
-#: templates/products.html:66 templates/search.html:86
+#: templates/products.html:66 templates/search.html:85
 msgid "최신순"
 msgstr ""
 
-#: templates/products.html:67 templates/search.html:87
+#: templates/products.html:67 templates/search.html:86
 msgid "낮은 가격순"
 msgstr ""
 
-#: templates/products.html:68 templates/search.html:88
+#: templates/products.html:68 templates/search.html:87
 msgid "높은 가격순"
 msgstr ""
 
-#: templates/products.html:69 templates/search.html:89
+#: templates/products.html:69 templates/search.html:88
 msgid "이름순"
 msgstr ""
 
-#: templates/products.html:99
+#: templates/products.html:100
 msgid "안내사항"
 msgstr ""
 
-#: templates/products.html:103
+#: templates/products.html:104
 msgid "유가몰은 모든 제품에"
 msgstr ""
 
-#: templates/products.html:104
+#: templates/products.html:105
 msgid "정품 UDI"
 msgstr ""
 
-#: templates/products.html:104
+#: templates/products.html:105
 msgid "를 제공합니다."
 msgstr ""
 
-#: templates/products.html:105
-msgid "신뢰할 수 있는 의료 쇼핑몰, 유가몰입니다 💙"
+#: templates/products.html:106
+msgid "신뢰할 수 있는 의료 쇼핑몰, 유가몰입니다"
 msgstr ""
 
-#: templates/search.html:5
-msgid "검색 결과"
-msgstr ""
-
-#: templates/search.html:13
+#: templates/search.html:10
 msgid "필터 열기 / 닫기"
 msgstr ""
 
-#: templates/search.html:18
-msgid "검색 필터"
-msgstr ""
-
-#: templates/search.html:62
+#: templates/search.html:61
 msgid "영상 포함"
 msgstr ""
 
-#: templates/search.html:85
+#: templates/search.html:84
 msgid "관련순"
 msgstr ""
 
-#: templates/search.html:96
+#: templates/search.html:95
 msgid " 에 대한 검색 결과가 없습니다."
 msgstr ""
 
@@ -804,6 +791,7 @@ msgstr ""
 
 #: templates/auth/login.html:18 templates/auth/register_info.html:26
 #: templates/auth/register_info.html:27 templates/auth/register_info.html:123
+#: templates/auth/register_info.html:124
 msgid "비밀번호"
 msgstr ""
 
@@ -844,7 +832,12 @@ msgid "8자 이상이며 숫자와 특수문자를 포함해야 합니다"
 msgstr ""
 
 #: templates/auth/register_info.html:40 templates/auth/register_info.html:41
+#: templates/auth/register_info.html:125
 msgid "비밀번호 확인"
+msgstr ""
+
+#: templates/auth/register_info.html:56
+msgid "우편번호"
 msgstr ""
 
 #: templates/auth/register_info.html:71 templates/auth/register_info.html:156
