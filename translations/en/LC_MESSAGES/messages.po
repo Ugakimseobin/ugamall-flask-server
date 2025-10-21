@@ -99,7 +99,6 @@ msgid "개 상품"
 msgstr "products"
 
 #: templates/checkout.html:23
-#, fuzzy
 msgid "전체 선택"
 msgstr "Select Coupon"
 
@@ -108,7 +107,6 @@ msgid "선택 삭제"
 msgstr "Delete Selection"
 
 #: templates/checkout.html:30
-#, fuzzy
 msgid "선택된 상품"
 msgstr "products"
 
@@ -203,7 +201,6 @@ msgid "할인금액"
 msgstr "Discount amount"
 
 #: templates/checkout.html:209
-#, fuzzy
 msgid "배송비"
 msgstr "Shipping Address"
 
@@ -217,7 +214,6 @@ msgid "결제하기"
 msgstr "payment"
 
 #: templates/checkout.html:240
-#, fuzzy
 msgid "삭제할 상품을 선택해주세요"
 msgstr "select the product you wish to pay for."
 
