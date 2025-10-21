@@ -31,67 +31,90 @@
                   </div>
                 </div>
                 {% for item in cart_items %}
-                <div class="cart-item flex flex-col sm:flex-row sm:items-center border-b py-4 gap-4 sm:gap-0"
-                     data-id="{{ item.id }}"
-                     data-price="{{ item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0) }}">
-
-                    <!-- 체크박스 -->
-                    <label class="custom-checkbox flex-shrink-0 mr-2 sm:mr-4">
+                <div class="cart-item bg-white border rounded-lg shadow-sm p-4 mb-4 sm:flex sm:items-start sm:gap-5"
+                      data-id="{{ item.id }}"
+                      data-price="{{ item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0) }}">
+                    
+                    <!-- 왼쪽 체크박스 -->
+                    <div class="flex items-start sm:flex-col sm:items-center sm:pt-1">
+                      <label class="custom-checkbox flex items-center sm:mb-2">
                         <input type="checkbox" name="selected_items" value="{{ item.id }}" class="item-checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-
-                    <!-- 제품 이미지 -->
-                    <img src="{{ url_for('serve_product_image', product_id=item.product.id) }}"
-                        alt="{{ item.product.name }}"
-                         class="w-full h-auto sm:w-20 sm:h-20 object-cover rounded">
-
-                    <!-- 중앙: 제품명 + 가격 -->
-                    <div class="flex flex-col justify-center flex-1 text-left sm:text-left">
-                      <p class="font-bold text-base text-gray-800">{{ item.product.name }}</p>
-                      <p class="text-gray-500 text-sm">단가: {{ (item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) | int | format }}원</p>
+                        <span class="checkmark ml-1"></span>
+                      </label>
                     </div>
 
-                    <!-- 옵션 + 수량 -->
-                    <div class="flex flex-row justify-between sm:justify-center items-center w-full sm:w-56 text-gray-600 text-sm text-center mt-1 sm:mt-0">
-                      {% if item.variant %}
-                        {% for key, val in item.variant.options.items() %}
-                          <span class="mr-1">{{ key }} : {{ val }} /</span>
-                        {% endfor %}
-                      {% else %}
-                        <span>기본상품 / </span>
-                      {% endif %}
-                      <span class="ml-2 font-semibold text-gray-600 option-qty-text">{{ item.quantity }}개</span>
+                    <!-- 중앙: 상품 이미지 -->
+                    <div class="flex-shrink-0 w-full sm:w-32 h-40 sm:h-32 rounded-md overflow-hidden border">
+                      <img src="{{ url_for('serve_product_image', product_id=item.product.id) }}"
+                          alt="{{ item.product.name }}"
+                          class="w-full h-full object-cover">
                     </div>
 
-                    <!-- 수량 조절 -->
-                    <div class="flex items-center justify-center sm:justify-start mt-2 sm:mt-0 border border-gray-300 rounded-full overflow-hidden w-full sm:w-auto">
-                      <button type="button"
-                              class="w-8 h-8 flex items-center justify-center border-r border-gray-300 text-gray-600 hover:bg-gray-100 transition decrease-btn">
-                        <span class="text-lg leading-none">−</span>
-                      </button>
-                      <input type="number"
-                            name="quantity_{{ item.id }}"
-                            value="{{ item.quantity }}"
-                            min="1"
-                            class="w-12 text-center outline-none text-sm sm:text-base appearance-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                      <button type="button"
-                              class="w-8 h-8 flex items-center justify-center border-l border-gray-300 text-gray-600 hover:bg-gray-100 transition increase-btn">
-                        <span class="text-lg leading-none">＋</span>
-                      </button>
-                    </div>
-
-                    <!-- 우측: 가격 + 삭제 -->
-                    <div class="w-full sm:w-32 text-right mt-2 sm:mt-0">
-                        <div class="font-semibold item-total text-sm sm:text-base">
-                             {{ ((item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) * item.quantity) | int | format }}원
+                    <!-- 우측 정보 -->
+                    <div class="flex flex-col justify-between flex-1 mt-3 sm:mt-0 text-left">
+                      <!-- 상단: 이름, 태그 -->
+                      <div>
+                        <div class="flex items-center gap-2 mb-1">
+                          <span class="bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded">빠른배송</span>
                         </div>
-                        <button type="button" class="remove-btn mt-1 sm:mt-2 text-red-500 hover:text-red-700 text-xs sm:text-sm"
-                                data-url="{{ url_for('remove_from_cart', item_id=item.id) }}">
-                            {{ _("삭제") }}
-                        </button>
+                        <p class="font-bold text-gray-900 text-base leading-snug">{{ item.product.name }}</p>
+
+                        <p class="text-gray-500 text-xs sm:text-sm mt-1">
+                          {% if item.variant %}
+                            {% for key, val in item.variant.options.items() %}
+                              {{ key }}: {{ val }}{% if not loop.last %} / {% endif %}
+                            {% endfor %}
+                          {% else %}
+                            기본상품
+                          {% endif %}
+                          / <span class="option-qty-text">{{ item.quantity }}개</span>
+                        </p>
+                      </div>
+
+                      <!-- 중간: 가격 -->
+                      <div class="mt-2">
+                        <div class="flex items-center gap-2">
+                          <span class="text-[#222] font-bold text-lg sm:text-xl">
+                            {{ (item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) | int | format }}원
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- 하단: 수량 조절 + 삭제 -->
+                      <div class="mt-3 flex justify-between items-center border-t pt-3">
+                        <!-- 수량 -->
+                        <div class="flex items-center gap-2">
+                          <div class="flex border rounded-full overflow-hidden">
+                            <button type="button"
+                                    class="decrease-btn w-8 h-8 flex items-center justify-center border-r text-gray-600 hover:bg-gray-100">
+                              −
+                            </button>
+                            <input type="number"
+                                  name="quantity_{{ item.id }}"
+                                  value="{{ item.quantity }}"
+                                  min="1"
+                                  class="w-12 text-center text-sm outline-none">
+                            <button type="button"
+                                    class="increase-btn w-8 h-8 flex items-center justify-center border-l text-gray-600 hover:bg-gray-100">
+                              ＋
+                            </button>
+                          </div>
+                        </div>
+
+                        <!-- 가격 + 삭제 -->
+                        <div class="text-right">
+                          <p class="font-semibold text-gray-800 item-total text-sm sm:text-base">
+                            {{ ((item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) * item.quantity) | int | format }}원
+                          </p>
+                          <button type="button"
+                                  class="remove-btn text-red-500 text-xs hover:text-red-700 mt-1"
+                                  data-url="{{ url_for('remove_from_cart', item_id=item.id) }}">
+                            삭제
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                </div>
+                  </div>
                 {% endfor %}
             {% else %}
                 <p class="text-gray-500">{{ _("장바구니가 비어 있습니다") }}.</p>
