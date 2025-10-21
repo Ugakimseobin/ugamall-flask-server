@@ -46,18 +46,22 @@
                         alt="{{ item.product.name }}"
                          class="w-20 h-20 object-cover rounded sm:mr-4">
 
-                    <!-- 중앙: 제품명 + 옵션 -->
-                    <div class="flex-1">
-                        <p class="font-bold text-sm sm:text-base">{{ item.variant.product.name }}</p>
-                        <p class="text-gray-500 text-xs sm:text-sm">
-                            {% if item.variant %}
-                                {% for key, val in item.variant.options.items() %}
-                                    {{ key }}: {{ val }}
-                                {% endfor %}
-                            {% else %}
-                                {{ _("기본상품") }}
-                            {% endif %}
-                        </p>
+                    <!-- 중앙: 제품명 + 가격 -->
+                    <div class="flex flex-col justify-center flex-1">
+                      <p class="font-bold text-sm sm:text-base text-gray-800">{{ item.product.name }}</p>
+                      <p class="text-gray-500 text-xs sm:text-sm">단가: {{ (item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) | int | format }}원</p>
+                    </div>
+
+                    <!-- 옵션 + 수량 -->
+                    <div class="flex-1 flex-col sm:flex-row sm:items-center sm:justify-center text-gray-600 text-xs sm:text-sm w-56 text-center">
+                      {% if item.variant %}
+                        {% for key, val in item.variant.options.items() %}
+                          <span class="mr-1">{{ key }} : {{ val }} /</span>
+                        {% endfor %}
+                      {% else %}
+                        <span>기본상품 / </span>
+                      {% endif %}
+                      <span class="ml-2 option-qty-text">{{ item.quantity }}개</span>
                     </div>
 
                     <!-- 수량 조절 -->
@@ -170,15 +174,19 @@
 
             <!-- 가격 정보 -->
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 w-full sm:w-auto text-center sm:text-left">
-              <div class="text-gray-600 text-sm sm:text-base">
+              <div class="text-gray-400 text-sm sm:text-base">
                 {{ _("총 상품긍액") }}:
-                <span id="total-price" class="font-semibold text-gray-900">0</span>{{ _("원") }}
+                <span id="total-price" class="font-semibold text-gray-200">0</span>{{ _("원") }}
               </div>
-              <div class="text-gray-600 text-sm sm:text-base">
+              <div class="text-gray-400 text-sm sm:text-base">
                 {{ _("할인금액") }}:
                 <span id="discount-price" class="font-semibold text-red-600">0</span>{{ _("원") }}
               </div>
-              <div class="text-gray-900 text-base sm:text-lg font-bold">
+              <div class="text-gray-400 text-sm sm:text-base">
+                배송비:
+                <span id="shipping-fee" class="font-semibold text-gray-200">0</span>원
+              </div>
+              <div class="text-gray-400 text-base sm:text-lg font-bold">
                 {{ _("결제금액") }}:
                 <span id="final-price" class="text-indigo-600 text-xl sm:text-2xl font-extrabold">0</span>원
               </div>
@@ -291,10 +299,15 @@ function updateTotals() {
   // 장바구니 상품 가격 합계
   document.querySelectorAll(".cart-item").forEach(item => {
     const checkbox = item.querySelector(".item-checkbox");
-    if (!checkbox.checked) return;   // 체크된 상품만 합산
-
-    const qty = parseInt(item.querySelector("input[type='number']").value) || 1;
+    const qtyInput = item.querySelector("input[type='number']");
+    const qty = parseInt(qtyInput.value) || 1;
     const price = Number(item.dataset.price) || 0;
+
+    // ✅ 옵션+수량 표시 부분 업데이트
+    const optionQtySpan = item.querySelector(".option-qty-text");
+    if (optionQtySpan) optionQtySpan.textContent = `${qty}개`;
+
+    if (!checkbox.checked) return; // 체크된 상품만 합산
     total += qty * price;
 
     // 소계 표시
@@ -319,10 +332,17 @@ function updateTotals() {
     }
   }
 
+  // 배송비 계산 (5만원 이상 무료)
+  const shipping = total >= 50000 ? 0 : (total > 0 ? 3000 : 0);
+
+  // 최종 결제금액
+  const final = total - discount + shipping;
+
   // DOM 반영
   document.getElementById("total-price").innerText = total.toLocaleString();
   document.getElementById("discount-price").innerText = discount.toLocaleString();
-  document.getElementById("final-price").innerText = (total - discount).toLocaleString();
+  document.getElementById("shipping-fee").innerText = shipping.toLocaleString();
+  document.getElementById("final-price").innerText = final.toLocaleString();
 }
 
 // ==============================
@@ -437,5 +457,18 @@ updateTotals();
 .custom-checkbox input:checked + .checkmark::after {
   opacity: 1;
 }
+
+.cart-item {
+  align-items: center;
+}
+
+.cart-item img {
+  flex-shrink: 0;
+}
+
+.cart-item .item-total {
+  min-width: 70px;
+}
 </style>
+
 {% endblock %}

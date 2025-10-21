@@ -1111,9 +1111,11 @@ def product_detail(product_id):
 
     # ✅ 옵션 키 추출 (첫 번째 variant 기준)
     option_keys = []
-    if product.variants:
-        first_variant = product.variants[0]
-        option_keys = list(first_variant.options.keys())
+    if product.variants and product.variants[0].options:
+        option_keys = list(product.variants[0].options.keys())
+    else:
+        # 🔹 variants가 아직 없으면 product_options에서 추출
+        option_keys = [opt.name for opt in ProductOption.query.filter_by(product_id=product.id).distinct()]
 
     # ✅ variants JSON 직렬화 (Object of type ProductVariant 에러 방지)
     variant_list = []
@@ -2599,6 +2601,66 @@ def search():
 
     categories = [c[0] for c in db.session.query(Product.category).distinct()]
     return render_template("search.html", products=products, videos=videos, categories=categories, video_filter=True,q=q,selected_sort=sort)
+
+# ----------------------------
+# ✅ 쿠폰 받기 (사용자용)
+# ----------------------------
+@app.route("/available_coupons")
+@login_required
+def available_coupons():
+    """아직 받지 않은 쿠폰 목록 조회"""
+    now = datetime.utcnow()
+    # 이미 받은 쿠폰 ID 추출
+    received_ids = [uc.coupon_id for uc in UserCoupon.query.filter_by(user_id=current_user.id).all()]
+
+    # 아직 안 받은 활성 쿠폰 목록
+    coupons = Coupon.query.filter(
+        Coupon.active == True,
+        Coupon.valid_from <= now,
+        Coupon.valid_to >= now,
+        ~Coupon.id.in_(received_ids)
+    ).all()
+
+    data = [
+        {
+            "id": c.id,
+            "name": c.name,
+            "description": c.description or "",
+            "discount_type": c.discount_type,
+            "discount_value": c.discount_value,
+            "min_amount": c.min_amount,
+            "valid_to": c.valid_to.strftime("%Y-%m-%d")
+        }
+        for c in coupons
+    ]
+    return jsonify(data)
+
+
+@app.route("/claim_coupons", methods=["POST"])
+@login_required
+def claim_coupons():
+    """선택한 쿠폰 수령"""
+    ids = request.json.get("coupon_ids", [])
+    if not ids:
+        return jsonify({"ok": False, "msg": "선택된 쿠폰이 없습니다."}), 400
+
+    added = 0
+    for cid in ids:
+        coupon = Coupon.query.get(cid)
+        if not coupon or not coupon.active:
+            continue
+
+        # 이미 받은 쿠폰은 건너뜀
+        existing = UserCoupon.query.filter_by(user_id=current_user.id, coupon_id=cid).first()
+        if existing:
+            continue
+
+        uc = UserCoupon(user_id=current_user.id, coupon_id=cid, used=False)
+        db.session.add(uc)
+        added += 1
+
+    db.session.commit()
+    return jsonify({"ok": True, "added": added})
 
 @app.route("/debug")
 def debug():
