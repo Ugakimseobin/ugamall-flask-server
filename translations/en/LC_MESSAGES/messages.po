@@ -100,15 +100,15 @@ msgstr "products"
 
 #: templates/checkout.html:23
 msgid "전체 선택"
-msgstr "Select Coupon"
+msgstr "Select all"
 
 #: templates/checkout.html:26
 msgid "선택 삭제"
-msgstr "Delete Selection"
+msgstr "Delete Select"
 
 #: templates/checkout.html:30
 msgid "선택된 상품"
-msgstr "products"
+msgstr "select product"
 
 #: templates/checkout.html:30 templates/guest_orders.html:74
 msgid "개"
