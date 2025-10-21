@@ -44,16 +44,16 @@
                     <!-- 제품 이미지 -->
                     <img src="{{ url_for('serve_product_image', product_id=item.product.id) }}"
                         alt="{{ item.product.name }}"
-                         class="w-20 h-20 object-cover rounded sm:mr-4">
+                         class="w-full h-auto sm:w-20 sm:h-20 object-cover rounded">
 
                     <!-- 중앙: 제품명 + 가격 -->
-                    <div class="flex flex-col justify-center flex-1">
-                      <p class="font-bold text-sm sm:text-base text-gray-800">{{ item.product.name }}</p>
-                      <p class="text-gray-500 text-xs sm:text-sm">단가: {{ (item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) | int | format }}원</p>
+                    <div class="flex flex-col justify-center flex-1 text-left sm:text-left">
+                      <p class="font-bold text-base text-gray-800">{{ item.product.name }}</p>
+                      <p class="text-gray-500 text-sm">단가: {{ (item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) | int | format }}원</p>
                     </div>
 
                     <!-- 옵션 + 수량 -->
-                    <div class="flex-1 flex-col sm:flex-row sm:items-center sm:justify-center text-gray-600 text-xs sm:text-sm w-56 text-center">
+                    <div class="flex flex-row justify-between sm:justify-center items-center w-full sm:w-56 text-gray-600 text-sm text-center mt-1 sm:mt-0">
                       {% if item.variant %}
                         {% for key, val in item.variant.options.items() %}
                           <span class="mr-1">{{ key }} : {{ val }} /</span>
@@ -61,11 +61,11 @@
                       {% else %}
                         <span>기본상품 / </span>
                       {% endif %}
-                      <span class="ml-2 option-qty-text">{{ item.quantity }}개</span>
+                      <span class="ml-2 font-semibold text-gray-600 option-qty-text">{{ item.quantity }}개</span>
                     </div>
 
                     <!-- 수량 조절 -->
-                    <div class="flex items-center mt-2 sm:mt-0 border border-gray-300 rounded-full overflow-hidden">
+                    <div class="flex items-center justify-center sm:justify-start mt-2 sm:mt-0 border border-gray-300 rounded-full overflow-hidden w-full sm:w-auto">
                       <button type="button"
                               class="w-8 h-8 flex items-center justify-center border-r border-gray-300 text-gray-600 hover:bg-gray-100 transition decrease-btn">
                         <span class="text-lg leading-none">−</span>
@@ -171,7 +171,7 @@
 
         <!-- 하단 고정 결제 바 -->
         <div class="fixed bottom-0 left-0 w-full bg-black border-t shadow-lg">
-          <div class="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 px-4 sm:px-6 py-3">
+          <div class="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 px-4 sm:px-6 py-3 text-sm sm:text-base">
 
             <!-- 가격 정보 -->
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 w-full sm:w-auto text-center sm:text-left">
@@ -195,7 +195,7 @@
 
             <!-- 결제 버튼 -->
             <button type="submit"
-              class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg sm:text-xl px-6 sm:px-10 py-3 rounded-lg shadow-md transition">
+              class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base sm:text-xl px-4 sm:px-10 py-2 sm:py-3 rounded-lg shadow-md transition">
               {{ _("결제하기") }}
             </button>
           </div>
