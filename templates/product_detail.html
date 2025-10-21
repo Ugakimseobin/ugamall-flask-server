@@ -303,16 +303,6 @@
       {% endfor %}
     {% endif %}
 
-    <div class="flex items-center mb-4">
-      <label class="mr-3 font-semibold text-sm text-gray-700">{{ _("수량") }}</label>
-      <div class="flex items-center border rounded-lg">
-        <button type="button" onclick="changeQuantity('side', -1)" class="px-3 py-2 bg-gray-100">−</button>
-        <input id="quantity-side" type="number" value="1" min="1"
-               class="w-16 text-center border-x p-1 focus:ring-0">
-        <button type="button" onclick="changeQuantity('side', 1)" class="px-3 py-2 bg-gray-100">＋</button>
-      </div>
-    </div>
-
     <button type="submit"
             class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 shadow transition">
       {{ _("장바구니 담기") }}
