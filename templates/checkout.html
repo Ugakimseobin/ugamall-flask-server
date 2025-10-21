@@ -1,12 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="max-w-5xl mx-auto py-6 sm:py-10 px-4 sm:px-6">
-    <h1 class="text-2xl sm:text-3xl font-bold mb-6">{{ _("주문 / 결제") }}</h1>
+  <!-- 상단 헤더 -->
+  <div class="bg-white shadow rounded-lg p-4 sm:p-6 mb-6 flex flex-col items-start text-left">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ _("주문 / 결제") }}</h1>
+    {% if cart_items %}
+      <div class="text-sm sm:text-base text-gray-600 mt-2 sm:mt-0 pt-4">
+        총 <span id="cart-count" class="font-semibold text-indigo-600">{{ cart_items|length }}</span>개 상품
+      </div>
+    {% endif %}
+  </div>
 
     <form method="post" id="checkout-form">
         <!-- 장바구니 -->
         <div class="bg-white shadow rounded p-4 sm:p-6 mb-8">
             {% if cart_items %}
+                <div class="flex items-center justify-between mb-4 border-b pb-3">
+                  <div class="flex items-center gap-4">
+                    <label class="custom-checkbox flex-shrink-0 mr-2 sm:mr-4">
+                      <input type="checkbox" id="select-all" class="all-checkbox">
+                      <span class="checkmark"></span>
+                       <p class="pl-2">전체 선택</p>
+                    </label>
+                    <button type="button" id="delete-selected" class="text-sm text-red-500 hover:text-red-700">
+                      선택 삭제
+                    </button>
+                  </div>
+                  <div class="text-gray-600 text-sm">
+                    선택된 상품: <span id="selected-count" class="font-semibold text-indigo-600">0</span>개
+                  </div>
+                </div>
                 {% for item in cart_items %}
                 <div class="cart-item flex flex-col sm:flex-row sm:items-center border-b py-4 gap-4 sm:gap-0"
                      data-id="{{ item.id }}"
@@ -162,6 +185,51 @@
         </div>
     </form>
 </div>
+
+<script>
+/* ✅ 전체선택 / 선택 삭제 */
+document.getElementById("select-all")?.addEventListener("change", e => {
+  const checked = e.target.checked;
+  document.querySelectorAll(".item-checkbox").forEach(cb => cb.checked = checked);
+  updateTotals();
+  updateSelectedCount();
+});
+
+document.getElementById("delete-selected")?.addEventListener("click", async () => {
+  const selected = [...document.querySelectorAll(".item-checkbox:checked")];
+  if (selected.length === 0) {
+    alert("삭제할 상품을 선택해주세요.");
+    return;
+  }
+
+  if (!confirm(`선택된 ${selected.length}개의 상품을 삭제하시겠습니까?`)) return;
+
+  for (const cb of selected) {
+    const itemEl = cb.closest(".cart-item");
+    const url = itemEl.querySelector(".remove-btn")?.dataset.url;
+    if (url) {
+      try {
+        await fetch(url, {
+          method: "POST",
+          headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+      } catch {
+        console.warn(`❌ 삭제 실패: ${url}`);
+      }
+    }
+  }
+  window.location.reload();
+});
+
+document.querySelectorAll(".item-checkbox").forEach(cb => 
+  cb.addEventListener("change", updateSelectedCount)
+);
+
+function updateSelectedCount() {
+  const selected = document.querySelectorAll(".item-checkbox:checked").length;
+  document.getElementById("selected-count").innerText = selected;
+}
+</script>
 
 <script>
 document.getElementById("checkout-form").addEventListener("submit", async function(e) {
