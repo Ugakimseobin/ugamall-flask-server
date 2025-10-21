@@ -6,7 +6,7 @@
     <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ _("주문 / 결제") }}</h1>
     {% if cart_items %}
       <div class="text-sm sm:text-base text-gray-600 mt-2 sm:mt-0 pt-4">
-        총 <span id="cart-count" class="font-semibold text-indigo-600">{{ cart_items|length }}</span>개 상품
+        {{ _("총") }} <span id="cart-count" class="font-semibold text-indigo-600">{{ cart_items|length }}</span>{{ _("개 상품") }}
       </div>
     {% endif %}
   </div>
@@ -20,14 +20,14 @@
                     <label class="custom-checkbox flex-shrink-0 mr-2 sm:mr-4">
                       <input type="checkbox" id="select-all" class="all-checkbox">
                       <span class="checkmark"></span>
-                       <p class="pl-2">전체 선택</p>
+                       <p class="pl-2">{{ _("전체 선택") }}</p>
                     </label>
                     <button type="button" id="delete-selected" class="text-sm text-red-500 hover:text-red-700">
-                      선택 삭제
+                      {{ _("선택 삭제") }}
                     </button>
                   </div>
                   <div class="text-gray-600 text-sm">
-                    선택된 상품: <span id="selected-count" class="font-semibold text-indigo-600">0</span>개
+                    {{ _("선택된 상품") }}: <span id="selected-count" class="font-semibold text-indigo-600">0</span>{{ _("개") }}
                   </div>
                 </div>
                 {% for item in cart_items %}
@@ -55,7 +55,7 @@
                       <!-- 상단: 이름, 태그 -->
                       <div>
                         <div class="flex items-center gap-2 mb-1">
-                          <span class="bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded">빠른배송</span>
+                          <span class="bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded">{{ _("빠른배송") }}</span>
                         </div>
                         <p class="font-bold text-gray-900 text-base leading-snug">{{ item.product.name }}</p>
 
@@ -75,7 +75,7 @@
                       <div class="mt-2">
                         <div class="flex items-center gap-2">
                           <span class="text-[#222] font-bold text-lg sm:text-xl">
-                            {{ (item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) | int | format }}원
+                            {{ (item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) | int | format }}{{ _("원") }}
                           </span>
                         </div>
                       </div>
@@ -104,7 +104,7 @@
                         <!-- 가격 + 삭제 -->
                         <div class="text-right">
                           <p class="font-semibold text-gray-800 item-total text-sm sm:text-base">
-                            {{ ((item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) * item.quantity) | int | format }}원
+                            {{ ((item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) * item.quantity) | int | format }}{{ _("원") }}
                           </p>
                           <button type="button"
                                   class="remove-btn text-red-500 text-xs hover:text-red-700 mt-1"
@@ -199,7 +199,7 @@
             <!-- 가격 정보 -->
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 w-full sm:w-auto text-center sm:text-left">
               <div class="text-gray-400 text-sm sm:text-base">
-                {{ _("총 상품긍액") }}:
+                {{ _("총 상품금액") }}:
                 <span id="total-price" class="font-semibold text-gray-200">0</span>{{ _("원") }}
               </div>
               <div class="text-gray-400 text-sm sm:text-base">
@@ -207,8 +207,8 @@
                 <span id="discount-price" class="font-semibold text-red-600">0</span>{{ _("원") }}
               </div>
               <div class="text-gray-400 text-sm sm:text-base">
-                배송비:
-                <span id="shipping-fee" class="font-semibold text-gray-200">0</span>원
+                {{ _("배송비") }}:
+                <span id="shipping-fee" class="font-semibold text-gray-200">0</span>{{ _("원") }}
               </div>
               <div class="text-gray-400 text-base sm:text-lg font-bold">
                 {{ _("결제금액") }}:
@@ -238,11 +238,11 @@ document.getElementById("select-all")?.addEventListener("change", e => {
 document.getElementById("delete-selected")?.addEventListener("click", async () => {
   const selected = [...document.querySelectorAll(".item-checkbox:checked")];
   if (selected.length === 0) {
-    alert("삭제할 상품을 선택해주세요.");
+    alert("{{ _('삭제할 상품을 선택해주세요') }}.");
     return;
   }
 
-  if (!confirm(`선택된 ${selected.length}개의 상품을 삭제하시겠습니까?`)) return;
+  if (!confirm(`{{ _("선택된 ${selected.length}개의 상품을 삭제하시겠습니까") }}`)) return;
 
   for (const cb of selected) {
     const itemEl = cb.closest(".cart-item");
@@ -400,7 +400,7 @@ document.querySelectorAll(".remove-btn").forEach(btn => {
     e.preventDefault();
     e.stopPropagation();
     const url = this.dataset.url;
-    if (confirm("이 상품을 장바구니에서 삭제하시겠습니까?")) {
+    if (confirm("{{ _('이 상품을 장바구니에서 삭제하시겠습니까') }}?")) {
       fetch(url, {
         method: "POST",
         headers: { "X-Requested-With": "XMLHttpRequest" }
