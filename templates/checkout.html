@@ -61,11 +61,20 @@
                     </div>
 
                     <!-- 수량 조절 -->
-                    <div class="flex items-center mt-2 sm:mt-0">
-                        <button type="button" class="px-2 py-1 bg-gray-200 rounded-l decrease-btn">-</button>
-                        <input type="number" name="quantity_{{ item.id }}" value="{{ item.quantity }}" min="1"
-                               class="w-12 sm:w-16 text-center border-t border-b text-xs sm:text-sm">
-                        <button type="button" class="px-2 py-1 bg-gray-200 rounded-r increase-btn">+</button>
+                    <div class="flex items-center mt-2 sm:mt-0 border border-gray-300 rounded-full overflow-hidden">
+                      <button type="button"
+                              class="w-8 h-8 flex items-center justify-center border-r border-gray-300 text-gray-600 hover:bg-gray-100 transition decrease-btn">
+                        <span class="text-lg leading-none">−</span>
+                      </button>
+                      <input type="number"
+                            name="quantity_{{ item.id }}"
+                            value="{{ item.quantity }}"
+                            min="1"
+                            class="w-12 text-center outline-none text-sm sm:text-base appearance-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                      <button type="button"
+                              class="w-8 h-8 flex items-center justify-center border-l border-gray-300 text-gray-600 hover:bg-gray-100 transition increase-btn">
+                        <span class="text-lg leading-none">＋</span>
+                      </button>
                     </div>
 
                     <!-- 우측: 가격 + 삭제 -->
