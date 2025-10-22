@@ -750,6 +750,25 @@ def check_email():
     exists = User.query.filter_by(email=email).first() is not None
     return jsonify({"exists": exists})
 
+@app.route("/delete_account", methods=["POST"])
+@login_required
+def delete_account():
+    data = request.get_json()
+    password = data.get("password")
+
+    if not check_password_hash(current_user.password_hash, password):
+        return jsonify({"success": False, "message": "비밀번호가 일치하지 않습니다."}), 400
+
+    try:
+        # 관련 데이터 삭제
+        db.session.delete(current_user)
+        db.session.commit()
+        logout_user()
+        return jsonify({"success": True})
+    except Exception as e:
+        print("❌ 회원탈퇴 실패:", e)
+        return jsonify({"success": False, "message": "서버 오류가 발생했습니다."}), 500
+
 @app.route("/guest_orders", methods=["GET", "POST"])
 def guest_orders():
     if request.method == "POST":
@@ -1137,16 +1156,45 @@ def reset_password_request():
 
         # 메일 발송
         msg = Message("비밀번호 재설정 안내", recipients=[email])
-        msg.body = f"""
-        안녕하세요.
+        msg.html = f"""
+        <div style="font-family: 'Noto Sans KR', sans-serif; max-width: 480px; margin: auto; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
+          <div style="text-align: center; padding: 32px 20px 16px;">
+            <img src="https://ugamall.co.kr/static/images/Uga_logo.png" alt="UGAMALL" style="height: 38px; margin-bottom: 20px;">
+          </div>
 
-        비밀번호를 재설정하려면 아래 링크를 클릭해주세요.
-        이 링크는 1시간 동안만 유효합니다.
+          <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
 
-        {reset_url}
+          <div style="padding: 32px 28px 24px; text-align: center;">
+            <h2 style="font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 12px;">비밀번호 재설정을 요청하셨습니다.</h2>
 
-        감사합니다.
+            <p style="font-size: 15px; color: #374151; line-height: 1.6; margin-bottom: 4px;">
+              안녕하세요, <strong>{user.name}</strong>님.
+            </p>
+            <p style="font-size: 15px; color: #374151; line-height: 1.6; margin-bottom: 20px;">
+              UGAMALL 계정의 비밀번호 재설정을 요청하셨습니다.<br>
+              아래 버튼을 클릭하여 새로운 비밀번호를 설정해주세요.<br>
+              이 링크는 <strong>1시간 후 만료</strong>됩니다.
+            </p>
+
+            <a href="{reset_url}" 
+               style="display: inline-block; background-color: #111827; color: #ffffff; font-weight: 600; padding: 14px 40px; border-radius: 6px; text-decoration: none; font-size: 15px; margin-top: 10px;">
+               비밀번호 재설정
+            </a>
+
+            <p style="font-size: 13px; color: #9ca3af; margin-top: 32px; line-height: 1.6;">
+              본 메일은 발신 전용이며, 회신되지 않습니다.<br>
+              UGAMALL은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다.
+            </p>
+          </div>
+
+          <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
+
+          <div style="text-align: center; background-color: #f9fafb; padding: 16px; font-size: 12px; color: #9ca3af;">
+            © 2025 UGAMALL. All rights reserved.
+          </div>
+        </div>
         """
+
         mail.send(msg)
 
         flash("비밀번호 재설정 메일을 보냈습니다. 메일함을 확인해주세요.", "info")
@@ -2847,14 +2895,41 @@ def send_email_code():
 
     try:
         msg = Message("[UGAMALL] 이메일 인증 코드", recipients=[email])
-        msg.body = f"""
-        안녕하세요, UGAMALL 입니다.
-        아래 인증코드를 입력해 이메일 인증을 완료해주세요.
+        msg.html = f"""
+        <div style="font-family:'Noto Sans KR',sans-serif; max-width:480px; margin:auto; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; background:#ffffff;">
+          <div style="text-align:center; padding:32px 20px 16px;">
+            <img src="https://ugamall.co.kr/static/images/Uga_logo.png" alt="UGAMALL" style="height:38px; margin-bottom:20px;">
+          </div>
 
-        인증코드: {code}
+          <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
 
-        (이 코드는 5분간만 유효합니다.)
+          <div style="padding:32px 28px 24px; text-align:center;">
+            <h2 style="font-size:20px; font-weight:700; color:#111827; margin-bottom:12px;">이메일 인증 요청</h2>
+
+            <p style="font-size:15px; color:#374151; line-height:1.6; margin-bottom:20px;">
+              안녕하세요, UGAMALL 입니다.<br>
+              회원가입을 완료하시려면 아래 인증코드를 입력해주세요.<br>
+              <strong>인증코드는 5분간만 유효</strong>합니다.
+            </p>
+
+            <div style="display:inline-block; background:#111827; color:#ffffff; font-weight:700; letter-spacing:2px; font-size:24px; padding:14px 40px; border-radius:6px; margin:20px 0;">
+              {code}
+            </div>
+
+            <p style="font-size:13px; color:#9ca3af; margin-top:24px; line-height:1.6;">
+              본 메일은 발신 전용이며 회신되지 않습니다.<br>
+              UGAMALL은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다.
+            </p>
+          </div>
+
+          <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
+
+          <div style="text-align:center; background:#f9fafb; padding:16px; font-size:12px; color:#9ca3af;">
+            © 2025 UGAMALL. All rights reserved.
+          </div>
+        </div>
         """
+
         mail.send(msg)
         return jsonify({"message": f"인증 메일이 {email} 로 전송되었습니다."})
     except Exception as e:
