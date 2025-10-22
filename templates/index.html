@@ -37,12 +37,12 @@
       </div>
 
       <!-- ✅ 모바일 전용 설명 박스 -->
-      <div class="sm:hidden absolute inset-0">
-        <!-- 상단 흐림(그라데이션) 오버레이 -->
-        <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black/60 via-black/30 to-transparent pointer-events-none"></div>
+      <div class="sm:hidden absolute bottom-0 left-0 w-full">
+        <!-- 👇 흐림 그라데이션: 텍스트박스 바로 위 경계 부분만 -->
+        <div class="absolute -top-10 left-0 w-full h-10 bg-gradient-to-b from-transparent via-black/30 to-black/60 pointer-events-none"></div>
 
-        <!-- 하단 텍스트 박스 -->
-        <div class="absolute bottom-0 left-0 w-full bg-black/60 text-white px-4 py-3 backdrop-blur-[2px]">
+        <!-- 텍스트 박스 -->
+        <div class="relative bg-black/60 text-white px-4 py-3 backdrop-blur-[2px]">
           <h2 class="text-base font-semibold mb-1">{{ _("UGAMALL 홍보 영상") }}</h2>
           <p class="text-xs text-gray-200 mb-2">{{ _("UGAMALL의 최신 소식과 스토리를 만나보세요.") }}</p>
           <a href="/videos"
