@@ -10,12 +10,21 @@
       <!-- 이메일 -->
       <div>
         <label class="block font-semibold mb-2 text-gray-700">{{ _("이메일") }}</label>
-        <div class="flex gap-3">
-          <input type="email" id="email" name="email" placeholder="{{ _('이메일 입력') }}"
-                 required class="flex-1 border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
-          <button type="button" onclick="checkEmail()"
-                  class="px-5 py-3 btn-dark text-white font-semibold rounded-lg hover:opacity-90 active:scale-[0.97] transition">
-            {{ _("중복확인") }}
+        <div class="flex space-x-2 mb-2">
+          <input type="email" id="email_verify" name="email" value="{{ email or '' }}" placeholder="이메일 입력" 
+                class="border border-gray-300 p-2 rounded-lg flex-1 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
+          <button type="button" id="send-email-btn" onclick="sendEmailCode()"
+                  class="bg-white border border-gray-400 text-[#222] px-3 py-2 rounded-lg hover:opacity-90 active:scale-[0.97] transition">
+            인증메일 보내기
+          </button>
+        </div>
+
+        <div class="flex space-x-2">
+          <input type="text" id="verify_email_code" placeholder="인증코드 입력"
+                class="border border-gray-300 p-2 rounded-lg flex-1 focus:ring-2 focus:ring-green-300 focus:border-green-400 transition">
+          <button type="button" onclick="verifyEmailCode()" 
+                  class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 active:scale-[0.97] transition">
+            인증 확인
           </button>
         </div>
         <p id="email-status" class="text-sm mt-1 text-gray-500"></p>
@@ -45,7 +54,7 @@
       <!-- 이름 -->
       <div>
         <label class="block font-semibold mb-1 text-gray-700">{{ _("이름") }}</label>
-        <input type="text" name="name" placeholder="{{ _('이름') }}"
+        <input type="text" name="name" placeholder="{{ _('이름') }}" value="{{ name or '' }}"
                required class="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
       </div>
 
@@ -60,9 +69,9 @@
             {{ _("주소찾기") }}
           </button>
         </div>
-        <input type="text" id="address" name="address" placeholder="{{ _('기본주소') }}"
+        <input type="text" id="address" name="address" placeholder="{{ _('기본주소') }}" value="{{ base_address or '' }}"
                class="w-full border border-gray-300 p-2 rounded-lg mb-2 bg-gray-100" readonly>
-        <input type="text" id="detailAddress" name="detail_address" placeholder="{{ _('상세주소') }}"
+        <input type="text" id="detailAddress" name="detail_address" placeholder="{{ _('상세주소') }}" value="{{ detail_address or '' }}"
                class="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
       </div>
 
@@ -70,16 +79,16 @@
       <div>
         <label class="block font-semibold mb-1 text-gray-700">{{ _("휴대폰 번호") }}</label>
         <div class="flex space-x-2">
-          <input type="text" id="phone" name="phone" placeholder="예: 01012345678"
+          <input type="text" id="phone" name="phone" placeholder="예: 01012345678" value="{{ phone or '' }}"
                  class="border border-gray-300 p-2 rounded-lg flex-1 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
-          <button type="button" onclick="sendCode()"
+          <!--<button type="button" onclick="sendCode()"
                   class="bg-white border border-gray-400 text-[#222] px-3 py-2 rounded-lg hover:opacity-90 active:scale-[0.97] transition">
             {{ _("인증번호 받기") }}
-          </button>
+          </button>-->
         </div>
       </div>
 
-      <!-- 인증번호 -->
+      <!-- 인증번호 --><!--
       <div class="flex space-x-2">
         <input type="text" id="verify_code" placeholder="{{ _('인증번호 입력') }}"
                class="border border-gray-300 p-2 rounded-lg flex-1 focus:ring-2 focus:ring-green-300 focus:border-green-400 transition">
@@ -87,7 +96,7 @@
                 class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 active:scale-[0.97] transition">
           {{ _("인증 확인") }}
         </button>
-      </div>
+      </div>-->
 
       <!-- 가입 버튼 -->
       <button type="submit"
@@ -114,8 +123,32 @@
       <!-- STEP 1 -->
       <div class="step" id="step1">
         <label class="block font-semibold mb-2">{{ _("이메일") }}</label>
-        <input type="email" name="email" required class="w-full border p-2 rounded mb-4" placeholder="{{ _('이메일') }}">
-        <button type="button" onclick="nextStep(2)" class="w-full bg-indigo-600 text-white py-2 rounded">{{ _("다음") }}</button>
+        
+        <!-- 이메일 입력 + 인증 버튼 -->
+        <div class="flex space-x-2 mb-2">
+          <input type="email" id="email_m" name="email" required
+                class="w-full border p-2 rounded flex-1" placeholder="{{ _('이메일 입력') }}">
+          <button type="button" id="send-email-btn-m" onclick="sendEmailCodeMobile()" 
+                  class="bg-white border border-gray-400 text-[#222] px-3 py-2 rounded-lg hover:bg-gray-100 active:scale-[0.97] transition">
+            {{ _("인증메일 보내기") }}
+          </button>
+        </div>
+
+        <!-- 인증코드 입력 + 인증확인 -->
+        <div class="flex space-x-2 mb-2">
+          <input type="text" id="verify_email_code_m" placeholder="{{ _('인증코드 입력') }}"
+                class="border border-gray-300 p-2 rounded flex-1 focus:ring-2 focus:ring-green-300 focus:border-green-400 transition">
+          <button type="button" onclick="verifyEmailCodeMobile()" 
+                  class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 active:scale-[0.97] transition">
+            {{ _("인증 확인") }}
+          </button>
+        </div>
+
+        <p id="email-status-m" class="text-xs text-gray-500 mb-4"></p>
+
+        <button type="button" onclick="nextStep(2)" class="w-full bg-indigo-600 text-white py-2 rounded">
+          {{ _("다음") }}
+        </button>
       </div>
 
       <!-- STEP 2 -->
@@ -155,8 +188,8 @@
       <div class="step hidden" id="step5">
         <label class="block font-semibold mb-2">{{ _("휴대폰 번호") }}</label>
         <input type="text" id="phone_m" name="phone" placeholder="01012345678" class="w-full border p-2 rounded mb-2">
-        <button type="button" onclick="sendCode()" class="w-full bg-indigo-600 text-white py-2 rounded mb-2">{{ _("인증번호 받기") }}</button>
-        <input type="text" id="verify_code_m" placeholder="{{ _('인증번호 입력') }}" class="w-full border p-2 rounded mb-4">
+        <!--<button type="button" onclick="sendCode()" class="w-full bg-indigo-600 text-white py-2 rounded mb-2">{{ _("인증번호 받기") }}</button>
+        <input type="text" id="verify_code_m" placeholder="{{ _('인증번호 입력') }}" class="w-full border p-2 rounded mb-4">-->
         <div class="flex justify-between">
           <button type="button" onclick="prevStep(4)" class="bg-gray-300 px-4 py-2 rounded">{{ _("이전") }}</button>
           <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">{{ _("가입하기") }}</button>
@@ -262,6 +295,7 @@ document.getElementById("register-form").addEventListener("submit", e => {
 </script>
 
 <!-- ✅ 인증 관련 -->
+ <!--
 <script>
 function sendCode() {
   const phone = document.getElementById("phone").value;
@@ -281,7 +315,7 @@ function verifyCode() {
   }).then(r => r.json()).then(data => alert(data.message));
 }
 </script>
-
+-->
 <script>
 let currentStep = 1;
 const totalSteps = 5;
@@ -366,8 +400,189 @@ function prevStep(step) {
 updateProgress();
 </script>
 
+<!-- 데스크탑 이메일 인증 -->
+<script>
+function sendEmailCode() {
+  const email = document.getElementById("email_verify").value.trim();
+  const btn = document.getElementById("send-email-btn");
+  const statusEl = document.getElementById("email-status");
+
+  if (!email) return alert("이메일을 입력해주세요.");
+
+  btn.disabled = true;
+  btn.innerHTML = `<span>확인 중...</span><div class='loading-spinner'></div>`;
+  
+  fetch("/check_email", {
+    method: "POST",
+    credentials: "include", // ✅ 세션 유지
+    body: new URLSearchParams({ email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.exists) {
+      statusEl.textContent = "이미 가입된 이메일입니다.";
+      statusEl.className = "text-xs text-red-500 mt-1";
+      btn.disabled = false;
+      btn.innerHTML = `<span>인증메일 보내기</span>`;
+      throw new Error("duplicate");
+    }
+
+    // 2️⃣ 중복 아니면 인증메일 발송
+    btn.innerHTML = `<span>전송 중...</span><div class='loading-spinner'></div>`;
+    return fetch("/send_email_code", {
+      method: "POST",
+      body: new URLSearchParams({ email })
+    });
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    statusEl.textContent = "인증메일이 발송되었습니다.";
+    statusEl.className = "text-xs text-green-600 mt-1";
+  })
+  .catch(err => {
+    if (err.message !== "duplicate") {
+      alert("이메일 전송 중 오류가 발생했습니다.");
+      console.error(err);
+    }
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.innerHTML = `<span>인증메일 보내기</span>`;
+  });
+}
+
+function verifyEmailCode() {
+  const code = document.getElementById("verify_email_code").value.trim();
+  const statusEl = document.getElementById("email-status");
+
+  if (!code) return alert("인증코드를 입력해주세요.");
+
+  fetch("/verify_email_code", {
+    method: "POST",
+    credentials: "include", // ✅ 세션 유지
+    body: new URLSearchParams({ code })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+
+    if (data.message.includes("인증이 완료되었습니다")) {
+      statusEl.textContent = "이메일 인증이 완료되었습니다!";
+      statusEl.className = "text-xs text-green-600 mt-1 font-semibold";
+    } else {
+      statusEl.textContent = "인증에 실패했습니다. 다시 시도해주세요.";
+      statusEl.className = "text-sm text-red-500 mt-1";
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("서버 오류가 발생했습니다.");
+  });
+}
+</script>
+
+<!-- 모바일 이메일 인증 -->
+<script>
+function sendEmailCodeMobile() {
+  const email = document.getElementById("email_m").value.trim();
+  const btn = document.getElementById("send-email-btn-m");
+  const statusEl = document.getElementById("email-status-m");
+
+  if (!email) return alert("이메일을 입력해주세요.");
+
+  btn.disabled = true;
+  btn.innerHTML = `<span>확인 중...</span><div class='loading-spinner'></div>`;
+
+  fetch("/check_email", {
+    method: "POST",
+    credentials: "include", // ✅ 세션 유지
+    body: new URLSearchParams({ email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.exists) {
+      statusEl.textContent = "이미 가입된 이메일입니다.";
+      statusEl.className = "text-xs text-red-500 mt-1";
+      btn.disabled = false;
+      btn.innerHTML = `<span>인증메일 보내기</span>`;
+      throw new Error("duplicate");
+    }
+
+    // 2️⃣ 중복 아니면 인증메일 발송
+    btn.innerHTML = `<span>전송 중...</span><div class='loading-spinner'></div>`;
+    return fetch("/send_email_code", {
+      method: "POST",
+      body: new URLSearchParams({ email })
+    });
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    statusEl.textContent = "인증메일이 발송되었습니다.";
+    statusEl.className = "text-xs text-green-600 mt-1";
+  })
+  .catch(err => {
+    if (err.message !== "duplicate") {
+      alert("이메일 전송 중 오류가 발생했습니다.");
+      console.error(err);
+    }
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.innerHTML = `<span>인증메일 보내기</span>`;
+  });
+}
+
+function verifyEmailCodeMobile() {
+  const code = document.getElementById("verify_email_code_m").value.trim();
+  const statusEl = document.getElementById("email-status-m");
+
+  if (!code) return alert("인증코드를 입력해주세요.");
+
+  fetch("/verify_email_code", {
+    method: "POST",
+    credentials: "include", // ✅ 세션 유지
+    body: new URLSearchParams({ code })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+
+    if (data.message.includes("인증이 완료되었습니다")) {
+      statusEl.textContent = "✅ 이메일 인증이 완료되었습니다!";
+      statusEl.className = "text-xs text-green-600 mt-1 font-semibold";
+    } else {
+      statusEl.textContent = "인증에 실패했습니다. 다시 시도해주세요.";
+      statusEl.className = "text-xs text-red-500 mt-1";
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("서버 오류가 발생했습니다.");
+  });
+}
+</script>
+
 <style>
 input:focus { outline: none !important; box-shadow: 0 0 0 2px rgba(99,102,241,0.3); }
 button { transition: all 0.2s ease; }
+</style>
+<style>
+.loading-spinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #4f46e5;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
 {% endblock %}

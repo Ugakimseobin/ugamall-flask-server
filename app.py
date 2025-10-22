@@ -10,7 +10,7 @@ from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
 import requests
 import os
-import random, time
+import random, time, string
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from flask_migrate import Migrate
@@ -680,6 +680,7 @@ def register_terms():
 # 2단계: 유저 정보 입력
 @app.route("/register/info", methods=["GET", "POST"])
 def register_info():
+    print("🟨 register_info 세션 상태:", dict(session))
     if request.method == "POST":
         email = request.form.get("email", "").strip()
         password = request.form.get("password", "")
@@ -689,26 +690,30 @@ def register_info():
         detail_address = request.form.get("detail_address", "").strip()
         phone = request.form.get("phone", "").strip()
 
-        # ✅ 이메일 중복 체크
+        # ✅ 이메일 인증 여부 확인
+        if not session.get("email_verified") or session.get("verified_email") != email:
+            flash("이메일 인증을 완료해야 회원가입이 가능합니다.", "error")
+            return render_template(
+                "auth/register_info.html",
+                email=email, name=name, phone=phone,
+                base_address=base_address, detail_address=detail_address
+            )
+
+        # ✅ 이메일 중복
         existing = User.query.filter_by(email=email).first()
         if existing:
             flash("이미 사용 중인 이메일입니다.", "error")
             return redirect(url_for("register_info"))
 
-        # ✅ 비밀번호 일치 확인
+        # ✅ 비밀번호 일치
         if password != password_confirm:
             flash("비밀번호가 일치하지 않습니다.", "error")
             return redirect(url_for("register_info"))
 
-        # ✅ 비밀번호 보안 정책 검증 (8자 이상, 대문자/숫자/특수문자 포함)
+        # ✅ 비밀번호 규칙
         pw_policy = re.compile(r"^(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$")
         if not pw_policy.match(password):
             flash("비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다.", "error")
-            return redirect(url_for("register_info"))
-
-        # ✅ 휴대폰 인증 여부 확인
-        if not session.get("phone_verified"):
-            flash("휴대폰 인증을 완료해야 회원가입이 가능합니다.", "error")
             return redirect(url_for("register_info"))
 
         # ✅ 회원 생성
@@ -725,10 +730,14 @@ def register_info():
             agree_age=session.get("agreements", {}).get("agree_age", False),
             agree_marketing=session.get("agreements", {}).get("agree_marketing", False),
         )
-        user.set_password(password)  # User 모델에 set_password(해시) 함수 필요
+        user.set_password(password)
 
         db.session.add(user)
         db.session.commit()
+
+        # 세션 초기화
+        session.pop("email_verified", None)
+        session.pop("verified_email", None)
 
         flash("회원가입이 완료되었습니다. 로그인해주세요.", "success")
         return redirect(url_for("login"))
@@ -2489,6 +2498,7 @@ def admin_confirm_deposit(order_id):
         payment = Payment(
             order_id=order.id,
             merchant_uid=f"DEPOSIT_{order.id}_{int(datetime.utcnow().timestamp())}",
+            imp_uid=f"MANUAL_{order.id}",   # ✅ 수동 결제라도 imp_uid 형태로 만들어둠
             amount=final_amount,
             status="paid",
             paid_at=datetime.utcnow(),
@@ -2824,9 +2834,59 @@ def claim_coupons():
     db.session.commit()
     return jsonify({"ok": True, "added": added})
 
-@app.route("/debug")
-def debug():
-    return f"로그인 여부: {current_user.is_authenticated}, id={getattr(current_user,'id',None)}"
+@app.route('/send_email_code', methods=['POST'])
+def send_email_code():
+    email = request.form.get('email')
+    if not email:
+        return jsonify({'message': '이메일을 입력해주세요.'})
+
+    code = ''.join(random.choices(string.digits, k=6))
+    session['email_code'] = code
+    session["email_code_time"] = time.time()
+    session["email_target"] = email
+
+    try:
+        msg = Message("[UGAMALL] 이메일 인증 코드", recipients=[email])
+        msg.body = f"""
+        안녕하세요, UGAMALL 입니다.
+        아래 인증코드를 입력해 이메일 인증을 완료해주세요.
+
+        인증코드: {code}
+
+        (이 코드는 5분간만 유효합니다.)
+        """
+        mail.send(msg)
+        return jsonify({"message": f"인증 메일이 {email} 로 전송되었습니다."})
+    except Exception as e:
+        print("⚠️ 메일 전송 실패:", e)
+        return jsonify({"message": "메일 전송 중 오류가 발생했습니다."}), 500
+
+@app.route("/verify_email_code", methods=["POST"])
+def verify_email_code():
+    code = request.form.get("code")
+    saved_code = session.get("email_code")
+    saved_time = session.get("email_code_time")
+    email_target = session.get("email_target")
+
+    # 세션 만료 또는 코드 없음
+    if not saved_code or not saved_time:
+        return jsonify({"message": "인증 코드가 만료되었거나 존재하지 않습니다."}), 400
+
+    # 5분(300초) 제한
+    if time.time() - saved_time > 300:
+        session.pop("email_code", None)
+        session.pop("email_code_time", None)
+        session.pop("email_target", None)
+        return jsonify({"message": "인증 코드가 만료되었습니다. 다시 시도해주세요."}), 400
+
+    # 코드 일치 확인
+    if code == saved_code:
+        session["email_verified"] = True
+        session["verified_email"] = email_target  # ✅ 인증된 이메일 저장
+        print("✅ 세션 상태 (인증 후):", dict(session))
+        return jsonify({"message": f"{email_target} 인증이 완료되었습니다!"})
+    else:
+        return jsonify({"message": "인증코드가 올바르지 않습니다."}), 400
 
 @app.route('/autocomplete')
 def autocomplete():
