@@ -48,7 +48,9 @@
       <div>
         <label class="block font-semibold mb-2 text-gray-700">{{ _("비밀번호 확인") }}</label>
         <input type="password" id="password_confirm" name="password_confirm" placeholder="{{ _('비밀번호 확인') }}"
-               required class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
+               required class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition"
+       oninput="checkPasswordMatch()">
+        <p id="pw-match-text" class="text-sm mt-2"></p>
       </div>
 
       <!-- 이름 -->
@@ -273,6 +275,25 @@ function checkPasswordStrength(password) {
   bar.style.background = colors[Math.min(score - 1, 2)] || "#d1d5db";
   text.textContent = score < 3 ? `비밀번호 강도: ${labels[Math.min(score - 1, 2)] || '약함'}` : "비밀번호 강도: 매우 강함";
   text.className = `text-sm mt-1 ${score < 2 ? 'text-red-500' : score === 2 ? 'text-yellow-600' : 'text-green-600'}`;
+}
+
+function checkPasswordMatch() {
+  const pw = document.getElementById("password").value;
+  const pwc = document.getElementById("password_confirm").value;
+  const text = document.getElementById("pw-match-text");
+
+  if (!pwc) {
+    text.textContent = "";
+    return;
+  }
+
+  if (pw === pwc) {
+    text.textContent = "비밀번호가 일치합니다.";
+    text.className = "text-xs text-green-600 mt-2";
+  } else {
+    text.textContent = "비밀번호가 일치하지 않습니다.";
+    text.className = "text-xs text-red-500 mt-2";
+  }
 }
 
 // 제출 전 검증
