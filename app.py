@@ -11,7 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 import requests
 import os
 import random, time
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from flask_migrate import Migrate
 from sqlalchemy.dialects.mysql import JSON
@@ -23,7 +23,6 @@ import uuid
 import json
 from threading import Thread
 import socket
-from datetime import timedelta
 
 app = Flask(__name__)
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -305,6 +304,18 @@ class OrderItem(db.Model):
     order = db.relationship("Order", back_populates="items")
     variant = db.relationship("ProductVariant", back_populates="order_items")
 
+class OrderReturn(db.Model):
+    __tablename__ = "order_returns"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
+    reason = db.Column(db.Text, nullable=False)
+    type = db.Column(db.String(20), nullable=False)  # 'return' or 'exchange'
+    status = db.Column(db.String(20), default="요청접수")  # 요청접수 / 처리중 / 완료
+    created_at = db.Column(db.DateTime, default=datetime.now(KST))
+
+    user = db.relationship("User", backref="returns")
+    order = db.relationship("Order", backref="return_request")
 # -----------------------------
 # 사용자 함수
 # -----------------------------
@@ -337,6 +348,22 @@ def format_kst(dt):
     except Exception:
         return dt.strftime('%Y-%m-%d %H:%M')
     
+@app.template_filter("status_label")
+def status_label_filter(status):
+    mapping = {
+        "주문 접수": "주문 접수",
+        "입금대기": "입금대기",
+        "결제대기": "결제대기",
+        "결제완료": "결제완료",
+        "배송중": "배송중",
+        "배송완료": "배송완료",
+        "canceled": "취소됨",
+        "paid": "결제완료",
+        "delivered": "배송완료",
+        "pending": "주문 접수"
+    }
+    return mapping.get(status, status)
+
 def allowed_file_ext(filename, allowed_exts):
     _, ext = os.path.splitext(filename or "")
     return ext.lower() in allowed_exts and len(ext) > 0
@@ -573,24 +600,41 @@ def _compute_date_range(period: str | None, start_date_str: str | None, end_date
 # 주문 상태 한국어 변환
 # -----------------------------
 STATUS_LABEL_TEXT = {
+    # 영어 상태코드
     "pending":   "결제대기",
     "ready":     "결제대기",
     "paid":      "결제완료",
     "shipped":   "배송중",
     "delivered": "배송완료",
     "canceled":  "취소됨",
-    "cancelled": "취소됨",  # 철자 혼용 보정
-    "-":         "-",
-    None:        "-"
+    "cancelled": "취소됨",
+
+    # 한글 상태코드도 추가
+    "주문 접수": "주문 접수",
+    "입금대기": "입금대기",
+    "결제대기": "결제대기",
+    "결제완료": "결제완료",
+    "배송중":   "배송중",
+    "배송완료": "배송완료",
+    "취소됨":   "취소됨",
+    "반품요청": "반품요청",
+    "교환요청": "교환요청",
+    "반품처리중": "반품처리중",
+    "교환처리중": "교환처리중",
+
+    "-": "-",
+    None: "-"
 }
 
 # 드롭다운 옵션(변경용)
 STATUS_OPTIONS = [
-    {"value": "pending",   "label": "결제대기"},
-    {"value": "paid",      "label": "결제완료"},
-    {"value": "shipped",   "label": "배송중"},
-    {"value": "delivered", "label": "배송완료"},
-    {"value": "canceled",  "label": "취소됨"},
+    {"value": "주문 접수", "label": "주문 접수"},
+    {"value": "입금대기", "label": "입금대기"},
+    {"value": "결제대기", "label": "결제대기"},
+    {"value": "결제완료", "label": "결제완료"},
+    {"value": "배송중", "label": "배송중"},
+    {"value": "배송완료", "label": "배송완료"},
+    {"value": "취소됨", "label": "취소됨"},
 ]
 
 @app.template_filter("status_label")
@@ -986,6 +1030,75 @@ def cancel_order(order_id):
 
     db.session.commit()
     flash(f"주문번호 {order.id}이(가) 취소되었습니다.", "success")
+    return redirect(url_for("mypage"))
+
+@app.route("/return_exchange/<int:order_id>", methods=["POST"])
+@login_required
+def return_exchange(order_id):
+    """사용자 반품/교환 신청"""
+    order = Order.query.filter_by(id=order_id, user_id=current_user.id).first_or_404()
+
+    # 배송완료 상태에서만 가능
+    if order.status not in ["배송완료"]:
+        flash("배송이 완료된 주문만 반품 또는 교환이 가능합니다.", "error")
+        return redirect(url_for("mypage"))
+
+    request_type = request.form.get("request_type")
+    reason = (request.form.get("reason") or "").strip()
+
+    if request_type not in ["반품", "교환"]:
+        flash("잘못된 요청 유형입니다.", "error")
+        return redirect(url_for("mypage"))
+
+    # 주문 상태 변경
+    if request_type == "반품":
+        order.status = "반품요청"
+    elif request_type == "교환":
+        order.status = "교환요청"
+
+    db.session.commit()
+
+    # ✅ 관리자 알림용 (선택: 이메일 등으로 알림 가능)
+    print(f"📦 [사용자 요청] 주문 {order.id} - {request_type} 요청 사유: {reason}")
+
+    flash(f"{request_type} 신청이 접수되었습니다. 관리자 확인 후 진행됩니다.", "success")
+    return redirect(url_for("mypage"))
+
+@app.route("/order/request_return", methods=["POST"])
+@login_required
+def request_return():
+    order_id = request.form.get("order_id", type=int)
+    req_type = request.form.get("type")  # 'return' or 'exchange'
+    reason = request.form.get("reason", "").strip()
+
+    if not order_id or not req_type or not reason:
+        flash("모든 항목을 입력해주세요.", "error")
+        return redirect(url_for("mypage"))
+
+    # 이미 존재하는지 확인
+    existing = OrderReturn.query.filter_by(order_id=order_id).first()
+    if existing:
+        flash("이미 신청이 접수되었습니다.", "error")
+        return redirect(url_for("mypage"))
+
+    # ✅ OrderReturn 테이블에 새 요청 저장
+    new_return = OrderReturn(
+        user_id=current_user.id,
+        order_id=order_id,
+        type=req_type,
+        reason=reason,
+        status="요청접수",
+        created_at=datetime.now()
+    )
+    db.session.add(new_return)
+
+    # 주문 테이블 상태도 함께 변경
+    order = Order.query.get(order_id)
+    if order:
+        order.status = "요청접수"
+    db.session.commit()
+
+    flash(f"{'반품' if req_type == 'return' else '교환'} 신청이 접수되었습니다.", "success")
     return redirect(url_for("mypage"))
 
 @app.route("/my_coupons")
@@ -1765,6 +1878,57 @@ def admin_assign_coupon(coupon_id):
     flash(f"{user.email} 님에게 쿠폰 '{coupon.name}' 지급 완료!", "success")
     return redirect(url_for("admin_coupons"))
 
+@app.route("/admin/returns", methods=["GET", "POST"])
+@login_required
+def admin_returns():
+    if not current_user.is_admin:
+        flash("관리자만 접근 가능합니다.", "error")
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+        return_id = request.form.get("return_id", type=int)
+        action = request.form.get("action")
+
+        req = OrderReturn.query.get(return_id)
+        if not req:
+            flash("해당 주문의 반품/교환 요청을 찾을 수 없습니다.", "error")
+            return redirect(url_for("admin_returns"))
+
+        order = Order.query.get(req.order_id)
+
+        if action == "approve":
+            req.status = "승인완료"
+            if order:
+                order.status = "반품처리중" if req.type == "return" else "교환처리중"
+            flash(f"주문 {req.order_id}의 요청이 승인되었습니다.", "success")
+
+        elif action == "reject":
+            req.status = "거절됨"
+            if order:
+                order.status = "배송완료"
+            flash(f"주문 {req.order_id}의 요청이 거절되었습니다.", "info")
+
+        elif action == "complete":
+            req.status = "처리완료"
+            if order:
+                if req.type == "return":
+                    order.status = "반품완료"
+                else:
+                    order.status = "교환완료"
+            flash(f"주문 {req.order_id}의 { '반품' if req.type == 'return' else '교환' }이 완료되었습니다.", "success")
+
+        db.session.commit()
+        return redirect(url_for("admin_returns"))
+
+    # GET
+    return_orders = (
+        OrderReturn.query
+        .options(joinedload(OrderReturn.user))
+        .order_by(OrderReturn.created_at.desc())
+        .all()
+    )
+    return render_template("admin/admin_returns.html", return_orders=return_orders)
+
 @app.route("/admin/products")
 @login_required
 def admin_products():
@@ -2430,7 +2594,6 @@ def admin_cancel_order(order_id):
 
     return redirect(url_for("admin_orders"))
 
-
 @app.route("/admin/inquiries", methods=["GET", "POST"])
 @login_required
 def admin_inquiries():
@@ -2481,7 +2644,6 @@ def admin_inquiries():
         )
 
     # 📅 기간 필터
-    from datetime import datetime, timedelta
     now = datetime.now(KST)
 
     if period == "1m":

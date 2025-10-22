@@ -9,6 +9,7 @@
       <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-indigo-600 text-white" data-tab="info">{{ _("개인정보") }}</button></li>
       <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="inquiry">{{ _("문의내역") }}</button></li>
       <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="coupons">{{ _("내 쿠폰함") }}</button></li>
+      <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="returns">반품/교환 내역</button></li>
     </ul>
   </aside>
 
@@ -66,6 +67,13 @@
                     {{ _("주문취소") }}
                   </button>
                 </form>
+                {% endif %}
+                {% if order.status == "배송완료" %}
+                <button 
+                  class="mt-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded hover:bg-yellow-600"
+                  onclick="openReturnModal('{{ order.id }}')">
+                  반품/교환 신청
+                </button>
                 {% endif %}
               </div>
             </div>
@@ -252,6 +260,58 @@
         {% endif %}
     </section>
 
+    <section id="tab-returns" class="tab-content hidden">
+      <h3 class="text-lg sm:text-xl font-bold mb-4">반품 / 교환 내역</h3>
+      {% if user.returns|length == 0 %}
+        <p class="text-gray-500">신청 내역이 없습니다.</p>
+      {% else %}
+      <table class="w-full text-sm border">
+        <thead>
+          <tr class="bg-gray-100 text-left">
+            <th class="border px-3 py-2">주문번호</th>
+            <th class="border px-3 py-2">종류</th>
+            <th class="border px-3 py-2">사유</th>
+            <th class="border px-3 py-2">상태</th>
+            <th class="border px-3 py-2">신청일</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in user.returns %}
+          <tr>
+            <td class="border px-3 py-2">{{ r.order_id }}</td>
+            <td class="border px-3 py-2">{{ "반품" if r.type == "return" else "교환" }}</td>
+            <td class="border px-3 py-2">{{ r.reason }}</td>
+            <td class="border px-3 py-2">{{ r.status }}</td>
+            <td class="border px-3 py-2">{{ r.created_at|kst }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </section>
+
+    <!-- 반품/교환 신청 모달 -->
+    <div id="returnModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-lg font-bold mb-3">반품 / 교환 신청</h3>
+        <form method="POST" action="{{ url_for('request_return') }}" class="space-y-3">
+          <input type="hidden" name="order_id" id="returnOrderId">
+          <label class="block text-sm font-semibold">신청 종류</label>
+          <select name="type" class="w-full border rounded p-2">
+            <option value="return">반품</option>
+            <option value="exchange">교환</option>
+          </select>
+
+          <label class="block text-sm font-semibold">사유</label>
+          <textarea name="reason" rows="3" class="w-full border rounded p-2" required></textarea>
+
+          <div class="flex justify-end gap-2 pt-3">
+            <button type="button" onclick="closeReturnModal()" class="px-4 py-2 bg-gray-300 rounded">취소</button>
+            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">신청</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </main>
 </div>
 
@@ -401,4 +461,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<!-- 환불/교환 모달 -->
+<script>
+function openReturnModal(orderId) {
+  document.getElementById("returnModal").classList.remove("hidden");
+  document.getElementById("returnOrderId").value = orderId;
+}
+function closeReturnModal() {
+  document.getElementById("returnModal").classList.add("hidden");
+}
+</script>
 {% endblock %}

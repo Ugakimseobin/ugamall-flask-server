@@ -28,13 +28,14 @@
         {% for p in products %}
         <tr class="hover:bg-gray-50">
           <td class="border px-3 py-2">{{ p.id }}</td>
-          <td class="border px-3 py-2 font-semibold">{{ p.name }}</td>
+          <td class="truncate max-w-xs border px-3 py-2 font-semibold">{{ p.name }}</td>
           <td class="border px-3 py-2">{{ "{:,.0f}".format(p.base_price) }}원</td>
           <td class="border px-3 py-2">{{ p.category }}</td>
           <td class="border px-3 py-2">
-            {% if p.image %}
-              <img src="{{ url_for('static', filename='images/' ~ p.image) }}" 
-                   class="h-12 w-12 object-cover rounded shadow">
+            {% if p.image_data %}
+              <img src="{{ url_for('serve_product_image', product_id=p.id) }}"
+                  alt="{{ p.name }}"
+                  class="h-12 w-12 object-cover rounded shadow">
             {% else %}
               <span class="text-gray-400 text-sm">없음</span>
             {% endif %}
