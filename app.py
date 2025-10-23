@@ -1171,7 +1171,7 @@ def reset_password_request():
               안녕하세요, <strong>{user.name}</strong>님.
             </p>
             <p style="font-size: 15px; color: #374151; line-height: 1.6; margin-bottom: 20px;">
-              UGAMALL 계정의 비밀번호 재설정을 요청하셨습니다.<br>
+              <strong>유가몰</strong> 계정의 비밀번호 재설정을 요청하셨습니다.<br>
               아래 버튼을 클릭하여 새로운 비밀번호를 설정해주세요.<br>
               이 링크는 <strong>1시간 후 만료</strong>됩니다.
             </p>
@@ -1183,7 +1183,7 @@ def reset_password_request():
 
             <p style="font-size: 13px; color: #9ca3af; margin-top: 32px; line-height: 1.6;">
               본 메일은 발신 전용이며, 회신되지 않습니다.<br>
-              UGAMALL은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다.
+              <strong>유가몰</strong>은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다.
             </p>
           </div>
 
@@ -2907,7 +2907,7 @@ def send_email_code():
             <h2 style="font-size:20px; font-weight:700; color:#111827; margin-bottom:12px;">이메일 인증 요청</h2>
 
             <p style="font-size:15px; color:#374151; line-height:1.6; margin-bottom:20px;">
-              안녕하세요, UGAMALL 입니다.<br>
+              안녕하세요, <strong>유가몰</strong> 입니다.<br>
               회원가입을 완료하시려면 아래 인증코드를 입력해주세요.<br>
               <strong>인증코드는 5분간만 유효</strong>합니다.
             </p>
@@ -2918,7 +2918,7 @@ def send_email_code():
 
             <p style="font-size:13px; color:#9ca3af; margin-top:24px; line-height:1.6;">
               본 메일은 발신 전용이며 회신되지 않습니다.<br>
-              UGAMALL은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다.
+              <strong>유가몰</strong>은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다.
             </p>
           </div>
 
