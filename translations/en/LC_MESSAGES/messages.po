@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-24 10:15+0900\n"
+"POT-Creation-Date: 2025-10-24 11:55+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -132,7 +132,9 @@ msgstr " "
 
 #: app.py:2938
 msgid "이메일 인증을 완료하시려면 아래 인증코드를 입력해주세요."
-msgstr "To complete email authentication, please enter the authentication code below"          
+msgstr ""
+"To complete email authentication, please enter the authentication code "
+"below"
 
 #: app.py:2939
 msgid "인증코드는 5분간만 유효합니다."
@@ -301,7 +303,8 @@ msgid "이메일 입력"
 msgstr "Email"
 
 #: templates/auth/register_info.html:18 templates/auth/register_info.html:135
-#: templates/checkout.html:175 templates/guest_orders_search.html:18
+#: templates/auth/register_info.html:529 templates/checkout.html:175
+#: templates/guest_orders_search.html:18
 msgid "인증메일 보내기"
 msgstr "send"
 
@@ -394,10 +397,13 @@ msgstr "An error occurred while processing payment"
 msgid "이 상품을 장바구니에서 삭제하시겠습니까"
 msgstr "Are you sure you want to delete this item from your shopping cart"
 
-#: templates/checkout.html:490 templates/guest_orders_search.html:56
+#: templates/auth/register_info.html:242 templates/auth/register_info.html:356
+#: templates/auth/register_info.html:431 templates/checkout.html:490
+#: templates/guest_orders_search.html:56
 msgid "이메일을 입력해주세요"
 msgstr "Email"
 
+#: templates/auth/register_info.html:452 templates/auth/register_info.html:534
 #: templates/checkout.html:493 templates/guest_orders_search.html:59
 msgid "전송 중"
 msgstr "Transmission"
@@ -406,15 +412,18 @@ msgstr "Transmission"
 msgid "인증메일이 발송되었습니다. 메일함을 확인해주세요"
 msgstr "Authentication mail has been sent, please check your mailbox"
 
-#: templates/checkout.html:519 templates/guest_orders_search.html:85
+#: templates/auth/register_info.html:562 templates/checkout.html:519
+#: templates/guest_orders_search.html:85
 msgid "인증코드를 입력해주세요"
 msgstr "Password"
 
-#: templates/checkout.html:530 templates/guest_orders_search.html:96
+#: templates/auth/register_info.html:574 templates/checkout.html:530
+#: templates/guest_orders_search.html:96
 msgid "이메일 인증이 완료되었습니다"
 msgstr "Payment completed"
 
-#: templates/checkout.html:534 templates/guest_orders_search.html:100
+#: templates/auth/register_info.html:577 templates/checkout.html:534
+#: templates/guest_orders_search.html:100
 msgid "인증에 실패했습니다. 다시 시도해주세요"
 msgstr "Authentication failed, please try again"
 
@@ -680,6 +689,10 @@ msgstr "Inquiry History"
 msgid "내 쿠폰함"
 msgstr "my coupon"
 
+#: templates/mypage.html:12
+msgid "반품/교환 내역"
+msgstr "Return / Exchange details"
+
 #: templates/mypage.html:26
 msgid "최대(5년)"
 msgstr "max 5 years"
@@ -765,7 +778,9 @@ msgstr "Membership Withdrawal"
 
 #: templates/mypage.html:199
 msgid "탈퇴 시 모든 주문내역, 쿠폰, 포인트 정보가 삭제되며 복구가 불가능합니다"
-msgstr "If you leave, all order details, coupons, and points will be deleted and cannot be recovered"
+msgstr ""
+"If you leave, all order details, coupons, and points will be deleted and "
+"cannot be recovered"
 
 #: templates/mypage.html:207
 msgid "문의 내역"
@@ -1048,7 +1063,9 @@ msgstr "Parcel Service"
 
 #: templates/product_detail.html:176
 msgid "결제 완료 후 평균 2~4일 이내 배송(주말 및 공휴일 제외)"
-msgstr "Delivery within 2-4 days on average after payment is completed (excluding weekends and holidays)"
+msgstr ""
+"Delivery within 2-4 days on average after payment is completed (excluding"
+" weekends and holidays)"
 
 #: templates/product_detail.html:180
 msgid "교환/반품 안내"
@@ -1068,7 +1085,9 @@ msgstr "Full free exchange/refund in case of product defect or misdelivery"
 
 #: templates/product_detail.html:186
 msgid "고객 부주의로 인한 훼손, 사용 흔적이 있을 경우 불가"
-msgstr "Damage due to customer carelessness, not possible if there are traces of use"
+msgstr ""
+"Damage due to customer carelessness, not possible if there are traces of "
+"use"
 
 #: templates/product_detail.html:191
 msgid "취소/환불 규정"
@@ -1076,11 +1095,15 @@ msgstr "Cancellation/refund regulations"
 
 #: templates/product_detail.html:193
 msgid "상품 준비 중 상태에서는 취소 가능하며, 배송 이후에는 반품 절차를 통해 처리됩니다"
-msgstr "Cancellation is possible when the product is being prepared, and after delivery, it will be processed through a return process"
+msgstr ""
+"Cancellation is possible when the product is being prepared, and after "
+"delivery, it will be processed through a return process"
 
 #: templates/product_detail.html:199
 msgid "본 상품정보는 전자상거래 등에서의 상품정보제공고시에 따라 작성되었습니다"
-msgstr "This product information was prepared in accordance with the notice of product information provision in e-commerce, etc"
+msgstr ""
+"This product information was prepared in accordance with the notice of "
+"product information provision in e-commerce, etc"
 
 #: templates/product_detail.html:205
 msgid "주의사항"
@@ -1088,19 +1111,26 @@ msgstr "precautions"
 
 #: templates/product_detail.html:207
 msgid "전자상거래 등에서의 소비자보호법에 따라 미성년자가 물품을 구매하는 경우, 법정대리인의 동의가 없으면 구매를 취소할 수 있습니다"
-msgstr "In accordance with the Consumer Protection Act in e-commerce, if a minor purchases an item, the purchase can be canceled without the consent of a legal representative"
+msgstr ""
+"In accordance with the Consumer Protection Act in e-commerce, if a minor "
+"purchases an item, the purchase can be canceled without the consent of a "
+"legal representative"
 
 #: templates/product_detail.html:208
 msgid ""
 "본 사이트에 등록된 모든 상품은 주식회사 유가에서 직접 판매·관리하는 정품이며, 제품 정보와 가격은 사전 예고 없이 변경될 수 "
 "있습니다"
 msgstr ""
-"All products registered on this site are genuine products sold and managed directly by oil prices, and product information and prices are subject to change without prior notice"
-"There is"
+"All products registered on this site are genuine products sold and "
+"managed directly by oil prices, and product information and prices are "
+"subject to change without prior noticeThere is"
 
 #: templates/product_detail.html:209
 msgid "결제 및 배송은 당사 시스템을 통해 안전하게 처리되며, 주문·결제 관련 문의는 고객센터를 통해 신속히 안내받으실 수 있습니다"
-msgstr "Payment and delivery will be handled safely through our system, and inquiries about orders and payments can be quickly informed through the customer center"
+msgstr ""
+"Payment and delivery will be handled safely through our system, and "
+"inquiries about orders and payments can be quickly informed through the "
+"customer center"
 
 #: templates/product_detail.html:216
 msgid "상품 리뷰"
@@ -1236,7 +1266,7 @@ msgstr "There are no results for your search term."
 
 #: templates/search.html:123
 msgid "브라우저가 비디오를 지원하지 않습니다."
-msgstr ""
+msgstr "Browser does not support video"
 
 #: templates/videos.html:4
 msgid "영상 아카이브"
@@ -1319,6 +1349,71 @@ msgstr "next"
 msgid "이전"
 msgstr "back"
 
+#: templates/auth/register_info.html:250
+msgid "이미 사용 중인 이메일입니다"
+msgstr "This email is already in use"
+
+#: templates/auth/register_info.html:253
+msgid "사용 가능한 이메일입니다"
+msgstr "This is an email you can use"
+
+#: templates/auth/register_info.html:291
+#: templates/auth/reset_password_form.html:79
+msgid "비밀번호가 일치합니다"
+msgstr "Invalid password"
+
+#: templates/auth/register_info.html:294
+#: templates/auth/reset_password_form.html:82
+msgid "비밀번호가 일치하지 않습니다"
+msgstr "Invalid password"
+
+#: templates/auth/register_info.html:307 templates/auth/register_info.html:370
+#: templates/auth/reset_password_form.html:21
+#: templates/auth/reset_password_form.html:95
+msgid "비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다"
+msgstr "Must contain at least 8 numbers and letters"
+
+#: templates/auth/register_info.html:312 templates/auth/register_info.html:374
+#: templates/auth/reset_password_form.html:100
+msgid "비밀번호 확인이 일치하지 않습니다"
+msgstr "Invalid password"
+
+#: templates/auth/register_info.html:361
+msgid "올바른 이메일 형식을 입력해주세요"
+msgstr "Email"
+
+#: templates/auth/register_info.html:381
+msgid "이름을 입력해주세요"
+msgstr "Email"
+
+#: templates/auth/register_info.html:389
+msgid "주소와 상세주소를 입력해주세요"
+msgstr "Please enter your address and detailed address"
+
+#: templates/auth/register_info.html:396
+msgid "올바른 휴대폰 번호를 입력해주세요"
+msgstr "Password"
+
+#: templates/auth/register_info.html:434 templates/auth/register_info.html:516
+msgid "확인 중"
+msgstr "Check for duplicates"
+
+#: templates/auth/register_info.html:444 templates/auth/register_info.html:526
+msgid "이미 가입된 이메일입니다"
+msgstr "Email"
+
+#: templates/auth/register_info.html:513
+msgid "이메일을 입려갷주세요"
+msgstr "Email"
+
+#: templates/auth/register_info.html:543
+msgid "인증메일이 발송되었습니다"
+msgstr "Authentication mail has been sent, please check your mailbox"
+
+#: templates/auth/register_info.html:573
+msgid "인증이 완료되었습니다"
+msgstr "Payment completed"
+
 #: templates/auth/register_terms.html:6
 msgid "이용약관 동의"
 msgstr "Agree to Terms of Use"
@@ -1377,11 +1472,6 @@ msgstr "New Password"
 msgid "영문+숫자+특수문자 포함 8자리 이상"
 msgstr "8 or more digits including English + number + special characters"
 
-#: templates/auth/reset_password_form.html:21
-#: templates/auth/reset_password_form.html:95
-msgid "비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다"
-msgstr "Must contain at least 8 numbers and letters"
-
 #: templates/auth/reset_password_form.html:28
 msgid "비밀번호 다시 입력"
 msgstr "Enter if you have an order number"
@@ -1393,18 +1483,6 @@ msgstr "Your password is stored securely encrypted."
 #: templates/auth/reset_password_form.html:45
 msgid "다른 사이트에서 사용하지 않은 비밀번호를 입력하세요."
 msgstr "Please enter a password that you have not used on any other site."
-
-#: templates/auth/reset_password_form.html:79
-msgid "비밀번호가 일치합니다"
-msgstr "Invalid password"
-
-#: templates/auth/reset_password_form.html:82
-msgid "비밀번호가 일치하지 않습니다"
-msgstr "Invalid password"
-
-#: templates/auth/reset_password_form.html:100
-msgid "비밀번호 확인이 일치하지 않습니다"
-msgstr "Invalid password"
 
 #: templates/auth/reset_password_request.html:10
 msgid "가입 이메일"
