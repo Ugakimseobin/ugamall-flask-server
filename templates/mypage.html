@@ -4,13 +4,43 @@
   <!-- ✅ 왼쪽 사이드바 -->
   <aside class="w-full md:w-1/4 md:pr-6">
     <h2 class="font-bold text-xl sm:text-2xl mb-4 sm:mb-6">{{ _("마이페이지") }}</h2>
-    <ul class="grid grid-cols-3 md:flex md:flex-col md:space-y-2 gap-2">
-      <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="orders">{{ _("주문내역") }}</button></li>
-      <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-indigo-600 text-white" data-tab="info">{{ _("개인정보") }}</button></li>
-      <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="inquiry">{{ _("문의내역") }}</button></li>
-      <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="coupons">{{ _("내 쿠폰함") }}</button></li>
-      <li><button class="tab-btn w-full text-center md:text-left px-3 sm:px-4 py-2 rounded bg-gray-200" data-tab="returns">{{ _("반품/교환 내역") }}</button></li>
+
+    <!-- ✅ 데스크탑: 세로 탭 -->
+    <ul class="hidden md:flex md:flex-col md:space-y-2">
+      <li><button class="tab-btn w-full text-left px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-800 hover:bg-gray-200 transition" data-tab="orders">{{ _("주문내역") }}</button></li>
+      <li><button class="tab-btn w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-100 transition" data-tab="info">{{ _("개인정보") }}</button></li>
+      <li><button class="tab-btn w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-100 transition" data-tab="inquiry">{{ _("문의내역") }}</button></li>
+      <li><button class="tab-btn w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-100 transition" data-tab="coupons">{{ _("내 쿠폰함") }}</button></li>
+      <li><button class="tab-btn w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-100 transition" data-tab="returns">{{ _("반품/교환 내역") }}</button></li>
     </ul>
+
+    <!-- ✅ 모바일: 카드형 메뉴 -->
+    <div class="flex flex-col gap-3 md:hidden">
+      <button class="tab-btn flex items-center justify-between text-left bg-white border border-gray-200 rounded-xl p-3 shadow-sm hover:shadow-md transition" data-tab="orders">
+        <span class="text-base font-medium mt-1">{{ _("주문내역") }}</span>
+        <span class="text-gray-400 text-lg">›</span>
+      </button>
+
+      <button class="tab-btn flex items-center justify-between text-left bg-white border border-gray-200 rounded-xl p-3 shadow-sm hover:shadow-md transition" data-tab="info">
+        <span class="text-base font-medium mt-1">{{ _("개인정보") }}</span>
+        <span class="text-gray-400 text-lg">›</span>
+      </button>
+
+      <button class="tab-btn flex items-center justify-between text-left bg-white border border-gray-200 rounded-xl p-3 shadow-sm hover:shadow-md transition" data-tab="inquiry">
+        <span class="text-base font-medium mt-1">{{ _("문의내역") }}</span>
+        <span class="text-gray-400 text-lg">›</span>
+      </button>
+
+      <button class="tab-btn flex items-center justify-between text-left bg-white border border-gray-200 rounded-xl p-3 shadow-sm hover:shadow-md transition" data-tab="coupons">
+        <span class="text-base font-medium mt-1">{{ _("내 쿠폰함") }}</span>
+        <span class="text-gray-400 text-lg">›</span>
+      </button>
+
+      <button class="tab-btn flex items-center justify-between text-left bg-white border border-gray-200 rounded-xl p-3 shadow-sm hover:shadow-md transition col-span-2 sm:col-span-1" data-tab="returns">
+        <span class="text-base font-medium mt-1">{{ _("반품/교환 내역") }}</span>
+        <span class="text-gray-400 text-lg">›</span>
+      </button>
+    </div>
   </aside>
 
   <!-- ✅ 오른쪽 컨텐츠 -->
