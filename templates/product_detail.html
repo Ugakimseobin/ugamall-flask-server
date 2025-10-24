@@ -4,12 +4,12 @@
 
   <!-- 뒤로가기 -->
   <button onclick="history.back()" 
-          class="absolute top-2 left-3 text-gray-500 hover:text-indigo-600 text-sm sm:text-base font-medium transition">
+          class="absolute top-2 left-6 text-gray-500 hover:text-indigo-600 text-sm sm:text-base font-medium transition">
     ← {{ _("뒤로가기") }}
   </button>
 
   <!-- 상품 상세 -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 bg-white p-4 sm:p-6 shadow rounded mt-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 bg-white p-4 sm:p-6 shadow rounded">
         <!-- 상품 이미지 -->
         <div>
           {% if product.image_data %}
@@ -261,7 +261,7 @@
         class="absolute top-1/2 -left-6 transform -translate-y-1/2 
                 w-6 h-16 bg-[#f9fafb] text-white flex items-center justify-center 
                 cursor-pointer rounded-l-full shadow-lg transition-all duration-500">
-        <span class="text-gray-400" id="cart-toggle-icon">⮞</span>
+        <span class="text-gray-400" id="cart-toggle-icon">⮜</span>
     </div>
 
     <img src="{{ url_for('serve_product_image', product_id=product.id) }}"
@@ -346,10 +346,10 @@ function toggleCart() {
   cart.classList.toggle("translate-x-full");
 
   if (cart.classList.contains("translate-x-full")) {
-    icon.textContent = "⮞"; // 닫힘
+    icon.textContent = "⮜"; // 닫힘
     userClosed = true;
   } else {
-    icon.textContent = "⮜"; // 열림
+    icon.textContent = "⮞"; // 열림
     userClosed = false;
   }
 }
@@ -362,7 +362,7 @@ window.addEventListener("scroll", function() {
   // ✅ PC(1024px 이상)에서만 자동 열림
   if (window.innerWidth >= 1024 && window.scrollY > 1000 && cart.classList.contains("translate-x-full") && !userClosed) {
     cart.classList.remove("translate-x-full");
-    icon.textContent = "⮜";
+    icon.textContent = "⮞";
   }
 });
 
