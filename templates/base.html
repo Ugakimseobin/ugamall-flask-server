@@ -199,7 +199,7 @@ footer a:hover {
     </div>
 
     <!-- 모바일 메뉴 -->
-    <div id="mobile-menu" class="hidden bg-white border-t shadow-md md:hidden" style="z-index: 10000;">
+    <div id="mobile-menu" class="hidden bg-white border-t shadow-md md:hidden text-sm" style="z-index: 10000;">
       <form id="mobile-search" action="{{ url_for('search') }}" class="flex px-4 py-2">
         <input type="text" name="name"
               placeholder="{{ _('상품 검색') }}..."
@@ -209,25 +209,59 @@ footer a:hover {
           <img src="{{ url_for('static', filename='images/search_logo.png') }}">
         </button>
       </form>
-      <nav class="flex flex-col px-4 py-3 space-y-2 text-sm">
-        <a href="/company" class="hover:text-[var(--primary-color)]">{{ _("회사소개") }}</a>
-        <a href="/products" class="hover:text-[var(--primary-color)]">{{ _("제품") }}</a>
-        <a href="/contact" class="hover:text-[var(--primary-color)]">{{ _("문의") }}</a>
+      <nav class="flex flex-col items-stretch px-4 py-3 text-sm divide-y divide-gray-200">
+  
+      <!-- ✅ 회사 / 제품 / 문의 -->
+      <div class="flex flex-col space-y-2 pb-3">
+        <a href="/company"
+          class="block w-full border border-gray-200 rounded-lg px-4 py-3 text-center bg-white hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition">
+          {{ _("회사소개") }}
+        </a>
+        <a href="/products"
+          class="block w-full border border-gray-200 rounded-lg px-4 py-3 text-center bg-white hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition">
+          {{ _("제품") }}
+        </a>
+        <a href="/contact"
+          class="block w-full border border-gray-200 rounded-lg px-4 py-3 text-center bg-white hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition">
+          {{ _("문의") }}
+        </a>
+      </div>
+
+      <!-- ✅ 로그인 / 마이페이지 / 관리자 -->
+      <div class="flex flex-col space-y-2 py-3">
         {% if current_user.is_authenticated %}
           {% if current_user.is_admin %}
-            <a href="{{ url_for('admin_dashboard') }}" class="hover:text-red-600 font-bold">관리자</a>
+            <a href="{{ url_for('admin_dashboard') }}"
+              class="block w-full border border-gray-200 rounded-lg px-4 py-3 text-center bg-white hover:bg-red-50 hover:border-red-400 text-red-600 font-semibold transition">
+              관리자
+            </a>
           {% else %}
-            <a href="{{ url_for('mypage') }}" class="hover:text-[var(--primary-color)]">{{ _("마이페이지") }}</a>
+            <a href="{{ url_for('mypage') }}"
+              class="block w-full border border-gray-200 rounded-lg px-4 py-3 text-center bg-white hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition">
+              {{ _("마이페이지") }}
+            </a>
           {% endif %}
-          <a href="{{ url_for('logout') }}" class="hover:text-[var(--primary-color)]">{{ _("로그아웃") }}</a>
+          <a href="{{ url_for('logout') }}"
+            class="block w-full border border-gray-200 rounded-lg px-4 py-3 text-center bg-white hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition">
+            {{ _("로그아웃") }}
+          </a>
         {% else %}
-          <a href="{{ url_for('login') }}" class="hover:text-[var(--primary-color)]">{{ _("로그인") }}</a>
+          <a href="{{ url_for('login') }}"
+            class="block w-full border border-gray-200 rounded-lg px-4 py-3 text-center bg-white hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition">
+            {{ _("로그인") }}
+          </a>
         {% endif %}
-        <a href="/checkout" class="flex items-center gap-2" aria-label="장바구니">
-          <span id="cart-icon-mobile" class="inline-block align-middle">🛒</span>
+      </div>
+
+      <!-- ✅ 장바구니 -->
+      <div class="flex flex-col pt-3">
+        <a href="/checkout"
+          class="flex items-center justify-center gap-2 border border-gray-200 rounded-lg px-4 py-3 bg-white hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition">
+          <span id="cart-icon-mobile" class="text-lg">🛒</span>
           {{ _("장바구니") }}
         </a>
-      </nav>
+      </div>
+    </nav>
       <div class="px-4 py-3 border-t">
         <div class="text-xs text-gray-500 mb-2">{{ _("언어") }}</div>
         <div class="flex gap-2">
