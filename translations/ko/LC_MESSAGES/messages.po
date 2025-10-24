@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-24 10:15+0900\n"
+"POT-Creation-Date: 2025-10-24 11:55+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -305,7 +305,8 @@ msgid "이메일 입력"
 msgstr ""
 
 #: templates/auth/register_info.html:18 templates/auth/register_info.html:135
-#: templates/checkout.html:175 templates/guest_orders_search.html:18
+#: templates/auth/register_info.html:529 templates/checkout.html:175
+#: templates/guest_orders_search.html:18
 msgid "인증메일 보내기"
 msgstr ""
 
@@ -398,10 +399,13 @@ msgstr ""
 msgid "이 상품을 장바구니에서 삭제하시겠습니까"
 msgstr ""
 
-#: templates/checkout.html:490 templates/guest_orders_search.html:56
+#: templates/auth/register_info.html:242 templates/auth/register_info.html:356
+#: templates/auth/register_info.html:431 templates/checkout.html:490
+#: templates/guest_orders_search.html:56
 msgid "이메일을 입력해주세요"
 msgstr ""
 
+#: templates/auth/register_info.html:452 templates/auth/register_info.html:534
 #: templates/checkout.html:493 templates/guest_orders_search.html:59
 msgid "전송 중"
 msgstr ""
@@ -410,15 +414,18 @@ msgstr ""
 msgid "인증메일이 발송되었습니다. 메일함을 확인해주세요"
 msgstr ""
 
-#: templates/checkout.html:519 templates/guest_orders_search.html:85
+#: templates/auth/register_info.html:562 templates/checkout.html:519
+#: templates/guest_orders_search.html:85
 msgid "인증코드를 입력해주세요"
 msgstr ""
 
-#: templates/checkout.html:530 templates/guest_orders_search.html:96
+#: templates/auth/register_info.html:574 templates/checkout.html:530
+#: templates/guest_orders_search.html:96
 msgid "이메일 인증이 완료되었습니다"
 msgstr ""
 
-#: templates/checkout.html:534 templates/guest_orders_search.html:100
+#: templates/auth/register_info.html:577 templates/checkout.html:534
+#: templates/guest_orders_search.html:100
 msgid "인증에 실패했습니다. 다시 시도해주세요"
 msgstr ""
 
@@ -664,6 +671,10 @@ msgstr ""
 
 #: templates/mypage.html:11 templates/mypage.html:234
 msgid "내 쿠폰함"
+msgstr ""
+
+#: templates/mypage.html:12
+msgid "반품/교환 내역"
 msgstr ""
 
 #: templates/mypage.html:26
@@ -1303,6 +1314,71 @@ msgstr ""
 msgid "이전"
 msgstr ""
 
+#: templates/auth/register_info.html:250
+msgid "이미 사용 중인 이메일입니다"
+msgstr ""
+
+#: templates/auth/register_info.html:253
+msgid "사용 가능한 이메일입니다"
+msgstr ""
+
+#: templates/auth/register_info.html:291
+#: templates/auth/reset_password_form.html:79
+msgid "비밀번호가 일치합니다"
+msgstr ""
+
+#: templates/auth/register_info.html:294
+#: templates/auth/reset_password_form.html:82
+msgid "비밀번호가 일치하지 않습니다"
+msgstr ""
+
+#: templates/auth/register_info.html:307 templates/auth/register_info.html:370
+#: templates/auth/reset_password_form.html:21
+#: templates/auth/reset_password_form.html:95
+msgid "비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다"
+msgstr ""
+
+#: templates/auth/register_info.html:312 templates/auth/register_info.html:374
+#: templates/auth/reset_password_form.html:100
+msgid "비밀번호 확인이 일치하지 않습니다"
+msgstr ""
+
+#: templates/auth/register_info.html:361
+msgid "올바른 이메일 형식을 입력해주세요"
+msgstr ""
+
+#: templates/auth/register_info.html:381
+msgid "이름을 입력해주세요"
+msgstr ""
+
+#: templates/auth/register_info.html:389
+msgid "주소와 상세주소를 입력해주세요"
+msgstr ""
+
+#: templates/auth/register_info.html:396
+msgid "올바른 휴대폰 번호를 입력해주세요"
+msgstr ""
+
+#: templates/auth/register_info.html:434 templates/auth/register_info.html:516
+msgid "확인 중"
+msgstr ""
+
+#: templates/auth/register_info.html:444 templates/auth/register_info.html:526
+msgid "이미 가입된 이메일입니다"
+msgstr ""
+
+#: templates/auth/register_info.html:513
+msgid "이메일을 입려갷주세요"
+msgstr ""
+
+#: templates/auth/register_info.html:543
+msgid "인증메일이 발송되었습니다"
+msgstr ""
+
+#: templates/auth/register_info.html:573
+msgid "인증이 완료되었습니다"
+msgstr ""
+
 #: templates/auth/register_terms.html:6
 msgid "이용약관 동의"
 msgstr ""
@@ -1359,11 +1435,6 @@ msgstr ""
 msgid "영문+숫자+특수문자 포함 8자리 이상"
 msgstr ""
 
-#: templates/auth/reset_password_form.html:21
-#: templates/auth/reset_password_form.html:95
-msgid "비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다"
-msgstr ""
-
 #: templates/auth/reset_password_form.html:28
 msgid "비밀번호 다시 입력"
 msgstr ""
@@ -1374,18 +1445,6 @@ msgstr ""
 
 #: templates/auth/reset_password_form.html:45
 msgid "다른 사이트에서 사용하지 않은 비밀번호를 입력하세요."
-msgstr ""
-
-#: templates/auth/reset_password_form.html:79
-msgid "비밀번호가 일치합니다"
-msgstr ""
-
-#: templates/auth/reset_password_form.html:82
-msgid "비밀번호가 일치하지 않습니다"
-msgstr ""
-
-#: templates/auth/reset_password_form.html:100
-msgid "비밀번호 확인이 일치하지 않습니다"
 msgstr ""
 
 #: templates/auth/reset_password_request.html:10

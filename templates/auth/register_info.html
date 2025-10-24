@@ -239,7 +239,7 @@ function checkEmail() {
   const email = document.getElementById("email").value.trim();
   const statusEl = document.getElementById("email-status");
   if (!email) {
-    statusEl.textContent = "이메일을 입력해주세요.";
+    statusEl.textContent = "{{ _('이메일을 입력해주세요') }}.";
     statusEl.className = "text-xs text-red-500 mt-1";
     return;
   }
@@ -247,10 +247,10 @@ function checkEmail() {
     .then(res => res.json())
     .then(data => {
       if (data.exists) {
-        statusEl.textContent = "이미 사용 중인 이메일입니다.";
+        statusEl.textContent = "{{ _('이미 사용 중인 이메일입니다') }}.";
         statusEl.className = "text-xs text-red-500 mt-1";
       } else {
-        statusEl.textContent = "사용 가능한 이메일입니다.";
+        statusEl.textContent = "{{ _('사용 가능한 이메일입니다') }}.";
         statusEl.className = "text-xs text-green-600 mt-1";
       }
     });
@@ -288,10 +288,10 @@ function checkPasswordMatch() {
   }
 
   if (pw === pwc) {
-    text.textContent = "비밀번호가 일치합니다.";
+    text.textContent = "{{ _('비밀번호가 일치합니다') }}.";
     text.className = "text-xs text-green-600 mt-2";
   } else {
-    text.textContent = "비밀번호가 일치하지 않습니다.";
+    text.textContent = "{{ _('비밀번호가 일치하지 않습니다') }}.";
     text.className = "text-xs text-red-500 mt-2";
   }
 }
@@ -304,12 +304,12 @@ document.getElementById("register-form").addEventListener("submit", e => {
 
   if (!regex.test(pw)) {
     e.preventDefault();
-    alert("비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다.");
+    alert("{{ _('비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다') }}.");
     return false;
   }
   if (pw !== pwc) {
     e.preventDefault();
-    alert("비밀번호 확인이 일치하지 않습니다.");
+    alert("{{ _('비밀번호 확인이 일치하지 않습니다') }}.");
     return false;
   }
 });
@@ -353,12 +353,12 @@ function validateStep(step) {
   if (step === 1) {
     const email = document.querySelector("#step1 input[name='email']").value.trim();
     if (!email) {
-      alert("이메일을 입력해주세요.");
+      alert("{{ _('이메일을 입력해주세요') }}.");
       return false;
     }
     const pattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
     if (!pattern.test(email)) {
-      alert("올바른 이메일 형식을 입력해주세요.");
+      alert("{{ _('올바른 이메일 형식을 입력해주세요') }}.");
       return false;
     }
   }
@@ -367,18 +367,18 @@ function validateStep(step) {
     const pwc = document.querySelector("#step2 input[name='password_confirm']").value.trim();
     const regex = /^(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/;
     if (!regex.test(pw)) {
-      alert("비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다.");
+      alert("{{ _('비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다') }}.");
       return false;
     }
     if (pw !== pwc) {
-      alert("비밀번호 확인이 일치하지 않습니다.");
+      alert("{{ _('비밀번호 확인이 일치하지 않습니다') }}.");
       return false;
     }
   }
   if (step === 3) {
     const name = document.querySelector("#step3 input[name='name']").value.trim();
     if (!name) {
-      alert("이름을 입력해주세요.");
+      alert("{{ _('이름을 입력해주세요') }}.");
       return false;
     }
   }
@@ -386,14 +386,14 @@ function validateStep(step) {
     const addr = document.querySelector("#address_m").value.trim();
     const detail = document.querySelector("#detailAddress_m").value.trim();
     if (!addr || !detail) {
-      alert("주소와 상세주소를 입력해주세요.");
+      alert("{{ _('주소와 상세주소를 입력해주세요') }}.");
       return false;
     }
   }
   if (step === 5) {
     const phone = document.querySelector("#phone_m").value.trim();
     if (!/^\d{10,11}$/.test(phone)) {
-      alert("올바른 휴대폰 번호를 입력해주세요.");
+      alert("{{ _('올바른 휴대폰 번호를 입력해주세요') }}.");
       return false;
     }
   }
@@ -428,10 +428,10 @@ function sendEmailCode() {
   const btn = document.getElementById("send-email-btn");
   const statusEl = document.getElementById("email-status");
 
-  if (!email) return alert("이메일을 입력해주세요.");
+  if (!email) return alert("{{ _('이메일을 입력해주세요') }}.");
 
   btn.disabled = true;
-  btn.innerHTML = `<span>확인 중...</span><div class='loading-spinner'></div>`;
+  btn.innerHTML = `<span>{{ _("확인 중") }}...</span><div class='loading-spinner'></div>`;
   
   fetch("/check_email", {
     method: "POST",
@@ -441,7 +441,7 @@ function sendEmailCode() {
   .then(res => res.json())
   .then(data => {
     if (data.exists) {
-      statusEl.textContent = "이미 가입된 이메일입니다.";
+      statusEl.textContent = "{{ _('이미 가입된 이메일입니다') }}.";
       statusEl.className = "text-xs text-red-500 mt-1";
       btn.disabled = false;
       btn.innerHTML = `<span>인증메일 보내기</span>`;
@@ -449,7 +449,7 @@ function sendEmailCode() {
     }
 
     // 2️⃣ 중복 아니면 인증메일 발송
-    btn.innerHTML = `<span>전송 중...</span><div class='loading-spinner'></div>`;
+    btn.innerHTML = `<span>{{ _('전송 중') }}...</span><div class='loading-spinner'></div>`;
     return fetch("/send_email_code", {
       method: "POST",
       body: new URLSearchParams({ email })
@@ -510,10 +510,10 @@ function sendEmailCodeMobile() {
   const btn = document.getElementById("send-email-btn-m");
   const statusEl = document.getElementById("email-status-m");
 
-  if (!email) return alert("이메일을 입력해주세요.");
+  if (!email) return alert("{{ _('이메일을 입려갷주세요') }}.");
 
   btn.disabled = true;
-  btn.innerHTML = `<span>확인 중...</span><div class='loading-spinner'></div>`;
+  btn.innerHTML = `<span>{{ _('확인 중') }}...</span><div class='loading-spinner'></div>`;
 
   fetch("/check_email", {
     method: "POST",
@@ -523,15 +523,15 @@ function sendEmailCodeMobile() {
   .then(res => res.json())
   .then(data => {
     if (data.exists) {
-      statusEl.textContent = "이미 가입된 이메일입니다.";
+      statusEl.textContent = "{{ _('이미 가입된 이메일입니다') }}.";
       statusEl.className = "text-xs text-red-500 mt-1";
       btn.disabled = false;
-      btn.innerHTML = `<span>인증메일 보내기</span>`;
+      btn.innerHTML = `<span>{{ _('인증메일 보내기') }}</span>`;
       throw new Error("duplicate");
     }
 
     // 2️⃣ 중복 아니면 인증메일 발송
-    btn.innerHTML = `<span>전송 중...</span><div class='loading-spinner'></div>`;
+    btn.innerHTML = `<span>{{ _('전송 중') }}...</span><div class='loading-spinner'></div>`;
     return fetch("/send_email_code", {
       method: "POST",
       body: new URLSearchParams({ email })
@@ -540,7 +540,7 @@ function sendEmailCodeMobile() {
   .then(res => res.json())
   .then(data => {
     alert(data.message);
-    statusEl.textContent = "인증메일이 발송되었습니다.";
+    statusEl.textContent = "{{ _('인증메일이 발송되었습니다') }}.";
     statusEl.className = "text-xs text-green-600 mt-1";
   })
   .catch(err => {
@@ -559,7 +559,7 @@ function verifyEmailCodeMobile() {
   const code = document.getElementById("verify_email_code_m").value.trim();
   const statusEl = document.getElementById("email-status-m");
 
-  if (!code) return alert("인증코드를 입력해주세요.");
+  if (!code) return alert("{{ _('인증코드를 입력해주세요') }}.");
 
   fetch("/verify_email_code", {
     method: "POST",
@@ -570,11 +570,11 @@ function verifyEmailCodeMobile() {
   .then(data => {
     alert(data.message);
 
-    if (data.message.includes("인증이 완료되었습니다")) {
-      statusEl.textContent = "✅ 이메일 인증이 완료되었습니다!";
+    if (data.message.includes("{{ _('인증이 완료되었습니다') }}")) {
+      statusEl.textContent = "{{ _('이메일 인증이 완료되었습니다') }}!";
       statusEl.className = "text-xs text-green-600 mt-1 font-semibold";
     } else {
-      statusEl.textContent = "인증에 실패했습니다. 다시 시도해주세요.";
+      statusEl.textContent = "{{ _('인증에 실패했습니다. 다시 시도해주세요') }}.";
       statusEl.className = "text-xs text-red-500 mt-1";
     }
   })
