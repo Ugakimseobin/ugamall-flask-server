@@ -3,7 +3,7 @@
 <!-- 모바일용 Hero 섹션 -->
 <div class="max-w-6xl min-h-[70vh] mx-auto md:py-6 flex flex-col md:flex-row md:px-4 gap-6">
 
-  <div class="bg-gradient-to-b from-green-500 to-green-600 text-white rounded-b-3x1 p-8 md:hidden">
+  <div class="bg-gradient-to-b from-green-500 to-green-600 text-white rounded-b-3x1 py-8 px-4 md:hidden">
     <div class="flex justify-between items-center">
       <div>
         <h2 class="text-2xl font-bold">{{ user.name }}{{ _("님") }}</h2>
@@ -393,6 +393,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabContents = document.querySelectorAll(".tab-content");
   const tabButtons = document.querySelectorAll(".tab-btn");
 
+  // ✅ 모든 탭 컨텐츠를 기본적으로 숨김
+  tabContents.forEach(c => c.classList.add("hidden"));
+  tabButtons.forEach(b => b.classList.remove("active-tab"));
+
   // ✅ 공통 함수: 탭 전환
   function showTab(tabName) {
     tabContents.forEach(c => c.classList.add("hidden"));
@@ -405,9 +409,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
     if (activeBtn) activeBtn.classList.add("active-tab");
   }
-
-  // 기본 탭 (주문내역)
-  showTab("orders");
 
   // 탭 버튼 클릭 시
   tabButtons.forEach(btn => {
