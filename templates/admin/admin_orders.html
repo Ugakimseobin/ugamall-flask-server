@@ -278,7 +278,48 @@
     {% endfor %}
   </div>
 </div>
+<!-- ✅ 전체 로딩 오버레이 -->
+<div id="global-loading"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-[9999]">
+  <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"></div>
+  <p class="text-white text-lg font-semibold">입금 확인 중...</p>
+</div>
 
+<script>
+// ✅ "입금 확인" 버튼 클릭 시 전체 로딩 표시
+document.addEventListener("DOMContentLoaded", () => {
+  const loadingOverlay = document.getElementById("global-loading");
+
+  document.querySelectorAll("form[action*='confirm_deposit']").forEach(form => {
+    form.addEventListener("submit", e => {
+      // 기본 confirm() 동작 이후에만 표시
+      const confirmed = confirm("정말로 입금 확인을 진행하시겠습니까?");
+      if (!confirmed) {
+        e.preventDefault();
+        return false;
+      }
+
+      // 로딩 표시
+      loadingOverlay.classList.remove("hidden");
+
+      // 10초 후 자동 제거 (비정상 응답 대비)
+      setTimeout(() => {
+        loadingOverlay.classList.add("hidden");
+      }, 10000);
+    });
+  });
+});
+</script>
+
+<style>
+/* ✅ 스피너 애니메이션 */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.animate-spin {
+  animation: spin 0.8s linear infinite;
+}
+</style>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   // 기간 버튼 클릭 시 자동 폼 전송
