@@ -212,7 +212,7 @@ footer a:hover {
       <nav class="flex flex-col items-stretch px-4 py-3 text-sm divide-y divide-gray-200">
   
       <!-- ✅ 회사 / 제품 / 문의 -->
-      <div class="flex flex-col space-y-2 pb-3">
+      <div class="flex flex-col space-y-2">
         <a href="/company"
           class="block w-full border border-gray-200 rounded-lg px-4 py-3 text-center bg-white hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition">
           {{ _("회사소개") }}
@@ -228,7 +228,7 @@ footer a:hover {
       </div>
 
       <!-- ✅ 로그인 / 마이페이지 / 관리자 -->
-      <div class="flex flex-col space-y-2 py-3">
+      <div class="flex flex-col space-y-2 py-2">
         {% if current_user.is_authenticated %}
           {% if current_user.is_admin %}
             <a href="{{ url_for('admin_dashboard') }}"
@@ -254,7 +254,7 @@ footer a:hover {
       </div>
 
       <!-- ✅ 장바구니 -->
-      <div class="flex flex-col pt-3">
+      <div class="flex flex-col">
         <a href="/checkout"
           class="flex items-center justify-center gap-2 border border-gray-200 rounded-lg px-4 py-3 bg-white hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition">
           <span id="cart-icon-mobile" class="text-lg">🛒</span>
