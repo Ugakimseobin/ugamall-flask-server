@@ -444,7 +444,7 @@ function sendEmailCode() {
       statusEl.textContent = "{{ _('이미 가입된 이메일입니다') }}.";
       statusEl.className = "text-xs text-red-500 mt-1";
       btn.disabled = false;
-      btn.innerHTML = `<span>인증메일 보내기</span>`;
+      btn.innerHTML = `<span>{{ _("인증메일 보내기") }}</span>`;
       throw new Error("duplicate");
     }
 
@@ -458,7 +458,7 @@ function sendEmailCode() {
   .then(res => res.json())
   .then(data => {
     alert(data.message);
-    statusEl.textContent = "인증메일이 발송되었습니다.";
+    statusEl.textContent = "{{ _('인증메일이 발송되었습니다') }}.";
     statusEl.className = "text-xs text-green-600 mt-1";
   })
   .catch(err => {
@@ -469,7 +469,7 @@ function sendEmailCode() {
   })
   .finally(() => {
     btn.disabled = false;
-    btn.innerHTML = `<span>인증메일 보내기</span>`;
+    btn.innerHTML = `<span>{{ _("인증메일 보내기") }}</span>`;
   });
 }
 
@@ -477,7 +477,7 @@ function verifyEmailCode() {
   const code = document.getElementById("verify_email_code").value.trim();
   const statusEl = document.getElementById("email-status");
 
-  if (!code) return alert("인증코드를 입력해주세요.");
+  if (!code) return alert("{{ _('인증코드를 입력해주세요') }}.");
 
   fetch("/verify_email_code", {
     method: "POST",
@@ -488,11 +488,11 @@ function verifyEmailCode() {
   .then(data => {
     alert(data.message);
 
-    if (data.message.includes("인증이 완료되었습니다")) {
-      statusEl.textContent = "이메일 인증이 완료되었습니다!";
+    if (data.message.includes("{{ _('인증이 완료되었습니다') }}")) {
+      statusEl.textContent = "{{ _('이메일 인증이 완료되었습니다') }}!";
       statusEl.className = "text-xs text-green-600 mt-1 font-semibold";
     } else {
-      statusEl.textContent = "인증에 실패했습니다. 다시 시도해주세요.";
+      statusEl.textContent = "{{ _('인증에 실패했습니다. 다시 시도해주세요') }}.";
       statusEl.className = "text-sm text-red-500 mt-1";
     }
   })
@@ -510,7 +510,7 @@ function sendEmailCodeMobile() {
   const btn = document.getElementById("send-email-btn-m");
   const statusEl = document.getElementById("email-status-m");
 
-  if (!email) return alert("{{ _('이메일을 입려갷주세요') }}.");
+  if (!email) return alert("{{ _('이메일을 입력해주세요') }}.");
 
   btn.disabled = true;
   btn.innerHTML = `<span>{{ _('확인 중') }}...</span><div class='loading-spinner'></div>`;
@@ -551,7 +551,7 @@ function sendEmailCodeMobile() {
   })
   .finally(() => {
     btn.disabled = false;
-    btn.innerHTML = `<span>인증메일 보내기</span>`;
+    btn.innerHTML = `<span>{{ _("인증메일 보내기") }}</span>`;
   });
 }
 
