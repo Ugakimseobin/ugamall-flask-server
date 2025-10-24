@@ -491,7 +491,7 @@ msgstr "Expanding the supply of new medical devices and establishing partnership
 
 #: templates/company.html:111
 msgid "관절 치료/재활 라인업 강화"
-msgstr "Strengthening the joint treatment/rehabilitation lineup"
+msgstr "Strengthening the joint treatment / rehabilitation lineup"
 
 #: templates/company.html:121
 msgid "법인 설립"
