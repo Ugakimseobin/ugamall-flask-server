@@ -140,23 +140,55 @@
             </div>
 
             <div class="mb-4">
-              <label class="block font-medium">{{ _("기본 주소") }}</label>
-              <input type="text" name="address" value="{{ user_info.base_address if user_info else '' }}" 
-                     class="w-full border rounded p-2 text-sm sm:text-base">
-            </div>
-            <div class="mb-4">
-              <label class="block font-medium">{{ _("상세 주소") }}</label>
-              <input type="text" name="detail_address" value="{{ user_info.detail_address if user_info else '' }}" 
-                     class="w-full border rounded p-2 text-sm sm:text-base">
+              <label class="block font-semibold mb-2">{{ _("주소") }}</label>
+              <div class="flex gap-2 mb-2">
+                <input type="text" id="postcode" placeholder="{{ _('우편번호') }}"
+                      class="border p-2 rounded w-1/2 bg-gray-100" readonly>
+                <button type="button" onclick="execDaumPostcode()"
+                        class="px-3 py-2 bg-white border border-gray-400 rounded hover:bg-gray-100 active:scale-[0.97] transition">
+                  {{ _("주소 찾기") }}
+                </button>
+              </div>
+              <input type="text" id="address" name="address"
+                    value="{{ user_info.base_address if user_info else '' }}"
+                    placeholder="{{ _('기본 주소') }}"
+                    class="w-full border rounded p-2 text-sm sm:text-base bg-gray-100 mb-2" readonly>
+              <input type="text" id="detailAddress" name="detail_address"
+                    value="{{ user_info.detail_address if user_info else '' }}"
+                    placeholder="{{ _('상세 주소') }}"
+                    class="w-full border rounded p-2 text-sm sm:text-base">
             </div>
 
+            <!-- ✅ 비회원 이메일 인증 -->
             {% if not user_id %}
             <div class="mb-4">
               <label class="block font-semibold mb-2">{{ _("이메일") }}</label>
-              <input type="email" name="email" placeholder="{{ _('이메일') }}" 
-                     class="w-full border p-2 rounded text-sm sm:text-base" required>
+
+              <!-- 이메일 입력 + 인증메일 전송 -->
+              <div class="flex space-x-2 mb-2">
+                <input type="email" id="guest_email" name="email"
+                      placeholder="{{ _('이메일 입력') }}"
+                      required
+                      class="flex-1 border rounded p-2 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition">
+                <button type="button" id="send-email-btn" onclick="sendGuestEmailCode()"
+                        class="bg-white border border-gray-400 text-[#222] px-3 py-2 rounded hover:bg-gray-50 active:scale-[0.97] transition">
+                  {{ _("인증메일 보내기") }}
+                </button>
+              </div>
+
+              <!-- 인증코드 입력 -->
+              <div class="flex space-x-2">
+                <input type="text" id="guest_verify_code"
+                      placeholder="{{ _('인증코드 입력') }}"
+                      class="border rounded p-2 flex-1 focus:ring-2 focus:ring-green-300 focus:border-green-400 transition">
+                <button type="button" id="verify-email-btn" onclick="verifyGuestEmailCode()"
+                        class="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 active:scale-[0.97] transition">
+                  {{ _("인증 확인") }}
+                </button>
+              </div>
+              <p id="guest-email-status" class="text-xs text-gray-500 mt-1"></p>
             </div>
-            {% endif %} 
+            {% endif %}
 
             <div class="mb-4">
               <label class="block font-semibold mb-2">{{ _("쿠폰 선택") }}</label>
@@ -431,6 +463,112 @@ if (couponSelect) {
 updateTotals();
 
 </script>
+
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+function execDaumPostcode() {
+  new daum.Postcode({
+    oncomplete: function(data) {
+      const fullAddress = data.roadAddress || data.jibunAddress;
+      document.getElementById("postcode").value = data.zonecode;
+      document.getElementById("address").value = fullAddress;
+      document.getElementById("detailAddress").focus();
+    }
+  }).open();
+}
+</script>
+
+<!-- ✅ 이메일 인증 JS -->
+<script>
+let guestVerified = {{ 'true' if user_id else 'false' }}; // 회원은 이미 인증된 상태로 처리
+
+function sendGuestEmailCode() {
+  const email = document.getElementById("guest_email").value.trim();
+  const btn = document.getElementById("send-email-btn");
+  const statusEl = document.getElementById("guest-email-status");
+
+  if (!email) return alert("{{ _('이메일을 입력해주세요') }}.");
+
+  btn.disabled = true;
+  btn.innerHTML = `<span>{{ _("전송 중") }}...</span><div class='loading-spinner'></div>`;
+
+  fetch("/send_email_code", {
+    method: "POST",
+    body: new URLSearchParams({ email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    statusEl.textContent = "{{ _('인증메일이 발송되었습니다. 메일함을 확인해주세요') }}.";
+    statusEl.className = "text-xs text-green-600 mt-1";
+  })
+  .catch(err => {
+    alert("이메일 전송 중 오류가 발생했습니다.");
+    console.error(err);
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.innerHTML = "인증메일 보내기";
+  });
+}
+
+function verifyGuestEmailCode() {
+  const code = document.getElementById("guest_verify_code").value.trim();
+  const statusEl = document.getElementById("guest-email-status");
+
+  if (!code) return alert("{{ _('인증코드를 입력해주세요') }}.");
+
+  fetch("/verify_email_code", {
+    method: "POST",
+    body: new URLSearchParams({ code })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    if (data.message.includes("완료")) {
+      guestVerified = true;
+      statusEl.textContent = "{{ _('이메일 인증이 완료되었습니다') }}.";
+      statusEl.className = "text-xs text-green-600 mt-1 font-semibold";
+    } else {
+      guestVerified = false;
+      statusEl.textContent = "{{ _('인증에 실패했습니다. 다시 시도해주세요') }}.";
+      statusEl.className = "text-xs text-red-500 mt-1";
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("서버 오류가 발생했습니다.");
+  });
+}
+
+// ✅ 결제 전 인증 확인
+document.getElementById("checkout-form").addEventListener("submit", function(e) {
+  const paymentMethod = document.getElementById("payment-method").value;
+  if (!guestVerified && paymentMethod !== "무통장입금") {
+    e.preventDefault();
+    alert("비회원 주문은 이메일 인증 후 결제 가능합니다.");
+    return false;
+  }
+});
+</script>
+
+<style>
+.loading-spinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #4f46e5;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
 
 <style>
 /* ============================

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, current_app, abort
-from flask_babel import Babel
+from flask_babel import Babel, _
 from flask_login import UserMixin
 from flask_login import current_user, login_required
 import re
@@ -1155,7 +1155,7 @@ def reset_password_request():
         reset_url = url_for("reset_password_token", token=token, _external=True)
 
         # 메일 발송
-        msg = Message("비밀번호 재설정 안내", recipients=[email])
+        msg = Message(_("비밀번호 재설정 안내"), recipients=[email])
         msg.html = f"""
         <div style="font-family: 'Noto Sans KR', sans-serif; max-width: 480px; margin: auto; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
           <div style="text-align: center; padding: 32px 20px 16px;">
@@ -1165,25 +1165,25 @@ def reset_password_request():
           <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
 
           <div style="padding: 32px 28px 24px; text-align: center;">
-            <h2 style="font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 12px;">비밀번호 재설정을 요청하셨습니다.</h2>
+            <h2 style="font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 12px;">{_('비밀번호 재설정을 요청하셨습니다.')}</h2>
 
             <p style="font-size: 15px; color: #374151; line-height: 1.6; margin-bottom: 4px;">
-              안녕하세요, <strong>{user.name}</strong>님.
+              {_('안녕하세요,')} <strong>{user.name}</strong>{_('님')}.
             </p>
             <p style="font-size: 15px; color: #374151; line-height: 1.6; margin-bottom: 20px;">
-              <strong>유가몰</strong> 계정의 비밀번호 재설정을 요청하셨습니다.<br>
-              아래 버튼을 클릭하여 새로운 비밀번호를 설정해주세요.<br>
-              이 링크는 <strong>1시간 후 만료</strong>됩니다.
+              <strong>{_('유가몰')}</strong> {_('계정의 비밀번호 재설정을 요청하셨습니다.')}<br>
+              {_('아래 버튼을 클릭하여 새로운 비밀번호를 설정해주세요.')}<br>
+              {_('이 링크는')} <strong>{_('1시간 후 만료')}</strong>{_('됩니다.')}
             </p>
 
             <a href="{reset_url}" 
                style="display: inline-block; background-color: #111827; color: #ffffff; font-weight: 600; padding: 14px 40px; border-radius: 6px; text-decoration: none; font-size: 15px; margin-top: 10px;">
-               비밀번호 재설정
+               {_('비밀번호 재설정')}
             </a>
 
             <p style="font-size: 13px; color: #9ca3af; margin-top: 32px; line-height: 1.6;">
-              본 메일은 발신 전용이며, 회신되지 않습니다.<br>
-              <strong>유가몰</strong>은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다.
+              {_('본 메일은 발신 전용이며, 회신되지 않습니다.')}<br>
+              <strong>{_('유가몰')}</strong>{_('은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다.')}
             </p>
           </div>
 
@@ -2573,18 +2573,45 @@ def admin_confirm_deposit(order_id):
     if recipient:
         try:
             msg = Message(
-                subject="[UGAMALL] 입금이 확인되었습니다.",
+                subject=_("[UGAMALL] 입금이 확인되었습니다."),
                 sender=("UGAMALL", app.config['MAIL_USERNAME']),
                 recipients=[recipient]
             )
-            msg.body = f"""
-        안녕하세요, {order.name}님.
-        주문번호 {order.id}의 입금이 확인되어 결제가 완료되었습니다.
-        배송 준비를 시작하겠습니다.
+            msg.html = f"""
+            <div style="font-family:'Noto Sans KR',sans-serif; max-width:480px; margin:auto; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; background:#ffffff;">
+              <div style="text-align:center; padding:32px 20px 16px;">
+                <img src="https://ugamall.co.kr/static/images/Uga_logo.png" alt="UGAMALL" style="height:38px; margin-bottom:20px;">
+              </div>
 
-        감사합니다.
-        UGAMALL 드림
-        """
+              <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
+
+              <div style="padding:32px 28px 24px; text-align:center;">
+                <h2 style="font-size:20px; font-weight:700; color:#111827; margin-bottom:12px;">{_('입금 확인 안내')}</h2>
+
+                <p style="font-size:15px; color:#374151; line-height:1.6; margin-bottom:20px;">
+                {_('안녕하세요,')} <strong>{order.name}</strong> {_('고객님.')}<br>
+                {_('주문번호')} <strong>#{order.id}</strong> {_('의 입금이 확인되어 결제가 완료되었습니다.')}<br>
+                {_('곧 배송 준비를 시작하겠습니다.')}.
+                </p>
+
+                <div style="display:inline-block; background:#111827; color:#ffffff; font-weight:700; letter-spacing:1px; font-size:18px; padding:12px 32px; border-radius:6px; margin:20px 0;">
+                {_('결제 금액:')} {final_amount:,.0f}{_('원')}
+                </div>
+
+                <p style="font-size:13px; color:#9ca3af; margin-top:24px; line-height:1.6;">
+                {_('주문 상세 정보는 마이페이지 또는 주문조회에서 확인하실 수 있습니다.')}<br>
+                <a href="https://ugamall.co.kr/guest_orders" target="_blank" style="color:#2563eb; text-decoration:none;">{_('주문 내역 바로가기')}</a>
+                </p>
+              </div>
+
+              <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
+
+              <div style="text-align:center; background:#f9fafb; padding:16px; font-size:12px; color:#9ca3af;">
+                © 2025 UGAMALL. All rights reserved.
+              </div>
+            </div>
+            """
+
             mail.send(msg)
         except Exception as e:
             print("⚠️ 이메일 발송 실패:", e)
@@ -2894,7 +2921,7 @@ def send_email_code():
     session["email_target"] = email
 
     try:
-        msg = Message("[UGAMALL] 이메일 인증 코드", recipients=[email])
+        msg = Message(_("[UGAMALL] 이메일 인증 코드"), recipients=[email])
         msg.html = f"""
         <div style="font-family:'Noto Sans KR',sans-serif; max-width:480px; margin:auto; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; background:#ffffff;">
           <div style="text-align:center; padding:32px 20px 16px;">
@@ -2904,12 +2931,12 @@ def send_email_code():
           <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
 
           <div style="padding:32px 28px 24px; text-align:center;">
-            <h2 style="font-size:20px; font-weight:700; color:#111827; margin-bottom:12px;">이메일 인증 요청</h2>
+            <h2 style="font-size:20px; font-weight:700; color:#111827; margin-bottom:12px;">{_('이메일 인증 요청')}</h2>
 
             <p style="font-size:15px; color:#374151; line-height:1.6; margin-bottom:20px;">
-              안녕하세요, <strong>유가몰</strong> 입니다.<br>
-              회원가입을 완료하시려면 아래 인증코드를 입력해주세요.<br>
-              <strong>인증코드는 5분간만 유효</strong>합니다.
+              {_('안녕하세요,')} <strong>{_('유가몰')}</strong> {_('입니다.')}<br>
+                {_('이메일 인증을 완료하시려면 아래 인증코드를 입력해주세요.')}<br>
+                <strong>{_('인증코드는 5분간만 유효합니다.')}</strong>
             </p>
 
             <div style="display:inline-block; background:#111827; color:#ffffff; font-weight:700; letter-spacing:2px; font-size:24px; padding:14px 40px; border-radius:6px; margin:20px 0;">
@@ -2917,8 +2944,8 @@ def send_email_code():
             </div>
 
             <p style="font-size:13px; color:#9ca3af; margin-top:24px; line-height:1.6;">
-              본 메일은 발신 전용이며 회신되지 않습니다.<br>
-              <strong>유가몰</strong>은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다.
+            {_('본 메일은 발신 전용이며 회신되지 않습니다.')}<br>
+            <strong>{_('유가몰')}</strong> {_('은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다.')}.
             </p>
           </div>
 
