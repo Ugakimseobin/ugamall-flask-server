@@ -59,44 +59,54 @@
   {% endif %}
 </section>
 
-<!-- 광고 섹션 -->
 <section class="bg-gray-50 max-w-full mx-auto px-4 sm:px-10 md:px-16 py-14 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-  <!-- 왼쪽 텍스트 -->
-  <div>
-    <h2 class="text-3xl sm:text-4xl font-extrabold text-[#222] mb-4 sm:mb-4">{{ _("신제품 프로모션") }}</h2>
-    <p class="text-gray-600 mb-6 text-sm sm:text-base leading-relaxed">
-      {{ _("최신 의료용품, 합리적인 가격으로 만나보세요.") }}<br>
-      {{ _("지금 바로 특별 혜택을 확인하세요!") }}
-    </p>
-    <a href="/products/5" target="_blank"
-       class="inline-block btn-dark px-6 py-2 text-white rounded-full shadow hover:opacity-90 text-sm sm:text-base transition">
-      {{ _("자세히 보러가기 →") }}
-    </a>
-  </div>
-
-  <!-- 오른쪽 이미지 캐러셀 -->
-  <div class="hidden sm:flex relative w-full h-72 md:h-80 items-center justify-center overflow-hidden">
-    <div id="ad-carousel-pc" class="relative w-full h-full flex items-center justify-center">
-      <img src="{{ url_for('static', filename='images/ad1.jpg') }}" 
-          class="ad-slide w-[300px] md:w-[400px] absolute rounded-lg shadow">
-      <img src="{{ url_for('static', filename='images/ad2.jpg') }}" 
-          class="ad-slide w-[300px] md:w-[400px] absolute rounded-lg shadow">
-      <img src="{{ url_for('static', filename='images/ad3.jpg') }}" 
-          class="ad-slide w-[300px] md:w-[400px] absolute rounded-lg shadow">
+  {% if ads and ads|length > 0 %}
+    <!-- 왼쪽 텍스트 -->
+    <div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-[#222] mb-4 sm:mb-4">
+        {{ ads[0].title or _("신제품 프로모션") }}
+      </h2>
+      <p class="text-gray-600 mb-6 text-sm sm:text-base leading-relaxed">
+        {{ ads[0].description or _("최신 의료용품, 합리적인 가격으로 만나보세요.") }}<br>
+        {{ ads[0].subtitle or _("지금 바로 특별 혜택을 확인하세요!") }}
+      </p>
+      <a href="{{ ads[0].link_url or '/products' }}" target="_blank"
+         class="inline-block btn-dark px-6 py-2 text-white rounded-full shadow hover:opacity-90 text-sm sm:text-base transition">
+        {{ _("자세히 보러가기 →") }}
+      </a>
     </div>
-  </div>
 
-  <!-- 모바일 전용 (손가락 스와이프 가능) -->
-  <div class="sm:hidden relative w-full h-56 overflow-x-auto">
-    <div class="flex space-x-4 w-max px-4 snap-x snap-mandatory">
-      <img src="{{ url_for('static', filename='images/ad1.jpg') }}" 
-          class="w-64 h-40 object-cover rounded-lg shadow snap-center flex-shrink-0">
-      <img src="{{ url_for('static', filename='images/ad2.jpg') }}" 
-          class="w-64 h-40 object-cover rounded-lg shadow snap-center flex-shrink-0">
-      <img src="{{ url_for('static', filename='images/ad3.jpg') }}" 
-          class="w-64 h-40 object-cover rounded-lg shadow snap-center flex-shrink-0">
+    <!-- 오른쪽 이미지 캐러셀 (데스크탑) -->
+    <div class="hidden sm:flex relative w-full h-72 md:h-80 items-center justify-center overflow-hidden">
+      <div id="ad-carousel-pc" class="relative w-full h-full flex items-center justify-center">
+        {% for ad in ads %}
+          {% for img in ad.images %}
+            <img src="{{ url_for('admin_ad_image', image_id=img.id) }}"
+                alt="{{ ad.title }}"
+                class="ad-slide w-[300px] md:w-[350px] absolute rounded-lg shadow">
+          {% endfor %}
+        {% endfor %}
+      </div>
     </div>
-  </div>
+
+    <!-- 모바일 전용 (스와이프) -->
+    <div class="sm:hidden relative w-full h-56 overflow-x-auto">
+      <div class="flex space-x-4 w-max px-4 snap-x snap-mandatory">
+        {% for ad in ads %}
+          {% for img in ad.images %}
+            <img src="{{ url_for('admin_ad_image', image_id=img.id) }}"
+                alt="{{ ad.title }}"
+                class="w-64 h-40 object-cover rounded-lg shadow snap-center flex-shrink-0">
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <!-- 광고 없을 때 -->
+    <div class="col-span-2 text-center text-gray-500 py-10">
+      {{ _("등록된 광고가 없습니다.") }}
+    </div>
+  {% endif %}
 </section>
 
 <!-- Company Section -->
@@ -145,4 +155,21 @@
     </form>
   </div>
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const slides = document.querySelectorAll(".ad-slide");
+  if (slides.length === 0) return;
+
+  let idx = 0;
+  slides[0].classList.add("opacity-100");
+
+  setInterval(() => {
+    slides[idx].classList.remove("opacity-100");
+    idx = (idx + 1) % slides.length;
+    slides[idx].classList.add("opacity-100");
+  }, 4000);
+});
+</script>
+
 {% endblock %}

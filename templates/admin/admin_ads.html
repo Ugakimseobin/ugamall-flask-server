@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-4xl mx-auto py-10">
+  <h2 class="text-2xl font-bold mb-6">광고 관리</h2>
+
+  <form method="POST" enctype="multipart/form-data" class="space-y-4 mb-10 border p-5 rounded-lg bg-gray-50">
+    <input type="text" name="title" placeholder="제목" class="border rounded p-2 w-full" required>
+    <input type="text" name="subtitle" placeholder="부제목" class="border rounded p-2 w-full">
+    <textarea name="description" placeholder="설명" class="border rounded p-2 w-full"></textarea>
+    <input type="url" name="link_url" placeholder="링크 URL" class="border rounded p-2 w-full">
+    <input type="file" name="images" accept="image/*" class="border rounded p-2 w-full" multiple>
+    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded">등록</button>
+  </form>
+
+  <h3 class="font-semibold mb-3">등록된 광고 목록</h3>
+  <ul class="space-y-3">
+    {% for ad in ads %}
+    <li class="border rounded-lg p-3 bg-white shadow-sm">
+      <div class="flex items-start gap-3 mb-3">
+        {% for img in ad.images %}
+          <img src="{{ url_for('admin_ad_image', image_id=img.id) }}" class="w-20 h-20 object-cover rounded border">
+        {% endfor %}
+      </div>
+
+      <div>
+        <p class="font-semibold">{{ ad.title }}</p>
+        <p class="text-sm text-gray-600">{{ ad.subtitle }}</p>
+        <a href="{{ ad.link_url }}" target="_blank" class="text-blue-600 text-sm">링크 보기</a>
+      </div>
+
+      <div class="flex gap-2 mt-2">
+        <form method="POST" action="{{ url_for('toggle_ad', ad_id=ad.id) }}">
+          <button class="px-2 py-1 {{ 'bg-green-500 text-white' if ad.is_active else 'bg-gray-400 text-white' }} rounded">
+            {{ '활성화' if ad.is_active else '비활성화' }}
+          </button>
+        </form>
+        <form method="POST" action="{{ url_for('delete_ad', ad_id=ad.id) }}">
+          <button class="px-2 py-1 bg-red-500 text-white rounded">삭제</button>
+        </form>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

@@ -209,6 +209,24 @@ class Review(db.Model):
     product = db.relationship("Product", backref="reviews")
     user = db.relationship("User", backref="reviews")
 
+class Advertisement(db.Model):
+    __tablename__ = "advertisements"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    subtitle = db.Column(db.String(255))
+    description = db.Column(db.Text)
+    link_url = db.Column(db.String(255))
+    is_active = db.Column(db.Boolean, default=True)
+    order = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    images = db.relationship("AdvertisementImage", backref="ad", cascade="all, delete")
+
+class AdvertisementImage(db.Model):
+    __tablename__ = "advertisement_images"
+    id = db.Column(db.Integer, primary_key=True)
+    ad_id = db.Column(db.Integer, db.ForeignKey("advertisements.id"), nullable=False)
+    image_data = db.Column(db.LargeBinary(length=(2**24)))  # ✅ MEDIUMBLOB (16MB)
+    image_mime = db.Column(db.String(100))
 
 class Video(db.Model):
     __tablename__ = 'video'
@@ -284,6 +302,12 @@ class Order(db.Model):
     is_read = db.Column(db.Boolean, default=False)
     applied_user_coupon_id = db.Column(db.Integer, db.ForeignKey("user_coupons.id"), nullable=True)
     discount_amount        = db.Column(db.Integer, default=0)
+    @property
+    def total_price(self):
+        total = 0
+        for item in self.items:
+            total += item.discount_price or item.original_price or 0
+        return total
 
     # 관계
     user = db.relationship("User", backref="orders")
@@ -648,10 +672,11 @@ def status_label(value):
 # -----------------------------
 @app.route('/')
 def home():
+    ads = Advertisement.query.filter_by(is_active=True).order_by(Advertisement.order).all()
     latest_video = Video.query.order_by(Video.id.desc()).first()
     # 🔽 숨김 처리된 상품은 제외
     products = Product.query.filter_by(is_active=True).order_by(Product.id.desc()).limit(8).all()
-    return render_template('index.html', latest_video=latest_video, products=products)
+    return render_template('index.html',ads=ads, latest_video=latest_video, products=products)
 
 @app.route('/set_lang/<lang>')
 def set_lang(lang):
@@ -661,6 +686,13 @@ def set_lang(lang):
 @app.route("/debug_lang")
 def debug_lang():
     return f"Current lang = {session.get('lang')}"
+
+@app.route("/ad_immage/<int:ad_id>")
+def ad_image(ad_id):
+    ad = Advertisement.query.get_or_404(ad_id)
+    if not ad.image_data:
+        abort(404)
+    return Response(ad.image_data, mimetype=ad.image_mime)
 
 # 1단계: 약관 동의
 @app.route("/register/terms", methods=["GET", "POST"])
@@ -2329,6 +2361,94 @@ def admin_delete_video(video_id):
 
     flash("영상이 성공적으로 삭제되었습니다.", "success")
     return redirect(url_for("admin_videos"))
+
+@app.route("/admin/ads", methods=["GET", "POST"])
+@login_required
+def admin_ads():
+    if not current_user.is_admin:
+        abort(403)
+
+    if request.method == "POST":
+        title = request.form.get("title")
+        subtitle = request.form.get("subtitle")
+        description = request.form.get("description")
+        link_url = request.form.get("link_url")
+
+        new_ad = Advertisement(
+            title=title,
+            subtitle=subtitle,
+            description=description,
+            link_url=link_url,
+            is_active=True
+        )
+        db.session.add(new_ad)
+        db.session.flush()  # ad.id 확보
+
+        files = request.files.getlist("images")
+        for f in files:
+            if f and f.filename:
+                img = AdvertisementImage(
+                    ad_id=new_ad.id,
+                    image_data=f.read(),
+                    image_mime=f.mimetype
+                )
+                db.session.add(img)
+
+        db.session.commit()
+        flash("광고가 등록되었습니다.", "success")
+        return redirect(url_for("admin_ads"))
+
+    ads = Advertisement.query.order_by(Advertisement.order).all()
+    return render_template("admin/admin_ads.html", ads=ads)
+
+@app.route("/admin/ad_image/<int:image_id>")
+@login_required
+def admin_ad_image(image_id):
+    if not current_user.is_admin:
+        abort(403)
+    image = AdvertisementImage.query.get_or_404(image_id)
+    return Response(image.image_data, mimetype=image.image_mime)
+
+@app.route("/admin/ads/<int:ad_id>/toggle", methods=["POST"])
+@login_required
+def toggle_ad(ad_id):
+    if not current_user.is_admin:
+        abort(403)
+    ad = Advertisement.query.get_or_404(ad_id)
+    ad.is_active = not ad.is_active
+    db.session.commit()
+    return redirect(url_for("admin_ads"))
+
+@app.route("/admin/ads/<int:ad_id>/delete", methods=["POST"])
+@login_required
+def delete_ad(ad_id):
+    if not current_user.is_admin:
+        abort(403)
+    ad = Advertisement.query.get_or_404(ad_id)
+    db.session.delete(ad)
+    db.session.commit()
+    flash("광고가 삭제되었습니다.", "info")
+    return redirect(url_for("admin_ads"))
+
+@app.route("/admin/ads/<int:ad_id>/move", methods=["POST"])
+@login_required
+def move_ad(ad_id):
+    if not current_user.is_admin:
+        abort(403)
+    direction = request.form.get("direction")
+    ad = Advertisement.query.get_or_404(ad_id)
+
+    if direction == "up":
+        prev_ad = Advertisement.query.filter(Advertisement.order < ad.order).order_by(Advertisement.order.desc()).first()
+        if prev_ad:
+            ad.order, prev_ad.order = prev_ad.order, ad.order
+    elif direction == "down":
+        next_ad = Advertisement.query.filter(Advertisement.order > ad.order).order_by(Advertisement.order.asc()).first()
+        if next_ad:
+            ad.order, next_ad.order = next_ad.order, ad.order
+
+    db.session.commit()
+    return redirect(url_for("admin_ads"))
 
 @app.route("/admin/users", methods=["GET", "POST"])
 @login_required
