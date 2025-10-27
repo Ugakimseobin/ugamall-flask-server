@@ -73,6 +73,11 @@
           location.href = "/checkout";
         }
       } else {
+        await fetch("/pay/fail", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ order_id: ORDER_ID, error: rsp.error_msg })
+        });
         alert("결제 실패: " + rsp.error_msg);
         location.href = "/checkout";
       }
