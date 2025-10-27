@@ -11,7 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 import requests
 import os
 import random, time, string
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from flask_migrate import Migrate
 from sqlalchemy.dialects.mysql import JSON
@@ -601,13 +601,15 @@ def _compute_date_range(period: str | None, start_date_str: str | None, end_date
 # -----------------------------
 STATUS_LABEL_TEXT = {
     # 영어 상태코드
-    "pending":   "결제대기",
-    "ready":     "결제대기",
-    "paid":      "결제완료",
-    "shipped":   "배송중",
+    "paid": "결제완료",
+    "ready": "입금대기",
+    "pending": "결제대기",
+    "failed": "결제실패",
+    "canceled": "취소됨",
+    "shipped": "배송중",
     "delivered": "배송완료",
-    "canceled":  "취소됨",
-    "cancelled": "취소됨",
+    "returned": "반품완료",
+    "exchanged": "교환완료",
 
     # 한글 상태코드도 추가
     "주문 접수": "주문 접수",
@@ -776,6 +778,7 @@ def guest_orders():
         order_id = request.form.get("order_id")  # 선택 입력
 
         query = Order.query.filter_by(guest_email=email)
+        query = query.filter(Order.status != "failed")
 
         if order_id:
             query = query.filter_by(id=order_id)
@@ -899,7 +902,7 @@ def mypage():
     start_date_str = request.args.get("start_date")
     end_date_str = request.args.get("end_date")
 
-    now = datetime.utcnow()
+    now = datetime.utcnow() + timedelta(hours=9)
 
     # 직접 입력한 기간이 있으면 그걸 우선 적용
     if start_date_str and end_date_str:
@@ -927,7 +930,8 @@ def mypage():
 
     # 🔍 주문 필터링 쿼리
     orders_query = Order.query.filter(
-        Order.user_id == user.id,
+        Order.user_id == user.id, 
+        Order.status != "failed",
         Order.created_at >= start_date,
         Order.created_at <= end_date
     ).order_by(Order.created_at.desc())
@@ -966,7 +970,7 @@ def mypage_orders_api():
     start_date_str = request.args.get("start_date")
     end_date_str = request.args.get("end_date")
 
-    now = datetime.utcnow()
+    now = datetime.utcnow() + timedelta(hours=9)
 
     # ✅ 날짜 계산
     if start_date_str and end_date_str:
@@ -993,6 +997,7 @@ def mypage_orders_api():
     # ✅ 쿼리
     orders_query = Order.query.filter(
         Order.user_id == user.id,
+        Order.status != "failed",
         Order.created_at >= start_date,
         Order.created_at <= end_date
     ).order_by(Order.created_at.desc())
@@ -1020,7 +1025,7 @@ def mypage_orders_api():
         for item in o.items:
             order_data["items"].append({
                 "name": item.variant.product.name,
-                "image": url_for("static", filename=f"images/{item.variant.product.image}"),
+                "image": url_for("serve_product_image", product_id=item.variant.product.id),
                 "quantity": item.quantity,
                 "original_price": item.original_price,
                 "discount_price": item.discount_price,
@@ -1712,6 +1717,7 @@ def pay_verify():
     amount = imp_data.get("amount")
     pg_provider = imp_data.get("pg_provider")
     pay_method = imp_data.get("pay_method")
+    fail_reason = imp_data.get("fail_reason", "")
 
     pay = Payment.query.filter_by(merchant_uid=merchant_uid).first()
     if not pay:
@@ -1758,12 +1764,29 @@ def pay_verify():
         order.status = "pending"
 
     else:
-        # 실패, 취소, 미결제 등
-        pay.status = status
+        # ❌ 실패, 취소, 응답 없음 등
+        pay.status = "failed"
         order.status = "failed"
+        pay.fail_reason = fail_reason or "결제 실패 또는 취소됨"
+
+        print(f"❌ [결제실패] 주문 {order.id}, 사유: {pay.fail_reason}")
 
     db.session.commit()
     return jsonify(ok=True, status=pay.status)
+
+@app.route("/pay/fail", methods=["POST"])
+def pay_fail():
+    data = request.get_json(silent=True) or {}
+    order_id = data.get("order_id")
+    reason = data.get("error", "결제 실패 또는 취소")
+
+    order = Order.query.get(order_id)
+    if order:
+        order.status = "failed"
+        db.session.commit()
+        print(f"❌ 결제 실패 처리됨: 주문 {order_id}, 사유: {reason}")
+
+    return jsonify(ok=True)
 
 # -----------------------------
 # 주문 완료 페이지(무통장/카드 공용)

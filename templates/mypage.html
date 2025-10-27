@@ -476,6 +476,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // ✅ 기간 버튼 클릭 시
   document.querySelectorAll(".filter-btn").forEach(btn => {
     btn.addEventListener("click", () => {
+      // 모든 버튼 비활성화
+      document.querySelectorAll(".filter-btn").forEach(b => {
+        b.classList.remove("bg-green-100", "text-green-700");
+      });
+
+      // 클릭된 버튼만 활성화 스타일 추가
+      btn.classList.add("bg-green-100", "text-green-700");
+
+      // 실제 데이터 로드
       const range = btn.dataset.range;
       loadOrders({ period: range });
     });
