@@ -142,17 +142,14 @@
             <div class="mb-4">
               <label class="block font-semibold mb-2">{{ _("주소") }}</label>
               <div class="flex gap-2 mb-2">
-                <input type="text" id="postcode" placeholder="{{ _('우편번호') }}"
+                <input type="text" id="address" name="address" placeholder="{{ _('기본 주소') }}"
+                      value="{{ user_info.base_address if user_info else '' }}"
                       class="border p-2 rounded w-1/2 bg-gray-100" readonly>
                 <button type="button" onclick="execDaumPostcode()"
                         class="px-3 py-2 bg-white border border-gray-400 rounded hover:bg-gray-100 active:scale-[0.97] transition">
                   {{ _("주소 찾기") }}
                 </button>
               </div>
-              <input type="text" id="address" name="address"
-                    value="{{ user_info.base_address if user_info else '' }}"
-                    placeholder="{{ _('기본 주소') }}"
-                    class="w-full border rounded p-2 text-sm sm:text-base bg-gray-100 mb-2" readonly>
               <input type="text" id="detailAddress" name="detail_address"
                     value="{{ user_info.detail_address if user_info else '' }}"
                     placeholder="{{ _('상세 주소') }}"
@@ -471,9 +468,19 @@ function execDaumPostcode() {
   new daum.Postcode({
     oncomplete: function(data) {
       const fullAddress = data.roadAddress || data.jibunAddress;
-      document.getElementById("postcode").value = data.zonecode;
-      document.getElementById("address").value = fullAddress;
-      document.getElementById("detailAddress").focus();
+      const postcode = data.zonecode;
+
+      // ✅ 우편번호 입력칸이 있을 경우만 넣기 (안 만들어도 오류 안 남)
+      const postcodeInput = document.getElementById("postcode");
+      if (postcodeInput) postcodeInput.value = postcode;
+
+      // ✅ 기본 주소 입력
+      const addressInput = document.getElementById("address");
+      if (addressInput) addressInput.value = fullAddress;
+
+      // ✅ 상세주소 포커스 이동
+      const detailInput = document.getElementById("detailAddress");
+      if (detailInput) detailInput.focus();
     }
   }).open();
 }

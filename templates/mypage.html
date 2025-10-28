@@ -507,9 +507,17 @@ document.addEventListener("DOMContentLoaded", () => {
 function execDaumPostcode() {
   new daum.Postcode({
     oncomplete: function(data) {
-      document.getElementById("postcode").value = data.zonecode;
-      document.getElementById("baseAddress").value = data.roadAddress ? data.roadAddress : data.jibunAddress;
-      document.getElementById("detailAddress").focus();
+      const baseAddress = document.getElementById("baseAddress");
+      const detailAddress = document.getElementById("detailAddress");
+
+      // ❌ postcode 필드가 없으므로 이 줄은 제거하거나 조건문 처리
+      // if (document.getElementById("postcode"))
+      //   document.getElementById("postcode").value = data.zonecode;
+
+      if (baseAddress) {
+        baseAddress.value = data.roadAddress ? data.roadAddress : data.jibunAddress;
+      }
+      if (detailAddress) detailAddress.focus();
     }
   }).open();
 }
