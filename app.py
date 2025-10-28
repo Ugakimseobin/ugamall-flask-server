@@ -907,6 +907,7 @@ def mypage():
             user.name = request.form.get("name")
             user.base_address = request.form.get("base_address", "")
             user.detail_address = request.form.get("detail_address", "")
+            user.phone = request.form.get("phone", "")
             user.agree_marketing = "agree_marketing" in request.form
             db.session.commit()
             flash("개인정보가 수정되었습니다.", "success")

@@ -205,11 +205,15 @@
                     value="{{ user.base_address or '' }}" placeholder="{{ _('기본주소') }}"
                     class="border p-2 rounded w-full sm:w-1/2 mb-2 sm:mb-0" readonly>
               <button type="button" onclick="execDaumPostcode()"
-                      class="px-3 py-2 bg-indigo-600 text-white rounded text-sm sm:text-base">{{ _("주소찾기") }}</button>
+                      class="px-3 py-2 bg-white border border-gray-400 rounded hover:bg-gray-100 active:scale-[0.97] transition">{{ _("주소찾기") }}</button>
             </div>
             <input type="text" id="detailAddress" name="detail_address"
                   value="{{ user.detail_address or '' }}" placeholder="{{ _('상세주소') }}"
                   class="w-full border p-2 rounded">
+          </div>
+          <div>
+            <label class="block font-semibold">{{ _("핸드폰") }}</label>
+            <input type="text" name="phone" value="{{ user.phone }}" class="w-full border p-2 rounded">
           </div>
           <div>
             <label class="text-sm sm:text-base">
