@@ -90,13 +90,13 @@
     </div>
 
     <!-- 모바일 전용 (스와이프) -->
-    <div class="sm:hidden relative w-full h-56 overflow-x-auto">
+    <div class="sm:hidden relative w-full h-80 overflow-x-auto">
       <div class="flex space-x-4 w-max px-4 snap-x snap-mandatory">
         {% for ad in ads %}
           {% for img in ad.images %}
             <img src="{{ url_for('ad_image', image_id=img.id) }}"
                 alt="{{ ad.title }}"
-                class="w-64 h-40 object-cover rounded-lg shadow snap-center flex-shrink-0">
+                class="w-64 h-72 object-cover rounded-lg shadow snap-center flex-shrink-0">
           {% endfor %}
         {% endfor %}
       </div>
