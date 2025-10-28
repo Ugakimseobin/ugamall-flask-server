@@ -687,12 +687,10 @@ def set_lang(lang):
 def debug_lang():
     return f"Current lang = {session.get('lang')}"
 
-@app.route("/ad_immage/<int:ad_id>")
-def ad_image(ad_id):
-    ad = Advertisement.query.get_or_404(ad_id)
-    if not ad.image_data:
-        abort(404)
-    return Response(ad.image_data, mimetype=ad.image_mime)
+@app.route("/ad_image/<int:image_id>")
+def ad_image(image_id):
+    img = AdvertisementImage.query.get_or_404(image_id)
+    return Response(img.image_data, mimetype=img.image_mime)
 
 # 1단계: 약관 동의
 @app.route("/register/terms", methods=["GET", "POST"])
