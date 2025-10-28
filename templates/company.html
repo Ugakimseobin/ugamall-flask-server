@@ -132,13 +132,32 @@
     <p class="text-gray-600 leading-relaxed max-w-3xl mx-auto reveal">{{ _("국내외 다양한 파트너사와 함께 헬스케어의 미래를 만들어갑니다.") }}</p>
 
     <div class="grid sm:grid-cols-3 gap-8 mt-10">
-      <div class="bg-white rounded-xl shadow-md p-10 font-extrabold text-[#222] text-2xl hover:shadow-lg transition reveal-left">폼메디칼</div>
-      <div class="bg-white rounded-xl shadow-md p-10 font-extrabold text-[#222] text-2xl hover:shadow-lg transition reveal-right">메디케이</div>
-      <div class="bg-white rounded-xl shadow-md p-10 font-extrabold text-[#222] text-2xl hover:shadow-lg transition reveal-right">하나캐피탈</div>
+      <div class="partner-card bg-white rounded-xl shadow-md p-10 font-extrabold text-[#222] text-2xl hover:shadow-lg transition reveal-left cursor-pointer"
+           data-name="폼메디칼" 
+           data-desc="정형외과 및 재활 보조기 전문 제조사로, UGA와 장기 공급 계약 체결. 국내 의료기기 품질 인증 다수 보유.">
+        폼메디칼
+      </div>
+      <div class="partner-card bg-white rounded-xl shadow-md p-10 font-extrabold text-[#222] text-2xl hover:shadow-lg transition reveal-right cursor-pointer"
+           data-name="메디케이" 
+           data-desc="의료 소모품 유통 전문 기업으로, UGA몰에 다양한 제품을 공급하며 협력 관계 유지. 전국 병원 납품망 보유.">
+        메디케이
+      </div>
+      <div class="partner-card bg-white rounded-xl shadow-md p-10 font-extrabold text-[#222] text-2xl hover:shadow-lg transition reveal-right cursor-pointer"
+           data-name="하나캐피탈" 
+           data-desc="UGA몰과 의료기기 렌탈 및 리스 금융 파트너십 체결. 의료 종사자 대상 맞춤 금융 상품 지원.">
+        하나캐피탈
+      </div>
     </div>
   </div>
 </section>
-
+<!-- ✅ 모달 -->
+<div id="partnerModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-[90%] relative">
+    <button id="closeModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+    <h3 id="modalName" class="text-2xl font-bold text-[#222] mb-4"></h3>
+    <p id="modalDesc" class="text-gray-600 leading-relaxed text-base"></p>
+  </div>
+</div>
 <!-- 맨 위로 -->
 <button id="backToTop" 
   class="hidden fixed md:bottom-6 bottom-[70px] right-6  bg-white border border-gray-400 text-[#222] p-3 rounded-full shadow-lg hover:bg-gray-100 transition hidden md:block">
@@ -208,6 +227,33 @@
     });
   }, {threshold:0.2});
   ioNav.observe(hero);
+</script>
+
+<!-- 파트너 모달 -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("partnerModal");
+  const modalName = document.getElementById("modalName");
+  const modalDesc = document.getElementById("modalDesc");
+  const closeModal = document.getElementById("closeModal");
+
+  document.querySelectorAll(".partner-card").forEach(card => {
+    card.addEventListener("click", () => {
+      modalName.textContent = card.dataset.name;
+      modalDesc.textContent = card.dataset.desc;
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    });
+  });
+
+  closeModal.addEventListener("click", () => {
+    modal.classList.add("hidden");
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) modal.classList.add("hidden");
+  });
+});
 </script>
 
 <style>
