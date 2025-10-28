@@ -16,7 +16,8 @@
         <tr class="bg-gray-100 text-left">
           <th class="border px-4 py-2">ID</th>
           <th class="border px-4 py-2">제목</th>
-          <th class="border px-4 py-2">파일 경로</th>
+          <th class="border px-4 py-2">설명</th>
+          <th class="border px-4 py-2">태그</th>
           <th class="border px-4 py-2">관리</th>
         </tr>
       </thead>
@@ -25,7 +26,8 @@
         <tr class="hover:bg-gray-50">
           <td class="border px-4 py-2">{{ v.id }}</td>
           <td class="border px-4 py-2">{{ v.title }}</td>
-          <td class="border px-4 py-2">{{ v.file_path }}</td>
+          <td class="border px-4 py-2">{{ v.description or '-' }}</td>
+          <td class="border px-4 py-2">{{ v.tags or '-' }}</td>
           <td class="border px-4 py-2 space-x-2">
             <a href="{{ url_for('admin_edit_video', video_id=v.id) }}"
                class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 text-sm">

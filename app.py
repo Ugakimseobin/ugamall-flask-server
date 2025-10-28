@@ -232,6 +232,8 @@ class Video(db.Model):
     __tablename__ = 'video'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    tags = db.Column(db.String(200))  # ✅ 태그(쉼표 구분) 추가
 
     # ✅ DB에 대용량 바이너리 저장 가능하도록 확장
     video_data = db.Column(LONGBLOB)         # <-- 여기!
@@ -2313,13 +2315,24 @@ def admin_add_video():
     if not current_user.is_admin:
         return redirect(url_for("home"))
     if request.method == "POST":
-        title = request.form["title"]
-        file = request.files["video"]
+        title = request.form.get("title")
+        description = request.form.get("description")
+        tags = request.form.get("tags")
+        file = request.files.get("video")
+
+        if not file or not title:
+            flash("제목과 영상을 입력해주세요.", "error")
+            return redirect(url_for("admin_add_video"))
+        
+        mime = file.mimetype
+        data = file.read()
 
         video = Video(
             title=title,
-            video_data=file.read(),
-            video_mime=file.mimetype
+            description=description,
+            tags=tags,
+            video_data=data,
+            video_mime=mime
         )
         db.session.add(video)
         db.session.commit()
