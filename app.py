@@ -1752,6 +1752,7 @@ def pay_verify():
     fail_reason = imp_data.get("fail_reason", "")
 
     pay = Payment.query.filter_by(merchant_uid=merchant_uid).first()
+    order = Order.query.get(order_id)
     if not pay:
         pay = Payment(order_id=order_id, merchant_uid=merchant_uid, amount=amount)
         db.session.add(pay)
@@ -1764,7 +1765,9 @@ def pay_verify():
     pay.method = pay_method
     pay.amount = amount
 
-    order = pay.order
+    if not order:
+        db.session.rollback()
+        return jsonify(ok=False, message="주문 정보를 찾을 수 없습니다."), 400
 
     if status == "paid":
         # ✅ 결제 성공
