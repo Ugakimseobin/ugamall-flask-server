@@ -43,8 +43,8 @@
 
         <!-- 텍스트 박스 -->
         <div class="relative bg-black/60 text-white px-4 pb-3 backdrop-blur-[2px]">
-          <h2 class="text-base font-semibold mb-1">{{ _("UGAMALL 홍보 영상") }}</h2>
-          <p class="text-xs text-gray-200 mb-2">{{ _("UGAMALL의 최신 소식과 스토리를 만나보세요.") }}</p>
+          <h2 class="text-base font-semibold mb-1">{{ latest_video.title or "UGAMALL 홍보 영상" }}</h2>
+          <p class="text-xs text-gray-200 mb-2">{{ latest_video.description or "UGAMALL의 최신 소식과 스토리를 만나보세요." }}</p>
           <a href="/videos"
              class="inline-block bg-white text-black text-xs font-medium px-3 py-1.5 rounded-full shadow hover:bg-gray-200 transition">
             {{ _("영상 더 보기 →") }}
