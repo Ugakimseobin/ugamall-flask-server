@@ -17,8 +17,8 @@
                   items-center p-4 sm:p-6 text-white cursor-pointer">
 
         <div class="text-sm sm:text-base md:text-lg">
-          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-white drop-shadow-[0_0_4px_rgba(0,0,0,0.8)] mb-2 sm:mb-3">{{ _("UGAMALL 홍보 영상") }}</h2>
-          <p class="mb-3 sm:mb-4 text-gray-200 text-xs text-[#ddd] sm:text-sm md:text-base">{{ _("UGAMALL의 최신 소식과 스토리를 만나보세요.") }}</p>
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-white drop-shadow-[0_0_4px_rgba(0,0,0,0.8)] mb-2 sm:mb-3">{{ latest_video.title or "UGAMALL 홍보 영상" }}</h2>
+          <p class="mb-3 sm:mb-4 text-gray-200 text-xs text-[#ddd] sm:text-sm md:text-base">{{ latest_video.description or "UGAMALL의 최신 소식과 스토리를 만나보세요." }}</p>
           <a href="/videos" 
              class="inline-block btn-dark px-5 py-2.5 rounded-full shadow hover:opacity-90 transition text-sm sm:text-base font-medium">
             {{ _("영상 더 보기 →") }}
