@@ -110,9 +110,9 @@
                 {% endif %}
                 {% if order.status == "배송완료" %}
                   <button 
-                    class="mt-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded hover:bg-yellow-600"
+                    class="bg-yellow-500 text-white text-xs px-2 py-1 rounded hover:bg-yellow-600"
                     onclick="openReturnModal('{{ order.id }}')">
-                    반품/교환 신청
+                    {{ _("반품/교환 신청") }}
                   </button>
                 {% endif %}
                 <button 
