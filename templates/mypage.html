@@ -109,12 +109,18 @@
                 </form>
                 {% endif %}
                 {% if order.status == "배송완료" %}
-                <button 
-                  class="mt-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded hover:bg-yellow-600"
-                  onclick="openReturnModal('{{ order.id }}')">
-                  반품/교환 신청
-                </button>
+                  <button 
+                    class="mt-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded hover:bg-yellow-600"
+                    onclick="openReturnModal('{{ order.id }}')">
+                    반품/교환 신청
+                  </button>
                 {% endif %}
+                <button 
+                  type="button"
+                  class="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 reorder-btn"
+                  data-order-id="{{ order.id }}">
+                  {{ _("다시 담기") }}
+                </button>
               </div>
             </div>
 
@@ -122,14 +128,21 @@
             <div class="divide-y mt-2">
               {% for item in order.items %}
               <div class="flex items-center gap-3 py-2">
-                <img src="{{ url_for('serve_product_image', product_id=item.variant.product.id) }}"
-+                    alt="{{ item.variant.product.name }}"
-                     class="w-16 h-16 rounded object-cover border">
+                <a href="{{ url_for('product_detail', product_id=item.variant.product.id) }}" class="flex-shrink-0">
+                  <img src="{{ url_for('serve_product_image', product_id=item.variant.product.id) }}"
+                      alt="{{ item.variant.product.name }}"
+                      class="w-16 h-16 rounded object-cover border hover:opacity-80 transition">
+                </a>
+
+                <!-- 상품 정보 -->
                 <div class="flex-1">
-                  <p class="font-semibold text-sm sm:text-base">{{ item.variant.product.name }}</p>
-                  <p class="text-xs text-gray-500">
+                  <a href="{{ url_for('product_detail', product_id=item.variant.product.id) }}"
+                    class="font-semibold text-sm sm:text-base text-gray-800 hover:text-indigo-600 transition">
+                    {{ item.variant.product.name }}
+                  </a>
+                  <p class="text-xs text-gray-500 mt-0.5">
                     {% for key, val in item.variant.options.items() %}
-                      {{ key }}: {{ val }}
+                      {{ key }}: {{ val }}{% if not loop.last %}, {% endif %}
                     {% endfor %}
                   </p>
                 </div>
@@ -599,6 +612,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+</script>
+
+<!-- 다시담기 ajax -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const reorderButtons = document.querySelectorAll(".reorder-btn");
+
+  reorderButtons.forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const orderId = btn.dataset.orderId;
+      btn.disabled = true;
+      const originalText = btn.innerText;
+      btn.innerText = "{{ _('처리 중...') }}";
+
+      try {
+        const res = await fetch(`/api/reorder/${orderId}`, {
+          method: "POST",
+          headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        const data = await res.json();
+        showToast(data.message, data.success ? "success" : "error");
+
+      } catch (err) {
+        console.error(err);
+        showToast("서버 오류가 발생했습니다.", "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerText = originalText;
+      }
+    });
+  });
+});
+
+/* ✅ 토스트 알림 */
+function showToast(message, type = "info") {
+  const toast = document.createElement("div");
+  toast.textContent = message;
+  toast.className = `fixed bottom-8 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-lg text-white shadow-lg z-50
+                     ${type === "success" ? "bg-green-600" : type === "error" ? "bg-red-600" : "bg-gray-800"}`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
 </script>
 
 <style>

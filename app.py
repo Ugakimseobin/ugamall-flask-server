@@ -1066,6 +1066,53 @@ def mypage_orders_api():
 
     return jsonify(result)
 
+@app.route("/api/reorder/<int:order_id>", methods=["POST"])
+@login_required
+def api_reorder(order_id):
+    """AJAX 요청: 이전 주문 상품을 다시 장바구니에 담기"""
+    order = Order.query.filter_by(id=order_id, user_id=current_user.id).first()
+    if not order:
+        return jsonify({"success": False, "message": "주문을 찾을 수 없습니다."}), 404
+
+    added_count = 0
+    skipped = 0
+
+    for item in order.items:
+        variant = item.variant
+        if not variant or variant.stock <= 0:
+            skipped += 1
+            continue
+
+        cart_item = CartItem.query.filter_by(
+            user_id=current_user.id,
+            product_id=variant.product_id,
+            variant_id=variant.id
+        ).first()
+
+        if cart_item:
+            cart_item.quantity += item.quantity
+        else:
+            db.session.add(
+                CartItem(
+                    user_id=current_user.id,
+                    product_id=variant.product_id,
+                    variant_id=variant.id,
+                    quantity=item.quantity,
+                )
+            )
+        added_count += 1
+
+    db.session.commit()
+
+    if added_count == 0:
+        msg = "추가 가능한 상품이 없습니다." if skipped else "담을 상품이 없습니다."
+        return jsonify({"success": False, "message": msg}), 400
+
+    return jsonify({
+        "success": True,
+        "message": f"{added_count}개의 상품이 장바구니에 담겼습니다."
+    })
+
 @app.route("/cancel_order/<int:order_id>", methods=["POST"])
 @login_required
 def cancel_order(order_id):
