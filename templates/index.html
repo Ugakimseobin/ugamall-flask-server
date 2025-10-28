@@ -81,7 +81,7 @@
       <div id="ad-carousel-pc" class="relative w-full h-full flex items-center justify-center">
         {% for ad in ads %}
           {% for img in ad.images %}
-            <img src="{{ url_for('admin_ad_image', image_id=img.id) }}"
+            <img src="{{ url_for('ad_image', image_id=img.id) }}"
                 alt="{{ ad.title }}"
                 class="ad-slide w-[300px] md:w-[350px] absolute rounded-lg shadow">
           {% endfor %}
@@ -94,7 +94,7 @@
       <div class="flex space-x-4 w-max px-4 snap-x snap-mandatory">
         {% for ad in ads %}
           {% for img in ad.images %}
-            <img src="{{ url_for('admin_ad_image', image_id=img.id) }}"
+            <img src="{{ url_for('ad_image', image_id=img.id) }}"
                 alt="{{ ad.title }}"
                 class="w-64 h-40 object-cover rounded-lg shadow snap-center flex-shrink-0">
           {% endfor %}
