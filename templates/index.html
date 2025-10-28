@@ -67,8 +67,8 @@
         {{ ads[0].title or _("신제품 프로모션") }}
       </h2>
       <p class="text-gray-600 mb-6 text-sm sm:text-base leading-relaxed">
-        {{ ads[0].description or _("최신 의료용품, 합리적인 가격으로 만나보세요.") }}<br>
-        {{ ads[0].subtitle or _("지금 바로 특별 혜택을 확인하세요!") }}
+        <strong class="text-lg">{{ ads[0].subtitle or _("지금 바로 특별 혜택을 확인하세요!") }}</strong><br>
+        {{ ads[0].description or _("최신 의료용품, 합리적인 가격으로 만나보세요.") }}
       </p>
       <a href="{{ ads[0].link_url or '/products' }}" target="_blank"
          class="inline-block btn-dark px-6 py-2 text-white rounded-full shadow hover:opacity-90 text-sm sm:text-base transition">
