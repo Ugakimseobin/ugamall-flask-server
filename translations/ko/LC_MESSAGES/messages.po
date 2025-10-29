@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-24 15:49+0900\n"
+"POT-Creation-Date: 2025-10-29 09:00+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -18,129 +18,161 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:1158
+#: app.py:1243
 msgid "비밀번호 재설정 안내"
 msgstr ""
 
-#: app.py:1168
+#: app.py:1253
 msgid "비밀번호 재설정을 요청하셨습니다."
 msgstr ""
 
-#: app.py:1171 app.py:2592 app.py:2937
+#: app.py:1256 app.py:2797 app.py:3142
 msgid "안녕하세요,"
 msgstr ""
 
-#: app.py:1171
+#: app.py:1256 templates/mypage.html:9
 msgid "님"
 msgstr ""
 
-#: app.py:1174 app.py:1186 app.py:2937 app.py:2948
+#: app.py:1259 app.py:1271 app.py:3142 app.py:3153
 msgid "유가몰"
 msgstr ""
 
-#: app.py:1174
+#: app.py:1259
 msgid "계정의 비밀번호 재설정을 요청하셨습니다."
 msgstr ""
 
-#: app.py:1175
+#: app.py:1260
 msgid "아래 버튼을 클릭하여 새로운 비밀번호를 설정해주세요."
 msgstr ""
 
-#: app.py:1176
+#: app.py:1261
 msgid "이 링크는"
 msgstr ""
 
-#: app.py:1176
+#: app.py:1261
 msgid "1시간 후 만료"
 msgstr ""
 
-#: app.py:1176
+#: app.py:1261
 msgid "됩니다."
 msgstr ""
 
-#: app.py:1181 templates/auth/reset_password_request.html:5
+#: app.py:1266 templates/auth/reset_password_request.html:5
 msgid "비밀번호 재설정"
 msgstr ""
 
-#: app.py:1185
+#: app.py:1270
 msgid "본 메일은 발신 전용이며, 회신되지 않습니다."
 msgstr ""
 
-#: app.py:1186 app.py:2948
+#: app.py:1271 app.py:3153
 msgid "은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다."
 msgstr ""
 
-#: app.py:2576
+#: app.py:2781
 msgid "[UGAMALL] 입금이 확인되었습니다."
 msgstr ""
 
-#: app.py:2589
+#: app.py:2794
 msgid "입금 확인 안내"
 msgstr ""
 
-#: app.py:2592
+#: app.py:2797
 msgid "고객님."
 msgstr ""
 
-#: app.py:2593 templates/guest_orders.html:30 templates/mypage.html:89
-#: templates/mypage.html:313 templates/order_complete.html:7
+#: app.py:2798 templates/guest_orders.html:30 templates/mypage.html:99
+#: templates/mypage.html:340 templates/order_complete.html:7
 #: templates/payment.html:8
 msgid "주문번호"
 msgstr ""
 
-#: app.py:2593
+#: app.py:2798
 msgid "의 입금이 확인되어 결제가 완료되었습니다."
 msgstr ""
 
-#: app.py:2594
+#: app.py:2799
 msgid "곧 배송 준비를 시작하겠습니다."
 msgstr ""
 
-#: app.py:2598
+#: app.py:2803
 msgid "결제 금액:"
 msgstr ""
 
-#: app.py:2598 templates/checkout.html:78 templates/checkout.html:107
-#: templates/checkout.html:234 templates/checkout.html:238
-#: templates/checkout.html:242 templates/guest_orders.html:77
-#: templates/mypage.html:129 templates/mypage.html:130
-#: templates/mypage.html:132 templates/mypage.html:286
-#: templates/mypage.html:289 templates/payment.html:11
+#: app.py:2803 templates/checkout.html:78 templates/checkout.html:107
+#: templates/checkout.html:231 templates/checkout.html:235
+#: templates/checkout.html:239 templates/guest_orders.html:77
+#: templates/mypage.html:152 templates/mypage.html:153
+#: templates/mypage.html:155 templates/mypage.html:313
+#: templates/mypage.html:316 templates/payment.html:11
 #: templates/product_detail.html:29 templates/product_detail.html:95
 #: templates/product_detail.html:271
 msgid "원"
 msgstr ""
 
-#: app.py:2602
+#: app.py:2807
 msgid "주문 상세 정보는 마이페이지 또는 주문조회에서 확인하실 수 있습니다."
 msgstr ""
 
-#: app.py:2603
+#: app.py:2808
 msgid "주문 내역 바로가기"
 msgstr ""
 
-#: app.py:2924
+#: app.py:3129
 msgid "[UGAMALL] 이메일 인증 코드"
 msgstr ""
 
-#: app.py:2934
+#: app.py:3139
 msgid "이메일 인증 요청"
 msgstr ""
 
-#: app.py:2937
+#: app.py:3142
 msgid "입니다."
 msgstr ""
 
-#: app.py:2938
+#: app.py:3143
 msgid "이메일 인증을 완료하시려면 아래 인증코드를 입력해주세요."
 msgstr ""
 
-#: app.py:2939
+#: app.py:3144
 msgid "인증코드는 5분간만 유효합니다."
 msgstr ""
 
-#: app.py:2947
+#: app.py:3152
 msgid "본 메일은 발신 전용이며 회신되지 않습니다."
+msgstr ""
+
+#: translations_dummy.py:4
+msgid "UGAMALL 홍보 영상"
+msgstr ""
+
+#: translations_dummy.py:5
+msgid "UGAMALL의 최신 소식과 스토리를 만나보세요."
+msgstr ""
+
+#: translations_dummy.py:6
+msgid "위생"
+msgstr ""
+
+#: translations_dummy.py:9
+msgid "신제품 프로모션"
+msgstr ""
+
+#: translations_dummy.py:10
+msgid "지금 바로 특별 혜택을 확인하세요!"
+msgstr ""
+
+#: translations_dummy.py:11
+msgid "최신 의료용품, 합리적인 가격으로 만나보세요."
+msgstr ""
+
+#: translations_dummy.py:12
+msgid "파스슬리퍼"
+msgstr ""
+
+#: translations_dummy.py:13
+msgid "발에 전해지는 편안함, 하루의 피로를 풀어주는 리커버리 슬리퍼"
 msgstr ""
 
 #: templates/base.html:132 templates/base.html:205
@@ -162,9 +194,8 @@ msgstr ""
 msgid "문의"
 msgstr ""
 
-#: templates/base.html:157 templates/base.html:241 templates/mypage.html:6
-#: templates/order_complete.html:34
-msgid "마이페이지"
+#: templates/base.html:157 templates/base.html:241 templates/mypage.html:16
+msgid "내 정보"
 msgstr ""
 
 #: templates/base.html:159 templates/base.html:246
@@ -188,7 +219,7 @@ msgstr ""
 msgid "바로가기"
 msgstr ""
 
-#: templates/base.html:317 templates/contact.html:16 templates/index.html:115
+#: templates/base.html:317 templates/contact.html:16 templates/index.html:125
 msgid "문의하기"
 msgstr ""
 
@@ -260,174 +291,170 @@ msgid "구매자 정보"
 msgstr ""
 
 #: templates/auth/register_info.html:58 templates/auth/register_info.html:59
-#: templates/auth/register_info.html:169 templates/auth/register_info.html:170
+#: templates/auth/register_info.html:167 templates/auth/register_info.html:168
 #: templates/checkout.html:129 templates/contact.html:26
-#: templates/index.html:125 templates/mypage.html:175
+#: templates/index.html:135 templates/mypage.html:198
 msgid "이름"
 msgstr ""
 
 #: templates/checkout.html:136 templates/contact.html:30
-#: templates/guest_orders.html:52 templates/index.html:129
+#: templates/guest_orders.html:52 templates/index.html:139
 msgid "전화번호"
 msgstr ""
 
-#: templates/auth/register_info.html:65 templates/auth/register_info.html:179
+#: templates/auth/register_info.html:65 templates/auth/register_info.html:177
 #: templates/checkout.html:143 templates/contact.html:58
-#: templates/mypage.html:179 templates/order_complete.html:10
+#: templates/mypage.html:202 templates/order_complete.html:10
 msgid "주소"
 msgstr ""
 
-#: templates/auth/register_info.html:67 templates/checkout.html:145
-msgid "우편번호"
-msgstr ""
-
-#: templates/auth/register_info.html:180 templates/checkout.html:149
-msgid "주소 찾기"
-msgstr ""
-
-#: templates/checkout.html:154
+#: templates/checkout.html:145
 msgid "기본 주소"
 msgstr ""
 
-#: templates/checkout.html:158
+#: templates/auth/register_info.html:178 templates/checkout.html:150
+msgid "주소 찾기"
+msgstr ""
+
+#: templates/checkout.html:155
 msgid "상세 주소"
 msgstr ""
 
 #: templates/auth/login.html:11 templates/auth/register_info.html:12
-#: templates/auth/register_info.html:127 templates/checkout.html:165
+#: templates/auth/register_info.html:125 templates/checkout.html:162
 #: templates/contact.html:61 templates/guest_orders.html:14
-#: templates/guest_orders_search.html:8 templates/mypage.html:170
+#: templates/guest_orders_search.html:8 templates/mypage.html:193
 msgid "이메일"
 msgstr ""
 
 #: templates/auth/login.html:12 templates/auth/register_info.html:14
-#: templates/auth/register_info.html:132 templates/checkout.html:170
+#: templates/auth/register_info.html:130 templates/checkout.html:167
 msgid "이메일 입력"
 msgstr ""
 
-#: templates/auth/register_info.html:18 templates/auth/register_info.html:135
+#: templates/auth/register_info.html:18 templates/auth/register_info.html:133
 #: templates/auth/register_info.html:447 templates/auth/register_info.html:472
 #: templates/auth/register_info.html:529 templates/auth/register_info.html:554
-#: templates/checkout.html:175 templates/guest_orders_search.html:18
+#: templates/checkout.html:172 templates/guest_orders_search.html:18
 msgid "인증메일 보내기"
 msgstr ""
 
-#: templates/auth/register_info.html:23 templates/auth/register_info.html:141
-#: templates/checkout.html:182 templates/guest_orders_search.html:25
+#: templates/auth/register_info.html:23 templates/auth/register_info.html:139
+#: templates/checkout.html:179 templates/guest_orders_search.html:25
 msgid "인증코드 입력"
 msgstr ""
 
-#: templates/auth/register_info.html:27 templates/auth/register_info.html:99
-#: templates/auth/register_info.html:145 templates/checkout.html:186
+#: templates/auth/register_info.html:27 templates/auth/register_info.html:97
+#: templates/auth/register_info.html:143 templates/checkout.html:183
 #: templates/guest_orders_search.html:29
 msgid "인증 확인"
 msgstr ""
 
-#: templates/checkout.html:194
+#: templates/checkout.html:191
 msgid "쿠폰 선택"
 msgstr ""
 
-#: templates/checkout.html:196
+#: templates/checkout.html:193
 msgid "쿠폰을 선택하세요"
 msgstr ""
 
-#: templates/checkout.html:216
+#: templates/checkout.html:213
 msgid "결제 방법"
 msgstr ""
 
-#: templates/checkout.html:218
+#: templates/checkout.html:215
 msgid "무통장입금"
 msgstr ""
 
-#: templates/checkout.html:219
+#: templates/checkout.html:216
 msgid "카드결제"
 msgstr ""
 
-#: templates/checkout.html:220
+#: templates/checkout.html:217
 msgid "카카오페이"
 msgstr ""
 
-#: templates/checkout.html:221
+#: templates/checkout.html:218
 msgid "토스페이"
 msgstr ""
 
-#: templates/checkout.html:233
+#: templates/checkout.html:230
 msgid "총 상품금액"
 msgstr ""
 
-#: templates/checkout.html:237
+#: templates/checkout.html:234
 msgid "할인금액"
 msgstr ""
 
-#: templates/checkout.html:241
+#: templates/checkout.html:238
 msgid "배송비"
 msgstr ""
 
-#: templates/checkout.html:245 templates/order_complete.html:13
+#: templates/checkout.html:242 templates/order_complete.html:13
 #: templates/payment.html:11
 msgid "결제금액"
 msgstr ""
 
-#: templates/checkout.html:253
+#: templates/checkout.html:250
 msgid "결제하기"
 msgstr ""
 
-#: templates/checkout.html:272
+#: templates/checkout.html:269
 msgid "삭제할 상품을 선택해주세요"
 msgstr ""
 
-#: templates/checkout.html:276
+#: templates/checkout.html:273
 #, python-brace-format
 msgid "선택된 ${selected.length}개의 상품을 삭제하시겠습니까"
 msgstr ""
 
-#: templates/checkout.html:311
+#: templates/checkout.html:308
 msgid "결제할 상품을 선택해주세요."
 msgstr ""
 
-#: templates/checkout.html:320
+#: templates/checkout.html:317
 msgid "무통장입금으로 주문하시겠습니까?"
 msgstr ""
 
-#: templates/checkout.html:333
+#: templates/checkout.html:330
 msgid "주문 생성 중 오류가 발생했습니다."
 msgstr ""
 
-#: templates/checkout.html:341
+#: templates/checkout.html:338
 msgid "결제 처리 중 오류가 발생했습니다."
 msgstr ""
 
-#: templates/checkout.html:434
+#: templates/checkout.html:431
 msgid "이 상품을 장바구니에서 삭제하시겠습니까"
 msgstr ""
 
 #: templates/auth/register_info.html:242 templates/auth/register_info.html:356
 #: templates/auth/register_info.html:431 templates/auth/register_info.html:513
-#: templates/checkout.html:490 templates/guest_orders_search.html:56
+#: templates/checkout.html:497 templates/guest_orders_search.html:56
 msgid "이메일을 입력해주세요"
 msgstr ""
 
 #: templates/auth/register_info.html:452 templates/auth/register_info.html:534
-#: templates/checkout.html:493 templates/guest_orders_search.html:59
+#: templates/checkout.html:500 templates/guest_orders_search.html:59
 msgid "전송 중"
 msgstr ""
 
-#: templates/checkout.html:502 templates/guest_orders_search.html:68
+#: templates/checkout.html:509 templates/guest_orders_search.html:68
 msgid "인증메일이 발송되었습니다. 메일함을 확인해주세요"
 msgstr ""
 
 #: templates/auth/register_info.html:480 templates/auth/register_info.html:562
-#: templates/checkout.html:519 templates/guest_orders_search.html:85
+#: templates/checkout.html:526 templates/guest_orders_search.html:85
 msgid "인증코드를 입력해주세요"
 msgstr ""
 
 #: templates/auth/register_info.html:492 templates/auth/register_info.html:574
-#: templates/checkout.html:530 templates/guest_orders_search.html:96
+#: templates/checkout.html:537 templates/guest_orders_search.html:96
 msgid "이메일 인증이 완료되었습니다"
 msgstr ""
 
 #: templates/auth/register_info.html:495 templates/auth/register_info.html:577
-#: templates/checkout.html:534 templates/guest_orders_search.html:100
+#: templates/checkout.html:541 templates/guest_orders_search.html:100
 msgid "인증에 실패했습니다. 다시 시도해주세요"
 msgstr ""
 
@@ -511,11 +538,11 @@ msgstr "국내외 다양한 파트너사와 함께 헬스케어의 미래를 만
 msgid "우리에게"
 msgstr ""
 
-#: templates/contact.html:22 templates/index.html:121
+#: templates/contact.html:22 templates/index.html:131
 msgid "이메일 (필수)"
 msgstr ""
 
-#: templates/contact.html:36 templates/index.html:135
+#: templates/contact.html:36 templates/index.html:145
 msgid "제목"
 msgstr ""
 
@@ -523,7 +550,7 @@ msgstr ""
 msgid "문의 제목"
 msgstr ""
 
-#: templates/contact.html:43 templates/index.html:139
+#: templates/contact.html:43 templates/index.html:149
 msgid "내용"
 msgstr ""
 
@@ -531,7 +558,7 @@ msgstr ""
 msgid "문의 내용을 입력하세요"
 msgstr ""
 
-#: templates/contact.html:50 templates/index.html:143
+#: templates/contact.html:50 templates/index.html:153
 msgid "보내기"
 msgstr ""
 
@@ -604,20 +631,12 @@ msgstr ""
 msgid "주문번호가 있다면 입력"
 msgstr ""
 
-#: templates/guest_orders_search.html:44 templates/mypage.html:74
+#: templates/guest_orders_search.html:44 templates/mypage.html:84
 msgid "조회하기"
 msgstr ""
 
 #: templates/guest_orders_search.html:114
 msgid "이메일 인증을 완료해야 주문을 조회할 수 있습니다"
-msgstr ""
-
-#: templates/index.html:20 templates/index.html:46
-msgid "UGAMALL 홍보 영상"
-msgstr ""
-
-#: templates/index.html:21 templates/index.html:47
-msgid "UGAMALL의 최신 소식과 스토리를 만나보세요."
 msgstr ""
 
 #: templates/index.html:24 templates/index.html:50
@@ -632,265 +651,277 @@ msgstr ""
 msgid "아직 등록된 영상이 없습니다."
 msgstr ""
 
-#: templates/index.html:66
-msgid "신제품 프로모션"
-msgstr ""
-
-#: templates/index.html:68
-msgid "최신 의료용품, 합리적인 가격으로 만나보세요."
-msgstr ""
-
-#: templates/index.html:69
-msgid "지금 바로 특별 혜택을 확인하세요!"
-msgstr ""
-
-#: templates/index.html:73
+#: templates/index.html:75
 msgid "자세히 보러가기 →"
 msgstr ""
 
-#: templates/index.html:104
+#: templates/index.html:107
+msgid "등록된 광고가 없습니다."
+msgstr ""
+
+#: templates/index.html:114
 msgid "유가몰 소개"
 msgstr ""
 
-#: templates/index.html:106
+#: templates/index.html:116
 msgid ""
 "유가몰은 누구나 편리하게 이용할 수 있는 의료용품 전문 스토어입니다.\n"
 "일상에서 필요한 제품을 간편하게 만나보세요.\n"
 "믿을 수 있는 품질, 합리적인 가격, 빠른 배송으로 여러분의 건강한 생활을 응원합니다 "
 msgstr ""
 
-#: templates/mypage.html:10 templates/mypage.html:20 templates/mypage.html:50
+#: templates/mypage.html:10
+msgid "고객님의 건강을 응원합니다!"
+msgstr ""
+
+#: templates/mypage.html:20 templates/mypage.html:30 templates/mypage.html:60
 msgid "주문내역"
 msgstr ""
 
-#: templates/mypage.html:11 templates/mypage.html:25
+#: templates/mypage.html:21 templates/mypage.html:35
 msgid "개인정보"
 msgstr ""
 
-#: templates/mypage.html:12 templates/mypage.html:30
+#: templates/mypage.html:22 templates/mypage.html:40
 msgid "문의내역"
 msgstr ""
 
-#: templates/mypage.html:13 templates/mypage.html:35 templates/mypage.html:264
+#: templates/mypage.html:23 templates/mypage.html:45 templates/mypage.html:291
 msgid "내 쿠폰함"
 msgstr ""
 
-#: templates/mypage.html:14 templates/mypage.html:40
+#: templates/mypage.html:24 templates/mypage.html:50
 msgid "반품/교환 내역"
 msgstr ""
 
-#: templates/mypage.html:56
+#: templates/mypage.html:66
 msgid "최대(5년)"
 msgstr ""
 
 # msgid "유가에 대해"
-#: templates/mypage.html:57 templates/mypage.html:58 templates/mypage.html:59
+#: templates/mypage.html:67 templates/mypage.html:68 templates/mypage.html:69
 #, fuzzy
 msgid "개월"
 msgstr "소개"
 
-#: templates/mypage.html:69
+#: templates/mypage.html:79
 msgid "주문 상품명을 입력하세요"
 msgstr ""
 
-#: templates/mypage.html:80
+#: templates/mypage.html:90
 msgid "최근 한달 간 주문내역이 없습니다"
 msgstr ""
 
-#: templates/mypage.html:81
+#: templates/mypage.html:91
 msgid "주문내역 전체보기"
 msgstr ""
 
-#: templates/mypage.html:97
+#: templates/mypage.html:107
 msgid "주문취소"
 msgstr ""
 
-#: templates/mypage.html:145
+#: templates/mypage.html:115
+msgid "반품/교환 신청"
+msgstr ""
+
+#: templates/mypage.html:122
+msgid "다시 담기"
+msgstr ""
+
+#: templates/mypage.html:168
 msgid "불러오는 중"
 msgstr ""
 
-#: templates/mypage.html:151
+#: templates/mypage.html:174
 msgid "개인정보 변경"
 msgstr ""
 
-#: templates/mypage.html:155
+#: templates/mypage.html:178
 msgid "개인정보 보호를 위해 비밀번호를 다시 입력해주세요"
 msgstr ""
 
-#: templates/mypage.html:158 templates/mypage.html:206
+#: templates/mypage.html:181 templates/mypage.html:233
 msgid "현재 비밀번호"
 msgstr ""
 
-#: templates/mypage.html:162
+#: templates/mypage.html:185
 msgid "확인"
 msgstr ""
 
-#: templates/auth/register_info.html:74 templates/auth/register_info.html:181
-#: templates/mypage.html:182
+#: templates/auth/register_info.html:67 templates/auth/register_info.html:179
+#: templates/mypage.html:205
 msgid "기본주소"
 msgstr ""
 
-#: templates/auth/register_info.html:71 templates/mypage.html:185
+#: templates/auth/register_info.html:71 templates/mypage.html:208
 msgid "주소찾기"
 msgstr ""
 
-#: templates/auth/register_info.html:76 templates/auth/register_info.html:182
-#: templates/mypage.html:188
+#: templates/auth/register_info.html:74 templates/auth/register_info.html:180
+#: templates/mypage.html:211
 msgid "상세주소"
 msgstr ""
 
-#: templates/mypage.html:194
+#: templates/mypage.html:215
+msgid "핸드폰"
+msgstr ""
+
+#: templates/mypage.html:221
 msgid "마케팅/혜택 수신 동의"
 msgstr ""
 
-#: templates/mypage.html:197
+#: templates/mypage.html:224
 msgid "저장"
 msgstr ""
 
-#: templates/auth/reset_password_form.html:38 templates/mypage.html:202
-#: templates/mypage.html:217
+#: templates/auth/reset_password_form.html:38 templates/mypage.html:229
+#: templates/mypage.html:244
 msgid "비밀번호 변경"
 msgstr ""
 
-#: templates/auth/reset_password_form.html:11 templates/mypage.html:210
+#: templates/auth/reset_password_form.html:11 templates/mypage.html:237
 msgid "새 비밀번호"
 msgstr ""
 
-#: templates/auth/reset_password_form.html:26 templates/mypage.html:214
+#: templates/auth/reset_password_form.html:26 templates/mypage.html:241
 msgid "새 비밀번호 확인"
 msgstr ""
 
-#: templates/mypage.html:223 templates/mypage.html:226
+#: templates/mypage.html:250 templates/mypage.html:253
 msgid "회원탈퇴"
 msgstr ""
 
-#: templates/mypage.html:229
+#: templates/mypage.html:256
 msgid "탈퇴 시 모든 주문내역, 쿠폰, 포인트 정보가 삭제되며 복구가 불가능합니다"
 msgstr ""
 
-#: templates/mypage.html:237
+#: templates/mypage.html:264
 msgid "문의 내역"
 msgstr ""
 
-#: templates/mypage.html:239
+#: templates/mypage.html:266
 msgid "등록된 문의가 없습니다."
 msgstr ""
 
-#: templates/mypage.html:249 templates/mypage.html:275
-#: templates/mypage.html:316
+#: templates/mypage.html:276 templates/mypage.html:302
+#: templates/mypage.html:343
 msgid "상태"
 msgstr ""
 
-#: templates/mypage.html:252
+#: templates/mypage.html:279
 msgid "답변"
 msgstr ""
 
-#: templates/mypage.html:266
+#: templates/mypage.html:293
 msgid "보유한 쿠폰이 없습니다."
 msgstr ""
 
-#: templates/mypage.html:271
+#: templates/mypage.html:298
 msgid "쿠폰명"
 msgstr ""
 
-#: templates/mypage.html:272
+#: templates/mypage.html:299
 msgid "할인"
 msgstr ""
 
-#: templates/mypage.html:273
+#: templates/mypage.html:300
 msgid "조건"
 msgstr ""
 
-#: templates/mypage.html:274
+#: templates/mypage.html:301
 msgid "유효기간"
 msgstr ""
 
-#: templates/mypage.html:289
+#: templates/mypage.html:316
 msgid "최소"
 msgstr ""
 
-#: templates/mypage.html:289
+#: templates/mypage.html:316
 msgid "이상"
 msgstr ""
 
-#: templates/mypage.html:293
+#: templates/mypage.html:320
 msgid "사용됨"
 msgstr ""
 
-#: templates/mypage.html:295
+#: templates/mypage.html:322
 msgid "미사용"
 msgstr ""
 
-#: templates/mypage.html:306
+#: templates/mypage.html:333
 msgid "반품 / 교환 내역"
 msgstr ""
 
-#: templates/mypage.html:308
+#: templates/mypage.html:335
 msgid "신청 내역이 없습니다"
 msgstr ""
 
-#: templates/mypage.html:314
+#: templates/mypage.html:341
 msgid "종류"
 msgstr ""
 
-#: templates/mypage.html:315 templates/mypage.html:347
+#: templates/mypage.html:342 templates/mypage.html:374
 msgid "사유"
 msgstr ""
 
-#: templates/mypage.html:317
+#: templates/mypage.html:344
 msgid "신청일"
 msgstr ""
 
-#: templates/mypage.html:338
+#: templates/mypage.html:365
 msgid "반품 / 교환 신청"
 msgstr ""
 
-#: templates/mypage.html:341
+#: templates/mypage.html:368
 msgid "신청 종류"
 msgstr ""
 
-#: templates/mypage.html:343
+#: templates/mypage.html:370
 msgid "반품"
 msgstr ""
 
-#: templates/mypage.html:344
+#: templates/mypage.html:371
 msgid "교환"
 msgstr ""
 
-#: templates/mypage.html:351 templates/mypage.html:372
+#: templates/mypage.html:378 templates/mypage.html:399
 msgid "취소"
 msgstr ""
 
-#: templates/mypage.html:352
+#: templates/mypage.html:379
 msgid "신청"
 msgstr ""
 
-#: templates/mypage.html:361
+#: templates/mypage.html:388
 msgid "회원탈퇴 확인"
 msgstr ""
 
-#: templates/mypage.html:363
+#: templates/mypage.html:390
 msgid "정말로 탈퇴하시겠습니까"
 msgstr ""
 
-#: templates/mypage.html:364
+#: templates/mypage.html:391
 msgid "이 작업은 되돌릴 수 없습니다"
 msgstr ""
 
-#: templates/mypage.html:368 templates/mypage.html:506
+#: templates/mypage.html:395 templates/mypage.html:551
 msgid "비밀번호를 입력해주세요"
 msgstr ""
 
-#: templates/mypage.html:373
+#: templates/mypage.html:400
 msgid "탈퇴"
 msgstr ""
 
-#: templates/mypage.html:426
+#: templates/mypage.html:454
 msgid "주문 내역이 없습니다"
 msgstr ""
 
-#: templates/mypage.html:524
+#: templates/mypage.html:569
 msgid "비밀번호가 올바르지 않습니다"
+msgstr ""
+
+#: templates/mypage.html:631
+msgid "처리 중..."
 msgstr ""
 
 #: templates/order_complete.html:4
@@ -935,6 +966,10 @@ msgstr ""
 
 #: templates/order_complete.html:33
 msgid "홈으로"
+msgstr ""
+
+#: templates/order_complete.html:34
+msgid "주문내역 보기"
 msgstr ""
 
 #: templates/payment.html:4
@@ -1244,8 +1279,8 @@ msgid "영상 ID"
 msgstr ""
 
 #: templates/auth/login.html:18 templates/auth/register_info.html:35
-#: templates/auth/register_info.html:36 templates/auth/register_info.html:158
-#: templates/auth/register_info.html:159
+#: templates/auth/register_info.html:36 templates/auth/register_info.html:156
+#: templates/auth/register_info.html:157
 msgid "비밀번호"
 msgstr ""
 
@@ -1261,7 +1296,7 @@ msgstr ""
 msgid "계정이 없나요"
 msgstr ""
 
-#: templates/auth/login.html:41 templates/auth/register_info.html:113
+#: templates/auth/login.html:41 templates/auth/register_info.html:111
 msgid "회원가입"
 msgstr ""
 
@@ -1282,37 +1317,37 @@ msgid "8자 이상이며 숫자와 특수문자를 포함해야 합니다"
 msgstr ""
 
 #: templates/auth/register_info.html:49 templates/auth/register_info.html:50
-#: templates/auth/register_info.html:160
+#: templates/auth/register_info.html:158
 msgid "비밀번호 확인"
 msgstr ""
 
-#: templates/auth/register_info.html:82 templates/auth/register_info.html:191
+#: templates/auth/register_info.html:80 templates/auth/register_info.html:189
 msgid "휴대폰 번호"
 msgstr ""
 
-#: templates/auth/register_info.html:88 templates/auth/register_info.html:193
+#: templates/auth/register_info.html:86 templates/auth/register_info.html:191
 msgid "인증번호 받기"
 msgstr ""
 
-#: templates/auth/register_info.html:95 templates/auth/register_info.html:194
+#: templates/auth/register_info.html:93 templates/auth/register_info.html:192
 msgid "인증번호 입력"
 msgstr ""
 
-#: templates/auth/register_info.html:106 templates/auth/register_info.html:197
+#: templates/auth/register_info.html:104 templates/auth/register_info.html:195
 msgid "가입하기"
 msgstr ""
 
-#: templates/auth/register_info.html:117
+#: templates/auth/register_info.html:115
 msgid "진행상황"
 msgstr ""
 
-#: templates/auth/register_info.html:152 templates/auth/register_info.html:163
-#: templates/auth/register_info.html:173 templates/auth/register_info.html:185
+#: templates/auth/register_info.html:150 templates/auth/register_info.html:161
+#: templates/auth/register_info.html:171 templates/auth/register_info.html:183
 msgid "다음"
 msgstr ""
 
-#: templates/auth/register_info.html:162 templates/auth/register_info.html:172
-#: templates/auth/register_info.html:184 templates/auth/register_info.html:196
+#: templates/auth/register_info.html:160 templates/auth/register_info.html:170
+#: templates/auth/register_info.html:182 templates/auth/register_info.html:194
 msgid "이전"
 msgstr ""
 
@@ -3254,5 +3289,11 @@ msgstr[0] ""
 #~ msgstr ""
 
 #~ msgid "이메일을 입려갷주세요"
+#~ msgstr ""
+
+#~ msgid "우편번호"
+#~ msgstr ""
+
+#~ msgid "마이페이지"
 #~ msgstr ""
 
