@@ -364,6 +364,14 @@ def won(n):
     except Exception:
         return "0"
 
+@app.template_filter('format_won')
+def format_won(value):
+    try:
+        value = int(value)
+        return f"{value:,}"
+    except (ValueError, TypeError):
+        return value
+    
 @app.template_filter('kst')
 def format_kst(dt):
     """서버 UTC datetime을 KST로 변환해서 YYYY-MM-DD HH:MM 형태로 반환"""

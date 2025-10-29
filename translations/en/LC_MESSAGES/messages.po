@@ -357,7 +357,7 @@ msgstr "Quick delivery"
 #: templates/product_detail.html:271
 #, python-format
 msgid "%(price)s원"
-msgstr "%(price) KRW"
+msgstr "%(price)s KRW"
 
 #: templates/checkout.html:112
 msgid "삭제"
