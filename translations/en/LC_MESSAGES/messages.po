@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-29 09:00+0900\n"
+"POT-Creation-Date: 2025-10-29 10:28+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -102,10 +102,11 @@ msgstr "amount"
 
 #: app.py:2803 templates/checkout.html:78 templates/checkout.html:107
 #: templates/checkout.html:231 templates/checkout.html:235
-#: templates/checkout.html:239 templates/guest_orders.html:77
-#: templates/mypage.html:152 templates/mypage.html:153
-#: templates/mypage.html:155 templates/mypage.html:313
-#: templates/mypage.html:316 templates/payment.html:11
+#: templates/checkout.html:239 templates/checkout.html:243
+#: templates/guest_orders.html:77 templates/mypage.html:152
+#: templates/mypage.html:153 templates/mypage.html:155
+#: templates/mypage.html:313 templates/mypage.html:316
+#: templates/order_complete.html:13 templates/payment.html:11
 #: templates/product_detail.html:29 templates/product_detail.html:95
 #: templates/product_detail.html:271
 msgid "원"
@@ -169,13 +170,93 @@ msgstr "Check out our special offers today!"
 msgid "최신 의료용품, 합리적인 가격으로 만나보세요."
 msgstr "Get the latest medical supplies at a reasonable price."
 
-#: translations_dummy.py:12
+#: translations_dummy.py:12 translations_dummy.py:17
 msgid "파스슬리퍼"
 msgstr "Pass Slippers"
 
 #: translations_dummy.py:13
 msgid "발에 전해지는 편안함, 하루의 피로를 풀어주는 리커버리 슬리퍼"
 msgstr "Recovery slippers to relieve the comfort and fatigue of the day"
+
+#: translations_dummy.py:16
+msgid "발"
+msgstr "foot"
+
+#: translations_dummy.py:18
+msgid "색상"
+msgstr "Color"
+
+#: translations_dummy.py:19
+msgid "사이즈"
+msgstr "Size"
+
+#: translations_dummy.py:20
+msgid "파랑"
+msgstr "Blue"
+
+#: translations_dummy.py:21
+msgid "발에 전해지는 편안함, 하루의 피로를 풀어주는 리커버리 슬리퍼."
+msgstr "Recovery slippers to relieve the comfort and fatigue of the day"
+
+#: templates/checkout.html:215 translations_dummy.py:25
+msgid "무통장입금"
+msgstr "Deposit without passbook"
+
+#: templates/checkout.html:217 translations_dummy.py:26
+msgid "카카오페이"
+msgstr "kakao pay"
+
+#: templates/checkout.html:216 translations_dummy.py:27
+msgid "카드결제"
+msgstr "Deposit with card"
+
+#: translations_dummy.py:28
+msgid "결제완료"
+msgstr "Paid"
+
+#: translations_dummy.py:29
+msgid "입금대기"
+msgstr "Ready"
+
+#: translations_dummy.py:30
+msgid "결제대기"
+msgstr "Pending"
+
+#: translations_dummy.py:31
+msgid "결제실패"
+msgstr "Canceled"
+
+#: translations_dummy.py:32
+msgid "취소됨"
+msgstr "Cancel"
+
+#: translations_dummy.py:33
+#, fuzzy
+msgid "배송중"
+msgstr "Shipping"
+
+#: translations_dummy.py:34
+msgid "배송완료"
+msgstr "delivered"
+
+#: translations_dummy.py:35
+#, fuzzy
+msgid "반품완료"
+msgstr "Return"
+
+#: translations_dummy.py:36
+#, fuzzy
+msgid "교환완료"
+msgstr "Exchange"
+
+#: translations_dummy.py:39
+msgid "년"
+msgstr "Year"
+
+#: translations_dummy.py:40
+#, fuzzy
+msgid "월"
+msgstr "month"
 
 #: templates/base.html:132 templates/base.html:205
 msgid "상품 검색"
@@ -268,7 +349,8 @@ msgstr "Delete Select"
 msgid "선택된 상품"
 msgstr "select product"
 
-#: templates/checkout.html:30 templates/guest_orders.html:74
+#: templates/checkout.html:30 templates/checkout.html:70
+#: templates/guest_orders.html:74
 msgid "개"
 msgstr "pcs"
 
@@ -360,18 +442,6 @@ msgstr "Please select"
 msgid "결제 방법"
 msgstr "Payment Method"
 
-#: templates/checkout.html:215
-msgid "무통장입금"
-msgstr "Deposit without passbook"
-
-#: templates/checkout.html:216
-msgid "카드결제"
-msgstr "Deposit with card"
-
-#: templates/checkout.html:217
-msgid "카카오페이"
-msgstr "kakao pay"
-
 #: templates/checkout.html:218
 msgid "토스페이"
 msgstr "toss pay"
@@ -386,7 +456,7 @@ msgstr "Discount amount"
 
 #: templates/checkout.html:238
 msgid "배송비"
-msgstr "Shipping Address"
+msgstr "The delivery charge"
 
 #: templates/checkout.html:242 templates/order_complete.html:13
 #: templates/payment.html:11

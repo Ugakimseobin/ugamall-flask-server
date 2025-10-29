@@ -25,7 +25,7 @@
               class="border border-gray-300 p-2 w-full rounded-lg focus:ring-2 focus:ring-indigo-300">
         <option value="">{{ _("전체 보기") }}</option>
         {% for cat in categories %}
-          <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
+          <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>{{ _(cat) }}</option>
         {% endfor %}
       </select>
     </div>
@@ -82,7 +82,7 @@
                alt="{{ p.name }}"
                class="h-48 sm:h-56 w-full object-cover transition-transform duration-300 hover:scale-105">
           <div class="p-4">
-            <h3 class="font-bold text-gray-800 text-sm sm:text-base truncate">{{ p.name }}</h3>
+            <h3 class="font-bold text-gray-800 text-sm sm:text-base truncate">{{ _(p.name) }}</h3>
             <p class="text-indigo-600 font-semibold text-sm sm:text-base mt-1">{{ p.base_price|won }}원</p>
           </div>
         </a>

@@ -57,17 +57,17 @@
                         <div class="flex items-center gap-2 mb-1">
                           <span class="bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded">{{ _("빠른배송") }}</span>
                         </div>
-                        <p class="font-bold text-gray-900 text-base leading-snug">{{ item.product.name }}</p>
+                        <p class="font-bold text-gray-900 text-base leading-snug">{{ _(item.product.name) }}</p>
 
                         <p class="text-gray-500 text-xs sm:text-sm mt-1">
                           {% if item.variant %}
                             {% for key, val in item.variant.options.items() %}
-                              {{ key }}: {{ val }}{% if not loop.last %} / {% endif %}
+                              {{ _(key) }}: {{ _(val) }}{% if not loop.last %} / {% endif %}
                             {% endfor %}
                           {% else %}
                             기본상품
                           {% endif %}
-                          / <span class="option-qty-text">{{ item.quantity }}개</span>
+                          / <span class="option-qty-text">{{ item.quantity }}{{ _("개") }}</span>
                         </p>
                       </div>
 
@@ -196,7 +196,7 @@
                           data-type="{{ uc.coupon.discount_type }}"
                           data-value="{{ uc.coupon.discount_value }}"
                           data-min="{{ uc.coupon.min_amount }}">
-                    {{ uc.coupon.name }} - 
+                    {{ _(uc.coupon.name) }} - 
                     {% if uc.coupon.discount_type == "percent" %}
                       {{ uc.coupon.discount_value }}%
                     {% else %}
@@ -239,9 +239,9 @@
                 {{ _("배송비") }}:
                 <span id="shipping-fee" class="font-semibold text-gray-200">0</span>{{ _("원") }}
               </div>
-              <div class="text-gray-400 text-base sm:text-lg font-bold">
+              <div class="text-gray-400 text-base sm:text-lg mb-2 font-bold">
                 {{ _("결제금액") }}:
-                <span id="final-price" class="text-indigo-600 text-xl sm:text-2xl font-extrabold">0</span>원
+                <span id="final-price" class="text-indigo-600 text-xl sm:text-2xl font-extrabold">0</span>{{ _("원") }}
               </div>
             </div>
 

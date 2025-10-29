@@ -25,10 +25,10 @@
 
         <!-- 상품 정보 -->
         <div id="purchase-box">
-          <h1 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">{{ product.name }}</h1>
+          <h1 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">{{ _(product.name) }}</h1>
           <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ product.base_price }}{{ _("원") }}</p>
-          <p class="text-gray-700 text-sm sm:text-base mb-4 sm:mb-6">{{ product.description }}</p>
-          <p class="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">{{ _("카테고리") }}: {{ product.category }}</p>
+          <p class="text-gray-700 text-sm sm:text-base mb-4 sm:mb-6">{{ _(product.description) }}</p>
+          <p class="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">{{ _("카테고리") }}: {{ _(product.category) }}</p>
 
           <!-- 장바구니 담기 -->
           <form id="cart-form-main" method="post" action="/add_to_cart" class="mb-3">
@@ -37,7 +37,7 @@
 
             {% if option_keys %}
               {% for key in option_keys %}
-                <label class="block font-semibold mb-2 text-sm">{{ key }}</label>
+                <label class="block font-semibold mb-2 text-sm">{{ _(key) }}</label>
                 <select name="option_{{ key }}" 
                         class="border rounded w-full p-2 mb-4 option-select text-sm" 
                         data-key="{{ key }}">
@@ -45,7 +45,7 @@
                   {% set values = [] %}
                   {% for v in product.variants %}
                     {% if v.options[key] not in values %}
-                      <option value="{{ v.options[key] }}">{{ v.options[key] }}</option>
+                      <option value="{{ v.options[key] }}">{{ _(v.options[key]) }}</option>
                       {% set _ = values.append(v.options[key]) %}
                     {% endif %}
                   {% endfor %}
@@ -91,7 +91,7 @@
         <img src="{{ url_for('serve_product_image', product_id=p.id) }}"
              alt="{{ p.name }}"
              class="h-36 sm:h-44 w-full object-cover rounded">
-        <h3 class="mt-2 font-bold text-sm sm:text-base truncate">{{ p.name }}</h3>
+        <h3 class="mt-2 font-bold text-sm sm:text-base truncate">{{ _(p.name) }}</h3>
         <p class="text-gray-600 text-xs sm:text-sm mt-1">{{ p.price|won }}{{ _("원") }}</p>
       </a>
       {% endfor %}
@@ -151,7 +151,7 @@
           <tbody class="divide-y divide-gray-100">
             <tr>
               <td class="font-semibold bg-gray-50 w-1/3 p-3">{{ _("품명 및 모델명") }}</td>
-              <td class="p-3">{{ product.name or "-" }}</td>
+              <td class="p-3">{{ _(product.name or "-") }}</td>
             </tr>
             <tr>
               <td class="font-semibold bg-gray-50 p-3">{{ _("제조국 또는 원산지") }}</td>
@@ -267,7 +267,7 @@
     <img src="{{ url_for('serve_product_image', product_id=product.id) }}"
        class="top-4 rounded-lg shadow mb-4 object-cover h-40 w-full">
 
-    <h4 class="text-base font-bold mb-1">{{ product.name }}</h4>
+    <h4 class="text-base font-bold mb-1">{{ _(product.name) }}</h4>
     <p class="text-indigo-600 font-semibold mb-4">{{ product.base_price|won }}{{ _("원") }}</p>
 
     <!-- 수량 -->
