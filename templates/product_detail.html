@@ -92,7 +92,7 @@
              alt="{{ p.name }}"
              class="h-36 sm:h-44 w-full object-cover rounded">
         <h3 class="mt-2 font-bold text-sm sm:text-base truncate">{{ _(p.name) }}</h3>
-        <p class="text-gray-600 text-xs sm:text-sm mt-1">{{ _("%(price)s원", price=p.price|format_won) }}</p>
+        <p class="text-gray-600 text-xs sm:text-sm mt-1">{{ _("%(price)s원", price=p.base_price|format_won) }}</p>
       </a>
       {% endfor %}
     </div>
@@ -147,7 +147,9 @@
       <!-- ✅ 상품 정보 제공 고시 -->
       <div class="mt-12 border-t pt-6">
         <h3 class="text-xl font-bold mb-4 text-gray-800">{{ _("상품정보 제공 고시") }}</h3>
-        <table class="w-full text-sm border-t border-b border-gray-200">
+
+        <!-- 💻 데스크탑용: 기존 테이블 유지 -->
+        <table class="hidden md:table w-full text-sm border-t border-b border-gray-200">
           <tbody class="divide-y divide-gray-100">
             <tr>
               <td class="font-semibold bg-gray-50 w-1/3 p-3">{{ _("품명 및 모델명") }}</td>
@@ -195,6 +197,52 @@
             </tr>
           </tbody>
         </table>
+        <!-- 📱 모바일용: 카드형 디자인 -->
+        <div class="block md:hidden space-y-3">
+          <div class="p-4 bg-gray-50 rounded-xl shadow-sm">
+            <p class="text-blue-600 font-semibold text-xs">{{ _("품명 및 모델명") }}</p>
+            <p class="text-gray-800 text-xs">{{ _(product.name or "-") }}</p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-xl shadow-sm">
+            <p class="text-blue-600 font-semibold text-xs">{{ _("제조국 또는 원산지") }}</p>
+            <p class="font-semibold text-xs">{{ _("대한민국") }}</p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-xl shadow-sm">
+            <p class="text-blue-600 font-semibold text-xs">{{ _("제조자 / 수입자") }}</p>
+            <p class="font-semibold text-xs">{{ _("유가메디컬") }}</p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-xl shadow-sm">
+            <p class="text-blue-600 font-semibold text-xs">A/S {{ _("책임자와 전화번호") }}</p>
+            <p class="font-semibold text-xs">{{ _("유가메디컬 고객센터") }} / 051-522-3969</p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-xl shadow-sm">
+            <p class="text-blue-600 font-semibold text-xs">{{ _("품질보증기준") }}</p>
+            <p class="font-semibold text-xs">{{ _("관련 법 및 소비자분쟁해결 기준에 따름") }}</p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-xl shadow-sm">
+            <p class="text-blue-600 font-semibold text-xs">{{ _("배송 안내") }}</p>
+            <p class="font-semibold text-xs leading-relaxed">
+              {{ _("택배") }} (CJ대한통운)<br>
+              {{ _("결제 완료 후 평균 2~4일 이내 배송(주말 및 공휴일 제외)") }}
+            </p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-xl shadow-sm">
+            <p class="text-blue-600 font-semibold text-xs">{{ _("교환/반품 안내") }}</p>
+            <ul class="list-disc pl-4 text-xs leading-relaxed space-y-1 mt-1 font-semibold">
+              <li>{{ _("상품 수령 후 7일 이내 신청 가능합니다") }}.</li>
+              <li>{{ _("단순 변심의 경우 왕복 배송비 고객 부담") }}</li>
+              <li>{{ _("제품 불량 및 오배송 시 전액 무료 교환/환불") }}</li>
+              <li>{{ _("고객 부주의로 인한 훼손, 사용 흔적이 있을 경우 불가") }}</li>
+            </ul>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-xl shadow-sm">
+            <p class="text-blue-600 font-semibold text-xs">{{ _("취소/환불 규정") }}</p>
+            <p class="font-semibold text-xs leading-relaxed">
+              {{ _("상품 준비 중 상태에서는 취소 가능하며, 배송 이후에는 반품 절차를 통해 처리됩니다") }}.
+            </p>
+          </div>
+        </div>
+
         <div class="text-right mt-2">
           <span class="text-xs text-gray-500">※ {{ _("본 상품정보는 전자상거래 등에서의 상품정보제공고시에 따라 작성되었습니다") }}.</span>
         </div>
