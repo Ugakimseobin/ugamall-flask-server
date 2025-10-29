@@ -26,7 +26,7 @@
         <!-- 상품 정보 -->
         <div id="purchase-box">
           <h1 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">{{ _(product.name) }}</h1>
-          <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ _("%(price)s원", price=product.base_price|int|format_won) }}</p>
+          <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ _("%(price)s원", price=product.base_price|int|won) }}</p>
           <p class="text-gray-700 text-sm sm:text-base mb-4 sm:mb-6">{{ _(product.description) }}</p>
           <p class="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">{{ _("카테고리") }}: {{ _(product.category) }}</p>
 
@@ -268,7 +268,7 @@
        class="top-4 rounded-lg shadow mb-4 object-cover h-40 w-full">
 
     <h4 class="text-base font-bold mb-1">{{ _(product.name) }}</h4>
-    <p class="text-indigo-600 font-semibold mb-4">{{ _("%(price)s원", price=product.base_price|int|format_won) }}</p>
+    <p class="text-indigo-600 font-semibold mb-4">{{ _("%(price)s원", price=product.base_price|int|won) }}</p>
 
     <!-- 수량 -->
     <div class="mb-4 flex items-center">
