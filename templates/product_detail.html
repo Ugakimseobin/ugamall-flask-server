@@ -309,7 +309,8 @@
         class="absolute top-1/2 -left-6 transform -translate-y-1/2 
                 w-6 h-16 bg-[#f9fafb] text-white flex items-center justify-center 
                 cursor-pointer rounded-l-full shadow-lg transition-all duration-500">
-        <span class="text-gray-400" id="cart-toggle-icon">⮜</span>
+        <span class="sm:hidden md:block text-gray-400" id="cart-toggle-icon">⮜</span>
+        <span class="md:hidden font-semibold text-gray-400" id="cart-toggle-icon"><</span>
     </div>
 
     <img src="{{ url_for('serve_product_image', product_id=product.id) }}"
