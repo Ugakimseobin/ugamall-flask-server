@@ -26,7 +26,7 @@
         <!-- 상품 정보 -->
         <div id="purchase-box">
           <h1 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">{{ _(product.name) }}</h1>
-          <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ product.base_price }}{{ _("원") }}</p>
+          <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ _("%(price)s원", price=product.base_price|int|format_won) }}</p>
           <p class="text-gray-700 text-sm sm:text-base mb-4 sm:mb-6">{{ _(product.description) }}</p>
           <p class="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">{{ _("카테고리") }}: {{ _(product.category) }}</p>
 
@@ -268,7 +268,7 @@
        class="top-4 rounded-lg shadow mb-4 object-cover h-40 w-full">
 
     <h4 class="text-base font-bold mb-1">{{ _(product.name) }}</h4>
-    <p class="text-indigo-600 font-semibold mb-4">{{ product.base_price|won }}{{ _("원") }}</p>
+    <p class="text-indigo-600 font-semibold mb-4">{{ _("%(price)s원", price=product.base_price|int|format_won) }}</p>
 
     <!-- 수량 -->
     <div class="mb-4 flex items-center">
@@ -289,13 +289,13 @@
 
     {% if option_keys %}
       {% for key in option_keys %}
-      <label class="block font-semibold mb-2 text-sm text-gray-700">{{ key }}</label>
+      <label class="block font-semibold mb-2 text-sm text-gray-700">{{ _(key) }}</label>
       <select name="option_{{ key }}" class="border rounded w-full p-2 mb-4 text-sm option-select-side" data-key="{{ key }}">
         <option value="">-- {{ _("선택하세요") }} --</option>
         {% set values = [] %}
         {% for v in product.variants %}
           {% if v.options[key] not in values %}
-            <option value="{{ v.options[key] }}">{{ v.options[key] }}</option>
+            <option value="{{ v.options[key] }}">{{ _(v.options[key]) }}</option>
             {% set _ = values.append(v.options[key]) %}
           {% endif %}
         {% endfor %}

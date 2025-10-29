@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-29 10:28+0900\n"
+"POT-Creation-Date: 2025-10-29 11:52+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -100,15 +100,14 @@ msgstr ""
 msgid "결제 금액:"
 msgstr ""
 
-#: app.py:2803 templates/checkout.html:78 templates/checkout.html:107
-#: templates/checkout.html:231 templates/checkout.html:235
-#: templates/checkout.html:239 templates/checkout.html:243
-#: templates/guest_orders.html:77 templates/mypage.html:152
-#: templates/mypage.html:153 templates/mypage.html:155
-#: templates/mypage.html:313 templates/mypage.html:316
-#: templates/order_complete.html:13 templates/payment.html:11
-#: templates/product_detail.html:29 templates/product_detail.html:95
-#: templates/product_detail.html:271
+#: app.py:2803 templates/checkout.html:107 templates/checkout.html:231
+#: templates/checkout.html:235 templates/checkout.html:239
+#: templates/checkout.html:243 templates/guest_orders.html:77
+#: templates/mypage.html:152 templates/mypage.html:153
+#: templates/mypage.html:155 templates/mypage.html:313
+#: templates/mypage.html:316 templates/order_complete.html:13
+#: templates/payment.html:11 templates/product_detail.html:95
+#: templates/search.html:108
 msgid "원"
 msgstr ""
 
@@ -356,6 +355,12 @@ msgstr "소개"
 
 #: templates/checkout.html:58
 msgid "빠른배송"
+msgstr ""
+
+#: templates/checkout.html:78 templates/product_detail.html:29
+#: templates/product_detail.html:271
+#, python-format
+msgid "%(price)s원"
 msgstr ""
 
 #: templates/checkout.html:112
@@ -1332,6 +1337,10 @@ msgstr ""
 
 #: templates/search.html:95
 msgid " 에 대한 검색 결과가 없습니다."
+msgstr ""
+
+#: templates/search.html:117
+msgid "관련 영상"
 msgstr ""
 
 #: templates/search.html:123

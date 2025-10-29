@@ -75,7 +75,7 @@
                       <div class="mt-2">
                         <div class="flex items-center gap-2">
                           <span class="text-[#222] font-bold text-lg sm:text-xl">
-                            {{ (item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0)) | int | format }}{{ _("원") }}
+                            {{ _("%(price)s원", price=(item.product.base_price + (item.variant.price if item.variant and item.variant.price else 0))|int|format_won) }}
                           </span>
                         </div>
                       </div>
