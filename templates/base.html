@@ -154,7 +154,7 @@ footer a:hover {
               {% endif %}
             </a>
           {% else %}
-            <a href="{{ url_for('mypage') }}" class="font-semibold hover:text-[var(--primary-color)]">{{ _("마이페이지") }}</a>
+            <a href="{{ url_for('mypage') }}" class="font-semibold hover:text-[var(--primary-color)]">{{ _("내 정보") }}</a>
           {% endif %}
           <a href="{{ url_for('logout') }}" class="hover:text-[var(--primary-color)]">{{ _("로그아웃") }}</a>
         {% else %}
@@ -227,7 +227,7 @@ footer a:hover {
         </a>
       </div>
 
-      <!-- ✅ 로그인 / 마이페이지 / 관리자 -->
+      <!-- ✅ 로그인 / 냉 정보 / 관리자 -->
       <div class="flex flex-col space-y-2 py-2">
         {% if current_user.is_authenticated %}
           {% if current_user.is_admin %}
@@ -238,7 +238,7 @@ footer a:hover {
           {% else %}
             <a href="{{ url_for('mypage') }}"
               class="block w-full border border-gray-200 rounded-lg px-4 py-3 text-center bg-white hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition">
-              {{ _("마이페이지") }}
+              {{ _("내 정보") }}
             </a>
           {% endif %}
           <a href="{{ url_for('logout') }}"
