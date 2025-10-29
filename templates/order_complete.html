@@ -8,9 +8,9 @@
     <div><b>{{ _("주문자") }}</b> : {{ order.name }} ({{ order.phone }})</div>
     {% if order.guest_email %}<div><b>Email</b> : {{ order.guest_email }}</div>{% endif %}
     <div><b>{{ _("주소") }}</b> : {{ order.base_address }} {{ order.detail_address or '' }}</div>
-    <div><b>{{ _("결제수단") }}</b> : {{ order.payment_method }}</div>
-    <div><b>{{ _("결제상태") }}</b> : {{ order.status|status_label }}</div>
-    <div><b>{{ _("결제금액") }}</b> : {{ "{:,}".format(amount) }}원</div>
+    <div><b>{{ _("결제수단") }}</b> : {{ _(order.payment_method) }}</div>
+    <div><b>{{ _("결제상태") }}</b> : {{ _(order.status|status_label) }}</div>
+    <div><b>{{ _("결제금액") }}</b> : {{ "{:,}".format(amount) }}{{ _("원") }}</div>
   </div>
 
   {% if order.payment_method == "무통장입금" %}

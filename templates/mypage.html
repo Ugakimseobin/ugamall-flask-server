@@ -70,9 +70,9 @@
 
             <!-- 직접 날짜 입력 -->
             <div class="flex items-center gap-1 ml-2">
-            <input type="month" id="startDate" class="border rounded p-1 text-sm" value="{{ start_date or '' }}">
+            <input type="month" id="startDate" class="border rounded p-1 text-sm" value="{{ _(start_date or '') }}">
             <span class="text-gray-500">~</span>
-            <input type="month" id="endDate" class="border rounded p-1 text-sm" value="{{ end_date or '' }}">
+            <input type="month" id="endDate" class="border rounded p-1 text-sm" value="{{ _(end_date or '') }}">
             </div>
 
             <!-- 검색창 -->
@@ -100,7 +100,7 @@
                 <p class="text-xs text-gray-500">{{ order.created_at|kst }}</p>
               </div>
               <div class="flex items-center gap-2 mt-2 sm:mt-0">
-                <span class="text-sm font-semibold text-indigo-600">{{ order.status | status_label }}</span>
+                <span class="text-sm font-semibold text-indigo-600">{{ _(order.status | status_label) }}</span>
                 {% if order.status in ["결제대기","입금대기","결제완료"] %}
                 <form method="post" action="{{ url_for('cancel_order', order_id=order.id) }}" onsubmit="return confirm('정말 주문을 취소하시겠습니까?');">
                   <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">
@@ -138,11 +138,11 @@
                 <div class="flex-1">
                   <a href="{{ url_for('product_detail', product_id=item.variant.product.id) }}"
                     class="font-semibold text-sm sm:text-base text-gray-800 hover:text-indigo-600 transition">
-                    {{ item.variant.product.name }}
+                    {{ _(item.variant.product.name) }}
                   </a>
                   <p class="text-xs text-gray-500 mt-0.5">
                     {% for key, val in item.variant.options.items() %}
-                      {{ key }}: {{ val }}{% if not loop.last %}, {% endif %}
+                      {{ _(key) }}: {{ _(val) }}{% if not loop.last %}, {% endif %}
                     {% endfor %}
                   </p>
                 </div>
