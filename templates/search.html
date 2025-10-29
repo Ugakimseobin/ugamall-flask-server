@@ -31,7 +31,7 @@
                   class="border border-gray-300 p-2 w-full rounded-lg focus:ring-2 focus:ring-indigo-300">
             <option value="">{{ _("전체 보기") }}</option>
             {% for cat in categories %}
-              <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
+              <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>{{ _(cat) }}</option>
             {% endfor %}
           </select>
         </div>
@@ -104,8 +104,8 @@
                alt="{{ p.name }}"
                class="h-48 sm:h-56 w-full object-cover transition-transform duration-300 hover:scale-105">
           <div class="p-4">
-            <h3 class="font-bold text-gray-800 text-sm sm:text-base truncate">{{ p.name }}</h3>
-            <p class="text-indigo-600 font-semibold text-sm sm:text-base mt-1">{{ p.base_price|won }}원</p>
+            <h3 class="font-bold text-gray-800 text-sm sm:text-base truncate">{{ _(p.name) }}</h3>
+            <p class="text-indigo-600 font-semibold text-sm sm:text-base mt-1">{{ p.base_price|won }}{{ _("원") }}</p>
           </div>
         </a>
         {% endfor %}
@@ -114,7 +114,7 @@
 
       {% if videos %}
       <section class="mt-10">
-        <h2 class="text-xl font-bold mb-4">관련 영상</h2>
+        <h2 class="text-xl font-bold mb-4">{{ _("관련 영상") }}</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {% for video in videos %}
             <div class="bg-white shadow rounded-lg overflow-hidden">
@@ -123,7 +123,7 @@
                 {{ _("브라우저가 비디오를 지원하지 않습니다.") }}
               </video>
               <div class="p-3">
-                <p class="font-semibold text-gray-800 text-sm">{{ video.title }}</p>
+                <p class="font-semibold text-gray-800 text-sm">{{ _(video.title) }}</p>
               </div>
             </div>
           {% endfor %}

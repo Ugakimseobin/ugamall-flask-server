@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-29 10:28+0900\n"
+"POT-Creation-Date: 2025-10-29 11:52+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -100,15 +100,14 @@ msgstr "We'll start preparing for delivery soon"
 msgid "결제 금액:"
 msgstr "amount"
 
-#: app.py:2803 templates/checkout.html:78 templates/checkout.html:107
-#: templates/checkout.html:231 templates/checkout.html:235
-#: templates/checkout.html:239 templates/checkout.html:243
-#: templates/guest_orders.html:77 templates/mypage.html:152
-#: templates/mypage.html:153 templates/mypage.html:155
-#: templates/mypage.html:313 templates/mypage.html:316
-#: templates/order_complete.html:13 templates/payment.html:11
-#: templates/product_detail.html:29 templates/product_detail.html:95
-#: templates/product_detail.html:271
+#: app.py:2803 templates/checkout.html:107 templates/checkout.html:231
+#: templates/checkout.html:235 templates/checkout.html:239
+#: templates/checkout.html:243 templates/guest_orders.html:77
+#: templates/mypage.html:152 templates/mypage.html:153
+#: templates/mypage.html:155 templates/mypage.html:313
+#: templates/mypage.html:316 templates/order_complete.html:13
+#: templates/payment.html:11 templates/product_detail.html:95
+#: templates/search.html:108
 msgid "원"
 msgstr "KRW"
 
@@ -231,7 +230,6 @@ msgid "취소됨"
 msgstr "Cancel"
 
 #: translations_dummy.py:33
-#, fuzzy
 msgid "배송중"
 msgstr "Shipping"
 
@@ -240,12 +238,10 @@ msgid "배송완료"
 msgstr "delivered"
 
 #: translations_dummy.py:35
-#, fuzzy
 msgid "반품완료"
 msgstr "Return"
 
 #: translations_dummy.py:36
-#, fuzzy
 msgid "교환완료"
 msgstr "Exchange"
 
@@ -254,7 +250,6 @@ msgid "년"
 msgstr "Year"
 
 #: translations_dummy.py:40
-#, fuzzy
 msgid "월"
 msgstr "month"
 
@@ -357,6 +352,12 @@ msgstr "pcs"
 #: templates/checkout.html:58
 msgid "빠른배송"
 msgstr "Quick delivery"
+
+#: templates/checkout.html:78 templates/product_detail.html:29
+#: templates/product_detail.html:271
+#, python-format
+msgid "%(price)s원"
+msgstr "%(price) KRW"
 
 #: templates/checkout.html:112
 msgid "삭제"
@@ -1370,6 +1371,10 @@ msgstr "In order of relevance"
 #: templates/search.html:95
 msgid " 에 대한 검색 결과가 없습니다."
 msgstr "There are no results for your search term."
+
+#: templates/search.html:117
+msgid "관련 영상"
+msgstr "Related Video"
 
 #: templates/search.html:123
 msgid "브라우저가 비디오를 지원하지 않습니다."
