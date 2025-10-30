@@ -2,14 +2,14 @@
 {% block content %}
 <div class="max-w-6xl mx-auto bg-white p-4 sm:p-6 shadow rounded mt-8">
   <div class="flex justify-between items-center mb-4">
-    <h1 class="text-xl sm:text-2xl font-bold">영상 관리</h1>
+    <h1 class="text-xl sm:text-2xl font-bold">🎬 영상 관리</h1>
     <a href="{{ url_for('admin_add_video') }}" 
        class="bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded hover:bg-indigo-700 text-sm sm:text-base">
       + 영상 추가
     </a>
   </div>
 
-  <!-- ✅ 데스크탑: 테이블 -->
+  <!-- ✅ 데스크탑용 테이블 -->
   <div class="hidden md:block overflow-x-auto">
     <table class="w-full border-collapse text-sm sm:text-base">
       <thead>
@@ -18,7 +18,8 @@
           <th class="border px-4 py-2">제목</th>
           <th class="border px-4 py-2">설명</th>
           <th class="border px-4 py-2">태그</th>
-          <th class="border px-4 py-2">관리</th>
+          <th class="border px-4 py-2 text-center">상태</th>
+          <th class="border px-4 py-2 text-center">관리</th>
         </tr>
       </thead>
       <tbody>
@@ -28,15 +29,29 @@
           <td class="border px-4 py-2">{{ v.title }}</td>
           <td class="border px-4 py-2">{{ v.description or '-' }}</td>
           <td class="border px-4 py-2">{{ v.tags or '-' }}</td>
-          <td class="border px-4 py-2 space-x-2">
+          <td class="border px-4 py-2 text-center">
+            {% if v.is_active %}
+              <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">활성화됨</span>
+            {% else %}
+              <span class="inline-block bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full">비활성화</span>
+            {% endif %}
+          </td>
+          <td class="border px-4 py-2 text-center space-x-2">
+            <form method="POST" action="{{ url_for('toggle_video_active', video_id=v.id) }}" class="inline">
+              <button type="submit"
+                      class="px-2 py-1 rounded text-white text-xs font-semibold 
+                      {{ 'bg-green-500 hover:bg-green-600' if not v.is_active else 'bg-gray-500 hover:bg-gray-600' }}">
+                {{ '활성화' if not v.is_active else '비활성화' }}
+              </button>
+            </form>
+
             <a href="{{ url_for('admin_edit_video', video_id=v.id) }}"
-               class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 text-sm">
+               class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 text-xs">
               수정
             </a>
-            <form action="{{ url_for('admin_delete_video', video_id=v.id) }}" 
-                  method="post" class="inline">
+            <form action="{{ url_for('admin_delete_video', video_id=v.id) }}" method="post" class="inline">
               <button type="submit"
-                      class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm"
+                      class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs"
                       onclick="return confirm('정말 삭제하시겠습니까?')">
                 삭제
               </button>
@@ -48,7 +63,7 @@
     </table>
   </div>
 
-  <!-- ✅ 모바일: 카드 형태 -->
+  <!-- ✅ 모바일: 카드형 -->
   <div class="md:hidden space-y-4">
     {% for v in videos %}
     <div class="border rounded-lg shadow p-4 bg-gray-50">
@@ -56,15 +71,20 @@
         <h2 class="font-bold text-lg">{{ v.title }}</h2>
         <span class="text-sm text-gray-500">#{{ v.id }}</span>
       </div>
-      <p class="text-sm text-gray-600 mb-3 break-words">{{ v.file_path }}</p>
-      <div class="flex space-x-2">
+      <p class="text-sm text-gray-600 mb-3 break-words">{{ v.description or '설명 없음' }}</p>
+      <div class="flex flex-wrap gap-2">
+        <form method="POST" action="{{ url_for('toggle_video_active', video_id=v.id) }}">
+          <button type="submit"
+                  class="px-3 py-1 rounded text-xs text-white font-medium
+                         {{ 'bg-green-500' if not v.is_active else 'bg-gray-500' }}">
+            {{ '활성화' if not v.is_active else '비활성화' }}
+          </button>
+        </form>
         <a href="{{ url_for('admin_edit_video', video_id=v.id) }}"
-           class="flex-1 text-center bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 text-sm">
-          수정
-        </a>
+           class="flex-1 text-center bg-yellow-500 text-white px-3 py-1 rounded text-xs">수정</a>
         <form action="{{ url_for('admin_delete_video', video_id=v.id) }}" method="post" class="flex-1">
           <button type="submit"
-                  class="w-full bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm"
+                  class="w-full bg-red-500 text-white px-3 py-1 rounded text-xs"
                   onclick="return confirm('정말 삭제하시겠습니까?')">
             삭제
           </button>
