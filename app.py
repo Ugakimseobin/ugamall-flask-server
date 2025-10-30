@@ -234,6 +234,7 @@ class Video(db.Model):
     title = db.Column(db.String(100))
     description = db.Column(db.Text)
     tags = db.Column(db.String(200))  # ✅ 태그(쉼표 구분) 추가
+    is_active = db.Column(db.Boolean, default=False)
 
     # ✅ DB에 대용량 바이너리 저장 가능하도록 확장
     video_data = db.Column(LONGBLOB)         # <-- 여기!
@@ -683,7 +684,7 @@ def status_label(value):
 @app.route('/')
 def home():
     ads = Advertisement.query.filter_by(is_active=True).order_by(Advertisement.order).all()
-    latest_video = Video.query.order_by(Video.id.desc()).first()
+    latest_video = Video.query.filter_by(is_active=True).order_by(Video.id.desc()).first()
     # 🔽 숨김 처리된 상품은 제외
     products = Product.query.filter_by(is_active=True).order_by(Product.id.desc()).limit(8).all()
     return render_template('index.html',ads=ads, latest_video=latest_video, products=products)
@@ -2430,6 +2431,24 @@ def admin_delete_video(video_id):
     db.session.commit()
 
     flash("영상이 성공적으로 삭제되었습니다.", "success")
+    return redirect(url_for("admin_videos"))
+
+@app.route("/admin/videos/<int:video_id>/toggle", methods=["POST"])
+@login_required
+def toggle_video_active(video_id):
+    if not current_user.is_admin:
+        abort(403)
+
+    video = Video.query.get_or_404(video_id)
+
+    # ✅ 활성화할 때 다른 영상들은 모두 비활성화
+    if not video.is_active:
+        Video.query.update({Video.is_active: False})
+
+    video.is_active = not video.is_active
+    db.session.commit()
+
+    flash("영상 상태가 변경되었습니다.", "success")
     return redirect(url_for("admin_videos"))
 
 @app.route("/admin/ads", methods=["GET", "POST"])
