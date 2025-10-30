@@ -74,8 +74,8 @@
             <form action="{{ url_for('admin_delete_product', product_id=p.id) }}" method="post" class="inline">
               <button type="submit" 
                       class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs sm:text-sm"
-                      onclick="return confirm('정말 삭제하시겠습니까?')">
-                삭제
+                      onclick="return confirm('정말 비활성화 하시겠습니까?')">
+                비활성화
               </button>
             </form>
           </td>
