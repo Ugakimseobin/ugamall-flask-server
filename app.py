@@ -27,6 +27,7 @@ from flask import Blueprint, Response
 
 
 app = Flask(__name__)
+
 @app.route("/robots.txt")
 def robots_txt():
     content = """User-agent: *
@@ -37,7 +38,7 @@ Disallow: /my/
 Disallow: /cart/
 Disallow: /checkout/
 
-Sitemap: https://www.ugamall.com/sitemap.xml
+Sitemap: https://www.ugamall.co.kr/sitemap.xml
 """
     return Response(content, mimetype="text/plain")
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
