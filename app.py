@@ -198,16 +198,27 @@ class ProductVariant(db.Model):
     cart_items = db.relationship("CartItem", back_populates="variant", cascade="all, delete-orphan")
 
 class Review(db.Model):
-    __tablename__ = "reviews"
+    __tablename__ = "review"
     id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    rating = db.Column(db.Integer, nullable=False)   # 1~5
     content = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Integer, default=5)
+    likes = db.Column(db.Integer, default=0)
+    image_data = db.Column(LONGBLOB)
+    image_mime = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
 
-    product = db.relationship("Product", backref="reviews")
     user = db.relationship("User", backref="reviews")
+    product = db.relationship("Product", backref="reviews")
+
+class ReviewLike(db.Model):
+    __tablename__ = "review_likes"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    review_id = db.Column(db.Integer, db.ForeignKey("review.id"), nullable=False)
+
+    __table_args__ = (db.UniqueConstraint("user_id", "review_id", name="_user_review_like_uc"),)
 
 class Advertisement(db.Model):
     __tablename__ = "advertisements"
@@ -1366,6 +1377,18 @@ def product_detail(product_id):
     # 🔽 숨김 상품은 접근 불가
     product = Product.query.filter_by(id=product_id, is_active=True).first_or_404()
 
+    sort = request.args.get("sort", "newest")
+    page = request.args.get("page", 1, type=int)
+    per_page = 5
+
+    if sort == "popular":
+        reviews_query = Review.query.filter_by(product_id=product.id).order_by(Review.likes.desc())
+    else:
+        reviews_query = Review.query.filter_by(product_id=product.id).order_by(Review.created_at.desc())
+
+    pagination = reviews_query.paginate(page=page, per_page=per_page, error_out=False)
+    reviews = pagination.items
+
     # 같은 카테고리 상품도 is_active=True 조건 추가
     related_products = Product.query.filter(
         Product.category == product.category,
@@ -1396,23 +1419,71 @@ def product_detail(product_id):
         product=product,
         related_products=related_products,
         option_keys=option_keys,
-        variants_json=variant_list  # 🔹 추가된 부분
+        variants_json=variant_list,  # 🔹 추가된 부분
+        reviews=reviews,
+        pagination=pagination,
+        sort=sort
     )
 
-@app.route("/products/<int:product_id>/review", methods=["POST"])
+@app.route("/add_review/<int:product_id>", methods=["POST"])
 @login_required
 def add_review(product_id):
-    rating = int(request.form.get("rating", 0))
-    content = request.form.get("content", "").strip()
-    if rating < 1 or rating > 5:
-        flash("평점은 1~5 사이여야 합니다.", "error")
-        return redirect(url_for("product_detail", product_id=product_id))
+    product = Product.query.get_or_404(product_id)
+    content = request.form.get("content")
+    rating = int(request.form.get("rating", 5))
+    file = request.files.get("image")
 
-    review = Review(product_id=product_id, user_id=current_user.id, rating=rating, content=content)
+    image_data = None
+    image_mime = None
+    if file and file.filename:
+        image_data = file.read()
+        image_mime = file.mimetype
+
+    review = Review(
+        content=content,
+        rating=rating,
+        user_id=current_user.id,
+        product_id=product.id,
+        image_data=image_data,
+        image_mime=image_mime,
+    )
+
     db.session.add(review)
     db.session.commit()
+
     flash("리뷰가 등록되었습니다.", "success")
-    return redirect(url_for("product_detail", product_id=product_id))
+    return redirect(url_for("product_detail", product_id=product.id))
+
+@app.route("/serve_review_image/<int:review_id>")
+def serve_review_image(review_id):
+    review = Review.query.get_or_404(review_id)
+    if not review.image_data:
+        # fallback to static image
+        return send_file("static/no-image.png", mimetype="image/png")
+    return Response(review.image_data, mimetype=review.image_mime)
+
+@app.route("/like_review/<int:review_id>", methods=["POST"])
+@login_required
+def like_review(review_id):
+    review = Review.query.get_or_404(review_id)
+
+    existing = ReviewLike.query.filter_by(
+        user_id=current_user.id, review_id=review.id
+    ).first()
+
+    if existing:
+        # 이미 좋아요 눌렀으면 취소 (토글)
+        db.session.delete(existing)
+        review.likes = max(0, review.likes - 1)
+        db.session.commit()
+        return jsonify({"likes": review.likes, "liked": False})
+    else:
+        # 처음 누르는 경우
+        new_like = ReviewLike(user_id=current_user.id, review_id=review.id)
+        db.session.add(new_like)
+        review.likes += 1
+        db.session.commit()
+        return jsonify({"likes": review.likes, "liked": True})
 
 @app.route("/add_to_cart", methods=["POST"])
 def add_to_cart():

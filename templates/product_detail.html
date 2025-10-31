@@ -262,33 +262,90 @@
     <!-- 리뷰 -->
     <div id="tab-reviews" class="tab-content p-6 sm:p-8 hidden">
       <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-800">📝 {{ _("상품 리뷰") }}</h2>
+
+      <!-- ✅ 정렬 -->
+      <div class="flex justify-between border-b items-center mb-4">
+        <div class="text-sm text-gray-600">
+          <span id="review-count">{{ product.reviews|length }} {{ _("개의 리뷰") }}</span>
+        </div>
+        <select id="review-sort" class="border rounded px-2 py-1 text-sm">
+          <option value="latest">{{ _("최신순") }}</option>
+          <option value="popular">{{ _("인기순") }}</option>
+        </select>
+      </div>
+
       {% if product.reviews %}
-        {% for r in product.reviews %}
-        <div class="border-b pb-3 mb-4 bg-white shadow-sm rounded-lg p-4 hover:shadow-md transition">
-          <p class="text-yellow-500 text-lg">
-            {% for i in range(r.rating) %}★{% endfor %}
-            {% for i in range(5 - r.rating) %}☆{% endfor %}
-          </p>
-          <p class="text-gray-800 text-sm sm:text-base mt-1">{{ r.content }}</p>
-          <p class="text-sm text-gray-500 mt-2">{{ r.user.name }} · {{ r.created_at.strftime("%Y-%m-%d") }}</p>
+      <div id="review-list">
+        {% for r in product.reviews[:5] %}
+        <div class="review-item flex items-start border-b pb-4 mb-4">
+          <!-- ✅ 리뷰 이미지 -->
+          <div class="flex-shrink-0 mr-4">
+            {% if r.image_data %}
+              <img src="{{ url_for('serve_review_image', review_id=r.id) }}" 
+                  alt="리뷰 사진" 
+                  class="w-20 h-20 object-cover rounded-lg shadow">
+            {% else %}
+              <div class="w-20 h-20 bg-gray-100 flex items-center justify-center text-gray-400 rounded-lg text-xs">No Img</div>
+            {% endif %}
+          </div>
+
+          <!-- ✅ 리뷰 본문 -->
+          <div class="flex-1">
+            <p class="text-yellow-500 text-lg mb-1">
+              {% for i in range(r.rating) %}★{% endfor %}
+              {% for i in range(5 - r.rating) %}☆{% endfor %}
+            </p>
+            <p class="text-gray-600 text-sm">{{ _(r.product.name) }}</p>
+            <p class="font-semibold text-gray-600 text-sm mt-1">{{ r.content }}</p>
+          </div>
+
+          <!-- ✅ 오른쪽 작성자/날짜/좋아요 -->
+          <div class="flex flex-col items-end text-xs text-gray-500 ml-4">
+            <span class="whitespace-nowrap text-gray-400">{{ _("작성자") }}: {{ r.user.name[:4] ~ "****" }}</span>
+            <span class="whitespace-nowrap text-gray-400 mt-1">{{ _("등록일") }}: {{ r.created_at.strftime("%Y-%m-%d") }}</span>
+            <div class="flex items-center whitespace-nowrap mt-2 space-x-1">
+              <span class="text-gray-400">{{ _("좋아요") }}:</span>
+              <span id="like-count-{{ r.id }}" class="text-pink-500 font-semibold">{{ r.likes or 0 }}</span>
+              <button 
+                class="like-btn mb-2 w-5 h-4 ml-1 text-gray-400 hover:text-pink-600 transition text-lg"
+                data-id="{{ r.id }}">
+                <img src="{{ url_for('static', filename='images/review_like.png') }}">
+              </button>
+            </div>
+          </div>
         </div>
         {% endfor %}
+      </div>
+
+      <!-- ✅ 페이지네이션 -->
+      <div class="flex justify-center mt-6 space-x-2">
+        <button id="prev-page" class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">이전</button>
+        <span id="page-info" class="text-sm text-gray-600">1 / {{ (product.reviews|length // 5) + (1 if product.reviews|length % 5 else 0) }}</span>
+        <button id="next-page" class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">다음</button>
+      </div>
       {% else %}
         <p class="text-gray-500">{{ _("아직 리뷰가 없습니다.") }}</p>
       {% endif %}
 
       {% if current_user.is_authenticated %}
-      <form method="post" action="{{ url_for('add_review', product_id=product.id) }}" class="mt-6 bg-gray-50 p-6 shadow rounded-xl">
+      <form method="post" action="{{ url_for('add_review', product_id=product.id) }}" enctype="multipart/form-data" class="mt-8 bg-gray-50 p-6 shadow rounded-xl">
         <h3 class="font-bold text-lg mb-3">{{ _("리뷰 작성하기") }}</h3>
+
+        <!-- 별점 -->
         <label class="block font-semibold text-sm mb-1">{{ _("별점") }}</label>
         <select name="rating" class="border rounded p-2 mb-3 w-28">
           {% for i in range(1,6) %}
-            <option value="{{ i }}">{{ i }}{{ _("점") }}</option>
+            <option value="{{ i }}" {% if i == 5 %}selected{% endif %}>{{ i }}{{ _("점") }}</option>
           {% endfor %}
         </select>
 
+        <!-- 리뷰 내용 -->
         <label class="block font-semibold text-sm mb-1">{{ _("리뷰 내용") }}</label>
         <textarea name="content" class="border rounded w-full p-3 mb-3 focus:ring-2 focus:ring-indigo-300" rows="3"></textarea>
+
+        <!-- ✅ 사진 업로드 -->
+        <label class="block font-semibold text-sm mb-1">{{ _("리뷰 사진 업로드") }}</label>
+        <input type="file" name="image" accept="image/*" capture="environment" class="block mb-4">
 
         <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 shadow">
           {{ _("등록") }}
@@ -571,6 +628,59 @@ document.addEventListener("DOMContentLoaded", () => {
     wrapper.classList.toggle("max-h-[950px]", !expanded);
     wrapper.classList.toggle("expanded", expanded);
     toggleBtn.textContent = expanded ? "상세정보 접기 ▲" : "상세정보 더보기 ▼";
+  });
+});
+</script>
+
+<!-- 리뷰 -->
+<script>
+// ✅ 정렬, 페이지네이션, 좋아요 (프론트에서 처리용)
+document.addEventListener("DOMContentLoaded", () => {
+  const reviews = [...document.querySelectorAll(".review-item")];
+  const perPage = 5;
+  let currentPage = 1;
+
+  function showPage(page) {
+    reviews.forEach((r, i) => {
+      r.style.display = (i >= (page - 1) * perPage && i < page * perPage) ? "flex" : "none";
+    });
+    document.getElementById("page-info").textContent = `${page} / ${Math.ceil(reviews.length / perPage)}`;
+    document.getElementById("prev-page").disabled = page === 1;
+    document.getElementById("next-page").disabled = page === Math.ceil(reviews.length / perPage);
+  }
+
+  document.getElementById("prev-page").addEventListener("click", () => {
+    if (currentPage > 1) showPage(--currentPage);
+  });
+  document.getElementById("next-page").addEventListener("click", () => {
+    if (currentPage < Math.ceil(reviews.length / perPage)) showPage(++currentPage);
+  });
+
+  showPage(currentPage);
+
+  // 좋아요 클릭 이벤트
+  document.querySelectorAll(".like-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const reviewId = btn.dataset.id;
+
+      try {
+        const res = await fetch(`/like_review/${reviewId}`, { method: "POST" });
+        const data = await res.json();
+        const countSpan = document.getElementById(`like-count-${reviewId}`);
+
+        if (countSpan) {
+          countSpan.textContent = data.likes;
+        }
+
+        if (data.liked) {
+          btn.classList.add("text-pink-600");
+        } else {
+          btn.classList.remove("text-pink-600");
+        }
+      } catch (err) {
+        console.error("좋아요 오류:", err);
+      }
+    });
   });
 });
 </script>
