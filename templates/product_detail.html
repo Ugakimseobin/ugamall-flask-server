@@ -599,7 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- 리뷰 -->
 <script>
-  const isAuthenticated = {{ "true" if current_user.is_authenticated else "false" }};
+  const isAuthenticated = {{ current_user.is_authenticated | tojson }};
 </script>
 <script>
 document.getElementById("review-sort").addEventListener("change", async function() {
@@ -607,12 +607,11 @@ document.getElementById("review-sort").addEventListener("change", async function
   const productId = "{{ product.id }}";
 
   const res = await fetch(`/get_reviews/${productId}?sort=${sortType}`);
-  const html = await res.text();
+  const data = await res.json(); // ✅ JSON으로 읽기
 
   const list = document.getElementById("review-list");
-  list.innerHTML = html;
+  list.innerHTML = data.html; // ✅ data.html 내용만 넣기
 
-  // ✅ 새로 불러온 영역에도 좋아요 버튼 다시 연결
   attachLikeHandlers();
 });
 
@@ -660,6 +659,49 @@ function attachLikeHandlers() {
 
 // ✅ 초기화 시에도 호출
 document.addEventListener("DOMContentLoaded", attachLikeHandlers);
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let currentPage = 1;
+  const productId = "{{ product.id }}";
+  const reviewList = document.getElementById("review-list");
+  const pageInfo = document.getElementById("page-info");
+  const prevBtn = document.getElementById("prev-page");
+  const nextBtn = document.getElementById("next-page");
+  const sortSelect = document.getElementById("review-sort");
+  let totalPages = parseInt(pageInfo.textContent.split("/")[1]?.trim()) || 1;
+
+  async function loadReviews(page) {
+    const sortType = sortSelect.value;
+    const res = await fetch(`/get_reviews/${productId}?page=${page}&sort=${sortType}`);
+    const data = await res.json();
+
+    // ✅ HTML 업데이트
+    reviewList.innerHTML = data.html;
+    attachLikeHandlers();
+
+    // ✅ 페이지 정보 업데이트
+    currentPage = data.page;
+    totalPages = data.total_pages;
+    pageInfo.textContent = `${currentPage} / ${totalPages}`;
+    prevBtn.disabled = currentPage <= 1;
+    nextBtn.disabled = currentPage >= totalPages;
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) loadReviews(currentPage - 1);
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentPage < totalPages) loadReviews(currentPage + 1);
+  });
+
+  sortSelect.addEventListener("change", () => loadReviews(1));
+
+  // 초기 상태
+  pageInfo.textContent = `${currentPage} / ${totalPages}`;
+});
 </script>
 
 <style>
