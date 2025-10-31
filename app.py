@@ -25,9 +25,21 @@ from threading import Thread
 import socket
 from flask import Blueprint, Response
 
-bp = Blueprint('main', __name__)
 
 app = Flask(__name__)
+@app.route("/robots.txt")
+def robots_txt():
+    content = """User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /my/
+Disallow: /cart/
+Disallow: /checkout/
+
+Sitemap: https://www.ugamall.com/sitemap.xml
+"""
+    return Response(content, mimetype="text/plain")
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 login_manager = LoginManager(app)
@@ -3312,18 +3324,6 @@ def db_tables():
         return jsonify({"tables": tables})
     except Exception as e:
         return jsonify({"error": str(e)})
-
-@bp.route("/robots.txt")
-def robots_txt():
-    content = """User-agent: *
-Allow: /
-Disallow: /admin/
-Disallow: /my/
-Disallow: /cart/
-Disallow: /checkout/
-Sitemap: https://www.ugamall.com/sitemap.xml
-"""
-    return Response(content, mimetype="text/plain")
 
 @app.route("/make_admin_page", methods=["GET", "POST"])
 def make_admin_page():
