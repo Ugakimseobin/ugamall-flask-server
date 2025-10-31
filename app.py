@@ -229,12 +229,17 @@ class Review(db.Model):
     product = db.relationship("Product", backref="reviews")
 
 class ReviewLike(db.Model):
-    __tablename__ = "review_likes"
+    __tablename__ = "review_like"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     review_id = db.Column(db.Integer, db.ForeignKey("review.id"), nullable=False)
 
-    __table_args__ = (db.UniqueConstraint("user_id", "review_id", name="_user_review_like_uc"),)
+    user = db.relationship("User", backref="review_likes")
+    review = db.relationship("Review", backref="likes_rel")
+
+    __table_args__ = (
+        db.UniqueConstraint("user_id", "review_id", name="unique_user_review_like"),
+    )
 
 class Advertisement(db.Model):
     __tablename__ = "advertisements"
@@ -1398,12 +1403,16 @@ def product_detail(product_id):
     per_page = 5
 
     if sort == "popular":
-        reviews_query = Review.query.filter_by(product_id=product.id).order_by(Review.likes.desc())
+        reviews_query = Review.query.filter_by(product_id=product_id).order_by(Review.likes.desc())
     else:
-        reviews_query = Review.query.filter_by(product_id=product.id).order_by(Review.created_at.desc())
+        reviews_query = Review.query.filter_by(product_id=product_id).order_by(Review.created_at.desc())
 
     pagination = reviews_query.paginate(page=page, per_page=per_page, error_out=False)
     reviews = pagination.items
+
+    liked_review_ids = []
+    if current_user.is_authenticated:
+        liked_review_ids = [rl.review_id for rl in ReviewLike.query.filter_by(user_id=current_user.id).all()]
 
     # 같은 카테고리 상품도 is_active=True 조건 추가
     related_products = Product.query.filter(
@@ -1438,8 +1447,24 @@ def product_detail(product_id):
         variants_json=variant_list,  # 🔹 추가된 부분
         reviews=reviews,
         pagination=pagination,
-        sort=sort
+        sort=sort,
+        liked_review_ids=liked_review_ids
     )
+
+@app.route("/get_reviews/<int:product_id>")
+def get_reviews(product_id):
+    sort = request.args.get("sort", "newest")
+
+    if sort == "popular":
+        reviews = Review.query.filter_by(product_id=product_id).order_by(Review.likes.desc()).limit(20).all()
+    else:
+        reviews = Review.query.filter_by(product_id=product_id).order_by(Review.created_at.desc()).limit(20).all()
+
+    liked_review_ids = []
+    if current_user.is_authenticated:
+        liked_review_ids = [rl.review_id for rl in ReviewLike.query.filter_by(user_id=current_user.id).all()]
+
+    return render_template("partials/_review_list.html", reviews=reviews, liked_review_ids=liked_review_ids)
 
 @app.route("/add_review/<int:product_id>", methods=["POST"])
 @login_required
@@ -1481,6 +1506,9 @@ def serve_review_image(review_id):
 @app.route("/like_review/<int:review_id>", methods=["POST"])
 @login_required
 def like_review(review_id):
+    if not current_user.is_authenticated:
+        return jsonify({"error": "login_required"}), 401
+    
     review = Review.query.get_or_404(review_id)
 
     existing = ReviewLike.query.filter_by(
@@ -1488,18 +1516,19 @@ def like_review(review_id):
     ).first()
 
     if existing:
-        # 이미 좋아요 눌렀으면 취소 (토글)
+        # 이미 눌렀으면 취소
         db.session.delete(existing)
-        review.likes = max(0, review.likes - 1)
-        db.session.commit()
-        return jsonify({"likes": review.likes, "liked": False})
+        review.likes = review.likes - 1 if review.likes > 0 else 0
+        liked = False
     else:
-        # 처음 누르는 경우
-        new_like = ReviewLike(user_id=current_user.id, review_id=review.id)
+        # 처음 누름
+        new_like = ReviewLike(user_id=current_user.id, review_id=review_id)
         db.session.add(new_like)
-        review.likes += 1
-        db.session.commit()
-        return jsonify({"likes": review.likes, "liked": True})
+        review.likes = review.likes + 1
+        liked = True
+
+    db.session.commit()
+    return jsonify({"likes": review.likes, "liked": liked})
 
 @app.route("/add_to_cart", methods=["POST"])
 def add_to_cart():

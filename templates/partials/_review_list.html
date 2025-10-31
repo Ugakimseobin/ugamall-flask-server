@@ -1,0 +1,44 @@
+{% for r in reviews %}
+        <div class="review-item flex items-start border-b pb-4 mb-4">
+          <!-- ✅ 리뷰 이미지 -->
+          <div class="flex-shrink-0 mr-4">
+            {% if r.image_data %}
+              <img src="{{ url_for('serve_review_image', review_id=r.id) }}" 
+                  alt="리뷰 사진" 
+                  class="w-20 h-20 object-cover rounded-lg shadow">
+            {% else %}
+              <div class="w-20 h-20 bg-gray-100 flex items-center justify-center text-gray-400 rounded-lg text-xs">No Img</div>
+            {% endif %}
+          </div>
+
+          <!-- ✅ 리뷰 본문 -->
+          <div class="flex-1">
+            <p class="text-yellow-500 text-lg mb-1">
+              {% for i in range(r.rating) %}★{% endfor %}
+              {% for i in range(5 - r.rating) %}☆{% endfor %}
+            </p>
+            <p class="text-gray-600 text-sm">{{ _(r.product.name) }}</p>
+            <p class="font-semibold text-gray-600 text-sm mt-1">{{ r.content }}</p>
+          </div>
+
+          <!-- ✅ 오른쪽 작성자/날짜/좋아요 -->
+          <div class="flex flex-col items-end text-xs text-gray-500 ml-4">
+            <span class="whitespace-nowrap text-gray-400">{{ _("작성자") }}: {{ r.user.name[:4] ~ "****" }}</span>
+            <span class="whitespace-nowrap text-gray-400 mt-1">{{ _("등록일") }}: {{ r.created_at.strftime("%Y-%m-%d") }}</span>
+            <div class="flex items-center whitespace-nowrap mt-2 space-x-1">
+              <span class="text-gray-400">{{ _("좋아요") }}:</span>
+              <span id="like-count-{{ r.id }}" class="text-pink-500 font-semibold">{{ r.likes or 0 }}</span>
+              {% if r.id in liked_review_ids %}
+                <button class="like-btn active mb-2 w-5 h-4 ml-1 transition transform" data-id="{{ r.id }}">
+                  <img id="like-img-{{ r.id }}" src="{{ url_for('static', filename='images/review_like_active.png') }}" class="transition-transform duration-300" alt="liked">
+                </button>
+              {% else %}
+                <button class="like-btn mb-2 w-5 h-4 ml-1 transition transform" data-id="{{ r.id }}">
+                  <img id="like-img-{{ r.id }}" src="{{ url_for('static', filename='images/review_like.png') }}" class="transition-transform duration-300" alt="like">
+                </button>
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
+        {% endfor %}
