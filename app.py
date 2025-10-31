@@ -1453,18 +1453,33 @@ def product_detail(product_id):
 
 @app.route("/get_reviews/<int:product_id>")
 def get_reviews(product_id):
+    page = int(request.args.get("page", 1))
     sort = request.args.get("sort", "newest")
 
+    query = Review.query.filter_by(product_id=product_id)
     if sort == "popular":
-        reviews = Review.query.filter_by(product_id=product_id).order_by(Review.likes.desc()).limit(20).all()
+        query = query.order_by(Review.likes.desc())
     else:
-        reviews = Review.query.filter_by(product_id=product_id).order_by(Review.created_at.desc()).limit(20).all()
+        query = query.order_by(Review.created_at.desc())
 
+    # ✅ 페이지당 5개씩 표시
+    per_page = 5
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    reviews = pagination.items
+
+    # ✅ 로그인 유저의 좋아요 여부
     liked_review_ids = []
     if current_user.is_authenticated:
         liked_review_ids = [rl.review_id for rl in ReviewLike.query.filter_by(user_id=current_user.id).all()]
 
-    return render_template("partials/_review_list.html", reviews=reviews, liked_review_ids=liked_review_ids)
+    # ✅ HTML만 반환
+    return jsonify({
+        "html": render_template("partials/_review_list.html",
+                                reviews=reviews,
+                                liked_review_ids=liked_review_ids),
+        "page": pagination.page,
+        "total_pages": pagination.pages
+    })
 
 @app.route("/add_review/<int:product_id>", methods=["POST"])
 @login_required

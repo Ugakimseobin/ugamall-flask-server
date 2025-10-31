@@ -293,29 +293,61 @@
       {% endif %}
 
       {% if current_user.is_authenticated %}
-      <form method="post" action="{{ url_for('add_review', product_id=product.id) }}" enctype="multipart/form-data" class="mt-8 bg-gray-50 p-6 shadow rounded-xl">
-        <h3 class="font-bold text-lg mb-3">{{ _("리뷰 작성하기") }}</h3>
-
-        <!-- 별점 -->
-        <label class="block font-semibold text-sm mb-1">{{ _("별점") }}</label>
-        <select name="rating" class="border rounded p-2 mb-3 w-28">
-          {% for i in range(1,6) %}
-            <option value="{{ i }}" {% if i == 5 %}selected{% endif %}>{{ i }}{{ _("점") }}</option>
-          {% endfor %}
-        </select>
-
-        <!-- 리뷰 내용 -->
-        <label class="block font-semibold text-sm mb-1">{{ _("리뷰 내용") }}</label>
-        <textarea name="content" class="border rounded w-full p-3 mb-3 focus:ring-2 focus:ring-indigo-300" rows="3"></textarea>
-
-        <!-- ✅ 사진 업로드 -->
-        <label class="block font-semibold text-sm mb-1">{{ _("리뷰 사진 업로드") }}</label>
-        <input type="file" name="image" accept="image/*" capture="environment" class="block mb-4">
-
-        <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 shadow">
-          {{ _("등록") }}
+      <!-- ✅ 리뷰 작성 버튼 -->
+      <div class="text-right mt-8">
+        <button id="open-review-modal"
+                class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition">
+          리뷰 작성하기
         </button>
-      </form>
+      </div>
+
+      <!-- ✅ 리뷰 작성 모달 -->
+      <div id="review-modal"
+          class="fixed inset-0 bg-black/40 hidden flex items-center justify-center z-50">
+        <div class="bg-white w-11/12 sm:w-[450px] rounded-xl shadow-xl p-6 relative">
+          <button id="close-review-modal"
+                  class="absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-xl">×</button>
+
+          <h3 class="font-bold text-lg mb-4 text-gray-800 text-center">리뷰 작성하기</h3>
+
+          <form method="post"
+                action="{{ url_for('add_review', product_id=product.id) }}"
+                enctype="multipart/form-data"
+                id="review-form">
+            
+            <!-- 별점 -->
+            <label class="block font-semibold text-sm mb-1">별점</label>
+            <select name="rating" class="border rounded p-2 mb-3 w-full">
+              {% for i in range(1,6) %}
+                <option value="{{ i }}" {% if i == 5 %}selected{% endif %}>{{ i }}점</option>
+              {% endfor %}
+            </select>
+
+            <!-- 리뷰 내용 -->
+            <label class="block font-semibold text-sm mb-1">리뷰 내용</label>
+            <textarea name="content"
+                      class="border rounded w-full p-3 mb-3 focus:ring-2 focus:ring-indigo-300"
+                      rows="3"
+                      placeholder="상품 사용 후기를 남겨주세요."></textarea>
+
+            <!-- 사진 업로드 -->
+            <label class="block font-semibold text-sm mb-1">리뷰 사진 업로드</label>
+            <input type="file" name="image" accept="image/*" class="block mb-4">
+
+            <div class="flex justify-between mt-4">
+              <button type="button"
+                      id="cancel-review"
+                      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                취소
+              </button>
+              <button type="submit"
+                      class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow">
+                등록
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
       {% endif %}
     </div>
   </div>
@@ -599,7 +631,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- 리뷰 -->
 <script>
-  const isAuthenticated = {{ "true" if current_user.is_authenticated else "false" }};
+  const isAuthenticated = {{ current_user.is_authenticated | tojson }};
 </script>
 <script>
 document.getElementById("review-sort").addEventListener("change", async function() {
@@ -607,12 +639,11 @@ document.getElementById("review-sort").addEventListener("change", async function
   const productId = "{{ product.id }}";
 
   const res = await fetch(`/get_reviews/${productId}?sort=${sortType}`);
-  const html = await res.text();
+  const data = await res.json(); // ✅ JSON으로 읽기
 
   const list = document.getElementById("review-list");
-  list.innerHTML = html;
+  list.innerHTML = data.html; // ✅ data.html 내용만 넣기
 
-  // ✅ 새로 불러온 영역에도 좋아요 버튼 다시 연결
   attachLikeHandlers();
 });
 
@@ -660,6 +691,81 @@ function attachLikeHandlers() {
 
 // ✅ 초기화 시에도 호출
 document.addEventListener("DOMContentLoaded", attachLikeHandlers);
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let currentPage = 1;
+  const productId = "{{ product.id }}";
+  const reviewList = document.getElementById("review-list");
+  const pageInfo = document.getElementById("page-info");
+  const prevBtn = document.getElementById("prev-page");
+  const nextBtn = document.getElementById("next-page");
+  const sortSelect = document.getElementById("review-sort");
+  let totalPages = parseInt(pageInfo.textContent.split("/")[1]?.trim()) || 1;
+
+  async function loadReviews(page) {
+    const sortType = sortSelect.value;
+    const res = await fetch(`/get_reviews/${productId}?page=${page}&sort=${sortType}`);
+    const data = await res.json();
+
+    // ✅ HTML 업데이트
+    reviewList.innerHTML = data.html;
+    attachLikeHandlers();
+
+    // ✅ 페이지 정보 업데이트
+    currentPage = data.page;
+    totalPages = data.total_pages;
+    pageInfo.textContent = `${currentPage} / ${totalPages}`;
+    prevBtn.disabled = currentPage <= 1;
+    nextBtn.disabled = currentPage >= totalPages;
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) loadReviews(currentPage - 1);
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentPage < totalPages) loadReviews(currentPage + 1);
+  });
+
+  sortSelect.addEventListener("change", () => loadReviews(1));
+
+  // 초기 상태
+  pageInfo.textContent = `${currentPage} / ${totalPages}`;
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("review-modal");
+  const openBtn = document.getElementById("open-review-modal");
+  const closeBtn = document.getElementById("close-review-modal");
+  const cancelBtn = document.getElementById("cancel-review");
+
+  if (openBtn) {
+    openBtn.addEventListener("click", () => {
+      modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden"; // 스크롤 잠금
+    });
+  }
+
+  [closeBtn, cancelBtn, modal].forEach(el => {
+    el?.addEventListener("click", e => {
+      if (e.target === modal || e.target === closeBtn || e.target === cancelBtn) {
+        modal.classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+    });
+  });
+
+  // ESC로 닫기
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      modal.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+  });
+});
 </script>
 
 <style>
