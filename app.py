@@ -3123,6 +3123,10 @@ def admin_inquiries():
         search_query=q,
     )
 
+# 구글 서치콘솔에서 about에 대한 페이지를 찾을 수 없다 떠서 about > company로 가는 라우트 추가
+@app.route("/about")
+def about_redirect():
+    return redirect(url_for("company"))
 
 @app.route('/company')
 def company():
