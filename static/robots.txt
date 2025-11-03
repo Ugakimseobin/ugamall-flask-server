@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /my/
+Disallow: /cart/
+Disallow: /checkout/
+
+Sitemap: https://www.ugamall.co.kr/sitemap.xml
