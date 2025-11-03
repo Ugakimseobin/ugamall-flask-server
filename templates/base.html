@@ -310,21 +310,21 @@ footer a:hover {
   </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-200 text-gray-700 text-sm leading-relaxed border-t border-gray-300">
-  <div class="max-w-7xl mx-auto px-4 pt-10 grid grid-cols-1 md:grid-cols-4 gap-8">
+  <footer class="bg-gray-200 text-gray-700 text-[12px] leading-relaxed border-t border-gray-300">
+  <div class="max-w-4xl mx-auto px-6 pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center lg:text-left">
 
     <!-- 회사 정보 -->
     <div>
-      <h3 class="font-bold text-gray-900 mb-3">㈜유가메디컬</h3>
+      <h3 class="text-sm font-bold text-gray-900 mb-3">㈜유가메디컬</h3>
       <p>대표자: 유명환</p>
-      <p>부산광역시 동래구 안남로 78-3 (더 평안빌딩 2층)</p>
+      <p class="md:whitespace-nowrap">부산광역시 동래구 안남로 78-3 (더 평안빌딩 2층)</p>
       <p>사업자등록번호: 822-87-03558</p>
       <p>통신판매업신고번호: 2025-부산동래-0204</p>
     </div>
 
     <!-- 고객센터 -->
     <div>
-      <h3 class="font-bold text-gray-900 mb-3">고객센터</h3>
+      <h3 class="text-sm font-bold text-gray-900 mb-3">고객센터</h3>
       <p>전화: <a href="tel:0515223969" class="hover:underline">051-522-3969</a></p>
       <p>팩스: 051-524-3969</p>
       <p>이메일: <a href="mailto:ugamedical@naver.com" class="hover:underline">ugamedical@naver.com</a></p>
@@ -333,31 +333,13 @@ footer a:hover {
 
     <!-- 정책 및 안내 -->
     <div>
-      <h3 class="font-bold text-gray-900 mb-3">이용안내 및 정책</h3>
-      <ul class="space-y-1">
-        <li><a href="/terms" class="hover:underline">이용약관</a></li>
-        <li><a href="/privacy" class="hover:underline">개인정보처리방침</a></li>
-        <li><a href="/shipping" class="hover:underline">배송 및 교환/반품 안내</a></li>
-        <li><a href="/refund" class="hover:underline">환불 정책</a></li>
-        <li><a href="/notice" class="hover:underline">공지사항</a></li>
+      <h3 class="text-sm font-bold text-gray-900 mb-3">바로가기</h3>
+      <ul>
+        <li><a href="/company" class="hover:text-[var(--primary-color)]">{{ _("회사소개") }}</a></li>
+        <li><a href="/products" class="hover:text-[var(--primary-color)]">{{ _("제품") }}</a></li>
+        <li><a href="/contact" class="hover:text-[var(--primary-color)]">{{ _("문의") }}</a></li>
       </ul>
     </div>
-
-    <div>
-      <h3 class="font-bold text-gray-900 mb-3">SNS</h3>
-      <ul class="flex flex-row">
-        <li><a href="#" class="hover:text-white" aria-label="Instagram">
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm0 2a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H7zm5 3a5 5 0 110 10 5 5 0 010-10zm0 2.2a2.8 2.8 0 100 5.6 2.8 2.8 0 000-5.6zM18 6.5a1 1 0 110 2 1 1 0 010-2z"/></svg>
-          </a></li>
-        <li><a href="#" class="hover:text-white" aria-label="Facebook">
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V8a1 1 0 011-1h3V3h-3a5 5 0 00-5 5v2H6v4h3v8h4z"/></svg>
-          </a></li>
-        <li><a href="#" class="hover:text-white" aria-label="YouTube">
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5a4 4 0 00-2.8-2.8C18.5 4 12 4 12 4s-6.5 0-8.2.7A4 4 0 001 7.5 41 41 0 000 12a41 41 0 001 4.5 4 4 0 002.8 2.8C5.5 20 12 20 12 20s6.5 0 8.2-.7A4 4 0 0023 16.5 41 41 0 0024 12a41 41 0 00-1-4.5zM10 15.5v-7l6 3.5-6 3.5z"/></svg>
-          </a></li>
-      </ul>
-    </div>
-
   </div>
 
   <!-- 구분선 -->
@@ -365,10 +347,10 @@ footer a:hover {
 
   <!-- 로고 / 인증 영역 -->
   <div class="bg-white border-t border-gray-200 py-4">
-    <div class="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center">
+    <div class="max-w-4xl mx-auto px-4 flex flex-wrap justify-between items-center">
       <div class="flex items-center gap-2 text-xs">
-        <img src="{{ url_for('static', filename='images/Uga_logo.png') }}" alt="UGA MEDICAL" class="h-8">
-          © 2025 <span class="font-semibold">UGA MEDICAL</span>. All Rights Reserved.
+        <a href="/"><img src="{{ url_for('static', filename='images/Uga_logo.png') }}" alt="UGA MEDICAL" class="h-8"></a>
+          © 2025 <span class="font-semibold">유가 inc.</span>. All Rights Reserved.
       </div>
     </div>
   </div>
