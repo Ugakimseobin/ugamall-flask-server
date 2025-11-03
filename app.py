@@ -3349,6 +3349,27 @@ def autocomplete():
         results = [p.name for p in Product.query.filter(Product.name.contains(q), Product.is_active == True).all()]
     return jsonify(results)
 
+@app.route("/sitemap.xml")
+def sitemap():
+    pages = []
+    ten_days_ago = (datetime.now() - timedelta(days=10)).date().isoformat()
+
+    # 정적 페이지들 수동 추가 (필요에 따라 추가/수정)
+    static_urls = [
+        "/", 
+        "/products", 
+        "/company", 
+        "/contact", 
+        "/login", 
+        "/signup"
+    ]
+
+    for url in static_urls:
+        pages.append(f"https://www.ugamall.co.kr{url}")
+
+    sitemap_xml = render_template("sitemap_template.xml", pages=pages, lastmod=ten_days_ago)
+    return Response(sitemap_xml, mimetype="application/xml")
+
 @app.route("/db_tables")
 def db_tables():
     try:
