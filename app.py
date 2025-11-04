@@ -3050,7 +3050,65 @@ def admin_inquiries():
             inquiry.status = "답변 완료"
             inquiry.answered_at = datetime.now(KST)
             db.session.commit()
-            flash("답변이 등록되었습니다.", "success")
+
+            if inquiry.guest_email:
+                try:
+                    msg = Message(
+                        subject=f"[UGAMALL] '{inquiry.title}' 문의에 대한 답변 안내",
+                        recipients=[inquiry.guest_email],
+                    )
+                    msg.html = f"""
+                    <div style="font-family:'Noto Sans KR',sans-serif; max-width:520px; margin:auto; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; background:#ffffff;">
+                    <div style="text-align:center; padding:32px 20px 16px;">
+                        <img src="https://ugamall.co.kr/static/images/Uga_logo.png" alt="UGAMALL" style="height:40px; margin-bottom:18px;">
+                    </div>
+
+                    <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
+
+                    <div style="padding:32px 28px 28px; color:#111827;">
+                        <h2 style="font-size:20px; font-weight:700; color:#111827; margin-bottom:12px; text-align:center;">
+                        문의하신 내용에 대한 답변을 안내드립니다.
+                        </h2>
+
+                        <p style="font-size:15px; color:#374151; line-height:1.7; margin-bottom:24px; text-align:center;">
+                        안녕하세요, <strong>유가몰 고객센터</strong>입니다.<br>
+                        고객님께서 남겨주신 문의에 대한 답변을 아래에 안내드립니다.
+                        </p>
+
+                        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:20px; margin-bottom:24px;">
+                        <p style="font-weight:600; color:#111827; font-size:15px; margin-bottom:8px;">[문의 제목]</p>
+                        <p style="color:#374151; font-size:14px; margin-bottom:16px;">{inquiry.title}</p>
+
+                        <p style="font-weight:600; color:#111827; font-size:15px; margin-bottom:8px;">[문의 내용]</p>
+                        <p style="color:#374151; font-size:14px; margin-bottom:16px; white-space:pre-line;">{inquiry.content}</p>
+
+                        <p style="font-weight:600; color:#111827; font-size:15px; margin-bottom:8px;">[관리자 답변]</p>
+                        <p style="color:#16a34a; font-size:14px; line-height:1.6; white-space:pre-line;">{inquiry.answer}</p>
+                        </div>
+
+                        <p style="font-size:13px; color:#6b7280; text-align:center; line-height:1.6;">
+                        추가 문의사항이 있으시다면, <a href="https://ugamall.co.kr/contact" style="color:#2563eb; text-decoration:none;">문의 페이지</a>를 통해 남겨주세요.<br>
+                        <strong>유가몰 고객센터</strong>는 고객님의 의견에 항상 귀 기울이고 있습니다.
+                        </p>
+                    </div>
+
+                    <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
+
+                    <div style="text-align:center; background:#f9fafb; padding:16px; font-size:12px; color:#9ca3af;">
+                        본 메일은 발신 전용이며 회신되지 않습니다.<br>
+                        © 2025 UGAMALL. All rights reserved.
+                    </div>
+                    </div>
+                    """
+
+                    mail.send(msg)
+                    flash(f"{inquiry.guest_email} 로 답변 메일이 전송되었습니다.", "success")
+
+                except Exception as e:
+                    print("❌ 이메일 전송 오류:", e)
+                    flash("답변은 저장되었지만 이메일 발송에 실패했습니다.", "error")
+            else:
+                flash("답변이 등록되었습니다.", "success")
         return redirect(url_for("admin_inquiries"))
 
     # ✅ 검색 및 기간 필터
@@ -3132,20 +3190,29 @@ def about_redirect():
 def company():
     return render_template('company.html')
 
-@app.route('/contact', methods=['GET','POST'])
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == "POST":
         title = request.form.get("title")
         content = request.form.get("content")
 
         if current_user.is_authenticated:
+            # 로그인 회원이면 바로 등록 가능
             user_id = current_user.id
             guest_email = None
+
         else:
+            # 비회원은 이메일 인증 필수
             user_id = None
             guest_email = request.form.get("email")
+
             if not guest_email:
                 flash("비회원은 이메일을 입력해야 합니다.", "error")
+                return redirect(url_for("contact"))
+
+            # ✅ 이메일 인증 완료 여부 확인
+            if not session.get("email_verified"):
+                flash("이메일 인증을 완료해야 문의를 보낼 수 있습니다.", "error")
                 return redirect(url_for("contact"))
 
         inquiry = Inquiry(
@@ -3156,8 +3223,14 @@ def contact():
             created_at=datetime.now(KST),
             status="답변 대기"
         )
+
         db.session.add(inquiry)
         db.session.commit()
+
+        # 인증 상태 초기화 (1회성)
+        session.pop("email_verified", None)
+        session.pop("email_code", None)
+        session.pop("email_for_code", None)
 
         flash("문의가 접수되었습니다.", "success")
         return redirect(url_for("home"))
@@ -3326,23 +3399,35 @@ def verify_email_code():
 
     # 세션 만료 또는 코드 없음
     if not saved_code or not saved_time:
-        return jsonify({"message": "인증 코드가 만료되었거나 존재하지 않습니다."}), 400
+        return jsonify({
+            "status": "error",
+            "message": "인증 코드가 만료되었거나 존재하지 않습니다."
+        }), 400
 
     # 5분(300초) 제한
     if time.time() - saved_time > 300:
         session.pop("email_code", None)
         session.pop("email_code_time", None)
         session.pop("email_target", None)
-        return jsonify({"message": "인증 코드가 만료되었습니다. 다시 시도해주세요."}), 400
+        return jsonify({
+            "status": "error",
+            "message": "인증 코드가 만료되었습니다. 다시 시도해주세요."
+        }), 400
 
     # 코드 일치 확인
     if code == saved_code:
         session["email_verified"] = True
         session["verified_email"] = email_target  # ✅ 인증된 이메일 저장
         print("✅ 세션 상태 (인증 후):", dict(session))
-        return jsonify({"message": f"{email_target} 인증이 완료되었습니다!"})
-    else:
-        return jsonify({"message": "인증코드가 올바르지 않습니다."}), 400
+        return jsonify({
+            "status": "ok",
+            "message": f"{email_target} 인증이 완료되었습니다!"
+        })
+    # 코드 불일치
+    return jsonify({
+        "status": "error",
+        "message": "인증코드가 올바르지 않습니다."
+    }), 400
 
 @app.route('/autocomplete')
 def autocomplete():

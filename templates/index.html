@@ -126,11 +126,30 @@
     <form method="POST" action="{{ url_for('contact') }}" class="bg-white shadow-lg rounded-2xl p-6 sm:p-8 space-y-5">
 
       {% if not current_user.is_authenticated %}
-      <!-- ✅ 비회원일 경우 표시 -->
+      <!-- ✅ 비회원 이메일 인증 -->
       <div>
-        <label class="block text-sm font-semibold mb-1">{{ _("이메일 (필수)") }}</label>
-        <input type="email" name="email" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-[#007AFF]" required>
+        <label class="block text-sm font-semibold mb-1">{{ _("이메일") }}</label>
+        <div class="flex space-x-2 mb-2">
+          <input type="email" id="contact_email" name="email"
+                class="w-full border border-gray-300 rounded-lg p-2.5 flex-1 focus:ring-2 focus:ring-[#007AFF]"
+                placeholder="{{ _('이메일 입력') }}" required>
+          <button type="button" id="send-email-btn" onclick="sendEmailCodeContact()"
+                  class="bg-white border border-gray-400 text-[#222] px-3 py-2 rounded-lg hover:bg-gray-100 active:scale-[0.97] transition">
+            {{ _("인증메일 보내기") }}
+          </button>
+        </div>
+
+        <div class="flex space-x-2 mb-1">
+          <input type="text" id="verify_email_code" placeholder="{{ _('인증코드 입력') }}"
+                class="border border-gray-300 p-2 rounded-lg flex-1 focus:ring-2 focus:ring-green-300 focus:border-green-400 transition">
+          <button type="button" onclick="verifyEmailCodeContact()"
+                  class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 active:scale-[0.97] transition">
+            {{ _("인증 확인") }}
+          </button>
+        </div>
+        <p id="email-status" class="text-xs text-gray-500 mt-1"></p>
       </div>
+
       <div>
         <label class="block text-sm font-semibold mb-1">{{ _("이름") }}</label>
         <input type="text" name="guest_name" class="w-full border border-gray-300 rounded-lg p-2.5">
@@ -155,6 +174,66 @@
     </form>
   </div>
 </section>
+
+<script>
+function sendEmailCodeContact() {
+  const email = document.getElementById("contact_email").value.trim();
+  const btn = document.getElementById("send-email-btn");
+  const statusEl = document.getElementById("email-status");
+
+  if (!email) return alert("이메일을 입력해주세요.");
+
+  btn.disabled = true;
+  btn.textContent = "전송 중...";
+
+  fetch("/send_email_code", {
+    method: "POST",
+    credentials: "include",
+    body: new URLSearchParams({ email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    statusEl.textContent = "인증메일이 발송되었습니다.";
+    statusEl.className = "text-xs text-green-600 mt-1";
+  })
+  .catch(err => {
+    console.error(err);
+    alert("이메일 전송 오류");
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.textContent = "인증메일 보내기";
+  });
+}
+
+function verifyEmailCodeContact() {
+  const code = document.getElementById("verify_email_code").value.trim();
+  const statusEl = document.getElementById("email-status");
+  if (!code) return alert("인증코드를 입력해주세요.");
+
+  fetch("/verify_email_code", {
+    method: "POST",
+    credentials: "include",
+    body: new URLSearchParams({ code })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    if (data.status === "ok") {
+      statusEl.textContent = "이메일 인증이 완료되었습니다.";
+      statusEl.className = "text-xs text-green-600 mt-1 font-semibold";
+    } else {
+      statusEl.textContent = "인증에 실패했습니다. 다시 시도해주세요.";
+      statusEl.className = "text-xs text-red-500 mt-1";
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("서버 오류 발생");
+  });
+}
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
