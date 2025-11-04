@@ -1,20 +1,97 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="max-w-md mx-auto bg-white p-6 shadow rounded mt-8">
-  <h1 class="text-xl font-bold mb-6">영상 수정</h1>
-  <form method="post" enctype="multipart/form-data" class="space-y-4">
+<div class="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-6 sm:p-8 mt-8 border border-gray-100">
+  <h1 class="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+    <span class="text-indigo-600">🎬</span> 영상 수정
+  </h1>
+
+  <form method="post" enctype="multipart/form-data" class="space-y-6">
+    <!-- 제목 -->
     <div>
-      <label class="block font-semibold mb-1">제목</label>
-      <input type="text" name="title" value="{{ video.title }}" class="w-full border rounded p-2">
+      <label class="block text-gray-700 font-semibold mb-2">제목 <span class="text-red-500">*</span></label>
+      <input type="text" name="title" value="{{ video.title }}" required
+             placeholder="영상 제목을 입력하세요"
+             class="w-full border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg p-3 text-sm sm:text-base transition">
     </div>
+
+    <!-- 설명 -->
     <div>
-      <label class="block font-semibold mb-1">영상 교체</label>
-      <video class="w-full h-40 mb-2 rounded" controls>
-        <source src="{{ url_for('static', filename='videos/' ~ video.file_path) }}">
-      </video>
-      <input type="file" name="video" class="w-full border rounded p-2">
+      <label class="block text-gray-700 font-semibold mb-2">설명</label>
+      <textarea name="description" rows="3"
+                placeholder="영상에 대한 설명을 입력하세요."
+                class="w-full border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg p-3 text-sm sm:text-base transition resize-none">{{ video.description or '' }}</textarea>
     </div>
-    <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">저장</button>
+
+    <!-- 태그 -->
+    <div>
+      <label class="block text-gray-700 font-semibold mb-2">태그 <span class="text-gray-400 text-sm">(쉼표로 구분)</span></label>
+      <input type="text" name="tags" value="{{ video.tags or '' }}"
+             placeholder="예: 홍보, 신제품, 캠페인"
+             class="w-full border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg p-3 text-sm sm:text-base transition">
+    </div>
+
+    <!-- 기존 영상 -->
+    <div>
+      <label class="block text-gray-700 font-semibold mb-2">현재 영상</label>
+      <div class="relative rounded-lg overflow-hidden border border-gray-200 shadow-inner bg-gray-50">
+        <video controls class="w-full max-h-[400px] rounded-lg">
+          <source src="{{ url_for('serve_video', video_id=video.id) }}" type="{{ video.video_mime or 'video/mp4' }}">
+        </video>
+      </div>
+    </div>
+
+    <!-- 영상 교체 -->
+    <div>
+      <label class="block text-gray-700 font-semibold mb-2">영상 교체 (선택)</label>
+      <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition group bg-gray-50 cursor-pointer">
+        <input type="file" name="video" accept="video/*"
+               class="absolute inset-0 opacity-0 cursor-pointer">
+        <div class="flex flex-col items-center justify-center space-y-2 text-gray-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400 group-hover:text-indigo-500 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 12l-3-3m3 3l3-3m7 3V4m0 12l-3-3m3 3l3-3" />
+          </svg>
+          <p class="text-sm font-medium">이곳을 클릭하거나 파일을 드래그하세요</p>
+          <p class="text-xs text-gray-400">지원 형식: MP4, WebM, Ogg | 최대 300MB</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 미리보기 -->
+    <div id="video-preview" class="hidden mt-6">
+      <p class="text-sm font-semibold text-gray-600 mb-2">🎥 교체할 영상 미리보기</p>
+      <div class="relative rounded-lg overflow-hidden border border-gray-200 shadow-inner">
+        <video controls class="w-full rounded-lg max-h-[400px]"></video>
+      </div>
+    </div>
+
+    <!-- 제출 버튼 -->
+    <div class="pt-4">
+      <button type="submit"
+              class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 shadow-md hover:shadow-lg transition">
+        저장하기
+      </button>
+    </div>
   </form>
 </div>
+
+<script>
+document.querySelector("input[name='video']").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    // ✅ 300MB 이상이면 경고
+    if (file.size > 300 * 1024 * 1024) {
+      alert("300MB 이하의 영상만 업로드 가능합니다.");
+      e.target.value = "";
+      return;
+    }
+
+    // ✅ 미리보기
+    const preview = document.getElementById("video-preview");
+    const video = preview.querySelector("video");
+    video.src = URL.createObjectURL(file);
+    preview.classList.remove("hidden");
+    preview.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+});
+</script>
 {% endblock %}
