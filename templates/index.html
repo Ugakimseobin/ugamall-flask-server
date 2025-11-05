@@ -130,7 +130,7 @@
       <div>
         <label class="block text-sm font-semibold mb-1">{{ _("이메일") }}</label>
         <div class="flex space-x-2 mb-2">
-          <input type="email" id="contact_email" name="email"
+          <input type="email" id="contact_email" name="email" value="{{ email or '' }}"
                 class="w-full border border-gray-300 rounded-lg p-2.5 flex-1 focus:ring-2 focus:ring-[#007AFF]"
                 placeholder="{{ _('이메일 입력') }}" required>
           <button type="button" id="send-email-btn" onclick="sendEmailCodeContact()"
@@ -152,21 +152,21 @@
 
       <div>
         <label class="block text-sm font-semibold mb-1">{{ _("이름") }}</label>
-        <input type="text" name="guest_name" class="w-full border border-gray-300 rounded-lg p-2.5">
+        <input type="text" name="guest_name" value="{{ guest_name or '' }}" class="w-full border border-gray-300 rounded-lg p-2.5">
       </div>
       <div>
         <label class="block text-sm font-semibold mb-1">{{ _("전화번호") }}</label>
-        <input type="text" name="guest_phone" class="w-full border border-gray-300 rounded-lg p-2.5">
+        <input type="text" name="guest_phone" value="{{ guest_phone or '' }}" class="w-full border border-gray-300 rounded-lg p-2.5">
       </div>
       {% endif %}
 
       <div>
         <label class="block text-sm font-semibold mb-1">{{ _("제목") }}</label>
-        <input type="text" name="title" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-[#007AFF]" required>
+        <input type="text" name="title" value="{{ title or '' }}" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-[#007AFF]" required>
       </div>
       <div>
         <label class="block text-sm font-semibold mb-1">{{ _("내용") }}</label>
-        <textarea name="content" rows="5" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-[#007AFF]" required></textarea>
+        <textarea name="content" rows="5" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-[#007AFF]" required>{{ content or '' }}</textarea>
       </div>
       <button type="submit" class="w-full btn-dark px-8 py-2.5 text-white rounded-full text-sm sm:text-base font-semibold shadow hover:opacity-90 transition">
         {{ _("보내기") }}
