@@ -21,7 +21,7 @@
       <div>
         <label class="block text-sm font-semibold mb-1">{{ _("이메일") }}</label>
         <div class="flex space-x-2 mb-2">
-          <input type="email" id="contact_email" name="email"
+          <input type="email" id="contact_email" name="email" value="{{ email or '' }}"
                  class="w-full border border-gray-300 rounded-lg p-2.5 flex-1 focus:ring-2 focus:ring-[#007AFF]"
                  placeholder="{{ _('이메일 입력') }}" required>
           <button type="button" id="send-email-btn" onclick="sendEmailCodeContact()"
@@ -43,18 +43,18 @@
 
       <div>
         <label class="block text-sm font-semibold mb-1">{{ _("이름") }}</label>
-        <input type="text" name="guest_name" class="w-full border border-gray-300 rounded-lg p-2.5">
+        <input type="text" name="guest_name" value="{{ guest_name or '' }}" class="w-full border border-gray-300 rounded-lg p-2.5">
       </div>
 
       <div>
         <label class="block text-sm font-semibold mb-1">{{ _("전화번호") }}</label>
-        <input type="text" name="guest_phone" class="w-full border border-gray-300 rounded-lg p-2.5">
+        <input type="text" name="guest_phone" value="{{ guest_phone or '' }}" class="w-full border border-gray-300 rounded-lg p-2.5">
       </div>
     {% endif %}
 
     <div>
       <label class="block font-semibold mb-1 text-sm sm:text-base">{{ _("제목") }}</label>
-      <input type="text" name="title" required
+      <input type="text" name="title" value="{{ title or '' }}" required
              class="w-full border rounded p-2 text-sm sm:text-base"
              placeholder="{{ _('문의 제목') }}">
     </div>
@@ -63,12 +63,17 @@
       <label class="block font-semibold mb-1 text-sm sm:text-base">{{ _("내용") }}</label>
       <textarea name="content" rows="5" required
                 class="w-full border rounded p-2 text-sm sm:text-base"
-                placeholder="{{ _('문의 내용을 입력하세요') }}"></textarea>
+                placeholder="{{ _('문의 내용을 입력하세요') }}">{{ content or '' }}</textarea>
     </div>
 
     <button type="submit" class="btn-dark text-white px-4 sm:px-6 py-2 rounded hover:opacity-90 text-sm sm:text-base">
       {{ _("보내기") }}
     </button>
+    <div class="g-recaptcha" 
+        data-sitekey="6LfOVQAsAAAAAAGSTK6ge0BoGeT6OGpuQG7-jPf3"
+        data-theme="light"
+        style="transform:scale(0.95); transform-origin:0 0;">
+    </div>
   </form>
 
   <!-- 회사 위치 -->
@@ -153,4 +158,7 @@ function verifyEmailCodeContact() {
   });
 }
 </script>
+
+<!-- reCAPTCHA -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock %}

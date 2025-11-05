@@ -3190,9 +3190,37 @@ def about_redirect():
 def company():
     return render_template('company.html')
 
+# reCAPTCJA 검증 함수
+def verify_recaptcha(token):
+    """Google reCAPTCHA v2/v3 토큰 검증"""
+    secret = os.getenv("RECAPTCHA_SECRET_KEY")
+    if not secret:
+        print("⚠️ RECAPTCHA_SECRET_KEY 미설정 (검증 스킵)")
+        return True  # 개발용
+    url = "https://www.google.com/recaptcha/api/siteverify"
+    payload = {"secret": secret, "response": token}
+    try:
+        res = requests.post(url, data=payload, timeout=5)
+        data = res.json()
+        return data.get("success", False)
+    except Exception as e:
+        print("❌ reCAPTCHA 검증 오류:", e)
+        return False
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == "POST":
+        recaptcha_token = request.form.get("g-recaptcha-response")
+        if not verify_recaptcha(recaptcha_token):
+            flash("자동 전송 방지를 위해 reCAPTCHA 인증을 완료해주세요.", "error")
+            return render_template(
+                "contact.html",
+                email=request.form.get("email"),
+                guest_name=request.form.get("guest_name"),
+                guest_phone=request.form.get("guest_phone"),
+                title=request.form.get("title"),
+                content=request.form.get("content")
+            )
+        
         title = request.form.get("title")
         content = request.form.get("content")
 
