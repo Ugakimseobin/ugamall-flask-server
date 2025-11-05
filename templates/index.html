@@ -171,6 +171,11 @@
       <button type="submit" class="w-full btn-dark px-8 py-2.5 text-white rounded-full text-sm sm:text-base font-semibold shadow hover:opacity-90 transition">
         {{ _("보내기") }}
       </button>
+      <div class="g-recaptcha" 
+          data-sitekey="6LfOVQAsAAAAAAGSTK6ge0BoGeT6OGpuQG7-jPf3"
+          data-theme="light"
+          style="transform:scale(0.95); transform-origin:0 0;">
+      </div>
     </form>
   </div>
 </section>
@@ -251,4 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<!-- reCAPTCHA -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock %}
