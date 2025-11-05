@@ -12,8 +12,17 @@
   <meta name="description" content="의료기기·의료용품 전문 쇼핑몰 유가몰(UGA MEDICAL) — 재활보조용품, 병원용 소모품, 가정용 건강기기 전문">
   <meta name="keywords" content="의료기기, 의료용품, 재활보조용품, 가정용의료기기, 병원용소모품, 주식회사 유가, UGA">
   <meta name="author" content="주식회사 유가 UGA">
-  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
-  <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "유가몰",
+    "url": "https://www.ugamall.co.kr",
+    "logo": "https://www.ugamall.co.kr/static/images/favicon.ico"
+  }
+  </script>
   <title>의료기기·의료용품 전문 쇼핑몰 유가몰</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css">
