@@ -208,17 +208,74 @@
               </select>
             </div>
 
-            <!-- 하단 결제 바-->
-            <div class="mb-4">
-                <label class="block font-semibold mb-2">{{ _("결제 방법") }}</label>
-                <select name="payment_method" id="payment-method" class="w-full border p-2 rounded text-sm sm:text-base">
-                  <option value="무통장입금">{{ _("무통장입금") }}</option>
-                  <option value="카드결제">{{ _("카드결제") }}</option>
-                  <option value="카카오페이">{{ _("카카오페이") }}</option>
-                  <option value="토스페이">{{ _("토스페이") }}</option>
+            <!-- 하단 결제방법 바-->
+            <h3 class="text-lg font-semibold mb-3">결제 수단</h3>
+            <div class="space-y-3">
+
+              <!-- 카드결제 -->
+              <label class="flex items-center gap-3 cursor-pointer p-4 border rounded-lg hover:bg-gray-50 transition">
+                <input type="radio" name="payment_method" value="카드결제" class="hidden peer">
+                <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-indigo-500">
+                  <div class="w-2.5 h-2.5 bg-indigo-500 rounded-full peer-checked:block hidden"></div>
+                </div>
+                <span class="font-semibold text-gray-900">카드결제</span>
+              </label>
+
+              <!-- 카카오페이 -->
+              <label class="flex items-center gap-3 cursor-pointer p-4 border rounded-lg hover:bg-gray-50 transition">
+                <input type="radio" name="payment_method" value="카카오페이" class="hidden peer">
+                <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-yellow-400">
+                  <div class="w-2.5 h-2.5 bg-yellow-400 rounded-full peer-checked:block hidden"></div>
+                </div>
+                <img src="{{ url_for('static', filename='images/kakaopay_logo.png') }}" alt="KakaoPay" class="h-5">
+                <span class="font-semibold text-gray-900">카카오페이</span>
+              </label>
+
+              <!-- 토스페이 -->
+              <label class="flex items-center gap-3 cursor-pointer p-4 border rounded-lg hover:bg-gray-50 transition">
+                <input type="radio" name="payment_method" value="토스페이" class="hidden peer">
+                <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-blue-400">
+                  <div class="w-2.5 h-2.5 bg-blue-400 rounded-full peer-checked:block hidden"></div>
+                </div>
+                <img src="{{ url_for('static', filename='images/toss_logo.png') }}" alt="TossPay" class="h-5">
+                <span class="font-semibold text-gray-900">토스페이</span>
+              </label>
+
+              <!-- 무통장입금 -->
+              <label class="flex items-center gap-3 cursor-pointer p-4 border rounded-lg hover:bg-gray-50 transition">
+                <input type="radio" name="payment_method" value="무통장입금" class="hidden peer">
+                <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-gray-600">
+                  <div class="w-2.5 h-2.5 bg-gray-600 rounded-full peer-checked:block hidden"></div>
+                </div>
+                <span class="font-semibold text-gray-900">무통장입금</span>
+              </label>
+
+              <div id="cash-receipt-section" class="hidden mt-4 p-4 border rounded-lg bg-gray-50">
+                <h4 class="font-semibold mb-3 text-gray-800">현금영수증 신청</h4>
+
+                <label class="block text-sm text-gray-600 mb-1">용도 선택</label>
+                <select name="receipt_type" class="border rounded p-2 w-full mb-3">
+                  <option value="personal">개인소득공제용</option>
+                  <option value="business">사업자지출증빙용</option>
                 </select>
+
+                <label class="block text-sm text-gray-600 mb-1">인증수단</label>
+                <select name="receipt_method" class="border rounded p-2 w-full mb-3">
+                  <option value="phone">휴대폰번호</option>
+                  <option value="biznum">사업자등록번호</option>
+                </select>
+
+                <input type="text" name="receipt_value" placeholder="휴대폰번호 또는 사업자번호"
+                      class="border rounded p-2 w-full mb-4">
+
+                <!-- ✅ 깔끔한 안내문 -->
+                <div class="text-xs text-gray-500 leading-relaxed">
+                  ※ 무통장입금 시 결제 완료 후 현금영수증 발급이 가능합니다.<br>
+                  ※ 개인소득공제용 또는 사업자지출증빙용으로 선택해 주세요.<br>
+                  ※ 국세청 홈택스(<a href="https://www.hometax.go.kr" target="_blank" class="text-indigo-600 underline">www.hometax.go.kr</a>)에서 조회할 수 있습니다.
+                </div>
+              </div>
             </div>
-        </div>
 
         <!-- 하단 고정 결제 바 -->
         <div class="fixed bottom-0 left-0 w-full bg-black border-t shadow-lg">
@@ -310,7 +367,7 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
   }
 
   // 결제 방식 확인
-  const paymentMethod = document.getElementById("payment-method").value;
+  const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || "";
 
   // ✅ 무통장입금일 경우 → 서버로 바로 제출 (결제창 X)
   if (paymentMethod === "무통장입금") {
@@ -550,12 +607,27 @@ function verifyGuestEmailCode() {
 
 // ✅ 결제 전 인증 확인
 document.getElementById("checkout-form").addEventListener("submit", function(e) {
-  const paymentMethod = document.getElementById("payment-method").value;
+  const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || "";
   if (!guestVerified && paymentMethod !== "무통장입금") {
     e.preventDefault();
     alert("비회원 주문은 이메일 인증 후 결제 가능합니다.");
     return false;
   }
+});
+</script>
+
+<!-- 무통장입금 시 현금영수증 -->
+<script>
+const receiptSection = document.getElementById("cash-receipt-section");
+document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+  radio.addEventListener("change", e => {
+    // 무통장입금 선택 시에만 표시
+    if (e.target.value === "무통장입금") {
+      receiptSection.classList.remove("hidden");
+    } else {
+      receiptSection.classList.add("hidden");
+    }
+  });
 });
 </script>
 
@@ -638,5 +710,43 @@ document.getElementById("checkout-form").addEventListener("submit", function(e) 
   min-width: 70px;
 }
 </style>
+<style>
+.payment-card {
+  @apply relative cursor-pointer border rounded-xl text-center p-4 bg-white shadow-sm hover:shadow-md transition;
+}
+.payment-card input {
+  display: none;
+}
+.payment-card span {
+  display: block;
+  font-weight: 500;
+  color: #333;
+}
+.payment-card img {
+  display: block;
+}
+.payment-card input:checked + img,
+.payment-card input:checked ~ span {
+  color: #4f46e5;
+}
+.payment-card input:checked ~ span::after {
+  content: "✓";
+  color: #4f46e5;
+  font-weight: bold;
+  margin-left: 4px;
+}
+.payment-card input:checked ~ * {
+  border-color: #4f46e5;
+}
+</style>
+<style>
+.payment-option input:checked + img,
+.payment-option input:checked + span {
+  border-color: #4f46e5;
+}
 
+.payment-option input:checked ~ span.font-semibold {
+  color: #4f46e5;
+}
+</style>
 {% endblock %}
