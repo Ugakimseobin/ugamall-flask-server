@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <!-- Shorts Section -->
-<section class="relative w-full h-[500px] md:h-[800px] bg-[#f2f2f2] overflow-hidden">
+<section class="relative w-full h-[126px] md:h-[400px] bg-[#f2f2f2] overflow-hidden">
   {% if latest_video %}
     <div class="relative w-full h-full">
       <!-- 영상 -->
@@ -196,6 +196,41 @@
   </div>
 </section>
 
+<div id="notice-popup"
+     class="fixed top-24 md:left-64 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-96 bg-white/95 border border-gray-300 shadow-xl z-50 hidden animate-fade-in cursor-move backdrop-blur-sm"
+     style="font-family: 'TheJamsil5Bold', 'Noto Sans KR', sans-serif; font-weight:500;">
+  <div class="flex justify-between items-center mb-2">
+    <h3 class="text-lg sm:text-xl text-gray-800 pl-2 pt-2"
+        style="font-weight-600; letter-spacing:-0.5px; color:#222;">
+      {{ _("안내사항") }}
+    </h3>
+  </div>
+    <!--<div class="relative w-full bg-gray-100 flex items-center justify-center h-[360px] sm:h-[420px]">
+      
+      <img src="/static/img/popup_notice.jpg" alt="안내 이미지"
+           class="w-full h-full object-cover">
+    </div>-->
+  <div class="w-full bg-gray-100 border border-gray-200">
+    <p class="font-semibold text-gray-500 text-[13px] sm:text-sm leading-snug tracking-tight my-4 px-5">
+      {{ _("㈜유가는 의료기기 도매업 전문기업으로,") }}  <br>
+      {{ _("모든 제품에 ") }}<span class="text-gray-900 font-semibold">{{ _("정품 UDI") }}</span>{{ _("를 제공합니다.") }}<br>
+      {{ _("유가몰은 ㈜유가에서 운영하는 공식 의료용품 쇼핑몰로,") }}<br>
+      {{ _("신뢰할 수 있는 품질과 합리적인 가격으로 고객의 건강한 삶을 지원합니다.") }}
+    </p>
+  </div>
+
+  <!-- 하루동안 보지 않기 체크박스 -->
+  <div class="bg-gray-500 flex justify-between items-center px-4 py-2 border-t border-gray-200">
+    <label class="flex items-center space-x-1 text-xs text-white cursor-pointer">
+      <input type="checkbox" id="hide-today" class="w-3.5 h-3.5 accent-gray-600">
+      <span>{{ _("오늘 하루 보이지 않음") }}</span>
+    </label>
+    <button onclick="closeNotice()" class="text-white hover:text-black text-xs font-semibold">
+      {{ _("닫기") }}
+    </button>
+  </div>
+</div>
+
 <script>
 function sendEmailCodeContact() {
   const email = document.getElementById("contact_email").value.trim();
@@ -271,6 +306,39 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 4000);
 });
 </script>
+
+<script>
+function setPopupCookie(name, value, days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  document.cookie = `${name}=${value}; expires=${d.toUTCString()}; path=/`;
+}
+function getPopupCookie(name) {
+  const cookies = document.cookie.split(';').map(c => c.trim());
+  for (let c of cookies) if (c.startsWith(name + '=')) return c.split('=')[1];
+  return null;
+}
+function closeNotice() {
+  const hide = document.getElementById("hide-today").checked;
+  document.getElementById("notice-popup").classList.add("hidden");
+  if (hide) setPopupCookie("noticeHidden", "true", 1);
+}
+document.addEventListener("DOMContentLoaded", () => {
+  if (!getPopupCookie("noticeHidden")) {
+    document.getElementById("notice-popup").classList.remove("hidden");
+  }
+});
+</script>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -10%); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+</style>
 
 <!-- reCAPTCHA -->
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
