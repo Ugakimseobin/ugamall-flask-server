@@ -115,12 +115,12 @@
     <!-- 로고형 타이틀 -->
     <div class="mb-8 leading-[0.9]">
       <h2 class="text-[64px] sm:text-[80px] text-[#222]"
-          style="font-family: 'TheJamsil', sans-serif; font-weight:400;">
+          style="font-family: 'TheJamsil5Bold', 'Noto Sans KR', sans-serif; font-weight:700;">
         유가몰
       </h2>
-      <p class="text-[28px] sm:text-[32px] text-[#222] mt-1"
-         style="font-family: 'Times New Roman', 'Times', serif; letter-spacing:0.5px;">
-        YUGA Mall
+      <p class="text-[28px] sm:text-[32px] text-[#222] mt-4"
+         style="font-family: 'Playfair Display', 'Times New Roman', serif; font-weight:400; letter-spacing:0.3px;">
+        UGA Mall
       </p>
     </div>
 
@@ -137,7 +137,8 @@
 <!-- Contact Section -->
 <section class="bg-[#f7f7f7] py-20 sm:py-16">
   <div class="max-w-3xl mx-auto px-4">
-    <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#222]">{{ _("문의하기") }}</h2>
+    <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#222]" 
+    style="font-family: 'TheJamsil5Bold', 'Noto Sans KR', sans-serif; font-weight:700;">{{ _("문의하기") }}</h2>
     <form method="POST" action="{{ url_for('contact') }}" class="bg-white shadow-lg rounded-2xl p-6 sm:p-8 space-y-5">
 
       {% if not current_user.is_authenticated %}

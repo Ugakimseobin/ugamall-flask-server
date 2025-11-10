@@ -181,7 +181,7 @@ footer a:hover {
       </nav>
 
       <!-- 검색창 -->
-      <form id="search-form" action="{{ url_for('search') }}" class="hidden md:flex relative w-1/4">
+      <form id="search-form" action="{{ url_for('search') }}" class="hidden md:flex relative w-1/4 px-8">
         <input type="text" id="search-input" name="name"
               placeholder="{{ _('상품 검색') }}..."
               value="{{ request.args.get('name','') }}"
@@ -193,7 +193,7 @@ footer a:hover {
       </form>
 
       <!-- 언어 변경 -->
-      <div class="relative inline-block hidden md:inline-block pl-8">
+      <div class="relative inline-block hidden md:inline-block">
         <button id="lang-button" 
           class="flex flex-col items-center text-gray-700 hover:text-indigo-600 focus:outline-none">
           <img src="{{ url_for('static', filename='images/icons8-지구-그리드-32.png') }}">
