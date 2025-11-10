@@ -28,6 +28,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/TheJamsil.css') }}">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -136,30 +143,18 @@ footer a:hover {
 <body class="bg-gray-50 text-gray-800 font-['Noto Sans KR',sans-serif]">
   <!-- Header -->
   <header class="fixed w-full shadow z-50 border-b border-gray-100" style="z-index: 9999;">
-    <div class="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center h-16">
-      <a href="/" class="relative inline-flex items-center text-xl md:text-2xl font-bold tracking-tight"
+    <div class="max-w-7xl mx-auto px-3 md:px-5 flex justify-between md:justify-center items-center h-16">
+      <a href="/" class="relative inline-flex pr-8 items-center text-xl md:text-2xl font-bold tracking-tight"
    style="font-family: 'DesignHouse', sans-serif; letter-spacing:-0.5px; color:#222;">
       <span class="relative z-10">유가몰</span>
         <img src="{{ url_for('static', filename='images/Uga_logo1.png') }}" 
        alt="유가몰 로고"
-       class="absolute left-[-0.5rem] top-[47%] -translate-y-1/2 w-8 md:w-10 opacity-40 pointer-events-none select-none">
+       class="absolute left-[-0.3rem] top-[47%] -translate-y-1/2 w-8 md:w-9 opacity-40 pointer-events-none select-none">
        
       </a>
 
-      <!-- 검색창 -->
-      <form id="search-form" action="{{ url_for('search') }}" class="hidden md:flex relative w-1/3">
-        <input type="text" id="search-input" name="name"
-              placeholder="{{ _('상품 검색') }}..."
-              value="{{ request.args.get('name','') }}"
-              class="w-full border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]">
-        <button type="submit"
-                class="border border-gray-300 bg-white text-gray-600 px-2 rounded-r-lg hover:bg-gray-100 flex items-center justify-center">
-          <img src="{{ url_for('static', filename='images/search_logo.png') }}">
-        </button>
-      </form>
-
       <!-- 네비게이션 (데스크탑) -->
-      <nav class="hidden md:flex space-x-6 text-sm md:text-base">
+      <nav class="hidden md:flex space-x-4 text-sm md:text-base px-4">
         <a href="/company" class="hover:text-[var(--primary-color)]">{{ _("회사소개") }}</a>
         <a href="/products" class="hover:text-[var(--primary-color)]">{{ _("제품") }}</a>
         <a href="/contact" class="hover:text-[var(--primary-color)]">{{ _("문의") }}</a>
@@ -185,8 +180,20 @@ footer a:hover {
         </a>
       </nav>
 
+      <!-- 검색창 -->
+      <form id="search-form" action="{{ url_for('search') }}" class="hidden md:flex relative w-1/4">
+        <input type="text" id="search-input" name="name"
+              placeholder="{{ _('상품 검색') }}..."
+              value="{{ request.args.get('name','') }}"
+              class="w-full border border-gray-300 rounded-l-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]">
+        <button type="submit"
+                class="border border-gray-300 bg-white text-gray-600 px-2 rounded-r-lg hover:bg-gray-100 flex items-center justify-center">
+          <img src="{{ url_for('static', filename='images/search_logo.png') }}">
+        </button>
+      </form>
+
       <!-- 언어 변경 -->
-      <div class="relative inline-block hidden md:inline-block">
+      <div class="relative inline-block hidden md:inline-block pl-8">
         <button id="lang-button" 
           class="flex flex-col items-center text-gray-700 hover:text-indigo-600 focus:outline-none">
           <img src="{{ url_for('static', filename='images/icons8-지구-그리드-32.png') }}">
@@ -326,7 +333,7 @@ footer a:hover {
 
     <!-- 회사 정보 -->
     <div>
-      <h3 class="text-sm font-bold text-gray-900 mb-3">㈜유가메디컬</h3>
+      <h3 class="text-sm font-bold text-gray-900 mb-3">㈜ 유가</h3>
       <p>대표자: 유명환</p>
       <p class="md:whitespace-nowrap">부산광역시 동래구 안남로 78-3 (더 평안빌딩 2층)</p>
       <p>사업자등록번호: 822-87-03558</p>

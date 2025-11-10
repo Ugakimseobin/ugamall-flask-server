@@ -9,7 +9,7 @@
   <img src="{{ url_for('static', filename='images/company.jpg') }}" class="absolute inset-0 w-full h-full object-cover">
   <div class="absolute inset-0 bg-black/45"></div>
   <div class="relative z-10 text-center">
-    <h1 class="text-3xl md:text-5xl font-extrabold drop-shadow" style="font-family:'DesignHouse',sans-serif; font-weight:700;">{{ _("유가에 대해") }}</h1>
+    <h1 class="text-3xl md:text-5xl font-extrabold drop-shadow" style="font-family:'DesignHouse',sans-serif; font-weight:700;">{{ _("유가 소개") }}</h1>
   </div>
 </section>
 
@@ -41,35 +41,11 @@
 
 <!-- 소개 -->
 <section id="intro" class="py-20 bg-white">
-  <div class="max-w-6xl mx-auto px-6 space-y-24">
-    <h2 class="text-3xl font-bold text-center mb-16">{{ _("소개") }}</h2>
-    <div class="grid md:grid-cols-2 gap-10 items-center reveal">
-      <img src="{{ url_for('static', filename='images/intro1.jpg') }}" class="w-full h-80 object-cover rounded-xl shadow-lg" alt="혁신 아이디어">
-      <div>
-        <h3 class="text-3xl font-bold text-[#222] mb-4">{{ _("고객 중심") }}</h3>
-        <p class="text-gray-600 leading-relaxed text-lg whitespace-pre-line">{{ _("모든 제품과 서비스는 고객의 건강과 편의를 최우선으로 합니다.
-쉽고 편리한 쇼핑 경험을 제공하고, 구매 후에도 만족할 수 있도록 지속적인 관리와 지원을 약속합니다.") }}</p>
-      </div>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-10 items-center reveal">
-      <div class="order-2 md:order-1">
-        <h3 class="text-3xl font-bold text-[#222] mb-4">{{ _("신뢰와 품질") }}</h3>
-        <p class="text-gray-600 leading-relaxed text-lg whitespace-pre-line">{{ _("엄격한 검증을 거친 정품 의료·건강 제품만을 취급합니다.
-투명한 정보 제공과 철저한 품질 관리로 고객이 안심하고 사용할 수 있는 쇼핑몰이 되겠습니다.") }}</p>
-      </div>
-      <img src="{{ url_for('static', filename='images/intro2.jpg') }}" class="order-1 md:order-2 w-full h-80 object-cover rounded-xl shadow-lg" alt="노트북과 기술">
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-10 items-center reveal">
-      <img src="{{ url_for('static', filename='images/intro3.jpg') }}" class="w-full h-80 object-cover rounded-xl shadow-lg" alt="파트너십">
-      <div>
-        <h3 class="text-3xl font-bold text-[#222] mb-4">{{ _("지속적인 혁신") }}</h3>
-        <p class="text-gray-600 leading-relaxed text-lg whitespace-pre-line">{{ _("최신 기술과 데이터를 기반으로 개인 맞춤형 의료·헬스케어 솔루션을 제공합니다.
-단순한 판매를 넘어, 고객의 건강한 삶을 위한 스마트 헬스 플랫폼으로 발전해 나갑니다") }}.</p>
-      </div>
-    </div>
-  </div>
+  <p class="text-lg sm:text-xl text-center leading-relaxed">
+    <strong>유가</strong>는 의료 현장의 <strong>신뢰</strong>를 바탕으로,  
+    작지만 단단한 걸음을 이어왔습니다.  
+    사람과 기술, 그리고 헌신으로 건강한 내일을 만듭니다.
+  </p>
 </section>
 
 <!-- 연혁 -->
@@ -87,7 +63,8 @@
         <div class="z-10"><div class="w-3 h-3 bg-[#222] rounded-full shadow"></div></div>
         <div class="w-5/12 bg-white shadow-md p-6 rounded-lg">
           <h3 class="text-lg font-bold text-[#222]">2025</h3>
-          <p class="text-gray-600">{{ _("UGAMALL 온라인 플랫폼 공식 런칭") }}</p>
+          <p>새로운 도약, 주식회사 유가</p>
+          <p class="text-gray-600">{{ _("새로운 의료·헬스케어 시장으로 확장 준비") }}</p>
         </div>
       </div>
 
@@ -96,8 +73,9 @@
         <div class="w-5/12"></div>
         <div class="z-10"><div class="w-3 h-3 bg-[#222] rounded-full shadow"></div></div>
         <div class="w-5/12 bg-white shadow-md p-6 rounded-lg text-right">
-          <h3 class="text-lg font-bold text-[#222]">2023</h3>
-          <p class="text-gray-600">{{ _("신규 의료기기 보급 확대 및 파트너십 체결") }}</p>
+          <h3 class="text-lg font-bold text-[#222]">2024</h3>
+          <p>협력과 확장의 해</p>
+          <p class="text-gray-600">{{ _("함께 성장하는 브랜드로 시장 내 신뢰 확립") }}</p>
         </div>
       </div>
 
@@ -106,8 +84,19 @@
         <div class="w-5/12"></div>
         <div class="z-10"><div class="w-3 h-3 bg-[#222] rounded-full shadow"></div></div>
         <div class="w-5/12 bg-white shadow-md p-6 rounded-lg">
-          <h3 class="text-lg font-bold text-[#222]">2020</h3>
-          <p class="text-gray-600">{{ _("관절 치료/재활 라인업 강화") }}</p>
+          <h3 class="text-lg font-bold text-[#222]">2023</h3>
+          <p>안정과 도약의 해</p>
+          <p class="text-gray-600">{{ _("신제품 개발·출시로 성장 기반") }}</p>
+        </div>
+      </div>
+
+      <div class="mb-24 flex justify-between items-center w-full flex-row-reverse reveal-left">
+        <div class="w-5/12"></div>
+        <div class="z-10"><div class="w-3 h-3 bg-[#222] rounded-full shadow"></div></div>
+        <div class="w-5/12 bg-white shadow-md p-6 rounded-lg text-right">
+          <h3 class="text-lg font-bold text-[#222]">2022</h3>
+          <p>시작의 해, 유가메디칼의 출발</p>
+          <p class="text-gray-600">{{ _("작지만 믿을 수 있는 의료") }}</p>
         </div>
       </div>
 

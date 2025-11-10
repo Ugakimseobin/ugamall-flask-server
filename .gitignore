@@ -1,7 +1,10 @@
 static/videos/ocean.mp4
+venv/
+env/
 .env
 .env.local
 .env.*
+*.sqlite3
 *.pyc
 __pycache__/
 instance/
