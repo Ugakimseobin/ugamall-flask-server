@@ -155,9 +155,9 @@ footer a:hover {
 
       <!-- 네비게이션 (데스크탑) -->
       <nav class="hidden md:flex space-x-4 text-sm md:text-base px-4">
-        <a href="/company" class="hover:text-[var(--primary-color)]">{{ _("회사소개") }}</a>
-        <a href="/products" class="hover:text-[var(--primary-color)]">{{ _("제품") }}</a>
-        <a href="/contact" class="hover:text-[var(--primary-color)]">{{ _("문의") }}</a>
+        <a href="/company" class="hover:text-[var(--primary-color)] {% if request.path.startswith('/company') %} font-bold text-gray-600 {% endif %}">{{ _("회사소개") }}</a>
+        <a href="/products" class="hover:text-[var(--primary-color)] {% if request.path.startswith('/products') %} font-bold text-gray-600 {% endif %}">{{ _("제품") }}</a>
+        <a href="/contact" class="hover:text-[var(--primary-color)] {% if request.path.startswith('/contact') %} font-bold text-gray-600 {% endif %}">{{ _("문의") }}</a>
         {% if current_user.is_authenticated %}
           {% if current_user.is_admin %}
             <a href="{{ url_for('admin_dashboard') }}" class="relative text-red-500 font-bold hover:text-red-600">
