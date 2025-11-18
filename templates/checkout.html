@@ -212,15 +212,6 @@
             <h3 class="text-lg font-semibold mb-3">결제 수단</h3>
             <div class="space-y-3">
 
-              <!-- 카드결제 -->
-              <label class="flex items-center gap-3 cursor-pointer p-4 border rounded-lg hover:bg-gray-50 transition">
-                <input type="radio" name="payment_method" value="카드결제" class="hidden peer">
-                <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-indigo-500">
-                  <div class="w-2.5 h-2.5 bg-indigo-500 rounded-full peer-checked:block hidden"></div>
-                </div>
-                <span class="font-semibold text-gray-900">카드결제</span>
-              </label>
-
               <!-- 카카오페이 -->
               <label class="flex items-center gap-3 cursor-pointer p-4 border rounded-lg hover:bg-gray-50 transition">
                 <input type="radio" name="payment_method" value="카카오페이" class="hidden peer">
@@ -231,14 +222,13 @@
                 <span class="font-semibold text-gray-900">카카오페이</span>
               </label>
 
-              <!-- 토스페이 -->
+              <!-- 카드결제 -->
               <label class="flex items-center gap-3 cursor-pointer p-4 border rounded-lg hover:bg-gray-50 transition">
-                <input type="radio" name="payment_method" value="토스페이" class="hidden peer">
-                <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-blue-400">
-                  <div class="w-2.5 h-2.5 bg-blue-400 rounded-full peer-checked:block hidden"></div>
+                <input type="radio" name="payment_method" value="카드결제" class="hidden peer">
+                <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-indigo-500">
+                  <div class="w-2.5 h-2.5 bg-indigo-500 rounded-full peer-checked:block hidden"></div>
                 </div>
-                <img src="{{ url_for('static', filename='images/toss_logo.png') }}" alt="TossPay" class="h-5">
-                <span class="font-semibold text-gray-900">토스페이</span>
+                <span class="font-semibold text-gray-900">카드결제</span>
               </label>
 
               <!-- 무통장입금 -->

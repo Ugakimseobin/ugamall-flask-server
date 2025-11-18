@@ -40,7 +40,6 @@
     const method = "{{ order.payment_method }}";
     if (method === "카카오페이") pgOption = "kakaopay";
     else if (method === "네이버페이") pgOption = "naverpay.NPAY";
-    else if (method === "토스페이") pgOption = "tosspayments";
 
     IMP.request_pay({
       pg: pgOption,
