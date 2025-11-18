@@ -2370,16 +2370,17 @@ def admin_edit_product(product_id):
         image_file = request.files.get("image")
         if image_file and image_file.filename:
             filename = secure_filename(image_file.filename)
-            image_path = os.path.join(current_app.root_path, "static", "images", filename)
-            image_file.save(image_path)
+            product.image_data = image_file.read()
+            product.image_mime = image_file.mimetype
             product.image = filename
 
         # ✅ 팜플렛 업로드
         pamphlet_file = request.files.get("pamphlet")
         if pamphlet_file and pamphlet_file.filename:
             filename = secure_filename(pamphlet_file.filename)
-            pamphlet_path = os.path.join(current_app.root_path, "static", "pamphlets", filename)
-            pamphlet_file.save(pamphlet_path)
+            product.pamphlet_data = pamphlet_file.read()
+            product.pamphlet_mime = pamphlet_file.mimetype
+            product.pamphlet_name = pamphlet_file.filename
             product.pamphlet = filename
 
         db.session.commit()
