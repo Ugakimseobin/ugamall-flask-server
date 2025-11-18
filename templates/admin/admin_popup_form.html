@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-xl mx-auto py-10 px-4 sm:px-6">
+
+  <h1 class="text-2xl sm:text-3xl font-bold mb-8">📢 팝업 등록</h1>
+
+  <form method="POST" enctype="multipart/form-data" 
+        class="space-y-6 bg-white shadow-md rounded-xl p-6">
+
+    <div>
+      <label class="font-semibold text-sm mb-1 block">제목</label>
+      <input type="text" name="title"
+             class="w-full border p-2 rounded" placeholder="팝업 제목 입력 (선택)">
+    </div>
+
+    <div>
+      <label class="font-semibold text-sm mb-1 block">링크 URL</label>
+      <input type="text" name="link_url"
+             class="w-full border p-2 rounded"
+             placeholder="이미지 클릭 시 이동할 링크(선택)">
+    </div>
+
+    <div>
+      <label class="font-semibold text-sm mb-1 block">이미지 업로드 *</label>
+      <input type="file" name="image" accept="image/*" required
+             class="w-full border p-2 rounded">
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <input type="checkbox" name="is_active" checked class="w-4 h-4">
+      <span class="text-sm">활성화</span>
+    </div>
+
+    <button type="submit"
+      class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold">
+      저장하기
+    </button>
+
+  </form>
+
+</div>
+{% endblock %}

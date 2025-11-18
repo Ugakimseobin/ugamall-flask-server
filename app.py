@@ -362,6 +362,16 @@ class OrderReturn(db.Model):
 
     user = db.relationship("User", backref="returns")
     order = db.relationship("Order", backref="return_request")
+
+class Popup(db.Model):
+    __tablename__ = "popups"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    link_url = db.Column(db.String(500))
+    image_data = db.Column(LONGBLOB)
+    image_mime = db.Column(db.String(50))
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 # -----------------------------
 # 사용자 함수
 # -----------------------------
@@ -705,8 +715,9 @@ def home():
     ads = Advertisement.query.filter_by(is_active=True).order_by(Advertisement.order).all()
     latest_video = Video.query.filter_by(is_active=True).order_by(Video.id.desc()).first()
     # 🔽 숨김 처리된 상품은 제외
+    popups = Popup.query.filter_by(is_active=True).order_by(Popup.id.asc()).all()
     products = Product.query.filter_by(is_active=True).order_by(Product.id.desc()).limit(8).all()
-    return render_template('index.html',ads=ads, latest_video=latest_video, products=products)
+    return render_template('index.html',ads=ads, latest_video=latest_video, products=products, popups=popups)
 
 @app.route('/set_lang/<lang>')
 def set_lang(lang):
@@ -2079,6 +2090,66 @@ def admin_dashboard():
     return render_template("admin/dashboard.html",
         pending_orders=pending_orders,
         new_inquiries_count=new_inquiries_count)
+
+# 홈화면 popup 제어
+@app.route("/popup_image/<int:popup_id>")
+def popup_image(popup_id):
+    popup = Popup.query.get_or_404(popup_id)
+    return Response(popup.image_data, mimetype=popup.image_mime)
+
+@app.route("/admin/popup")
+@login_required
+def admin_popup():
+    if not current_user.is_admin:
+        abort(403)
+
+    popups = Popup.query.order_by(Popup.created_at.desc()).all()
+    return render_template("admin/admin_popup.html", popups=popups)
+
+@app.route("/admin/popup/create", methods=["GET", "POST"])
+@login_required
+def admin_popup_create():
+    if not current_user.is_admin:
+        abort(403)
+
+    if request.method == "POST":
+        title = request.form.get("title")
+        link_url = request.form.get("link_url")
+        is_active = bool(request.form.get("is_active"))
+
+        file = request.files.get("image")
+        if not file or not file.filename:
+            flash("이미지를 업로드해주세요.", "error")
+            return redirect(url_for("admin_popup_create"))
+
+        popup = Popup(
+            title=title,
+            link_url=link_url,
+            image_data=file.read(),
+            image_mime=file.mimetype,
+            is_active=is_active
+        )
+
+        db.session.add(popup)
+        db.session.commit()
+
+        flash("팝업이 등록되었습니다.", "success")
+        return redirect(url_for("admin_popup"))
+
+    return render_template("admin/admin_popup_form.html")
+
+@app.route("/admin/popup/delete/<int:popup_id>", methods=["POST"])
+@login_required
+def admin_popup_delete(popup_id):
+    if not current_user.is_admin:
+        abort(403)
+
+    popup = Popup.query.get_or_404(popup_id)
+    db.session.delete(popup)
+    db.session.commit()
+
+    flash("팝업이 삭제되었습니다.", "success")
+    return redirect(url_for("admin_popup"))
 
 @app.route("/admin/coupons")
 @login_required
