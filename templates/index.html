@@ -199,7 +199,7 @@
 
 {% for p in popups %}
 <div id="notice-popup-{{ p.id }}"
-     class="popup-box fixed top-24
+     class="popup-box absolute top-24
             left-1/2 transform -translate-x-1/2
             md:transform-none
             md:left-[calc(16rem+{{ loop.index0 * 40 }}px)]
