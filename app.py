@@ -133,6 +133,12 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     base_price = db.Column(db.Integer, nullable=False, default=0)
+
+    coverage_type = db.Column(db.String(20), default="normal")  
+    # 값: "급여", "비급여", "일반"
+    member_only_price = db.Column(db.Boolean, default=False)
+    # True → 비회원은 가격 노출 안 됨
+
     description = db.Column(db.Text)
     image_data = db.Column(LONGBLOB)
     image_mime = db.Column(db.String(50))
@@ -1551,6 +1557,13 @@ def add_to_cart():
     if not product_id:
         return jsonify({"status": "error", "message": "상품 ID가 누락되었습니다."}), 400
     
+    # 🔥 회원공개 상품이면서 비회원이면 장바구니 금지
+    if product_id.member_only_price and not current_user.is_authenticated:
+        return jsonify({
+            "ok": False,
+            "msg": "회원 전용 상품입니다. 로그인 후 이용해주세요."
+        }), 403
+    
     # 옵션 선택값 모으기
     chosen_options = {k.replace("option_", ""): str(v) for k, v in request.form.items() if k.startswith("option_")}
     chosen_options_str = json.dumps(chosen_options, ensure_ascii=False, sort_keys=True)
@@ -2310,12 +2323,16 @@ def admin_add_product():
     if request.method == "POST":
         name = request.form.get("name")
         base_price = request.form.get("base_price", type=int)
+        coverage_type = request.form.get("coverage_type", "일반")
+        member_only_price = True if request.form.get("member_only_price") == "1" else False
         category = request.form.get("category")
         description = request.form.get("description")
 
         new_product = Product(
             name=name,
             base_price=base_price,
+            coverage_type=coverage_type,
+            member_only_price=member_only_price,
             category=category,
             description=description
         )
@@ -2434,6 +2451,8 @@ def admin_edit_product(product_id):
         # 상품 기본 정보 업데이트
         product.name = request.form.get("name")
         product.base_price = request.form.get("base_price", type=int)
+        product.coverage_type = request.form.get("coverage_type", "일반")
+        product.member_only_price = True if request.form.get("member_only_price") == "1" else False
         product.category = request.form.get("category")
         product.description = request.form.get("description")
 

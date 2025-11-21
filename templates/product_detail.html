@@ -26,7 +26,13 @@
         <!-- 상품 정보 -->
         <div id="purchase-box">
           <h1 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">{{ _(product.name) }}</h1>
-          <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ _("%(price)s원", price=product.base_price|int|format_won) }}</p>
+          <!-- 거격 회원공개 -->
+          {% if product.member_only_price and not current_user.is_authenticated %}
+            <p class="text-red-600 text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">로그인 후 가격 확인</p>
+          {% else %}
+            <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ _("%(price)s원", price=product.base_price|int|format_won) }}</p>
+          {% endif %}
+          
           <p class="text-gray-700 text-sm sm:text-base mb-4 sm:mb-6">{{ _(product.description)
                                                                     .replace('\r\n', '<br>')
                                                                     .replace('\n', '<br>')
@@ -71,9 +77,16 @@
               </div>
             </div>
 
-            <button type="submit" class="w-full sm:w-[200px] bg-indigo-600 text-white py-2 sm:py-3 rounded-lg hover:bg-indigo-700">
-              {{ _("장바구니에 담기") }}
-            </button>
+            {% if product.member_only_price and not current_user.is_authenticated %}
+                <button class="w-full sm:w-[200px] bg-gray-400 text-white py-2 rounded cursor-not-allowed" disabled>
+                    로그인 후 구매 가능합니다
+                </button>
+            {% else %}
+                <!-- 기존 장바구니 버튼 -->
+                <button type="submit" class="w-full sm:w-[200px] bg-indigo-600 text-white py-2 sm:py-3 rounded-lg hover:bg-indigo-700">
+                    장바구니 담기
+                </button>
+            {% endif %}
           </form>
 
           <a href="/contact">
@@ -375,7 +388,12 @@
        class="top-4 rounded-lg shadow mb-4 object-cover h-40 w-full">
 
     <h4 class="text-base font-bold mb-1">{{ _(product.name) }}</h4>
+    <!-- 회원공개 가격 -->
+    {% if product.member_only_price and not current_user.is_authenticated %}
+    <p class="text-red-600 font-semibold mb-4">로그인 후 가격 확인</p>
+    {% else %}
     <p class="text-indigo-600 font-semibold mb-4">{{ _("%(price)s원", price=product.base_price|int|format_won) }}</p>
+    {% endif %}
 
     <!-- 수량 -->
     <div class="mb-4 flex items-center">
@@ -410,10 +428,17 @@
       {% endfor %}
     {% endif %}
 
-    <button type="submit"
+    {% if product.member_only_price and not current_user.is_authenticated %}
+        <button class="w-full bg-gray-400 text-white py-2 rounded cursor-not-allowed" disabled>
+            로그인 후 구매 가능합니다
+        </button>
+    {% else %}
+         <!-- 기존 장바구니 버튼 -->
+         <button type="submit"
             class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 shadow transition">
-      {{ _("장바구니 담기") }}
-    </button>
+            장바구니 담기
+        </button>
+    {% endif %}
   </form>
 
   <!-- 위로가기 버튼 -->

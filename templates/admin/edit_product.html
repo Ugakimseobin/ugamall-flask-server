@@ -20,6 +20,25 @@
              class="w-full border p-2 rounded text-sm sm:text-base" required>
     </div>
 
+    <!-- 급여/비급여 -->
+    <div>
+      <label class="block font-semibold mb-1">제품 유형</label>
+      <select name="coverage_type" class="w-full border p-2 rounded">
+        <option value="일반">일반 제품</option>
+        <option value="급여">급여 제품</option>
+        <option value="비급여">비급여 제품</option>
+      </select>
+    </div>
+      
+    <!-- 회원에게만 공개 -->
+    <div>
+      <label class="flex items-center gap-2 mt-4">
+          <input type="checkbox" name="member_only_price" value="1"
+                class="w-4 h-4">
+          <span class="text-sm">가격은 로그인한 회원에게만 공개</span>
+      </label>
+    </div>
+    
     <!-- 카테고리 -->
     <div>
       <label class="block font-semibold mb-1">카테고리</label>
