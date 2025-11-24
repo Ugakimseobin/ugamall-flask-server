@@ -59,7 +59,7 @@
           buyer_name: "{{ baggage.name }}",
           buyer_tel: "",
           buyer_addr: "{{ baggage.address }} {{ baggage.detail_address or '' }}",
-          m_redirect_url: "{{ url_for('patient_payment_complete', baggage_id=baggage.id, _external=True) }}"
+          m_redirect_url: "https://ugamall.co.kr/patient_payment_complete/{{baggage.id}}"
         }, async function(rsp){
           if (rsp.success){
             const vRes = await fetch("/patient_pay/verify", {

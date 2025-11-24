@@ -3684,30 +3684,44 @@ def patient_pay_fail():
 def patient_payment_complete(baggage_id):
     bo = BaggageOrder.query.get_or_404(baggage_id)
     imp_uid = request.args.get("imp_uid")
-    merchant_uid = request.args.get("merchant_uid")
+    merchant_uid = request.args.get("merchant_uid") or bo.merchant_uid
 
-    # imp_uid가 없으면 실패 처리
+    # ① imp_uid 없으면 merchant_uid 로 복구
+    if not imp_uid and merchant_uid:
+        try:
+            token = _get_iamport_token()
+            res = requests.get(
+                f"https://api.iamport.kr/payments/find/{merchant_uid}",
+                headers={"Authorization": token},
+                timeout=7
+            )
+            data = res.json().get("response")
+            if data and data.get("imp_uid"):
+                imp_uid = data["imp_uid"]
+        except Exception as e:
+            print("❌ imp_uid 복구 실패:", e)
+
+    # ② 그래도 없으면 실패
     if not imp_uid:
         bo.status = "failed"
-        bo.fail_reason = "모바일 콜백 imp_uid 누락"
+        bo.fail_reason = "모바일 imp_uid 누락"
         db.session.commit()
         return redirect(url_for("patient_baggage"))
 
-    # ✅ 클라이언트 verify를 다시 호출해서 검증
-    try:
-        verify_res = requests.post(
-            f"{request.url_root}patient_pay/verify",
-            json={"imp_uid": imp_uid, "merchant_uid": merchant_uid, "baggage_id": baggage_id},
-            headers={"Content-Type": "application/json"},
-            timeout=7
-        )
-        v = verify_res.json()
-        if v.get("ok"):
-            return redirect(url_for("patient_success", baggage_id=baggage_id))
-    except Exception as e:
-        print("❌ patient_payment_complete 예외:", e)
+    # ③ verify 로 직접 검증
+    verify_res = requests.post(
+        f"{request.url_root}patient_pay/verify",
+        json={"imp_uid": imp_uid, "merchant_uid": merchant_uid, "baggage_id": baggage_id},
+        headers={"Content-Type": "application/json"},
+        timeout=7
+    )
+
+    v = verify_res.json()
+    if v.get("ok"):
+        return redirect(url_for("patient_success", baggage_id=baggage_id))
 
     return redirect(url_for("patient_baggage"))
+
 
 
 # =========================================================
