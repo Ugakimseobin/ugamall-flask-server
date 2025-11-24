@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>환자 짐 접수</title>
+  <title>귀가케어 접수</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center min-h-screen px-6">
 
 <div class="w-full max-w-sm bg-white rounded-2xl shadow p-8 text-center">
-  
-  <h1 class="text-xl font-bold mb-6">유가몰 짐 서비스</h1>
+  <img src="{{ url_for('static', filename='images/Uga_logo.png') }}" alt="UGA MEDICAL" class="h-6 md:h-8">
+  <h1 class="text-xl font-bold mb-6">귀가케어</h1>
 
   <a href="/patient_baggage"
      class="block w-full bg-blue-600 text-white py-3 rounded-xl font-semibold mb-4">
-     환자용 짐 접수하기
+     귀가케어 접수하기
   </a>
 
   <a href="/patient_admin_login"

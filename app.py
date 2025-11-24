@@ -1879,7 +1879,7 @@ def payment_complete(order_id):
             print("❌ merchant_uid 완전 누락")
             return redirect(url_for("checkout"))
 
-        # 2) imp_uid 누락 → Iamport API로 조회
+        # 2) imp_uid 누락 → PG 서버에서 조회
         if not imp_uid:
             token = _get_iamport_token()
             res = requests.get(
@@ -1893,7 +1893,7 @@ def payment_complete(order_id):
                     imp_uid = data["imp_uid"]
                     print("✅ imp_uid 복구:", imp_uid)
 
-        # 3) imp_uid 확보 → verify 호출
+        # 3) 이 시점에서 imp_uid 확보됨 → verify 호출
         if imp_uid:
             verify_res = requests.post(
                 f"{request.url_root}pay/verify",
@@ -1903,6 +1903,7 @@ def payment_complete(order_id):
             )
             v = verify_res.json()
             if v.get("ok"):
+                print("🎉 검증 성공 → order_complete 이동")
                 return redirect(url_for("order_complete", order_id=order_id))
 
     except Exception as e:
