@@ -421,6 +421,39 @@ document.getElementById("patientForm").addEventListener("submit", (e) => {
   }
 });
 </script>
+<script>
+  /* ===========================
+   🔥 모바일 키보드 엔터 입력 대응
+   Enter 키 → blur → 다음 섹션 오픈
+=========================== */
 
+// ① 이름 입력 → 엔터 시 다음(sec2)
+nameInput.addEventListener("keydown", function(e){
+  if (e.key === "Enter") {
+    e.preventDefault();   // 폼 제출 방지
+    nameInput.blur();     // 강제 blur 발생
+    setTimeout(() => showSection("sec2"), 10);
+  }
+});
+
+// ② 병동/병실 → 엔터 시 다음(sec3)
+wardInput.addEventListener("keydown", function(e){
+  if (e.key === "Enter") {
+    e.preventDefault();
+    wardInput.blur();
+    setTimeout(() => showSection("sec3"), 10);
+  }
+});
+
+// ③ 상세주소 → 엔터 시 다음(sec5)
+detailInput.addEventListener("keydown", function(e){
+  if (e.key === "Enter") {
+    e.preventDefault();
+    detailInput.blur();
+    setTimeout(() => showSection("sec5"), 10);
+  }
+});
+
+</script>
 </body>
 </html>
