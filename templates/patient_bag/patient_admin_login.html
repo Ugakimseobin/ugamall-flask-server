@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 로그인</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen px-6">
+
+<div class="w-full max-w-sm bg-white rounded-2xl shadow p-8">
+    
+  <h1 class="text-xl font-bold text-center mb-6">관리자 로그인</h1>
+
+  <form method="POST">
+
+    <label class="block text-sm font-medium mb-1">관리자 비밀번호</label>
+    <input type="password" name="password"
+           class="w-full border p-3 rounded-lg mb-4"
+           placeholder="비밀번호 입력" required>
+
+    <button class="w-full bg-gray-800 text-white py-3 rounded-xl font-semibold">
+      로그인
+    </button>
+
+  </form>
+
+  <a href="/patient_portal"
+     class="block text-center text-gray-500 text-sm mt-4">
+     ← 돌아가기
+  </a>
+
+</div>
+
+</body>
+</html>

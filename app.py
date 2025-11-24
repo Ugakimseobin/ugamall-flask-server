@@ -3486,6 +3486,10 @@ def claim_coupons():
 # ----------------------------
 # ✅ 환자용 짐 접수 페이지
 # ----------------------------
+# 최초 접속
+@app.route("/patient_portal")
+def patient_portal():
+    return render_template("patient_bag/patient_portal.html")
 # 1) 입력 화면
 @app.route("/patient_baggage")
 def patient_baggage():
@@ -3713,6 +3717,29 @@ def patient_payment_complete(baggage_id):
 def patient_success(baggage_id):
     bo = BaggageOrder.query.get_or_404(baggage_id)
     return render_template("patient_bag/patient_success.html", baggage=bo)
+
+@app.route("/patient_admin_login", methods=["GET", "POST"])
+def patient_admin_login():
+    if request.method == "POST":
+        input_pw = request.form.get("password", "").strip()
+
+        # 관리자 계정 가져오기 (관리자 1명이라고 가정)
+        admin = User.query.filter_by(is_admin=True).first()
+
+        if not admin:
+            flash("관리자 계정이 존재하지 않습니다.", "error")
+            return redirect(url_for("patient_admin_login"))
+
+        # 비밀번호 확인 (User 모델의 check_password 사용)
+        if admin.check_password(input_pw):
+            # 로그인 처리
+            login_user(admin)
+            return redirect(url_for("admin_patient_baggage"))
+
+        flash("비밀번호가 올바르지 않습니다.", "error")
+        return redirect(url_for("patient_admin_login"))
+
+    return render_template("patient_bag/patient_admin_login.html")
 
 # 4) 관리자 페이지
 @app.route("/admin/patient_baggage")
