@@ -1869,24 +1869,17 @@ def payment_complete(order_id):
     print("📦 [모바일 콜백] imp_uid:", imp_uid, "merchant_uid:", merchant_uid)
 
     try:
-        if not imp_uid:
-            # 🔹 imp_uid가 없을 경우: DB에 사전등록된 merchant_uid로 Payment 검색
-            pay = Payment.query.filter_by(order_id=order_id).order_by(Payment.id.desc()).first()
-            if pay:
-                merchant_uid = pay.merchant_uid
-                print("✅ DB에서 merchant_uid 복구:", merchant_uid)
+        pay = Payment.query.filter_by(order_id=order_id).order_by(Payment.id.desc()).first()
+
+        # 1) merchant_uid 누락 → DB에서 복구
+        if not merchant_uid and pay:
+            merchant_uid = pay.merchant_uid
 
         if not merchant_uid:
-            # 아주 드물게 빈 문자열이 올 경우 다시 복구 시도
-            pay = Payment.query.filter_by(order_id=order_id).first()
-            if pay:
-                merchant_uid = pay.merchant_uid
+            print("❌ merchant_uid 완전 누락")
+            return redirect(url_for("checkout"))
 
-            if not merchant_uid:
-                print("❌ merchant_uid 완전 누락, 복구 불가")
-                return redirect(url_for("checkout"))
-
-        # 🔹 아임포트에서 imp_uid 조회 (merchant_uid 기반)
+        # 2) imp_uid 누락 → Iamport API로 조회
         if not imp_uid:
             token = _get_iamport_token()
             res = requests.get(
@@ -1898,9 +1891,9 @@ def payment_complete(order_id):
                 data = res.json().get("response")
                 if data and data.get("imp_uid"):
                     imp_uid = data["imp_uid"]
-                    print("✅ imp_uid 복구 성공:", imp_uid)
-        
-        # imp_uid 확보 후 검증 요청
+                    print("✅ imp_uid 복구:", imp_uid)
+
+        # 3) imp_uid 확보 → verify 호출
         if imp_uid:
             verify_res = requests.post(
                 f"{request.url_root}pay/verify",
@@ -1910,16 +1903,17 @@ def payment_complete(order_id):
             )
             v = verify_res.json()
             if v.get("ok"):
-                print("✅ 검증 성공:", v)
                 return redirect(url_for("order_complete", order_id=order_id))
-            else:
-                print("❌ 검증 실패:", v)
+
     except Exception as e:
         print("❌ 모바일 검증 예외:", e)
 
-    print("⚠️ imp_uid 또는 검증 실패, checkout으로 이동")
+    print("⚠️ 모바일 검증 실패 → checkout 이동")
     return redirect(url_for("checkout"))
 
+def _order_sum(order):
+    items_total = sum((oi.original_price or 0) * (oi.quantity or 0) for oi in order.items)
+    return max(0, items_total - int(order.discount_amount or 0))
 @app.route("/pay/prepare", methods=["POST"])
 def pay_prepare():
     data = request.get_json()
@@ -1928,7 +1922,10 @@ def pay_prepare():
     if not order:
         return jsonify({"ok": False, "msg": "주문을 찾을 수 없습니다."}), 404
 
-    # ✅ Access Token 발급
+    # 실제 결제 금액 (할인 포함)
+    amount = _order_sum(order)
+
+    # IAMPORT Access Token
     imp_key = app.config['IMP_KEY']
     imp_secret = app.config['IMP_SECRET']
     token_res = requests.post(
@@ -1936,40 +1933,46 @@ def pay_prepare():
         data={"imp_key": imp_key, "imp_secret": imp_secret}
     ).json()
 
-    if token_res['code'] != 0:
+    if token_res.get("code") != 0:
         return jsonify({"ok": False, "msg": "토큰 발급 실패"}), 400
 
     access_token = token_res['response']['access_token']
 
     # ✅ merchant_uid 생성
     merchant_uid = f"order_{order.id}_{int(datetime.utcnow().timestamp())}"
-    # 결제 준비시 Payment 객체를 미리 만들어 merchant_uid 저장
-    existing = Payment.query.filter_by(order_id=order_id).first()
-    if not existing:
-        pay = Payment(order_id=order_id, merchant_uid=merchant_uid, amount=order.total_price, status="ready")
+
+    # Payment 저장 (없으면 생성, 있으면 갱신)
+    pay = Payment.query.filter_by(order_id=order_id).first()
+    if not pay:
+        pay = Payment(
+            order_id=order_id,
+            merchant_uid=merchant_uid,
+            amount=amount,
+            status="ready"
+        )
         db.session.add(pay)
     else:
-        existing.merchant_uid = merchant_uid
-        existing.amount = order.total_price
-        existing.status = "ready"
+        pay.merchant_uid = merchant_uid
+        pay.amount = amount
+        pay.status = "ready"
 
     db.session.commit()
 
-    # ✅ 사전 등록 (금액 검증용)
+    # IAMPORT 사전등록
     res = requests.post(
         "https://api.iamport.kr/payments/prepare",
         headers={"Authorization": access_token},
-        data={"merchant_uid": merchant_uid, "amount": order.total_price}
+        data={"merchant_uid": merchant_uid, "amount": amount}
     ).json()
 
-    if res['code'] != 0:
-        return jsonify({"ok": False, "msg": res.get('message', '사전등록 실패')}), 400
+    if res.get("code") != 0:
+        return jsonify({"ok": False, "msg": "사전등록 실패"}), 400
 
     return jsonify({
         "ok": True,
-        "imp_code": app.config['IMP_CODE'],
+        "imp_code": app.config["IMP_CODE"],
         "merchant_uid": merchant_uid,
-        "amount": order.total_price
+        "amount": amount
     })
 
 @app.route("/pay/verify", methods=["POST"])
@@ -2003,30 +2006,28 @@ def pay_verify():
 
     pay = Payment.query.filter_by(merchant_uid=merchant_uid).first()
     order = Order.query.get(order_id)
+
     if not pay:
         pay = Payment(order_id=order_id, merchant_uid=merchant_uid, amount=amount)
         db.session.add(pay)
 
-    # ✅ 반드시 imp_uid 저장 (덮어쓰기 포함)
-    if not pay.imp_uid or pay.imp_uid != imp_uid:
-        pay.imp_uid = imp_uid
-
+    # imp_uid 저장
+    pay.imp_uid = imp_uid
     pay.pg_provider = pg_provider
     pay.method = pay_method
     pay.amount = amount
 
     if not order:
         db.session.rollback()
-        return jsonify(ok=False, message="주문 정보를 찾을 수 없습니다."), 400
+        return jsonify(ok=False, message="주문정보 없음"), 400
 
     if status == "paid":
-        # ✅ 결제 성공
         pay.status = "paid"
         pay.paid_at = datetime.utcnow()
         order.status = "paid"
 
-        # ✅ 쿠폰은 결제 성공시에만 사용 처리
-        if getattr(order, "applied_user_coupon_id", None):
+        # 쿠폰 처리
+        if order.applied_user_coupon_id:
             uc = UserCoupon.query.filter_by(
                 id=order.applied_user_coupon_id,
                 user_id=order.user_id
@@ -2035,26 +2036,23 @@ def pay_verify():
                 uc.used = True
                 db.session.add(uc)
 
-        # ✅ 장바구니도 성공시에만 비움
+        # 장바구니 비우기
         if order.user_id:
             CartItem.query.filter_by(user_id=order.user_id).delete()
-        elif order.guest_email:
+        else:
             sid = session.get("session_id")
             if sid:
                 CartItem.query.filter_by(session_id=sid).delete()
 
     elif status in ("ready", "vbank_issued"):
-        # 가상계좌 발급 등 → 입금 대기
         pay.status = "ready"
         order.status = "pending"
 
     else:
-        # ❌ 실패, 취소, 응답 없음 등
         pay.status = "failed"
         order.status = "failed"
         pay.fail_reason = fail_reason or "결제 실패 또는 취소됨"
-
-        print(f"❌ [결제실패] 주문 {order.id}, 사유: {pay.fail_reason}")
+        print("❌ 결제실패:", pay.fail_reason)
 
     db.session.commit()
     return jsonify(ok=True, status=pay.status)
