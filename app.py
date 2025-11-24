@@ -1877,8 +1877,14 @@ def payment_complete(order_id):
                 print("✅ DB에서 merchant_uid 복구:", merchant_uid)
 
         if not merchant_uid:
-            print("❌ merchant_uid 누락, 복구 불가")
-            return redirect(url_for("checkout"))
+            # 아주 드물게 빈 문자열이 올 경우 다시 복구 시도
+            pay = Payment.query.filter_by(order_id=order_id).first()
+            if pay:
+                merchant_uid = pay.merchant_uid
+
+            if not merchant_uid:
+                print("❌ merchant_uid 완전 누락, 복구 불가")
+                return redirect(url_for("checkout"))
 
         # 🔹 아임포트에서 imp_uid 조회 (merchant_uid 기반)
         if not imp_uid:
@@ -1937,6 +1943,17 @@ def pay_prepare():
 
     # ✅ merchant_uid 생성
     merchant_uid = f"order_{order.id}_{int(datetime.utcnow().timestamp())}"
+    # 결제 준비시 Payment 객체를 미리 만들어 merchant_uid 저장
+    existing = Payment.query.filter_by(order_id=order_id).first()
+    if not existing:
+        pay = Payment(order_id=order_id, merchant_uid=merchant_uid, amount=order.total_price, status="ready")
+        db.session.add(pay)
+    else:
+        existing.merchant_uid = merchant_uid
+        existing.amount = order.total_price
+        existing.status = "ready"
+
+    db.session.commit()
 
     # ✅ 사전 등록 (금액 검증용)
     res = requests.post(
@@ -1961,6 +1978,12 @@ def pay_verify():
     imp_uid = data.get("imp_uid")
     merchant_uid = data.get("merchant_uid")
     order_id = data.get("order_id")
+
+    # 🔥 [추가] merchant_uid 누락시 DB에서 복구
+    if not merchant_uid:
+        pay2 = Payment.query.filter_by(order_id=order_id).first()
+        if pay2:
+            merchant_uid = pay2.merchant_uid
 
     token = _get_iamport_token()
     imp_res = requests.get(
