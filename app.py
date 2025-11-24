@@ -3486,6 +3486,43 @@ def claim_coupons():
 # ----------------------------
 # ✅ 환자용 짐 접수 페이지
 # ----------------------------
+# ✅ [추가] 환자 짐 결제 검증 공용 함수
+def _verify_baggage_payment(bo, imp_uid, merchant_uid):
+    token = _get_iamport_token()  # 기존 너 함수 그대로 사용
+
+    imp_res = requests.get(
+        f"https://api.iamport.kr/payments/{imp_uid}",
+        headers={"Authorization": token},
+        timeout=7
+    )
+    if imp_res.status_code != 200:
+        return {"ok": False, "message": "결제사 검증 실패"}
+
+    imp_data = imp_res.json().get("response") or {}
+    status = imp_data.get("status")
+    amount = imp_data.get("amount")
+    fail_reason = imp_data.get("fail_reason", "")
+
+    # ✅ 금액 검증
+    if int(amount or 0) != int(bo.total_price):
+        bo.status = "failed"
+        bo.fail_reason = "결제 금액 불일치"
+        db.session.commit()
+        return {"ok": False, "message": "금액 불일치"}
+
+    if status == "paid":
+        bo.status = "paid"
+        bo.imp_uid = imp_uid
+        bo.merchant_uid = merchant_uid
+        bo.fail_reason = None
+    else:
+        bo.status = "failed"
+        bo.imp_uid = imp_uid
+        bo.merchant_uid = merchant_uid
+        bo.fail_reason = fail_reason or "결제 실패/취소"
+
+    db.session.commit()
+    return {"ok": True, "status": bo.status}
 # 최초 접속
 @app.route("/patient_portal")
 def patient_portal():
@@ -3623,40 +3660,9 @@ def patient_pay_verify():
     if not bo:
         return jsonify(ok=False, message="접수 정보를 찾을 수 없습니다."), 400
 
-    token = _get_iamport_token()  # ✅ 너 app.py에 이미 있는 함수 그대로 사용
-    imp_res = requests.get(
-        f"https://api.iamport.kr/payments/{imp_uid}",
-        headers={"Authorization": token},
-        timeout=7
-    )
-    if imp_res.status_code != 200:
-        return jsonify(ok=False, message="결제사 검증 실패"), 400
-
-    imp_data = imp_res.json().get("response", {})
-    status = imp_data.get("status")
-    amount = imp_data.get("amount")
-    fail_reason = imp_data.get("fail_reason", "")
-
-    # ✅ 금액 검증
-    if int(amount or 0) != int(bo.total_price):
-        bo.status = "failed"
-        bo.fail_reason = "결제 금액 불일치"
-        db.session.commit()
-        return jsonify(ok=False, message="금액 불일치"), 400
-
-    if status == "paid":
-        bo.status = "paid"
-        bo.imp_uid = imp_uid
-        bo.merchant_uid = merchant_uid
-        bo.fail_reason = None
-    else:
-        bo.status = "failed"
-        bo.imp_uid = imp_uid
-        bo.merchant_uid = merchant_uid
-        bo.fail_reason = fail_reason or "결제 실패/취소"
-
-    db.session.commit()
-    return jsonify(ok=True, status=bo.status)
+    # ✅ [수정] 공용 함수로 검증
+    result = _verify_baggage_payment(bo, imp_uid, merchant_uid)
+    return jsonify(result), (200 if result.get("ok") else 400)
 
 
 # =========================================================
@@ -3709,16 +3715,12 @@ def patient_payment_complete(baggage_id):
         return redirect(url_for("patient_baggage"))
 
     # ③ verify 로 직접 검증
-    verify_res = requests.post(
-        f"{request.url_root}patient_pay/verify",
-        json={"imp_uid": imp_uid, "merchant_uid": merchant_uid, "baggage_id": baggage_id},
-        headers={"Content-Type": "application/json"},
-        timeout=7
-    )
-
-    v = verify_res.json()
-    if v.get("ok"):
-        return redirect(url_for("patient_success", baggage_id=baggage_id))
+    try:
+        result = _verify_baggage_payment(bo, imp_uid, merchant_uid)
+        if result.get("ok"):
+            return redirect(url_for("patient_success", baggage_id=baggage_id))
+    except Exception as e:
+        print("❌ patient_payment_complete 검증 예외:", e)
 
     return redirect(url_for("patient_baggage"))
 
