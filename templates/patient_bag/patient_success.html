@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>접수 완료</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 max-w-md mx-auto px-4 py-6">
+
+  <div class="bg-white shadow-xl rounded-2xl p-6 mt-10">
+    <h2 class="text-xl font-bold text-center mb-4">
+      결제가 완료되었습니다 🎉
+    </h2>
+
+    <div class="space-y-2 text-sm leading-6">
+      <div><b>접수번호</b> : {{ baggage.id }}</div>
+      <div><b>환자명</b> : {{ baggage.name }}</div>
+      <div><b>병동/병실</b> : {{ baggage.ward }}</div>
+      <div><b>주소</b> : {{ baggage.address }} {{ baggage.detail_address or "" }}</div>
+      <div><b>배송</b> : {{ baggage.delivery_type }}</div>
+      <div><b>크기</b> : {{ baggage.size }}</div>
+      <div><b>무게</b> : {{ baggage.weight }}</div>
+      <div class="pt-2 font-bold text-indigo-600">
+        결제금액 : {{ baggage.total_price|comma }}원
+      </div>
+    </div>
+
+    <a href="/" class="block mt-6 w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold">
+      홈으로 이동
+    </a>
+  </div>
+
+</body>
+</html>

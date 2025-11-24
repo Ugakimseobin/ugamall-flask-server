@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>결제 준비 중...</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 max-w-md mx-auto px-4 py-6">
+
+  <div class="bg-white rounded-2xl shadow-lg p-6 mt-10">
+    <h2 class="text-xl font-bold text-center">결제 준비 중...</h2>
+    <p class="text-gray-500 text-center mt-1">잠시만 기다려주세요.</p>
+
+    <div class="flex justify-center mt-6">
+      <div class="w-12 h-12 border-4 border-gray-300 border-t-indigo-500 rounded-full animate-spin"></div>
+    </div>
+
+    <div class="bg-gray-50 border rounded-xl p-4 text-sm mt-6 leading-6">
+      <div><b>접수번호</b> : {{ baggage.id }}</div>
+      <div><b>환자명</b> : {{ baggage.name }}</div>
+      <div><b>병동/병실</b> : {{ baggage.ward }}</div>
+      <div><b>주소</b> : {{ baggage.address }} {{ baggage.detail_address or "" }}</div>
+      <div><b>결제금액</b> : {{ amount|comma }}원</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+
+  <script>
+    (async function(){
+      const BAGGAGE_ID = {{ baggage.id }};
+      const IMP_CODE = "{{ imp_code }}";
+
+      try {
+        const prepRes = await fetch("/patient_pay/prepare", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ baggage_id: BAGGAGE_ID })
+        });
+        const prep = await prepRes.json();
+
+        if (!prep.ok) {
+          alert("결제 준비 실패");
+          location.href = "/patient_baggage";
+          return;
+        }
+
+        const IMP = window.IMP;
+        IMP.init(prep.imp_code || IMP_CODE);
+
+        IMP.request_pay({
+          pg: "html5_inicis",
+          pay_method: "card",
+          merchant_uid: prep.merchant_uid,
+          name: "환자 짐 접수 결제",
+          amount: prep.amount,
+          buyer_name: "{{ baggage.name }}",
+          buyer_tel: "",
+          buyer_addr: "{{ baggage.address }} {{ baggage.detail_address or '' }}",
+          m_redirect_url: "{{ url_for('patient_payment_complete', baggage_id=baggage.id, _external=True) }}"
+        }, async function(rsp){
+          if (rsp.success){
+            const vRes = await fetch("/patient_pay/verify", {
+              method:"POST",
+              headers:{ "Content-Type":"application/json" },
+              body:JSON.stringify({
+                imp_uid: rsp.imp_uid,
+                merchant_uid: rsp.merchant_uid,
+                baggage_id: BAGGAGE_ID
+              })
+            });
+
+            const v = await vRes.json();
+            if (v.ok){
+              location.href = "/patient_success/" + BAGGAGE_ID;
+            } else {
+              alert("검증 실패");
+              location.href = "/patient_baggage";
+            }
+
+          } else {
+            await fetch("/patient_pay/fail", {
+              method:"POST",
+              headers:{ "Content-Type":"application/json" },
+              body:JSON.stringify({ baggage_id:BAGGAGE_ID, error:rsp.error_msg })
+            });
+
+            alert("결제 실패: " + rsp.error_msg);
+            location.href = "/patient_baggage";
+          }
+        });
+
+      } catch(e){
+        console.error(e);
+        alert("결제 오류 발생");
+        location.href = "/patient_baggage";
+      }
+    })();
+  </script>
+
+</body>
+</html>

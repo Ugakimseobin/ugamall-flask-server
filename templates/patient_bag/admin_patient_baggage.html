@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>환자 짐 접수 목록</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 px-4 py-6">
+
+  <h1 class="text-xl font-bold mb-4">환자 짐 접수 목록</h1>
+
+  <!-- ⭐ 전체 테이블을 감싸는 스크롤 박스 -->
+  <div class="bg-white shadow rounded-xl overflow-x-auto">
+    <table class="min-w-[900px] w-full text-sm">
+      <thead class="bg-gray-50 border-b">
+        <tr class="white-space">
+          <th class="p-3 text-left">접수번호</th>
+          <th class="p-3 text-left">환자명</th>
+          <th class="p-3 text-left">병동/병실</th>
+          <th class="p-3 text-left">주소</th>
+          <th class="p-3 text-left">옵션</th>
+          <th class="p-3 text-left">금액</th>
+          <th class="p-3 text-left">상태</th>
+          <th class="p-3 text-left">접수일</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for o in orders %}
+        <tr class="border-b hover:bg-gray-50">
+          <td class="p-3 whitespace-nowrap">{{ o.id }}</td>
+          <td class="p-3 whitespace-nowrap">{{ o.name }}</td>
+          <td class="p-3 whitespace-nowrap">{{ o.ward }}</td>
+          <td class="p-3">
+            ({{ o.postcode or "-" }}) {{ o.address }} {{ o.detail_address or "" }}
+          </td>
+          <td class="p-3 whitespace-nowrap">
+            {{ o.delivery_type }} / {{ o.size }} / {{ o.weight }}
+          </td>
+          <td class="p-3 font-semibold whitespace-nowrap">
+            {{ o.total_price|comma }}원
+          </td>
+          <td class="p-3 whitespace-nowrap">
+            {% if o.status == "paid" %}
+              <span class="text-green-600 font-bold">결제완료</span>
+            {% elif o.status == "failed" %}
+              <span class="text-red-600 font-bold">실패</span>
+            {% else %}
+              <span class="text-gray-600">대기</span>
+            {% endif %}
+          </td>
+          <td class="p-3 whitespace-nowrap">{{ o.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+        </tr>
+        {% endfor %}
+
+        {% if orders|length == 0 %}
+        <tr>
+          <td colspan="8" class="p-6 text-center text-gray-500">
+            접수 내역이 없습니다.
+          </td>
+        </tr>
+        {% endif %}
+      </tbody>
+
+    </table>
+  </div>
+
+</body>
+</html>

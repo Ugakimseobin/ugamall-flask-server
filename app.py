@@ -24,6 +24,7 @@ import json
 from threading import Thread
 import socket
 from flask import Blueprint, Response
+from config.baggage_price import BAGGAGE_PRICE_MAP
 
 
 app = Flask(__name__, static_url_path="", static_folder="static")
@@ -378,6 +379,31 @@ class Popup(db.Model):
     image_mime = db.Column(db.String(50))
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class BaggageOrder(db.Model):
+    __tablename__ = "baggage_orders"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(100), nullable=False)      # 환자 이름
+    ward = db.Column(db.String(100), nullable=False)      # 병동/병실
+
+    postcode = db.Column(db.String(10), nullable=True)    # 우편번호
+    address = db.Column(db.String(200), nullable=False)   # 기본주소
+    detail_address = db.Column(db.String(200), nullable=True)  # 상세주소(없을 수 있음)
+
+    delivery_type = db.Column(db.String(50), nullable=False)  # 일반/특급
+    size = db.Column(db.String(50), nullable=False)           # 소/중/대
+    weight = db.Column(db.String(50), nullable=False)         # 가벼움/보통/무거움
+
+    total_price = db.Column(db.Integer, nullable=False)       # 최종금액(서버계산)
+
+    status = db.Column(db.String(20), default="pending")      # pending/paid/failed
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    imp_uid = db.Column(db.String(50), nullable=True)
+    merchant_uid = db.Column(db.String(80), nullable=True)
+    fail_reason = db.Column(db.String(200), nullable=True)
 # -----------------------------
 # 사용자 함수
 # -----------------------------
@@ -1551,14 +1577,16 @@ def like_review(review_id):
 
 @app.route("/add_to_cart", methods=["POST"])
 def add_to_cart():
-    product_id = request.form.get("product_id")
+    product_id = int(request.form.get("product_id", 0))
     quantity = int(request.form.get("quantity", 1))
 
     if not product_id:
         return jsonify({"status": "error", "message": "상품 ID가 누락되었습니다."}), 400
     
-    # 🔥 회원공개 상품이면서 비회원이면 장바구니 금지
-    if product_id.member_only_price and not current_user.is_authenticated:
+    product = Product.query.get_or_404(product_id)
+
+    # 🔥 회원공개 상품이면 비회원은 장바구니 금지
+    if product.member_only_price and not current_user.is_authenticated:
         return jsonify({
             "ok": False,
             "msg": "회원 전용 상품입니다. 로그인 후 이용해주세요."
@@ -3454,6 +3482,247 @@ def claim_coupons():
 
     db.session.commit()
     return jsonify({"ok": True, "added": added})
+
+# ----------------------------
+# ✅ 환자용 짐 접수 페이지
+# ----------------------------
+# 1) 입력 화면
+@app.route("/patient_baggage")
+def patient_baggage():
+    return render_template("patient_bag/patient_baggage.html")
+
+def _calc_baggage_price(delivery_type, size, weight):
+    total = 0
+    total += BAGGAGE_PRICE_MAP["delivery_type"].get(delivery_type, 0)
+    total += BAGGAGE_PRICE_MAP["size"].get(size, 0)
+    total += BAGGAGE_PRICE_MAP["weight"].get(weight, 0)
+    return total
+
+# 2) 가격 계산 API
+@app.route("/patient_price", methods=["POST"])
+def patient_price():
+    data = request.get_json(silent=True) or {}
+    delivery_type = data.get("delivery_type")
+    size = data.get("size")
+    weight = data.get("weight")
+
+    total = _calc_baggage_price(delivery_type, size, weight)
+    return jsonify({"price": total})
+
+
+# 3) 주문 생성 & 결제로 이동
+@app.route("/patient_payment", methods=["POST"])
+def patient_payment():
+    name = (request.form.get("name") or "").strip()
+    ward = (request.form.get("ward") or "").strip()
+    postcode = (request.form.get("postcode") or "").strip()
+    address = (request.form.get("address") or "").strip()
+    detail_address = (request.form.get("detail_address") or "").strip()
+
+    delivery_type = request.form.get("delivery_type")
+    size = request.form.get("size")
+    weight = request.form.get("weight")
+
+    if not (name and ward and address and delivery_type and size and weight):
+        flash("필수 항목이 누락되었습니다.", "error")
+        return redirect(url_for("patient_baggage"))
+
+    total = _calc_baggage_price(delivery_type, size, weight)
+
+    # ✅ 전용 테이블에 저장 (Order 안씀)
+    bo = BaggageOrder(
+        name=name,
+        ward=ward,
+        postcode=postcode or None,
+        address=address,
+        detail_address=detail_address or None,
+        delivery_type=delivery_type,
+        size=size,
+        weight=weight,
+        total_price=total,
+        status="pending",
+        created_at=datetime.now(timezone.utc),
+    )
+    db.session.add(bo)
+    db.session.commit()
+
+    # ✅ 전용 결제 페이지로 이동
+    return redirect(url_for("patient_payment_page", baggage_id=bo.id))
+@app.route("/patient_payment_page/<int:baggage_id>")
+def patient_payment_page(baggage_id):
+    bo = BaggageOrder.query.get_or_404(baggage_id)
+    return render_template(
+        "patient_bag/patient_payment.html",
+        baggage=bo,
+        amount=bo.total_price,
+        imp_code=app.config["IMP_CODE"],
+    )
+
+@app.route("/patient_pay/prepare", methods=["POST"])
+def patient_pay_prepare():
+    data = request.get_json(silent=True) or {}
+    baggage_id = data.get("baggage_id")
+    bo = BaggageOrder.query.get(baggage_id)
+
+    if not bo:
+        return jsonify({"ok": False, "msg": "접수 정보를 찾을 수 없습니다."}), 404
+
+    # ✅ Access Token 발급
+    imp_key = app.config["IMP_KEY"]
+    imp_secret = app.config["IMP_SECRET"]
+    token_res = requests.post(
+        "https://api.iamport.kr/users/getToken",
+        data={"imp_key": imp_key, "imp_secret": imp_secret}
+    ).json()
+
+    if token_res.get("code") != 0:
+        return jsonify({"ok": False, "msg": "토큰 발급 실패"}), 400
+
+    access_token = token_res["response"]["access_token"]
+
+    # ✅ merchant_uid 생성
+    merchant_uid = f"baggage_{bo.id}_{int(datetime.now(timezone.utc).timestamp())}"
+
+    # ✅ 사전등록
+    res = requests.post(
+        "https://api.iamport.kr/payments/prepare",
+        headers={"Authorization": access_token},
+        data={"merchant_uid": merchant_uid, "amount": bo.total_price}
+    ).json()
+
+    if res.get("code") != 0:
+        return jsonify({"ok": False, "msg": res.get("message", "사전등록 실패")}), 400
+
+    # ✅ DB에 merchant_uid 저장
+    bo.merchant_uid = merchant_uid
+    db.session.commit()
+
+    return jsonify({
+        "ok": True,
+        "imp_code": app.config["IMP_CODE"],
+        "merchant_uid": merchant_uid,
+        "amount": bo.total_price
+    })
+
+
+# =========================================================
+# 6) 결제 검증 (아임포트 verify) - 전용
+# =========================================================
+@app.route("/patient_pay/verify", methods=["POST"])
+def patient_pay_verify():
+    data = request.get_json(silent=True) or {}
+    imp_uid = data.get("imp_uid")
+    merchant_uid = data.get("merchant_uid")
+    baggage_id = data.get("baggage_id")
+
+    bo = BaggageOrder.query.get(baggage_id)
+    if not bo:
+        return jsonify(ok=False, message="접수 정보를 찾을 수 없습니다."), 400
+
+    token = _get_iamport_token()  # ✅ 너 app.py에 이미 있는 함수 그대로 사용
+    imp_res = requests.get(
+        f"https://api.iamport.kr/payments/{imp_uid}",
+        headers={"Authorization": token},
+        timeout=7
+    )
+    if imp_res.status_code != 200:
+        return jsonify(ok=False, message="결제사 검증 실패"), 400
+
+    imp_data = imp_res.json().get("response", {})
+    status = imp_data.get("status")
+    amount = imp_data.get("amount")
+    fail_reason = imp_data.get("fail_reason", "")
+
+    # ✅ 금액 검증
+    if int(amount or 0) != int(bo.total_price):
+        bo.status = "failed"
+        bo.fail_reason = "결제 금액 불일치"
+        db.session.commit()
+        return jsonify(ok=False, message="금액 불일치"), 400
+
+    if status == "paid":
+        bo.status = "paid"
+        bo.imp_uid = imp_uid
+        bo.merchant_uid = merchant_uid
+        bo.fail_reason = None
+    else:
+        bo.status = "failed"
+        bo.imp_uid = imp_uid
+        bo.merchant_uid = merchant_uid
+        bo.fail_reason = fail_reason or "결제 실패/취소"
+
+    db.session.commit()
+    return jsonify(ok=True, status=bo.status)
+
+
+# =========================================================
+# 7) 결제 실패 기록 - 전용
+# =========================================================
+@app.route("/patient_pay/fail", methods=["POST"])
+def patient_pay_fail():
+    data = request.get_json(silent=True) or {}
+    baggage_id = data.get("baggage_id")
+    reason = data.get("error", "결제 실패 또는 취소")
+
+    bo = BaggageOrder.query.get(baggage_id)
+    if bo:
+        bo.status = "failed"
+        bo.fail_reason = reason
+        db.session.commit()
+
+    return jsonify(ok=True)
+
+
+# =========================================================
+# 8) 결제 완료 이동 페이지 (모바일 m_redirect_url)
+# =========================================================
+@app.route("/patient_payment_complete/<int:baggage_id>")
+def patient_payment_complete(baggage_id):
+    bo = BaggageOrder.query.get_or_404(baggage_id)
+    imp_uid = request.args.get("imp_uid")
+    merchant_uid = request.args.get("merchant_uid")
+
+    # imp_uid가 없으면 실패 처리
+    if not imp_uid:
+        bo.status = "failed"
+        bo.fail_reason = "모바일 콜백 imp_uid 누락"
+        db.session.commit()
+        return redirect(url_for("patient_baggage"))
+
+    # ✅ 클라이언트 verify를 다시 호출해서 검증
+    try:
+        verify_res = requests.post(
+            f"{request.url_root}patient_pay/verify",
+            json={"imp_uid": imp_uid, "merchant_uid": merchant_uid, "baggage_id": baggage_id},
+            headers={"Content-Type": "application/json"},
+            timeout=7
+        )
+        v = verify_res.json()
+        if v.get("ok"):
+            return redirect(url_for("patient_success", baggage_id=baggage_id))
+    except Exception as e:
+        print("❌ patient_payment_complete 예외:", e)
+
+    return redirect(url_for("patient_baggage"))
+
+
+# =========================================================
+# 9) 환자 결제 성공 화면
+# =========================================================
+@app.route("/patient_success/<int:baggage_id>")
+def patient_success(baggage_id):
+    bo = BaggageOrder.query.get_or_404(baggage_id)
+    return render_template("patient_bag/patient_success.html", baggage=bo)
+
+# 4) 관리자 페이지
+@app.route("/admin/patient_baggage")
+@login_required
+def admin_patient_baggage():
+    if not getattr(current_user, "is_admin", False):
+        abort(403)
+
+    orders = BaggageOrder.query.order_by(BaggageOrder.id.desc()).all()
+    return render_template("patient_bag/admin_patient_baggage.html", orders=orders)
 
 @app.route('/send_email_code', methods=['POST'])
 def send_email_code():
