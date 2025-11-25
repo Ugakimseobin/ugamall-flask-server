@@ -694,6 +694,13 @@ def _compute_date_range(period: str | None, start_date_str: str | None, end_date
     end_dt = now + timedelta(days=1)  # ✅ 오늘 포함 (UTC 문제 방지)
 
     return start_dt, end_dt
+
+@app.template_filter("kst_format")
+def kst_format(dt):
+    if not dt:
+        return ""
+    kst_dt = dt + timedelta(hours=9)
+    return kst_dt.strftime("%Y-%m-%d %H:%M")
 # -----------------------------
 # 주문 상태 한국어 변환
 # -----------------------------

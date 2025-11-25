@@ -40,7 +40,7 @@
         <div><b>옵션:</b> {{ o.delivery_type }} / {{ o.size }} / {{ o.weight }}</div>
         <div><b>금액:</b> <span class="font-semibold">{{ o.total_price|comma }}원</span></div>
         <div class="text-xs text-gray-500">
-          <b>접수일:</b> {{ o.created_at.strftime("%Y-%m-%d %H:%M") }}
+          <b>접수일:</b> {{ o.created_at|kst_format }}
         </div>
       </div>
 
