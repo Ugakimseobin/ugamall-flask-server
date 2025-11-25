@@ -4,24 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>귀가케어 접수</title>
+
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen px-6">
+<body class="bg-gradient-to-b from-blue-50 to-gray-100 flex items-center justify-center min-h-screen px-6">
 
-<div class="w-full max-w-sm bg-white rounded-2xl shadow p-8 text-center">
-  <img src="{{ url_for('static', filename='images/Uga_logo.png') }}" alt="UGA MEDICAL" class="h-6 md:h-8">
-  <h1 class="text-xl font-bold mb-6">귀가케어</h1>
+<!-- 메인 카드 -->
+<div class="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-100">  
 
+  <!-- 로고 -->
+  <div class="flex justify-center mb-4">
+    <img src="{{ url_for('static', filename='images/Uga_logo.png') }}" 
+         alt="UGA MEDICAL" 
+         class="h-10 md:h-12 object-contain">
+  </div>
+
+  <!-- 제목 -->
+  <h1 class="text-2xl font-bold text-gray-800 mb-6 tracking-tight">
+    환자 귀가케어 서비스
+  </h1>
+
+  <!-- 접수 버튼 -->
   <a href="/patient_baggage"
-     class="block w-full bg-blue-600 text-white py-3 rounded-xl font-semibold mb-4">
+     class="block w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-semibold shadow-md transition">
      귀가케어 접수하기
   </a>
 
+  <!-- 관리자 로그인 -->
   <a href="/patient_admin_login"
-     class="block w-full bg-gray-800 text-white py-3 rounded-xl font-semibold">
+     class="block w-full mt-4 bg-gray-800 hover:bg-gray-900 text-white py-3.5 rounded-xl font-semibold shadow-sm transition">
      관리자 로그인
   </a>
+
+  <!-- 아래 설명문 -->
+  <p class="mt-6 text-xs text-gray-500">
+    본 서비스는 ㈜유가에서 제공하는 환자 귀가 도움 서비스입니다.
+  </p>
 </div>
 
 </body>
