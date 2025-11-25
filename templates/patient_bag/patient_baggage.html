@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>환자 귀가케어 접수</title>
 
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/TheJamsil.css') }}">
   <!-- ✅ Daum 주소검색 -->
   <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
   <style>
     body {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'TheJamsil5Bold', 'Noto Sans KR', 'Pretendard', sans-serif;
       max-width: 480px;
       margin: 0 auto;
       background: #f5f6f8;
@@ -24,10 +25,11 @@
     }
 
     h2 {
-      font-weight: 800;
-      font-size: 22px;
-      margin-bottom: 18px;
+      font-weight: 900;
+      font-size: 26px;
+      margin-bottom: 22px;
       color: #111827;
+      letter-spacing: -0.3px;
     }
 
     .section {
@@ -44,8 +46,8 @@
     }
 
     label {
-      font-weight: 700;
-      color: #374151;
+      font-weight: 500;
+      color: #111827;
       font-size: 14px;
       display: block;
       margin-bottom: 6px;
