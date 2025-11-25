@@ -7,7 +7,7 @@
 
   <!-- ✅ Daum 주소검색 -->
   <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
   <style>
     body {
       font-family: 'Pretendard', sans-serif;
@@ -218,6 +218,50 @@
       </select>
     </div>
 
+    
+    <!-- 8) 결제 방법 -->
+    <div class="section" id="sec8">
+      <label class="font-semibold text-gray-700 block mb-2">결제 방법</label>
+
+      <div class="space-y-3">
+
+        <!-- 카카오페이 -->
+        <label class="flex items-center gap-3 cursor-pointer p-4 border rounded-lg hover:bg-gray-50 transition">
+          <input type="radio" name="payment_method" value="kakaopay" class="hidden peer">
+
+          <!-- 원형 UI -->
+          <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center 
+                      peer-checked:border-yellow-400">
+            <div class="w-2.5 h-2.5 bg-yellow-400 rounded-full hidden peer-checked:block"></div>
+          </div>
+
+          <!-- 로고 -->
+          <img src="{{ url_for('static', filename='images/kakaopay_logo.png') }}" 
+              alt="KakaoPay" class="h-6">
+
+          <!-- 텍스트 -->
+          <span class="font-semibold text-gray-900">카카오페이</span>
+        </label>
+
+        <!-- 카드결제 -->
+        <label class="flex items-center gap-3 cursor-pointer p-4 border rounded-lg hover:bg-gray-50 transition">
+          <input type="radio" name="payment_method" value="card" class="hidden peer">
+
+          <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center 
+                      peer-checked:border-indigo-500">
+            <div class="w-2.5 h-2.5 bg-indigo-500 rounded-full hidden peer-checked:block"></div>
+          </div>
+
+          <span class="font-semibold text-gray-900">카드결제</span>
+        </label>
+
+      </div>
+
+      <p id="err-payment" class="text-red-600 text-sm mt-2 hidden font-semibold">
+        결제 수단을 선택해주세요.
+      </p>
+    </div>
+
     <!-- 가격 표시 -->
     <div class="price-box" id="priceBox">총 금액: 0원</div>
 
@@ -239,13 +283,18 @@ function showSection(id) {
   }
 }
 
-function hideError(id) {
-  const el = document.getElementById(id);
-  if (el) el.style.display = "none";
-}
 function showError(id) {
   const el = document.getElementById(id);
-  if (el) el.style.display = "block";
+  if (el) {
+    el.classList.remove("hidden");
+  }
+}
+
+function hideError(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add("hidden");
+  }
 }
 
 /* ===========================
@@ -357,13 +406,17 @@ sizeSel.addEventListener("change", () => {
   if (sizeSel.value) showSection("sec7");
   calculatePrice();
 });
-weightSel.addEventListener("change", calculatePrice);
-
+weightSel.addEventListener("change", () => {
+  calculatePrice();
+  if (weightSel.value) showSection("sec8");
+});
 /* ===========================
    ✅ 서버 가격 계산 (/patient_price)
 =========================== */
 const priceBox = document.getElementById("priceBox");
 const submitBtn = document.getElementById("submitBtn");
+
+submitBtn.style.display = "none";
 
 async function calculatePrice() {
   const delivery = deliverySel.value;
@@ -392,8 +445,6 @@ async function calculatePrice() {
 
     priceBox.textContent = "총 금액: " + price.toLocaleString() + "원";
     priceBox.style.display = "block";
-    submitBtn.style.display = "block";
-    submitBtn.scrollIntoView({ behavior:"smooth", block:"center" });
   } catch (e) {
     console.error(e);
     alert("가격 계산 중 오류가 발생했습니다.");
@@ -407,6 +458,12 @@ document.getElementById("patientForm").addEventListener("submit", (e) => {
   const nameVal = nameInput.value.trim();
   const wardVal = wardInput.value.trim();
   const addrVal = document.getElementById("address").value.trim();
+  const pmChecked = document.querySelector('input[name="payment_method"]:checked');
+  if (!pmChecked) {
+    e.preventDefault();
+    showError("err-payment");
+    return;
+  }
 
   if (nameVal.length < 2) { e.preventDefault(); showError("err-name"); nameInput.focus(); return; }
   if (wardVal.length < 3) { e.preventDefault(); showError("err-ward"); wardInput.focus(); return; }
@@ -419,6 +476,18 @@ document.getElementById("patientForm").addEventListener("submit", (e) => {
     detailInput.focus();
     return;
   }
+});
+
+/* ===========================
+   ✅ 결제수단 선택 시 결제 버튼 활성화
+=========================== */
+const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+paymentRadios.forEach(r => {
+  r.addEventListener("change", () => {
+    submitBtn.style.display = "block"; // 결제하기 버튼 표시
+    hideError("err-payment");
+    submitBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
 });
 </script>
 <script>

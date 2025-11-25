@@ -51,7 +51,7 @@
         IMP.init(prep.imp_code || IMP_CODE);
 
         IMP.request_pay({
-          pg: "html5_inicis",
+          pg: "{{ pg_option }}",
           pay_method: "card",
           merchant_uid: prep.merchant_uid,
           name: "귀가케어 접수 결제",

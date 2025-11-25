@@ -396,6 +396,8 @@ class BaggageOrder(db.Model):
     size = db.Column(db.String(50), nullable=False)           # 소/중/대
     weight = db.Column(db.String(50), nullable=False)         # 가벼움/보통/무거움
 
+    payment_method = db.Column(db.String(20), nullable=False)
+
     total_price = db.Column(db.Integer, nullable=False)       # 최종금액(서버계산)
 
     status = db.Column(db.String(20), default="pending")      # pending/paid/failed
@@ -3585,6 +3587,11 @@ def patient_payment():
     delivery_type = request.form.get("delivery_type")
     size = request.form.get("size")
     weight = request.form.get("weight")
+    payment_method = request.form.get("payment_method")
+    
+    if not payment_method:
+        flash("결제 방법을 선택해주세요.", "error")
+        return redirect(url_for("patient_baggage"))
 
     if not (name and ward and address and delivery_type and size and weight):
         flash("필수 항목이 누락되었습니다.", "error")
@@ -3603,6 +3610,7 @@ def patient_payment():
         size=size,
         weight=weight,
         total_price=total,
+        payment_method=payment_method,
         status="pending",
         created_at=datetime.now(timezone.utc),
     )
@@ -3614,11 +3622,19 @@ def patient_payment():
 @app.route("/patient_payment_page/<int:baggage_id>")
 def patient_payment_page(baggage_id):
     bo = BaggageOrder.query.get_or_404(baggage_id)
+
+    # PG 분기
+    if bo.payment_method == "kakaopay":
+        pg_option = f"kakaopay.CA17512439"  # ← 너 실연동 MID
+    else:
+        pg_option = "html5_inicis"  # 카드 기본
+
     return render_template(
         "patient_bag/patient_payment.html",
         baggage=bo,
         amount=bo.total_price,
         imp_code=app.config["IMP_CODE"],
+        pg_option=pg_option
     )
 
 @app.route("/patient_pay/prepare", methods=["POST"])
