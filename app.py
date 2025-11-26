@@ -392,9 +392,9 @@ class BaggageOrder(db.Model):
     address = db.Column(db.String(200), nullable=False)   # 기본주소
     detail_address = db.Column(db.String(200), nullable=True)  # 상세주소(없을 수 있음)
 
-    delivery_type = db.Column(db.String(50), nullable=False)  # 일반/특급
-    size = db.Column(db.String(50), nullable=False)           # 소/중/대
-    weight = db.Column(db.String(50), nullable=False)         # 가벼움/보통/무거움
+    delivery_type = db.Column(db.String(50), nullable=True)  # 일반/특급
+    size = db.Column(db.String(50), nullable=True)           # 소/중/대
+    weight = db.Column(db.String(50), nullable=True)         # 가벼움/보통/무거움
 
     payment_method = db.Column(db.String(20), nullable=False)
 
@@ -3571,15 +3571,15 @@ def _calc_baggage_price(delivery_type, size, weight):
     return total
 
 # 2) 가격 계산 API
-@app.route("/patient_price", methods=["POST"])
-def patient_price():
-    data = request.get_json(silent=True) or {}
-    delivery_type = data.get("delivery_type")
-    size = data.get("size")
-    weight = data.get("weight")
+# @app.route("/patient_price", methods=["POST"])
+# def patient_price():
+#     data = request.get_json(silent=True) or {}
+#     delivery_type = data.get("delivery_type")
+#     size = data.get("size")
+#     weight = data.get("weight")
 
-    total = _calc_baggage_price(delivery_type, size, weight)
-    return jsonify({"price": total})
+#     total = _calc_baggage_price(delivery_type, size, weight)
+#     return jsonify({"price": total})
 
 
 # 3) 주문 생성 & 결제로 이동
@@ -3591,20 +3591,23 @@ def patient_payment():
     address = (request.form.get("address") or "").strip()
     detail_address = (request.form.get("detail_address") or "").strip()
 
-    delivery_type = request.form.get("delivery_type")
-    size = request.form.get("size")
-    weight = request.form.get("weight")
+    FIXED_BAGGAGE_PRICE = 3000
+    # delivery_type = request.form.get("delivery_type")
+    # size = request.form.get("size")
+    # weight = request.form.get("weight")
+
     payment_method = request.form.get("payment_method")
     
     if not payment_method:
         flash("결제 방법을 선택해주세요.", "error")
         return redirect(url_for("patient_baggage"))
 
-    if not (name and ward and address and delivery_type and size and weight):
+    # if not (name and ward and address and delivery_type and size and weight):
+    if not (name and ward and address):
         flash("필수 항목이 누락되었습니다.", "error")
         return redirect(url_for("patient_baggage"))
 
-    total = _calc_baggage_price(delivery_type, size, weight)
+    total = FIXED_BAGGAGE_PRICE
 
     # ✅ 전용 테이블에 저장 (Order 안씀)
     bo = BaggageOrder(
@@ -3613,9 +3616,11 @@ def patient_payment():
         postcode=postcode or None,
         address=address,
         detail_address=detail_address or None,
-        delivery_type=delivery_type,
-        size=size,
-        weight=weight,
+
+        delivery_type=None,
+        size=None,
+        weight=None,
+
         total_price=total,
         payment_method=payment_method,
         status="pending",

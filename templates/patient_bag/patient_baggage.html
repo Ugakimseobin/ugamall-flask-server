@@ -189,17 +189,17 @@
     </div>
 
     <!-- 5) 배송 방식 -->
-    <div class="section" id="sec5">
+    <!-- <div class="section" id="sec5">
       <label>배송 방법</label>
       <select id="delivery_type" name="delivery_type" required>
         <option value="">선택하세요</option>
         <option value="일반배송">일반배송</option>
         <option value="특급배송">특급배송</option>
       </select>
-    </div>
+    </div> -->
 
     <!-- 6) 크기 -->
-    <div class="section" id="sec6">
+    <!-- <div class="section" id="sec6">
       <label>짐 크기</label>
       <select id="size" name="size" required>
         <option value="">선택하세요</option>
@@ -207,10 +207,10 @@
         <option value="중형">중형</option>
         <option value="대형">대형</option>
       </select>
-    </div>
+    </div> -->
 
     <!-- 7) 무게 -->
-    <div class="section" id="sec7">
+    <!-- <div class="section" id="sec7">
       <label>짐 무게</label>
       <select id="weight" name="weight" required>
         <option value="">선택하세요</option>
@@ -218,7 +218,7 @@
         <option value="보통">보통</option>
         <option value="무거움">무거움</option>
       </select>
-    </div>
+    </div> -->
 
     
     <!-- 8) 결제 방법 -->
@@ -265,7 +265,7 @@
     </div>
 
     <!-- 가격 표시 -->
-    <div class="price-box" id="priceBox">총 금액: 0원</div>
+    <div class="price-box" id="priceBox">금액: 30,000원</div>
 
     <!-- 제출 -->
     <button class="btn" id="submitBtn">결제하기</button>
@@ -359,11 +359,13 @@ function checkDetailAndNext() {
   hideError("err-detail");
 
   if (checked) {
-    showSection("sec5");
+    showSection("sec8");
+    priceBox.style.display = "block";
     return;
   }
   if (detailVal.length >= 1) {
-    showSection("sec5");
+    showSection("sec8");
+    priceBox.style.display = "block";
     return;
   }
 }
@@ -396,62 +398,62 @@ noDetailChk.addEventListener("change", () => {
 /* ===========================
    ✅ 5) 배송/크기/무게 선택 후 다음
 =========================== */
-const deliverySel = document.getElementById("delivery_type");
-const sizeSel = document.getElementById("size");
-const weightSel = document.getElementById("weight");
+// const deliverySel = document.getElementById("delivery_type");
+// const sizeSel = document.getElementById("size");
+// const weightSel = document.getElementById("weight");
 
-deliverySel.addEventListener("change", () => {
-  if (deliverySel.value) showSection("sec6");
-  calculatePrice();
-});
-sizeSel.addEventListener("change", () => {
-  if (sizeSel.value) showSection("sec7");
-  calculatePrice();
-});
-weightSel.addEventListener("change", () => {
-  calculatePrice();
-  if (weightSel.value) showSection("sec8");
-});
+// deliverySel.addEventListener("change", () => {
+//   if (deliverySel.value) showSection("sec6");
+//   calculatePrice();
+// });
+// sizeSel.addEventListener("change", () => {
+//   if (sizeSel.value) showSection("sec7");
+//   calculatePrice();
+// });
+// weightSel.addEventListener("change", () => {
+//   calculatePrice();
+//   if (weightSel.value) showSection("sec8");
+// });
 /* ===========================
    ✅ 서버 가격 계산 (/patient_price)
 =========================== */
-const priceBox = document.getElementById("priceBox");
-const submitBtn = document.getElementById("submitBtn");
+// const priceBox = document.getElementById("priceBox");
+// const submitBtn = document.getElementById("submitBtn");
 
-submitBtn.style.display = "none";
+// submitBtn.style.display = "none";
 
-async function calculatePrice() {
-  const delivery = deliverySel.value;
-  const size = sizeSel.value;
-  const weight = weightSel.value;
+// async function calculatePrice() {
+//   const delivery = deliverySel.value;
+//   const size = sizeSel.value;
+//   const weight = weightSel.value;
 
-  if (!delivery || !size || !weight) {
-    priceBox.style.display = "none";
-    submitBtn.style.display = "none";
-    return;
-  }
+//   if (!delivery || !size || !weight) {
+//     priceBox.style.display = "none";
+//     submitBtn.style.display = "none";
+//     return;
+//   }
 
-  try {
-    const res = await fetch("/patient_price", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        delivery_type: delivery,
-        size: size,
-        weight: weight
-      })
-    });
+//   try {
+//     const res = await fetch("/patient_price", {
+//       method: "POST",
+//       headers: {"Content-Type":"application/json"},
+//       body: JSON.stringify({
+//         delivery_type: delivery,
+//         size: size,
+//         weight: weight
+//       })
+//     });
 
-    const data = await res.json();
-    const price = Number(data.price || 0);
+//     const data = await res.json();
+//     const price = Number(data.price || 0);
 
-    priceBox.textContent = "총 금액: " + price.toLocaleString() + "원";
-    priceBox.style.display = "block";
-  } catch (e) {
-    console.error(e);
-    alert("가격 계산 중 오류가 발생했습니다.");
-  }
-}
+//     priceBox.textContent = "금액: " + price.toLocaleString() + "원";
+//     priceBox.style.display = "block";
+//   } catch (e) {
+//     console.error(e);
+//     alert("가격 계산 중 오류가 발생했습니다.");
+//   }
+// }
 
 /* ===========================
    ✅ 폼 제출 전 마지막 검증
