@@ -3814,8 +3814,68 @@ def admin_patient_baggage():
     if not getattr(current_user, "is_admin", False):
         abort(403)
 
-    orders = BaggageOrder.query.order_by(BaggageOrder.id.desc()).all()
-    return render_template("patient_bag/admin_patient_baggage.html", orders=orders)
+    # GET 파라미터
+    period = request.args.get("period", "1m")   # 🟢 기본 1개월
+    start = request.args.get("start")
+    end = request.args.get("end")
+    q = request.args.get("q", "").strip()
+
+    # 기본 쿼리
+    query = BaggageOrder.query
+
+    # =====================
+    # 🟦 1) 기간 필터
+    # =====================
+    now = datetime.utcnow()
+
+    if start and end:
+        try:
+            start_dt = datetime.strptime(start, "%Y-%m-%d")
+            end_dt = datetime.strptime(end, "%Y-%m-%d") + timedelta(days=1)
+            query = query.filter(BaggageOrder.created_at >= start_dt,
+                                 BaggageOrder.created_at < end_dt)
+        except:
+            pass
+    else:
+        # period 값으로 날짜 자동 설정
+        if period == "1m":
+            start_dt = now - timedelta(days=30)
+        elif period == "3m":
+            start_dt = now - timedelta(days=90)
+        elif period == "6m":
+            start_dt = now - timedelta(days=180)
+        elif period == "5y":
+            start_dt = now - timedelta(days=1825)
+        else:
+            start_dt = now - timedelta(days=30)
+
+        query = query.filter(BaggageOrder.created_at >= start_dt)
+
+    # =====================
+    # 🟦 2) 검색 (이름, 병동)
+    # =====================
+    if q:
+        like = f"%{q}%"
+        query = query.filter(
+            or_(
+                BaggageOrder.name.like(like),
+                BaggageOrder.ward.like(like)
+            )
+        )
+
+    # =====================
+    # 🟦 3) 정렬
+    # =====================
+    orders = query.order_by(BaggageOrder.id.desc()).all()
+
+    return render_template(
+        "patient_bag/admin_patient_baggage.html",
+        orders=orders,
+        period=period,
+        start=start,
+        end=end,
+        q=q,
+    )
 
 @app.route('/send_email_code', methods=['POST'])
 def send_email_code():

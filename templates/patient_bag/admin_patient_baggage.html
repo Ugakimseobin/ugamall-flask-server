@@ -11,6 +11,41 @@
 
   <h1 class="text-xl font-bold mb-5">환자 짐 접수 목록</h1>
 
+  <div class="bg-white p-4 rounded-xl shadow mb-6">
+    <form method="get" id="filterForm" action="{{ url_for('admin_patient_baggage') }}" class="flex flex-wrap gap-2 items-center">
+
+      <!-- 기간 버튼 -->
+      <button type="button" class="filter-btn px-3 py-1 rounded border border-gray-300 
+        {% if period == '5y' %}bg-green-100 text-green-700{% endif %}" data-range="5y">전체</button>
+
+      <button type="button" class="filter-btn px-3 py-1 rounded border border-gray-300 
+        {% if period == '6m' %}bg-green-100 text-green-700{% endif %}" data-range="6m">6개월</button>
+
+      <button type="button" class="filter-btn px-3 py-1 rounded border border-gray-300
+        {% if period == '3m' %}bg-green-100 text-green-700{% endif %}" data-range="3m">3개월</button>
+
+      <button type="button" class="filter-btn px-3 py-1 rounded border border-gray-300
+        {% if period == '1m' %}bg-green-100 text-green-700{% endif %}" data-range="1m">1개월</button>
+
+      <!-- 날짜 선택 -->
+      <div class="flex items-center gap-1 ml-2">
+        <input type="date" name="start" value="{{ start or '' }}" class="border rounded p-1 text-sm">
+        <span class="text-gray-500">~</span>
+        <input type="date" name="end" value="{{ end or '' }}" class="border rounded p-1 text-sm">
+      </div>
+
+      <!-- 검색창 -->
+      <input type="text" name="q" placeholder="환자명, 병동 검색"
+             class="border rounded px-2 py-1 text-sm flex-1 min-w-[150px]"
+             value="{{ q or '' }}">
+      
+      <!-- 조회하기 -->
+      <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded text-sm">
+        조회하기
+      </button>
+    </form>
+  </div>
+
   <!-- 🟦 리스트 전체 컨테이너 -->
   <div class="space-y-4">
 
@@ -54,6 +89,27 @@
     {% endif %}
 
   </div>
+<script>
+  // 기간 버튼 자동 제출
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const range = btn.dataset.range;
+    const form = document.getElementById("filterForm");
 
+    // 기존 period input 제거
+    const old = form.querySelector("input[name='period']");
+    if (old) old.remove();
+
+    // 새로운 period input 추가
+    const hidden = document.createElement("input");
+    hidden.type = "hidden";
+    hidden.name = "period";
+    hidden.value = range;
+    form.appendChild(hidden);
+
+    form.submit();
+  });
+});
+</script>
 </body>
 </html>
