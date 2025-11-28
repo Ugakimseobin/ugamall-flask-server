@@ -32,7 +32,15 @@
     (async function(){
       const BAGGAGE_ID = {{ baggage.id }};
       const IMP_CODE = "{{ imp_code }}";
+      const PAYMENT_METHOD = "{{ baggage.payment_method }}";
 
+      // 🔥 계좌이체일 경우 결제창 아예 안 열고 바로 성공 처리
+      if (PAYMENT_METHOD === "bank_transfer") {
+        alert("계좌이체 접수가 완료되었습니다.");
+        location.href = "/patient_success/{{ baggage.id }}";
+        return;
+      }
+    
       try {
         const prepRes = await fetch("/patient_pay/prepare", {
           method: "POST",
