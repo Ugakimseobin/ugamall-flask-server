@@ -13,7 +13,7 @@
     <div><b>{{ _("결제금액") }}</b> : {{ "{:,}".format(amount) }}{{ _("원") }}</div>
   </div>
 
-  {% if order.payment_method == "무통장입금" %}
+  {% if order.payment_method == "계좌이체" %}
     <div class="mt-8 bg-gray-50 border rounded-lg p-6 text-center">
     <h2 class="text-xl font-semibold mb-2">{{ _("입금 안내") }}</h2>
     <p class="text-gray-600 mb-3">

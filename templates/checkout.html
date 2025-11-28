@@ -231,13 +231,13 @@
                 <span class="font-semibold text-gray-900">카드결제</span>
               </label>
 
-              <!-- 무통장입금 -->
+              <!-- 계좌이체 -->
               <label class="flex items-center gap-3 cursor-pointer p-4 border rounded-lg hover:bg-gray-50 transition">
-                <input type="radio" name="payment_method" value="무통장입금" class="hidden peer">
+                <input type="radio" name="payment_method" value="계좌이체" class="hidden peer">
                 <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-gray-600">
                   <div class="w-2.5 h-2.5 bg-gray-600 rounded-full peer-checked:block hidden"></div>
                 </div>
-                <span class="font-semibold text-gray-900">무통장입금</span>
+                <span class="font-semibold text-gray-900">계좌이체</span>
               </label>
 
               <div id="cash-receipt-section" class="hidden mt-4 p-4 border rounded-lg bg-gray-50">
@@ -260,7 +260,7 @@
 
                 <!-- ✅ 깔끔한 안내문 -->
                 <div class="text-xs text-gray-500 leading-relaxed">
-                  ※ 무통장입금 시 결제 완료 후 현금영수증 발급이 가능합니다.<br>
+                  ※ 계좌이체 시 결제 완료 후 현금영수증 발급이 가능합니다.<br>
                   ※ 개인소득공제용 또는 사업자지출증빙용으로 선택해 주세요.<br>
                   ※ 국세청 홈택스(<a href="https://www.hometax.go.kr" target="_blank" class="text-indigo-600 underline">www.hometax.go.kr</a>)에서 조회할 수 있습니다.
                 </div>
@@ -359,9 +359,9 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
   // 결제 방식 확인
   const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || "";
 
-  // ✅ 무통장입금일 경우 → 서버로 바로 제출 (결제창 X)
-  if (paymentMethod === "무통장입금") {
-    if (confirm("{{ _('무통장입금으로 주문하시겠습니까?') }}")) {
+  // ✅ 계좌이체일 경우 → 서버로 바로 제출 (결제창 X)
+  if (paymentMethod === "계좌이체체") {
+    if (confirm("{{ _('계좌이체로 주문하시겠습니까?') }}")) {
       form.removeEventListener("submit", arguments.callee); // 이벤트 중복 방지
       form.submit(); // ✅ 기본 폼 제출로 서버 이동
     }
@@ -598,7 +598,7 @@ function verifyGuestEmailCode() {
 // ✅ 결제 전 인증 확인
 document.getElementById("checkout-form").addEventListener("submit", function(e) {
   const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || "";
-  if (!guestVerified && paymentMethod !== "무통장입금") {
+  if (!guestVerified && paymentMethod !== "계좌이체") {
     e.preventDefault();
     alert("비회원 주문은 이메일 인증 후 결제 가능합니다.");
     return false;
@@ -606,13 +606,13 @@ document.getElementById("checkout-form").addEventListener("submit", function(e) 
 });
 </script>
 
-<!-- 무통장입금 시 현금영수증 -->
+<!-- 계좌이체 시 현금영수증 -->
 <script>
 const receiptSection = document.getElementById("cash-receipt-section");
 document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
   radio.addEventListener("change", e => {
-    // 무통장입금 선택 시에만 표시
-    if (e.target.value === "무통장입금") {
+    // 계좌이체 선택 시에만 표시
+    if (e.target.value === "계좌이체") {
       receiptSection.classList.remove("hidden");
     } else {
       receiptSection.classList.add("hidden");

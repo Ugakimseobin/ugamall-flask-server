@@ -1750,7 +1750,7 @@ def checkout():
 
         final_amount = max(0, total_amount - discount_amount)
 
-        if payment_method == "무통장입금":
+        if payment_method == "계좌이체":
             status = "입금대기"
         else:
             status = "결제대기"
@@ -1803,8 +1803,8 @@ def checkout():
         db.session.commit()
 
         # ✅ 결제 페이지로 이동
-        if payment_method == "무통장입금":
-            # 무통장입금은 결제창 띄우지 않고 바로 주문완료 페이지로 이동
+        if payment_method == "계좌이체":
+            # 계좌이체는 결제창 띄우지 않고 바로 주문완료 페이지로 이동
             new_order.status = "입금대기"  # 상태를 명확히 설정
             if applied_user_coupon_id:
                 uc = UserCoupon.query.get(applied_user_coupon_id)
@@ -2084,7 +2084,7 @@ def pay_fail():
     return jsonify(ok=True)
 
 # -----------------------------
-# 주문 완료 페이지(무통장/카드 공용)
+# 주문 완료 페이지(계좌이체/카드 공용)
 # -----------------------------
 @app.route("/order-complete/<int:order_id>")
 def order_complete(order_id):
@@ -3030,9 +3030,9 @@ def admin_confirm_deposit(order_id):
 
     order = Order.query.get_or_404(order_id)
 
-    # 무통장입금 주문만 처리
-    if order.payment_method != "무통장입금":
-        flash("무통장입금 주문만 입금 확인 가능합니다.", "error")
+    # 계좌이체 주문만 처리
+    if order.payment_method != "계좌이체":
+        flash("계좌이체 주문만 입금 확인 가능합니다.", "error")
         return redirect(url_for("admin_orders"))
     
     items_total = sum(int(i.original_price or 0) * int(i.quantity or 0) for i in order.items)
