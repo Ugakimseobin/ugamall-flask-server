@@ -392,9 +392,7 @@ class BaggageOrder(db.Model):
     address = db.Column(db.String(200), nullable=False)   # 기본주소
     detail_address = db.Column(db.String(200), nullable=True)  # 상세주소(없을 수 있음)
 
-    delivery_type = db.Column(db.String(50), nullable=True)  # 일반/특급
-    size = db.Column(db.String(50), nullable=True)           # 소/중/대
-    weight = db.Column(db.String(50), nullable=True)         # 가벼움/보통/무거움
+    hospital = db.Column(db.String(200), nullable=False)
 
     payment_method = db.Column(db.String(20), nullable=False)
 
@@ -406,6 +404,10 @@ class BaggageOrder(db.Model):
     imp_uid = db.Column(db.String(50), nullable=True)
     merchant_uid = db.Column(db.String(80), nullable=True)
     fail_reason = db.Column(db.String(200), nullable=True)
+
+class Hospital(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False, unique=True)
 # -----------------------------
 # 사용자 함수
 # -----------------------------
@@ -3561,7 +3563,8 @@ def patient_portal():
 # 1) 입력 화면
 @app.route("/patient_baggage")
 def patient_baggage():
-    return render_template("patient_bag/patient_baggage.html")
+    hospitals = Hospital.query.order_by(Hospital.name.asc()).all()
+    return render_template("patient_bag/patient_baggage.html", hospitals=hospitals)
 
 def _calc_baggage_price(delivery_type, size, weight):
     total = 0
@@ -3590,8 +3593,9 @@ def patient_payment():
     postcode = (request.form.get("postcode") or "").strip()
     address = (request.form.get("address") or "").strip()
     detail_address = (request.form.get("detail_address") or "").strip()
+    hospital = request.form.get("hospital")
 
-    FIXED_BAGGAGE_PRICE = 3000
+    FIXED_BAGGAGE_PRICE = 0
     # delivery_type = request.form.get("delivery_type")
     # size = request.form.get("size")
     # weight = request.form.get("weight")
@@ -3616,10 +3620,7 @@ def patient_payment():
         postcode=postcode or None,
         address=address,
         detail_address=detail_address or None,
-
-        delivery_type=None,
-        size=None,
-        weight=None,
+        hospital=hospital,
 
         total_price=total,
         payment_method=payment_method,
@@ -3635,6 +3636,17 @@ def patient_payment():
 def patient_payment_page(baggage_id):
     bo = BaggageOrder.query.get_or_404(baggage_id)
 
+    # ------------------- 0원 테스트 모드: PG 결제 생략
+    if bo.total_price == 0:
+        bo.status = "paid"
+        bo.imp_uid = "TEST_ZERO_PAYMENT"
+        bo.merchant_uid = f"test_{bo.id}"
+        bo.fail_reason = None
+        db.session.commit()
+
+        return redirect(url_for("patient_success", baggage_id=baggage_id))
+    # ------------------여기까지 시범기간끝나면 삭제
+    
     # PG 분기
     if bo.payment_method == "kakaopay":
         pg_option = f"kakaopay.CA17512439"  # ← 너 실연동 MID

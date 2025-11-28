@@ -71,8 +71,8 @@
       <div class="space-y-1 text-sm">
         <div><b>환자명:</b> {{ o.name }}</div>
         <div><b>병동/병실:</b> {{ o.ward }}</div>
+        <div><b>병원명:</b> {{ o.hospital }}</div>
         <div><b>주소:</b> ({{ o.postcode or "-" }}) {{ o.address }} {{ o.detail_address or "" }}</div>
-        <div><b>옵션:</b> {{ o.delivery_type }} / {{ o.size }} / {{ o.weight }}</div>
         <div><b>금액:</b> <span class="font-semibold">{{ o.total_price|comma }}원</span></div>
         <div class="text-xs text-gray-500">
           <b>접수일:</b> {{ o.created_at|kst_format }}
