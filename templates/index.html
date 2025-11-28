@@ -59,7 +59,8 @@
   {% endif %}
 </section>
 
-<section class="bg-gray-50 max-w-full mx-auto px-4 sm:px-10 md:px-16 py-14 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+<!-- promotion section -->
+<section class="bg-gray-50 w-full mx-auto px-4 sm:px-10 md:px-16 py-14 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
   {% if ads and ads|length > 0 %}
     <!-- 왼쪽 텍스트 -->
     <div>
@@ -231,6 +232,41 @@
   </div>
 </div>
 {% endfor %}
+
+<!-- 🔥 오른쪽 플로팅 광고 -->
+<div id="right-floating-banner"
+     class="hidden lg:block absolute right-0 top-[500px] w-[150px] z-30">
+  
+  <a href="/patient_portal">
+    <img src="{{ url_for('static', filename='images/patient_bag.png') }}"
+         class="w-full rounded-lg shadow-lg hover:opacity-90 transition">
+  </a>
+
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const banner = document.getElementById("right-floating-banner");
+  if (!banner) return;
+
+  const originalTop = banner.offsetTop; // 원래 절대 위치
+  const triggerPoint = originalTop - 30; // fixed 전환 시점
+
+  window.addEventListener("scroll", () => {
+    const scrollY = window.scrollY;
+
+    // fixed로 전환 시점
+    if (scrollY > triggerPoint) {
+      banner.style.position = "fixed";
+      banner.style.top = "60px"; // 화면에서 유지될 fixed 위치
+    } else {
+      // 다시 absolute 복귀
+      banner.style.position = "absolute";
+      banner.style.top = originalTop + "px";
+    }
+  });
+});
+</script>
+
 <script>
 function sendEmailCodeContact() {
   const email = document.getElementById("contact_email").value.trim();
