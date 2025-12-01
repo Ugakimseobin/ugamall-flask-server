@@ -3798,6 +3798,9 @@ def patient_success(baggage_id):
 
 @app.route("/patient_admin_login", methods=["GET", "POST"])
 def patient_admin_login():
+    if current_user.is_authenticated and current_user.is_admin:
+        return redirect(url_for("admin_patient_baggage"))
+
     if request.method == "POST":
         input_pw = request.form.get("password", "").strip()
 
