@@ -238,6 +238,11 @@ document.addEventListener("click", (e) => {
     dropdown.classList.add("hidden");
   }
 });
+
+// 목록에 없는 병원도 저장되도록 처리
+input.addEventListener("blur", () => {
+  hiddenInput.value = input.value.trim();
+});
 </script>
 </body>
 </html>
