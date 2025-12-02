@@ -3892,6 +3892,32 @@ def admin_patient_baggage():
         q=q,
     )
 
+@app.route("/patient_lookup", methods=["GET", "POST"])
+def patient_lookup():
+    if request.method == "POST":
+        name = (request.form.get("name") or "").strip()
+        ward = (request.form.get("ward") or "").strip()
+
+        if not (name and ward):
+            flash("이름과 병동/병실을 모두 입력해주세요.", "error")
+            return redirect(url_for("patient_lookup"))
+
+        # 가장 최근 접수 내역 1건만 보여줌
+        order = (
+            BaggageOrder.query
+            .filter_by(name=name, ward=ward)
+            .order_by(BaggageOrder.id.desc())
+            .first()
+        )
+
+        if not order:
+            flash("조회 결과가 없습니다.", "error")
+            return redirect(url_for("patient_lookup"))
+
+        return render_template("patient_bag/patient_lookup_result.html", order=order)
+
+    return render_template("patient_bag/patient_lookup.html")
+
 @app.route('/send_email_code', methods=['POST'])
 def send_email_code():
     email = request.form.get('email')

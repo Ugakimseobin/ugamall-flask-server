@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>접수 조회 결과</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center px-6">
+
+<div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border">
+
+  <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">조회 결과</h2>
+
+  <div class="space-y-3 text-gray-800 text-sm">
+
+    <div><b>접수번호 :</b> {{ order.id }}</div>
+    <div><b>환자명 :</b> {{ order.name }}</div>
+    <div><b>병동/병실 :</b> {{ order.ward }}</div>
+    <div><b>병원명 :</b> {{ order.hospital }}</div>
+    <div><b>주소 :</b> {{ order.address }} {{ order.detail_address or "" }}</div>
+    <div><b>접수일 :</b> {{ order.created_at.strftime("%Y-%m-%d %H:%M") }}</div>
+    <div><b>상태 :</b> 
+      {% if order.status == "pending" %}
+        <span class="text-yellow-600 font-semibold">대기중</span>
+      {% elif order.status == "paid" %}
+        <span class="text-green-600 font-semibold">완료</span>
+      {% else %}
+        <span class="text-red-600 font-semibold">실패</span>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <a href="/patient_lookup"
+     class="block mt-6 w-full text-center bg-gray-800 text-white py-3 rounded-xl font-semibold hover:bg-gray-900 transition">
+     다시 조회하기
+  </a>
+
+  <a href="/patient_portal"
+     class="block mt-3 text-center text-sm text-gray-500 hover:text-gray-700">
+     ← 귀가케어 홈으로
+  </a>
+
+</div>
+
+</body>
+</html>

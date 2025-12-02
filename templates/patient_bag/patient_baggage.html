@@ -31,46 +31,9 @@
         placeholder="홍길동" required>
     </div>
 
-    <!-- 2) 병동/병실 -->
-    <div>
-      <label class="text-sm font-medium text-gray-700 mb-1 block">병동 · 병실</label>
-      <input type="text" id="ward" name="ward"
-        class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-400"
-        placeholder="본관 5층 503호" required>
-    </div>
-
-    <!-- 3) 주소 -->
-    <div>
-      <label class="text-sm font-medium text-gray-700 mb-1 block">주소</label>
-      <div class="flex gap-2">
-        <input type="text" id="address" name="address"
-          class="flex-1 border rounded-xl px-4 py-3 bg-gray-50"
-          placeholder="주소 찾기를 눌러주세요" readonly required>
-        <button type="button"
-          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-semibold"
-          onclick="execDaumPostcode()">
-          검색
-        </button>
-      </div>
-      <input type="hidden" id="postcode" name="postcode">
-    </div>
-
-    <!-- 4) 상세주소 -->
-    <div>
-      <label class="text-sm font-medium text-gray-700 mb-1 block">상세주소</label>
-      <input type="text" id="detailAddress" name="detail_address"
-        class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-400"
-        placeholder="상세주소 입력">
-
-      <label class="flex items-center gap-2 mt-2 text-sm text-gray-600">
-        <input type="checkbox" id="noDetailChk" class="w-4 h-4">
-        상세주소 없음
-      </label>
-    </div>
-
-    <!-- 5) 서비스하는 병원 목록 -->
+    <!-- 2) 서비스하는 병원 목록 -->
     <div class="section">
-      <label class="font-semibold text-gray-700 block mb-2">병원명</label>
+      <label class="text-sm font-medium text-gray-700 mb-1 block">병원명</label>
 
       <!-- 검색창(드롭다운 트리거) -->
       <div class="relative">
@@ -92,6 +55,45 @@
       <!-- 선택된 병원 저장 -->
       <input type="hidden" id="hospital" name="hospital" required>
     </div>
+
+    <!-- 3) 병동/병실 -->
+    <div>
+      <label class="text-sm font-medium text-gray-700 mb-1 block">병동 · 병실</label>
+      <input type="text" id="ward" name="ward"
+        class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-400"
+        placeholder="본관 5층 503호" required>
+    </div>
+
+    <!-- 4) 주소 -->
+    <div>
+      <label class="text-sm font-medium text-gray-700 mb-1 block">주소</label>
+      <div class="flex gap-2">
+        <input type="text" id="address" name="address"
+          class="flex-1 border rounded-xl px-4 py-3 bg-gray-50"
+          placeholder="주소 찾기를 눌러주세요" readonly required>
+        <button type="button"
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-semibold"
+          onclick="execDaumPostcode()">
+          검색
+        </button>
+      </div>
+      <input type="hidden" id="postcode" name="postcode">
+    </div>
+
+    <!-- 5) 상세주소 -->
+    <div>
+      <label class="text-sm font-medium text-gray-700 mb-1 block">상세주소</label>
+      <input type="text" id="detailAddress" name="detail_address"
+        class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-400"
+        placeholder="상세주소 입력">
+
+      <label class="flex items-center gap-2 mt-2 text-sm text-gray-600">
+        <input type="checkbox" id="noDetailChk" class="w-4 h-4">
+        상세주소 없음
+      </label>
+    </div>
+
+    
     
     <!-- 5) 결제 방법 -->
     <div class="section relative z-0">

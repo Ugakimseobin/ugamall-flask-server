@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>귀가케어 접수 조회</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center px-6">
+
+<div class="w-full max-w-sm bg-white p-8 rounded-2xl shadow-xl border">
+
+  <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">접수 조회</h2>
+
+  <form method="POST" class="space-y-5">
+
+    <div>
+      <label class="block text-sm font-semibold mb-1">환자 이름</label>
+      <input type="text" name="name"
+             class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-400"
+             placeholder="홍길동" required>
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold mb-1">병동 · 병실</label>
+      <input type="text" name="ward"
+             class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-400"
+             placeholder="본관 5층 503호" required>
+    </div>
+
+    <button class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-semibold hover:bg-blue-700 transition">
+      조회하기
+    </button>
+  </form>
+
+  <a href="/patient_portal" class="block mt-4 text-center text-sm text-gray-500 hover:text-gray-700">← 귀가케어 홈으로</a>
+
+</div>
+
+</body>
+</html>
