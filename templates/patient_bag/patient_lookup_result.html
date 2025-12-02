@@ -18,6 +18,7 @@
     <div><b>환자명 :</b> {{ order.name }}</div>
     <div><b>병동/병실 :</b> {{ order.ward }}</div>
     <div><b>병원명 :</b> {{ order.hospital }}</div>
+    <div><b>전화번호:</b> {{ order.phone }}</div>
     <div><b>주소 :</b> {{ order.address }} {{ order.detail_address or "" }}</div>
     <div><b>접수일 :</b> {{ order.created_at.strftime("%Y-%m-%d %H:%M") }}</div>
     <div><b>상태 :</b> 

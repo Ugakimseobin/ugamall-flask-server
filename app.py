@@ -387,6 +387,7 @@ class BaggageOrder(db.Model):
 
     name = db.Column(db.String(100), nullable=False)      # 환자 이름
     ward = db.Column(db.String(100), nullable=False)      # 병동/병실
+    phone = db.Column(db.String(20), nullable=True)
 
     postcode = db.Column(db.String(10), nullable=True)    # 우편번호
     address = db.Column(db.String(200), nullable=False)   # 기본주소
@@ -3590,6 +3591,7 @@ def _calc_baggage_price(delivery_type, size, weight):
 def patient_payment():
     name = (request.form.get("name") or "").strip()
     ward = (request.form.get("ward") or "").strip()
+    phone = request.form.get("phone")
     postcode = (request.form.get("postcode") or "").strip()
     address = (request.form.get("address") or "").strip()
     detail_address = (request.form.get("detail_address") or "").strip()
@@ -3617,6 +3619,7 @@ def patient_payment():
     bo = BaggageOrder(
         name=name,
         ward=ward,
+        phone=phone,
         postcode=postcode or None,
         address=address,
         detail_address=detail_address or None,
@@ -3896,16 +3899,16 @@ def admin_patient_baggage():
 def patient_lookup():
     if request.method == "POST":
         name = (request.form.get("name") or "").strip()
-        ward = (request.form.get("ward") or "").strip()
+        phone = request.form.get("phone", "").strip()
 
-        if not (name and ward):
-            flash("이름과 병동/병실을 모두 입력해주세요.", "error")
+        if not (name and phone):
+            flash("이름과 핸드폰번호를 모두 입력해주세요.", "error")
             return redirect(url_for("patient_lookup"))
 
         # 가장 최근 접수 내역 1건만 보여줌
         order = (
             BaggageOrder.query
-            .filter_by(name=name, ward=ward)
+            .filter_by(name=name, phone=phone)
             .order_by(BaggageOrder.id.desc())
             .first()
         )
