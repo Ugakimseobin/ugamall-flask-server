@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <!-- 상단 비디오 배경 -->
-<section id="hero" class="relative h-80 md:h-[28rem] flex items-center justify-center text-white overflow-hidden">
-  <!--<video autoplay muted loop playsinline 
-         class="absolute inset-0 w-full h-full object-cover object-bottom">
-    <source src="{{ url_for('static', filename='videos/ocean.mp4') }}" type="video/mp4">
-  </video>-->
-  <img src="{{ url_for('static', filename='images/xcontact.jpg') }}" class="absolute inset-0 w-full h-full object-cover">
+<section id="hero"
+  class="relative h-80 md:h-[28rem] flex items-center justify-center text-white overflow-hidden
+         bg-cover bg-no-repeat bg-[center_80%]"
+  style="background-image: url('{{ url_for('static', filename='images/contact.jpg') }}');">
   <div class="absolute inset-0 bg-black/40"></div>
   <h1 class="relative z-10 text-2xl sm:text-3xl font-bold" style="font-family: 'TheJamsil5Bold', 'Noto Sans KR', sans-serif; font-weight:700;">{{ _("유가에 문의하기") }}</h1>
 </section>
