@@ -2671,23 +2671,29 @@ def admin_add_video():
 @app.route("/admin/videos/<int:video_id>/edit", methods=["GET", "POST"])
 @login_required
 def admin_edit_video(video_id):
+    if not current_user.is_admin:
+        return redirect(url_for("home"))
+
     video = Video.query.get_or_404(video_id)
 
     if request.method == "POST":
-        video.title = request.form["title"]
+        # ✅ 제목 수정
+        video.title = request.form.get("title")
+        video.description = request.form.get("description")
+        video.tags = request.form.get("tags")
 
+        # ✅ 영상 교체 (DB 저장 방식 유지)
         file = request.files.get("video")
         if file:
-            filename = secure_filename(file.filename)
-            filepath = os.path.join("static/videos", filename)
-            file.save(filepath)
-            video.file_path = filename
+            video.video_data = file.read()      # ✅ 기존 영상 완전 교체
+            video.video_mime = file.mimetype    # ✅ mime 타입도 같이 갱신
 
         db.session.commit()
-        flash("영상이 수정되었습니다.", "success")
+        flash("영상이 정상적으로 수정되었습니다.", "success")
         return redirect(url_for("admin_videos"))
 
     return render_template("admin/edit_video.html", video=video)
+
 
 @app.route("/admin/videos/<int:video_id>/delete", methods=["POST"])
 @login_required
