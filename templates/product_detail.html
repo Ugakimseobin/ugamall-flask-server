@@ -120,7 +120,9 @@
   <div class="mt-16 bg-white shadow rounded-2xl border border-gray-100">
     <div class="flex border-b text-center">
       <button class="tab-btn flex-1 py-3 sm:py-4 text-gray-600 font-semibold border-b-2 border-transparent hover:text-indigo-600 active-tab"
-              data-tab="details">{{ _("상세보기") }}</button>
+              data-tab="details">{{ _("상품상세보기") }}</button>
+      <button class="tab-btn flex-1 py-3 sm:py-4 text-gray-600 font-semibold border-b-2 border-transparent hover:text-indigo-600"
+              data-tab="payments">{{ _("상품결제/배송정보") }}</button>
       <button class="tab-btn flex-1 py-3 sm:py-4 text-gray-600 font-semibold border-b-2 border-transparent hover:text-indigo-600"
               data-tab="reviews">{{ _("리뷰") }}</button>
     </div>
@@ -276,9 +278,54 @@
       </div>
     </div>
 
+    <!-- 결제/배송 -->
+    <div id="tab-payments" class="tab-content p-6 sm:p-8 hidden">
+      <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-800">{{ _("상품 결제정보") }}</h2>
+
+      <div class="space-y-4 mb-8 ml-4">
+        <div>
+          <p class="text-sm sm:text-base font-semibold text-gray-800 mb-1">{{ _("결제방식") }}</p>
+          <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm sm:text-base">
+            <li>계좌이체</li>
+            <li>카카오페이</li>
+            <li>신용카드</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 배송정보 -->
+      <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-900"
+          style="font-family:'TheJamsil5Bold','Noto Sans KR',sans-serif;">
+        {{ _("상품 배송정보") }}
+      </h2>
+
+      <div class="space-y-6 ml-4">
+        <div>
+          <p class="text-sm sm:text-base font-semibold text-gray-800 mb-1">{{ _("배송방법") }}</p>
+          <p class="text-gray-700 text-sm sm:text-base ml-4">택배</p>
+        </div>
+
+        <div>
+          <p class="text-sm sm:text-base font-semibold text-gray-800 mb-1">{{ _("배송비용") }}</p>
+          <p class="text-gray-700 text-sm sm:text-base ml-4">
+            {{ _("총 상품금액 50,000원 미만 3,000원") }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-sm sm:text-base font-semibold text-gray-800 mb-1">{{ _("배송기간") }}</p>
+          <p class="text-gray-700 text-sm sm:text-base ml-4">
+            {{ _("평균 배송일 2~4일(주말 및 공휴일 제외)") }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    
     <!-- 리뷰 -->
     <div id="tab-reviews" class="tab-content p-6 sm:p-8 hidden">
-      <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-800">📝 {{ _("상품 리뷰") }}</h2>
+      <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-800">{{ _("상품 리뷰") }}</h2>
 
       <!-- ✅ 정렬 -->
       <div class="flex justify-between border-b items-center mb-4">

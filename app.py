@@ -326,7 +326,7 @@ class Order(db.Model):
     base_address = db.Column(db.String(200), nullable=False)
     detail_address = db.Column(db.String(200), nullable=True)  # 배송 주소
     payment_method = db.Column(db.String(50), nullable=False)  # 카드, vbank 등
-    status = db.Column(db.String(20), default="주문 접수")  # 주문 상태
+    status = db.Column(db.String(20), default="주문접수")  # 주문 상태
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_read = db.Column(db.Boolean, default=False)
     applied_user_coupon_id = db.Column(db.Integer, db.ForeignKey("user_coupons.id"), nullable=True)
@@ -452,7 +452,7 @@ def format_kst(dt):
 @app.template_filter("status_label")
 def status_label_filter(status):
     mapping = {
-        "주문 접수": "주문 접수",
+        "주문접수": "주문접수",
         "입금대기": "입금대기",
         "결제대기": "결제대기",
         "결제완료": "결제완료",
@@ -461,7 +461,7 @@ def status_label_filter(status):
         "canceled": "취소됨",
         "paid": "결제완료",
         "delivered": "배송완료",
-        "pending": "주문 접수"
+        "pending": "주문접수"
     }
     return mapping.get(status, status)
 
@@ -720,7 +720,7 @@ STATUS_LABEL_TEXT = {
     "exchanged": "교환완료",
 
     # 한글 상태코드도 추가
-    "주문 접수": "주문 접수",
+    "주문접수": "주문접수",
     "입금대기": "입금대기",
     "결제대기": "결제대기",
     "결제완료": "결제완료",
@@ -738,7 +738,7 @@ STATUS_LABEL_TEXT = {
 
 # 드롭다운 옵션(변경용)
 STATUS_OPTIONS = [
-    {"value": "주문 접수", "label": "주문 접수"},
+    {"value": "주문접수", "label": "주문접수"},
     {"value": "입금대기", "label": "입금대기"},
     {"value": "결제대기", "label": "결제대기"},
     {"value": "결제완료", "label": "결제완료"},
