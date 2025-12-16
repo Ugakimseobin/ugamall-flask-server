@@ -68,5 +68,29 @@
     </a>
 
   </div>
+
+  <div class="mt-10">
+    <h2 class="text-lg font-bold mb-4">알림</h2>
+
+    <div class="bg-white shadow rounded divide-y">
+      {% if notifications %}
+        {% for noti in notifications %}
+          <div class="flex items-center px-4 py-3 text-sm">
+            <span class="mr-3 text-gray-400">
+              {{ loop.index }}
+            </span>
+            <span class="flext-1">{{ noti.message }}</span>
+            <span class="text-xs text-gray-400">
+              {{ noti.created_at.strftime("%m-%d %H:%M") }}
+            </span>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="px-4 py-4 text-sm text-gray-500">
+          알림이 없습니다.
+        </div>
+      {% endif %}
+    </div>
+  </div>
 </div>
 {% endblock %}

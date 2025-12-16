@@ -409,6 +409,15 @@ class BaggageOrder(db.Model):
 class Hospital(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
+
+class AdminNotification(db.Model):
+    __tablename__ = "admin_notifications"
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String(255), nullable=False)
+    type = db.Column(db.String(50)) # order , 귀가케어
+    is_read = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
 # -----------------------------
 # 사용자 함수
 # -----------------------------
@@ -750,6 +759,15 @@ STATUS_OPTIONS = [
 @app.template_filter("status_label")
 def status_label(value):
     return STATUS_LABEL_TEXT.get(value, value)
+
+# 알림 생성 함수
+def create_admin_notification(message, type=None):
+    noti = AdminNotification(
+        message=message,
+        type=type
+    )
+    db.session.add(noti)
+    db.session.commit()
 
 # -----------------------------
 # 라우트
@@ -1773,6 +1791,11 @@ def checkout():
         db.session.add(new_order)
         db.session.flush()  # new_order.id 확보
 
+        create_admin_notification(
+            message="주문이 들어왔습니다.",
+            type="order"
+        )
+
         # 주문 아이템 생성 + 장바구니 제거
         for item in cart_items:
             # 정가
@@ -2162,9 +2185,13 @@ def admin_dashboard():
     ).count()
     # 답변 대기중 문의 개수
     new_inquiries_count = Inquiry.query.filter_by(status="답변 대기").count()
+    notifications = (
+        AdminNotification.query.order_by(AdminNotification.created_at.desc()).limit(10).all()
+    )
     return render_template("admin/dashboard.html",
         pending_orders=pending_orders,
-        new_inquiries_count=new_inquiries_count)
+        new_inquiries_count=new_inquiries_count,
+        notifications=notifications)
 
 # 홈화면 popup 제어
 @app.route("/popup_image/<int:popup_id>")
@@ -3638,6 +3665,11 @@ def patient_payment():
     )
     db.session.add(bo)
     db.session.commit()
+
+    create_admin_notification(
+        message="귀가케어 접수됐습니다.",
+        type="care"
+    )
 
     # ✅ 전용 결제 페이지로 이동
     return redirect(url_for("patient_payment_page", baggage_id=bo.id))
