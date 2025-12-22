@@ -33,11 +33,7 @@
             <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ _("%(price)s원", price=product.base_price|int|format_won) }}</p>
           {% endif %}
           
-          <p class="text-gray-700 text-sm sm:text-base mb-4 sm:mb-6">{{ _(product.description)
-                                                                    .replace('\r\n', '<br>')
-                                                                    .replace('\n', '<br>')
-                                                                    .replace('\r', '<br>')
-                                                                    | safe }}</p>
+          <p class="text-gray-700 text-sm sm:text-base whitespace-pre-wrap mb-4 sm:mb-6">{{ product.description }}</p>
           <p class="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">{{ _("카테고리") }}: {{ _(product.category) }}</p>
 
           <!-- 장바구니 담기 -->
@@ -193,7 +189,7 @@
             <tr>
               <td class="font-semibold bg-gray-50 p-3">{{ _("배송 안내") }}</td>
               <td class="p-3">
-                {{ _("택배") }} (CJ대한통운)<br>
+                {{ _("택배") }}<br>
                 {{ _("결제 완료 후 평균 2~4일 이내 배송(주말 및 공휴일 제외)") }}
               </td>
             </tr>
