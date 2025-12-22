@@ -83,6 +83,12 @@
                     장바구니 담기
                 </button>
             {% endif %}
+            {% if product.coverage_type == '급여' %}
+            <div class="text-xs text-gray-500 mt-2">
+              ※ 본 제품은 급여 대상 품목이나,
+              온라인 구매 시 보험 적용은 되지 않습니다.
+            </div>
+            {% endif %}
           </form>
 
           <a href="/contact">
