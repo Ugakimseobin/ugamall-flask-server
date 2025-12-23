@@ -198,8 +198,8 @@ class ProductVariant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
     sku = db.Column(db.String(100), unique=True)
-    price = db.Column(db.Integer, nullable=False, default=0)
-    stock = db.Column(db.Integer, nullable=False, default=0)
+    price = db.Column(db.Integer, nullable=True, default=0)
+    stock = db.Column(db.Integer, nullable=True, default=0)
     options = db.Column(JSON, nullable=False)  # {"사이즈": "250", "색상": "파랑"}
 
     product = db.relationship("Product", back_populates="variants")
