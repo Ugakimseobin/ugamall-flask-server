@@ -24,9 +24,15 @@
     <div>
       <label class="block font-semibold mb-1">제품 유형</label>
       <select name="coverage_type" class="w-full border p-2 rounded">
-        <option value="일반">일반 제품</option>
-        <option value="급여">급여 제품</option>
-        <option value="비급여">비급여 제품</option>
+        <option value="일반" {% if product.coverage_type == '일반' %}selected{% endif %}>
+          일반 제품
+        </option>
+        <option value="급여" {% if product.coverage_type == '급여' %}selected{% endif %}>
+          급여 제품
+        </option>
+        <option value="비급여" {% if product.coverage_type == '비급여' %}selected{% endif %}>
+          비급여 제품
+        </option>
       </select>
     </div>
       
@@ -34,7 +40,8 @@
     <div>
       <label class="flex items-center gap-2 mt-4">
           <input type="checkbox" name="member_only_price" value="1"
-                class="w-4 h-4">
+                class="w-4 h-4"
+                {% if product.member_only_price %}checked{% endif %}>
           <span class="text-sm">가격은 로그인한 회원에게만 공개</span>
       </label>
     </div>
