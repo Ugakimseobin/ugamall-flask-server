@@ -48,13 +48,7 @@
                         class="border rounded w-full p-2 mb-4 option-select text-sm" 
                         data-key="{{ key }}">
                   <option value="">-- {{ _("선택하세요") }} --</option>
-                  {% set values = [] %}
-                  {% for v in product.variants %}
-                    {% if v.options[key] not in values %}
-                      <option value="{{ v.options[key] }}">{{ _(v.options[key]) }}</option>
-                      {% set _ = values.append(v.options[key]) %}
-                    {% endif %}
-                  {% endfor %}
+                  
                 </select>
                 <input type="hidden" id="cart-option-main-{{ key }}" name="option_{{ key }}">
               {% endfor %}
@@ -466,13 +460,7 @@
       <label class="block font-semibold mb-2 text-sm text-gray-700">{{ _(key) }}</label>
       <select name="option_{{ key }}" class="border rounded w-full p-2 mb-4 text-sm option-select-side" data-key="{{ key }}">
         <option value="">-- {{ _("선택하세요") }} --</option>
-        {% set values = [] %}
-        {% for v in product.variants %}
-          {% if v.options[key] not in values %}
-            <option value="{{ v.options[key] }}">{{ _(v.options[key]) }}</option>
-            {% set _ = values.append(v.options[key]) %}
-          {% endif %}
-        {% endfor %}
+        
       </select>
       {% endfor %}
     {% endif %}
@@ -665,7 +653,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (matchedVariant && matchedVariant.price) {
-        newPrice += parseInt(matchedVariant.price);
+        newPrice = basePrice + parseInt(matchedVariant.price || 0);
       }
     }
 
@@ -843,6 +831,43 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.style.overflow = "";
     }
   });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const variants = {{ variants_json | tojson }};
+  const basePrice = {{ product.base_price | int }};
+
+  function buildOptions(selectors) {
+    selectors.forEach(select => {
+      const key = select.dataset.key;
+      const added = new Set();
+
+      variants.forEach(v => {
+        const value = v.options[key];
+        if (!value || added.has(value)) return;
+
+        added.add(value);
+
+        const diff = parseInt(v.price || 0);
+        let label = value;
+
+        if (diff > 0) {
+          label += ` (+${diff.toLocaleString()}원)`;
+        }
+
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+
+        select.appendChild(option);
+      });
+    });
+  }
+
+  buildOptions(document.querySelectorAll(".option-select"));
+  buildOptions(document.querySelectorAll(".option-select-side"));
 });
 </script>
 
