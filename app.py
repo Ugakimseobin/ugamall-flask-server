@@ -97,6 +97,13 @@ ALLOWED_IMAGE_EXT = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 ALLOWED_PAMPHLET_EXT = {".pdf", ".jpg", ".jpeg", ".png"}
 
 # -----------------------------
+# 병원용, 일반사용자용 구분을 위한 도메인 호스트 받아오기 함수
+def get_site_type():
+    host = request.host.split(":")[0]
+    if host.startswith("shop."):
+        return "b2b"
+    return "b2c"
+# -----------------------------
 # DB 모델
 # -----------------------------
 class User(db.Model, UserMixin):
@@ -779,6 +786,9 @@ def home():
     # 🔽 숨김 처리된 상품은 제외
     popups = Popup.query.filter_by(is_active=True).order_by(Popup.id.asc()).all()
     products = Product.query.filter_by(is_active=True).order_by(Product.id.desc()).limit(8).all()
+    site = get_site_type()
+    if site == "b2b":
+        render_template("b2b/index.html")
     return render_template('index.html',ads=ads, latest_video=latest_video, products=products, popups=popups)
 
 @app.route('/set_lang/<lang>')
