@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-29 11:57+0900\n"
+"POT-Creation-Date: 2025-12-26 10:52+0900\n"
 "PO-Revision-Date: 2025-09-25 16:51+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,130 +18,129 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:1243
+#: app.py:1344
 msgid "비밀번호 재설정 안내"
 msgstr "Password Reset Guide"
 
-#: app.py:1253
+#: app.py:1354
 msgid "비밀번호 재설정을 요청하셨습니다."
 msgstr "Request password reset"
 
-#: app.py:1256 app.py:2797 app.py:3142
+#: app.py:1357 app.py:3128 app.py:3987
 msgid "안녕하세요,"
 msgstr "hello"
 
-#: app.py:1256 templates/mypage.html:9
+#: app.py:1357 templates/mypage.html:9
 msgid "님"
 msgstr "Customer"
 
-#: app.py:1259 app.py:1271 app.py:3142 app.py:3153
+#: app.py:1360 app.py:1372 app.py:3987 app.py:3998
 msgid "유가몰"
 msgstr "UGAMall"
 
-#: app.py:1259
+#: app.py:1360
 msgid "계정의 비밀번호 재설정을 요청하셨습니다."
 msgstr "Request password reset for account"
 
-#: app.py:1260
+#: app.py:1361
 msgid "아래 버튼을 클릭하여 새로운 비밀번호를 설정해주세요."
 msgstr "Click the button below to set a new password"
 
-#: app.py:1261
+#: app.py:1362
 msgid "이 링크는"
 msgstr "This link will expire in"
 
-#: app.py:1261
+#: app.py:1362
 msgid "1시간 후 만료"
 msgstr "an hour"
 
-#: app.py:1261
+#: app.py:1362
 msgid "됩니다."
 msgstr " "
 
-#: app.py:1266 templates/auth/reset_password_request.html:5
+#: app.py:1367 templates/auth/reset_password_request.html:5
 msgid "비밀번호 재설정"
 msgstr "Change Password"
 
-#: app.py:1270
+#: app.py:1371
 msgid "본 메일은 발신 전용이며, 회신되지 않습니다."
 msgstr "This e-mail is outgoing only and will not be returned"
 
-#: app.py:1271 app.py:3153
+#: app.py:1372 app.py:3998
 msgid "은 고객님의 계정을 안전하게 보호하기 위해 최선을 다하고 있습니다."
 msgstr "is doing its best to keep your account safe"
 
-#: app.py:2781
+#: app.py:3112
 msgid "[UGAMALL] 입금이 확인되었습니다."
 msgstr "[UGAMALL] The deposit has been confirmed"
 
-#: app.py:2794
+#: app.py:3125
 msgid "입금 확인 안내"
 msgstr "Deposit Information"
 
-#: app.py:2797
+#: app.py:3128
 msgid "고객님."
 msgstr "Customer"
 
-#: app.py:2798 templates/guest_orders.html:30 templates/mypage.html:99
+#: app.py:3129 templates/guest_orders.html:30 templates/mypage.html:99
 #: templates/mypage.html:340 templates/order_complete.html:7
 #: templates/payment.html:8
 msgid "주문번호"
 msgstr "Order Number"
 
-#: app.py:2798
+#: app.py:3129
 msgid "의 입금이 확인되어 결제가 완료되었습니다."
 msgstr "Payment completed"
 
-#: app.py:2799
+#: app.py:3130
 msgid "곧 배송 준비를 시작하겠습니다."
 msgstr "We'll start preparing for delivery soon"
 
-#: app.py:2803
+#: app.py:3134
 msgid "결제 금액:"
 msgstr "amount"
 
-#: app.py:2803 templates/checkout.html:107 templates/checkout.html:231
-#: templates/checkout.html:235 templates/checkout.html:239
-#: templates/checkout.html:243 templates/guest_orders.html:77
+#: app.py:3134 templates/checkout.html:107 templates/checkout.html:278
+#: templates/checkout.html:282 templates/checkout.html:286
+#: templates/checkout.html:290 templates/guest_orders.html:77
 #: templates/mypage.html:152 templates/mypage.html:153
 #: templates/mypage.html:155 templates/mypage.html:313
 #: templates/mypage.html:316 templates/order_complete.html:13
-#: templates/payment.html:11 templates/product_detail.html:95
-#: templates/search.html:108
+#: templates/payment.html:11
 msgid "원"
 msgstr "KRW"
 
-#: app.py:2807
+#: app.py:3138
 msgid "주문 상세 정보는 마이페이지 또는 주문조회에서 확인하실 수 있습니다."
 msgstr "Order details can be found on My Page or Order Inquiry"
 
-#: app.py:2808
+#: app.py:3139
 msgid "주문 내역 바로가기"
 msgstr "Order History"
 
-#: app.py:3129
+#: app.py:3974
 msgid "[UGAMALL] 이메일 인증 코드"
 msgstr "[UGAMALL] Email Authentication Code"
 
-#: app.py:3139
+#: app.py:3984
 msgid "이메일 인증 요청"
 msgstr "Email Authentication Request"
 
-#: app.py:3142
+#: app.py:3987
 msgid "입니다."
 msgstr " "
 
-#: app.py:3143
+#: app.py:3988
 msgid "이메일 인증을 완료하시려면 아래 인증코드를 입력해주세요."
 msgstr ""
 "To complete email authentication, please enter the authentication code "
 "below"
 
-#: app.py:3144
+#: app.py:3989
 msgid "인증코드는 5분간만 유효합니다."
 msgstr "The authentication code is only valid for 5 minutes"
 
-#: app.py:3152
+#: app.py:3997
 msgid "본 메일은 발신 전용이며 회신되지 않습니다."
 msgstr "This e-mail is outgoing only and will not be returned"
 
@@ -197,15 +196,16 @@ msgstr "Blue"
 msgid "발에 전해지는 편안함, 하루의 피로를 풀어주는 리커버리 슬리퍼."
 msgstr "Recovery slippers to relieve the comfort and fatigue of the day"
 
-#: templates/checkout.html:215 translations_dummy.py:25
+#: translations_dummy.py:25
 msgid "무통장입금"
 msgstr "Deposit without passbook"
 
-#: templates/checkout.html:217 translations_dummy.py:26
+#: templates/checkout.html:222 templates/product_detail.html:286
+#: translations_dummy.py:26
 msgid "카카오페이"
 msgstr "kakao pay"
 
-#: templates/checkout.html:216 translations_dummy.py:27
+#: templates/checkout.html:231 translations_dummy.py:27
 msgid "카드결제"
 msgstr "Deposit with card"
 
@@ -253,71 +253,80 @@ msgstr "Year"
 msgid "월"
 msgstr "month"
 
-#: templates/base.html:132 templates/base.html:205
-msgid "상품 검색"
-msgstr "Product search"
-
-#: templates/base.html:143 templates/base.html:218 templates/base.html:316
+#: templates/base.html:172 templates/base.html:259 templates/base.html:373
 msgid "회사소개"
 msgstr "Introduction"
 
-#: templates/base.html:144 templates/base.html:222 templates/base.html:315
+#: templates/base.html:173 templates/base.html:263 templates/base.html:374
 msgid "제품"
 msgstr "product"
 
-#: templates/base.html:145 templates/base.html:226
-#: templates/product_detail.html:77
+#: templates/base.html:174 templates/base.html:267 templates/base.html:375
+#: templates/product_detail.html:90
 msgid "문의"
 msgstr "Contact us"
 
-#: templates/base.html:157 templates/base.html:241 templates/mypage.html:16
+#: templates/base.html:186 templates/base.html:282 templates/mypage.html:16
 msgid "내 정보"
 msgstr "MyPage"
 
-#: templates/base.html:159 templates/base.html:246
+#: templates/base.html:188 templates/base.html:287
 msgid "로그아웃"
 msgstr "Sign out"
 
 #: templates/auth/login.html:5 templates/auth/login.html:26
-#: templates/base.html:161 templates/base.html:251
+#: templates/base.html:190 templates/base.html:292
 msgid "로그인"
 msgstr "Sign in"
 
-#: templates/base.html:261
+#: templates/base.html:200 templates/base.html:246
+msgid "상품 검색"
+msgstr "Product search"
+
+#: templates/base.html:302
 msgid "장바구니"
 msgstr "Add to Cart"
 
-#: templates/base.html:266
+#: templates/base.html:307
 msgid "언어"
 msgstr "Language"
 
-#: templates/base.html:313
+#: templates/base.html:362
+msgid "고객센터"
+msgstr "Customer service center"
+
+#: templates/base.html:363 templates/contact.html:82
+msgid "전화"
+msgstr "Phone Number"
+
+#: templates/base.html:364 templates/contact.html:83
+msgid "팩스"
+msgstr "Fax"
+
+#: templates/auth/login.html:11 templates/auth/register_info.html:12
+#: templates/auth/register_info.html:125 templates/base.html:365
+#: templates/checkout.html:162 templates/contact.html:20
+#: templates/contact.html:84 templates/guest_orders.html:14
+#: templates/guest_orders_search.html:8 templates/index.html:148
+#: templates/mypage.html:193
+msgid "이메일"
+msgstr "Email"
+
+#: templates/base.html:366
+msgid "평일"
+msgstr "weekdays"
+
+#: templates/base.html:366
+msgid "점심"
+msgstr "lunch"
+
+#: templates/base.html:366
+msgid "주말 및 공휴일 휴무"
+msgstr "excluding weekends and holidays"
+
+#: templates/base.html:371
 msgid "바로가기"
 msgstr "Go to menu"
-
-#: templates/base.html:317 templates/contact.html:16 templates/index.html:125
-msgid "문의하기"
-msgstr "Contact us"
-
-#: templates/base.html:321 templates/contact.html:56
-msgid "오시는 길"
-msgstr "LOCATION"
-
-#: templates/base.html:322
-msgid "대표자"
-msgstr "Representative"
-
-#: templates/base.html:323
-msgid "부산광역시 동래구 안남로 78-3"
-msgstr "78-3, Annam-ro, Dongnae-gu, Busan, Republic of Korea"
-
-#: templates/base.html:324
-msgid "사업자등록번호"
-msgstr "Business registration number"
-
-#: templates/base.html:325
-msgid "통신판매업신고번호"
-msgstr "Mail order number"
 
 #: templates/checkout.html:6
 msgid "주문 / 결제"
@@ -353,8 +362,9 @@ msgstr "pcs"
 msgid "빠른배송"
 msgstr "Quick delivery"
 
-#: templates/checkout.html:78 templates/product_detail.html:29
-#: templates/product_detail.html:271
+#: templates/checkout.html:78 templates/product_detail.html:33
+#: templates/product_detail.html:108 templates/product_detail.html:438
+#: templates/products.html:101 templates/search.html:108
 #, python-format
 msgid "%(price)s원"
 msgstr "%(price)s KRW"
@@ -373,18 +383,18 @@ msgstr "Buyer Information"
 
 #: templates/auth/register_info.html:58 templates/auth/register_info.html:59
 #: templates/auth/register_info.html:167 templates/auth/register_info.html:168
-#: templates/checkout.html:129 templates/contact.html:26
-#: templates/index.html:135 templates/mypage.html:198
+#: templates/checkout.html:129 templates/contact.html:43
+#: templates/index.html:171 templates/mypage.html:198
 msgid "이름"
 msgstr "Name"
 
-#: templates/checkout.html:136 templates/contact.html:30
-#: templates/guest_orders.html:52 templates/index.html:139
+#: templates/checkout.html:136 templates/contact.html:48
+#: templates/guest_orders.html:52 templates/index.html:175
 msgid "전화번호"
 msgstr "Phone Number"
 
 #: templates/auth/register_info.html:65 templates/auth/register_info.html:177
-#: templates/checkout.html:143 templates/contact.html:58
+#: templates/checkout.html:143 templates/contact.html:81
 #: templates/mypage.html:202 templates/order_complete.html:10
 msgid "주소"
 msgstr "Address"
@@ -401,33 +411,30 @@ msgstr "Find Address"
 msgid "상세 주소"
 msgstr "Detailed Address"
 
-#: templates/auth/login.html:11 templates/auth/register_info.html:12
-#: templates/auth/register_info.html:125 templates/checkout.html:162
-#: templates/contact.html:61 templates/guest_orders.html:14
-#: templates/guest_orders_search.html:8 templates/mypage.html:193
-msgid "이메일"
-msgstr "Email"
-
 #: templates/auth/login.html:12 templates/auth/register_info.html:14
 #: templates/auth/register_info.html:130 templates/checkout.html:167
+#: templates/contact.html:24 templates/index.html:152
 msgid "이메일 입력"
 msgstr "Email"
 
 #: templates/auth/register_info.html:18 templates/auth/register_info.html:133
 #: templates/auth/register_info.html:447 templates/auth/register_info.html:472
 #: templates/auth/register_info.html:529 templates/auth/register_info.html:554
-#: templates/checkout.html:172 templates/guest_orders_search.html:18
+#: templates/checkout.html:172 templates/contact.html:27
+#: templates/guest_orders_search.html:18 templates/index.html:155
 msgid "인증메일 보내기"
 msgstr "send"
 
 #: templates/auth/register_info.html:23 templates/auth/register_info.html:139
-#: templates/checkout.html:179 templates/guest_orders_search.html:25
+#: templates/checkout.html:179 templates/contact.html:32
+#: templates/guest_orders_search.html:25 templates/index.html:160
 msgid "인증코드 입력"
 msgstr "Enter"
 
 #: templates/auth/register_info.html:27 templates/auth/register_info.html:97
 #: templates/auth/register_info.html:143 templates/checkout.html:183
-#: templates/guest_orders_search.html:29
+#: templates/contact.html:36 templates/guest_orders_search.html:29
+#: templates/index.html:164
 msgid "인증 확인"
 msgstr "Verify"
 
@@ -439,222 +446,207 @@ msgstr "Select Coupon"
 msgid "쿠폰을 선택하세요"
 msgstr "Please select"
 
-#: templates/checkout.html:213
-msgid "결제 방법"
-msgstr "Payment Method"
+#: templates/checkout.html:212
+msgid "결제 수단"
+msgstr "payment method"
 
-#: templates/checkout.html:218
-msgid "토스페이"
-msgstr "toss pay"
+#: templates/checkout.html:240 templates/product_detail.html:285
+msgid "계좌이체"
+msgstr "account transfer"
 
-#: templates/checkout.html:230
+#: templates/checkout.html:277
 msgid "총 상품금액"
 msgstr "total amount"
 
-#: templates/checkout.html:234
+#: templates/checkout.html:281
 msgid "할인금액"
 msgstr "Discount amount"
 
-#: templates/checkout.html:238
+#: templates/checkout.html:285
 msgid "배송비"
 msgstr "The delivery charge"
 
-#: templates/checkout.html:242 templates/order_complete.html:13
+#: templates/checkout.html:289 templates/order_complete.html:13
 #: templates/payment.html:11
 msgid "결제금액"
 msgstr "amount"
 
-#: templates/checkout.html:250
+#: templates/checkout.html:297
 msgid "결제하기"
 msgstr "payment"
 
-#: templates/checkout.html:269
+#: templates/checkout.html:316
 msgid "삭제할 상품을 선택해주세요"
 msgstr "select the product you wish to pay for."
 
-#: templates/checkout.html:273
+#: templates/checkout.html:320
 #, python-brace-format
 msgid "선택된 ${selected.length}개의 상품을 삭제하시겠습니까"
 msgstr "Are you sure you want to delete the ${selected.length}selected items"
 
-#: templates/checkout.html:308
+#: templates/checkout.html:355
 msgid "결제할 상품을 선택해주세요."
 msgstr "select the product you wish to pay for."
 
-#: templates/checkout.html:317
-msgid "무통장입금으로 주문하시겠습니까?"
+#: templates/checkout.html:364
+msgid "계좌이체로 주문하시겠습니까?"
 msgstr "Would you like to order by bank transfer?"
 
-#: templates/checkout.html:330
+#: templates/checkout.html:377
 msgid "주문 생성 중 오류가 발생했습니다."
 msgstr "An error occurred while creating the order"
 
-#: templates/checkout.html:338
+#: templates/checkout.html:385
 msgid "결제 처리 중 오류가 발생했습니다."
 msgstr "An error occurred while processing payment"
 
-#: templates/checkout.html:431
+#: templates/checkout.html:478
 msgid "이 상품을 장바구니에서 삭제하시겠습니까"
 msgstr "Are you sure you want to delete this item from your shopping cart"
 
 #: templates/auth/register_info.html:242 templates/auth/register_info.html:356
 #: templates/auth/register_info.html:431 templates/auth/register_info.html:513
-#: templates/checkout.html:497 templates/guest_orders_search.html:56
+#: templates/checkout.html:544 templates/guest_orders_search.html:56
 msgid "이메일을 입력해주세요"
 msgstr "Email"
 
 #: templates/auth/register_info.html:452 templates/auth/register_info.html:534
-#: templates/checkout.html:500 templates/guest_orders_search.html:59
+#: templates/checkout.html:547 templates/guest_orders_search.html:59
 msgid "전송 중"
 msgstr "Transmission"
 
-#: templates/checkout.html:509 templates/guest_orders_search.html:68
+#: templates/checkout.html:556 templates/guest_orders_search.html:68
 msgid "인증메일이 발송되었습니다. 메일함을 확인해주세요"
 msgstr "Authentication mail has been sent, please check your mailbox"
 
 #: templates/auth/register_info.html:480 templates/auth/register_info.html:562
-#: templates/checkout.html:526 templates/guest_orders_search.html:85
+#: templates/checkout.html:573 templates/guest_orders_search.html:85
 msgid "인증코드를 입력해주세요"
 msgstr "Password"
 
 #: templates/auth/register_info.html:492 templates/auth/register_info.html:574
-#: templates/checkout.html:537 templates/guest_orders_search.html:96
+#: templates/checkout.html:584 templates/guest_orders_search.html:96
 msgid "이메일 인증이 완료되었습니다"
 msgstr "Payment completed"
 
 #: templates/auth/register_info.html:495 templates/auth/register_info.html:577
-#: templates/checkout.html:541 templates/guest_orders_search.html:100
+#: templates/checkout.html:588 templates/guest_orders_search.html:100
 msgid "인증에 실패했습니다. 다시 시도해주세요"
 msgstr "Authentication failed, please try again"
 
-#: templates/company.html:12
-msgid "유가에 대해"
-msgstr "About UGA"
+#: templates/company.html:11
+msgid "유가 소개"
+msgstr "Introduction to UGAMall"
 
-#: templates/company.html:13
-msgid "혁신 · 신뢰 · 협력"
-msgstr "innovation · Trust · cooperation"
-
-#: templates/company.html:30 templates/company.html:46
+#: templates/company.html:28
 msgid "소개"
 msgstr "Introduction"
 
-#: templates/company.html:34 templates/company.html:79
+#: templates/company.html:32 templates/company.html:52
 msgid "연혁"
 msgstr "History"
 
-#: templates/company.html:38
+#: templates/company.html:36
 msgid "파트너"
 msgstr "partner"
 
-#: templates/company.html:50
-msgid "고객 중심"
-msgstr "Customer First"
+#: templates/company.html:44
+msgid "유가"
+msgstr "UGA"
 
-#: templates/company.html:51
-msgid ""
-"모든 제품과 서비스는 고객의 건강과 편의를 최우선으로 합니다.\n"
-"쉽고 편리한 쇼핑 경험을 제공하고, 구매 후에도 만족할 수 있도록 지속적인 관리와 지원을 약속합니다."
-msgstr ""
-"All products and services prioritize customer health and convenience.\n"
-"We provide an easy and convenient shopping experience, and promise "
-"ongoing management and support to ensure your satisfaction even after "
-"your purchase."
+#: templates/company.html:44
+msgid "는 의료 현장의"
+msgstr "is based on the"
 
-#: templates/company.html:58
-msgid "신뢰와 품질"
-msgstr "Trust & Quality"
+#: templates/company.html:44
+msgid "신뢰"
+msgstr "trust"
 
-#: templates/company.html:59
-msgid ""
-"엄격한 검증을 거친 정품 의료·건강 제품만을 취급합니다.\n"
-"투명한 정보 제공과 철저한 품질 관리로 고객이 안심하고 사용할 수 있는 쇼핑몰이 되겠습니다."
-msgstr ""
-"We only handle genuine medical and health products that have passed "
-"strict verification.\n"
-"We will become a shopping mall where customers can use our products with "
-"confidence by providing transparent information and thorough quality "
-"control."
+#: templates/company.html:44
+msgid "를 바탕으로, "
+msgstr "of the medical field,"
 
-#: templates/company.html:68
-msgid "지속적인 혁신"
-msgstr "Innovation for the Future"
+#: templates/company.html:45
+msgid "작지만 단단한 걸음을 이어왔습니다."
+msgstr "and has continued to take a small but solid steps."
 
-#: templates/company.html:69
-msgid ""
-"최신 기술과 데이터를 기반으로 개인 맞춤형 의료·헬스케어 솔루션을 제공합니다.\n"
-"단순한 판매를 넘어, 고객의 건강한 삶을 위한 스마트 헬스 플랫폼으로 발전해 나갑니다"
-msgstr ""
-"We provide personalized medical and healthcare solutions based on the "
-"latest technology and data.\n"
-"Beyond simple sales, we are evolving into a smart health platform that "
-"helps customers lead healthier lives."
+#: templates/company.html:64
+msgid "새로운 도약, 주식회사 유가"
+msgstr "A new leap, UGA inc."
 
-#: templates/company.html:91
-msgid "UGAMALL 온라인 플랫폼 공식 런칭"
-msgstr "UGAMALL Official launch of online platform"
+#: templates/company.html:65
+msgid "새로운 의료·헬스케어 시장으로 확장 준비"
+msgstr "Prepare to expand into new healthcare and healthcare markets"
 
-#: templates/company.html:101
-msgid "신규 의료기기 보급 확대 및 파트너십 체결"
-msgstr "Expanding the supply of new medical devices and establishing partnerships"
+#: templates/company.html:75
+msgid "협력과 확장의 해"
+msgstr "Year of Cooperation and Expansion"
 
-#: templates/company.html:111
-msgid "관절 치료/재활 라인업 강화"
-msgstr "Strengthening the joint treatment / rehabilitation lineup"
+#: templates/company.html:76
+msgid "함께 성장하는 브랜드로 시장 내 신뢰 확립"
+msgstr "Build trust in the market with brands that grow together"
 
-#: templates/company.html:121
-msgid "법인 설립"
-msgstr "Establishment of a corporation"
+#: templates/company.html:86
+msgid "안정과 도약의 해"
+msgstr "the Year of Stability and Leap"
 
-#: templates/company.html:131
+#: templates/company.html:87
+msgid "신제품 개발·출시로 성장 기반"
+msgstr "Foundation for growth by developing and launching new products"
+
+#: templates/company.html:96
+msgid "시작의 해, 유가메디칼의 출발"
+msgstr "The Year of the Beginning, UGAMEDICAL"
+
+#: templates/company.html:97
+msgid "작지만 믿을 수 있는 의료"
+msgstr "small but reliable medical care"
+
+#: templates/company.html:108
 msgid "함께하는 사람들"
 msgstr "Our Partners"
 
-#: templates/company.html:132
+#: templates/company.html:109
 msgid "국내외 다양한 파트너사와 함께 헬스케어의 미래를 만들어갑니다."
 msgstr ""
 "We shape the future of healthcare with diverse domestic and global "
 "partners."
 
-#: templates/contact.html:11
-msgid "우리에게"
-msgstr "To us"
+#: templates/contact.html:9
+msgid "유가에 문의하기"
+msgstr "Contact us"
 
-#: templates/contact.html:22 templates/index.html:131
-msgid "이메일 (필수)"
-msgstr "Email (required)"
+#: templates/contact.html:14 templates/index.html:142
+msgid "문의하기"
+msgstr "Contact us"
 
-#: templates/contact.html:36 templates/index.html:145
+#: templates/contact.html:54 templates/index.html:181
 msgid "제목"
 msgstr "Title"
 
-#: templates/contact.html:39
+#: templates/contact.html:57
 msgid "문의 제목"
 msgstr "Inquiry about"
 
-#: templates/contact.html:43 templates/index.html:149
+#: templates/contact.html:61 templates/index.html:185
 msgid "내용"
 msgstr "Contents"
 
-#: templates/contact.html:46
+#: templates/contact.html:64
 msgid "문의 내용을 입력하세요"
 msgstr "Please enter your inquiry details"
 
-#: templates/contact.html:50 templates/index.html:153
+#: templates/contact.html:68 templates/index.html:189
 msgid "보내기"
 msgstr "SEND"
 
-#: templates/contact.html:58
+#: templates/contact.html:79
+msgid "오시는 길"
+msgstr "LOCATION"
+
+#: templates/contact.html:81
 msgid "부산광역시 동래구 안남로 78-3 (더 평안빌딩 2층)"
 msgstr "78-3, Annam-ro, Dongnae-gu, Busan, Republic of Korea"
-
-#: templates/contact.html:59
-msgid "전화"
-msgstr "Phone Number"
-
-#: templates/contact.html:60
-msgid "팩스"
-msgstr "Fax"
 
 #: templates/guest_orders.html:8
 msgid "비회원 주문내역"
@@ -681,7 +673,7 @@ msgstr "Order Date"
 msgid "주문자"
 msgstr "Customer"
 
-#: templates/guest_orders.html:53
+#: templates/guest_orders.html:53 templates/product_detail.html:283
 msgid "결제방식"
 msgstr "Payment Method"
 
@@ -733,29 +725,33 @@ msgstr "Learn More"
 msgid "아직 등록된 영상이 없습니다."
 msgstr "No videos registered yet."
 
-#: templates/index.html:75
+#: templates/index.html:76
 msgid "자세히 보러가기 →"
 msgstr "Read more →"
 
-#: templates/index.html:107
+#: templates/index.html:108
 msgid "등록된 광고가 없습니다."
 msgstr "No inquiries registered."
 
-#: templates/index.html:114
-msgid "유가몰 소개"
-msgstr "Introduction to UGAMall"
-
-#: templates/index.html:116
+#: templates/index.html:131
 msgid ""
 "유가몰은 누구나 편리하게 이용할 수 있는 의료용품 전문 스토어입니다.\n"
 "일상에서 필요한 제품을 간편하게 만나보세요.\n"
-"믿을 수 있는 품질, 합리적인 가격, 빠른 배송으로 여러분의 건강한 생활을 응원합니다 "
+"믿을 수 있는 품질, 합리적인 가격, 빠른 배송으로 여러분의 건강한 생활을 응원합니다."
 msgstr ""
 "Ugamall is a medical supplies specialty store that anyone can "
 "conveniently use.\n"
 "Easily find the products you need in your daily life.\n"
 "We support your healthy lifestyle with reliable quality, reasonable "
 "prices, and fast delivery."
+
+#: templates/index.html:227
+msgid "오늘 하루 보지 않기"
+msgstr "don't watch today"
+
+#: templates/auth/register_terms.html:77 templates/index.html:230
+msgid "닫기"
+msgstr "close"
 
 #: templates/mypage.html:10
 msgid "고객님의 건강을 응원합니다!"
@@ -972,6 +968,7 @@ msgid "교환"
 msgstr "Exchange"
 
 #: templates/mypage.html:378 templates/mypage.html:399
+#: templates/product_detail.html:401
 msgid "취소"
 msgstr "Cancel"
 
@@ -1069,7 +1066,7 @@ msgstr "Preparing payment"
 msgid "잠시만 기다려 주세요. 결제창이 곧 열립니다."
 msgstr "Please wait a moment. The payment window will open shortly."
 
-#: templates/payment.html:69
+#: templates/payment.html:68
 msgid "결제가 완료되었습니다"
 msgstr "Payment completed"
 
@@ -1081,150 +1078,151 @@ msgstr "Go back"
 msgid "이미지 없음"
 msgstr "No image"
 
-#: templates/product_detail.html:31
+#: templates/product_detail.html:37
 msgid "카테고리"
 msgstr "Category"
 
-#: templates/product_detail.html:44 templates/product_detail.html:294
+#: templates/product_detail.html:50 templates/product_detail.html:462
 msgid "선택하세요"
 msgstr "Please select"
 
-#: templates/product_detail.html:59 templates/product_detail.html:275
+#: templates/product_detail.html:59 templates/product_detail.html:443
 msgid "수량"
 msgstr "Quantity"
 
-#: templates/product_detail.html:71
-msgid "장바구니에 담기"
-msgstr "Add to Cart"
-
-#: templates/product_detail.html:86
+#: templates/product_detail.html:99
 msgid "관련 분야 상품"
 msgstr "Special Item"
 
-#: templates/product_detail.html:106
-msgid "상세보기"
+#: templates/product_detail.html:119
+msgid "상품상세보기"
 msgstr "Terms and conditions details"
 
-#: templates/product_detail.html:108
+#: templates/product_detail.html:121
+msgid "상품결제/배송정보"
+msgstr "Payment/Delivery info"
+
+#: templates/product_detail.html:123
 msgid "리뷰"
 msgstr "review"
 
-#: templates/product_detail.html:131
+#: templates/product_detail.html:146
 msgid "상세정보 더보기"
 msgstr "Terms and conditions details"
 
-#: templates/product_detail.html:139
+#: templates/product_detail.html:154
 msgid "팜플렛 다운로드"
 msgstr "Download pamphlets"
 
-#: templates/product_detail.html:143
+#: templates/product_detail.html:158
 msgid "등록된 팜플렛이 없습니다."
 msgstr "No inquiries registered."
 
-#: templates/product_detail.html:149
+#: templates/product_detail.html:164
 msgid "상품정보 제공 고시"
 msgstr "Notice of provision of product information"
 
-#: templates/product_detail.html:153
+#: templates/product_detail.html:170 templates/product_detail.html:218
 msgid "품명 및 모델명"
 msgstr "Item name and model name"
 
-#: templates/product_detail.html:157
+#: templates/product_detail.html:174 templates/product_detail.html:222
 msgid "제조국 또는 원산지"
 msgstr "country of manufacture or country of origin"
 
-#: templates/product_detail.html:158
+#: templates/product_detail.html:175 templates/product_detail.html:223
 msgid "대한민국"
 msgstr "Republic of Korea"
 
-#: templates/product_detail.html:161
+#: templates/product_detail.html:178 templates/product_detail.html:226
 msgid "제조자 / 수입자"
 msgstr "Manufacturer/Importer"
 
-#: templates/product_detail.html:162
-msgid "유가메디컬"
-msgstr "UGAMedical"
+#: templates/product_detail.html:179 templates/product_detail.html:227
+msgid "㈜유가"
+msgstr "UGA inc."
 
-#: templates/product_detail.html:165
+#: templates/product_detail.html:182 templates/product_detail.html:230
 msgid "책임자와 전화번호"
 msgstr "Phone Number"
 
-#: templates/product_detail.html:166
-msgid "유가메디컬 고객센터"
+#: templates/product_detail.html:183 templates/product_detail.html:231
+msgid "㈜유가 고객센터"
 msgstr "Customer Center"
 
-#: templates/product_detail.html:169
+#: templates/product_detail.html:186 templates/product_detail.html:234
 msgid "품질보증기준"
 msgstr "Quality assurance standard"
 
-#: templates/product_detail.html:170
+#: templates/product_detail.html:187 templates/product_detail.html:235
 msgid "관련 법 및 소비자분쟁해결 기준에 따름"
 msgstr "In accordance with relevant laws and consumer dispute settlement standards"
 
-#: templates/product_detail.html:173
+#: templates/product_detail.html:190 templates/product_detail.html:238
 msgid "배송 안내"
 msgstr "Deposit Information"
 
-#: templates/product_detail.html:175
+#: templates/product_detail.html:192 templates/product_detail.html:240
+#: templates/product_detail.html:301
 msgid "택배"
 msgstr "Parcel Service"
 
-#: templates/product_detail.html:176
+#: templates/product_detail.html:193 templates/product_detail.html:241
 msgid "결제 완료 후 평균 2~4일 이내 배송(주말 및 공휴일 제외)"
 msgstr ""
 "Delivery within 2-4 days on average after payment is completed (excluding"
 " weekends and holidays)"
 
-#: templates/product_detail.html:180
+#: templates/product_detail.html:197 templates/product_detail.html:245
 msgid "교환/반품 안내"
 msgstr "Exchange/Return Notice"
 
-#: templates/product_detail.html:183
+#: templates/product_detail.html:200 templates/product_detail.html:247
 msgid "상품 수령 후 7일 이내 신청 가능합니다"
 msgstr "You can apply within 7 days of receiving the product"
 
-#: templates/product_detail.html:184
+#: templates/product_detail.html:201 templates/product_detail.html:248
 msgid "단순 변심의 경우 왕복 배송비 고객 부담"
 msgstr "For short-lived change of mind, the customer pays for round-trip shipping"
 
-#: templates/product_detail.html:185
+#: templates/product_detail.html:202 templates/product_detail.html:249
 msgid "제품 불량 및 오배송 시 전액 무료 교환/환불"
 msgstr "Full free exchange/refund in case of product defect or misdelivery"
 
-#: templates/product_detail.html:186
+#: templates/product_detail.html:203 templates/product_detail.html:250
 msgid "고객 부주의로 인한 훼손, 사용 흔적이 있을 경우 불가"
 msgstr ""
 "Damage due to customer carelessness, not possible if there are traces of "
 "use"
 
-#: templates/product_detail.html:191
+#: templates/product_detail.html:208 templates/product_detail.html:254
 msgid "취소/환불 규정"
 msgstr "Cancellation/refund regulations"
 
-#: templates/product_detail.html:193
+#: templates/product_detail.html:210 templates/product_detail.html:256
 msgid "상품 준비 중 상태에서는 취소 가능하며, 배송 이후에는 반품 절차를 통해 처리됩니다"
 msgstr ""
 "Cancellation is possible when the product is being prepared, and after "
 "delivery, it will be processed through a return process"
 
-#: templates/product_detail.html:199
+#: templates/product_detail.html:262
 msgid "본 상품정보는 전자상거래 등에서의 상품정보제공고시에 따라 작성되었습니다"
 msgstr ""
 "This product information was prepared in accordance with the notice of "
 "product information provision in e-commerce, etc"
 
-#: templates/product_detail.html:205
+#: templates/product_detail.html:268
 msgid "주의사항"
 msgstr "precautions"
 
-#: templates/product_detail.html:207
+#: templates/product_detail.html:270
 msgid "전자상거래 등에서의 소비자보호법에 따라 미성년자가 물품을 구매하는 경우, 법정대리인의 동의가 없으면 구매를 취소할 수 있습니다"
 msgstr ""
 "In accordance with the Consumer Protection Act in e-commerce, if a minor "
 "purchases an item, the purchase can be canceled without the consent of a "
 "legal representative"
 
-#: templates/product_detail.html:208
+#: templates/product_detail.html:271
 msgid ""
 "본 사이트에 등록된 모든 상품은 주식회사 유가에서 직접 판매·관리하는 정품이며, 제품 정보와 가격은 사전 예고 없이 변경될 수 "
 "있습니다"
@@ -1233,54 +1231,125 @@ msgstr ""
 "managed directly by oil prices, and product information and prices are "
 "subject to change without prior noticeThere is"
 
-#: templates/product_detail.html:209
+#: templates/product_detail.html:272
 msgid "결제 및 배송은 당사 시스템을 통해 안전하게 처리되며, 주문·결제 관련 문의는 고객센터를 통해 신속히 안내받으실 수 있습니다"
 msgstr ""
 "Payment and delivery will be handled safely through our system, and "
 "inquiries about orders and payments can be quickly informed through the "
 "customer center"
 
-#: templates/product_detail.html:216
+#: templates/product_detail.html:279
+msgid "상품 결제정보"
+msgstr "Payment information"
+
+#: templates/product_detail.html:287
+msgid "신용카드"
+msgstr "Deposit with card"
+
+#: templates/product_detail.html:295
+msgid "상품 배송정보"
+msgstr "Delivery information"
+
+#: templates/product_detail.html:300
+msgid "배송방법"
+msgstr "Delivery method"
+
+#: templates/product_detail.html:305
+msgid "배송비용"
+msgstr "The delivery charge"
+
+#: templates/product_detail.html:307
+msgid "총 상품금액 50,000원 미만 3,000원"
+msgstr "Total amount less than KRW50,000, KRW3,000 "
+
+#: templates/product_detail.html:312
+msgid "배송기간"
+msgstr "Delivery period"
+
+#: templates/product_detail.html:314
+msgid "평균 배송일 2~4일(주말 및 공휴일 제외)"
+msgstr ""
+"Delivery within 2-4 days on average after payment is completed (excluding"
+" weekends and holidays)"
+
+#: templates/product_detail.html:324
 msgid "상품 리뷰"
 msgstr "Product review"
 
-#: templates/product_detail.html:229
+#: templates/product_detail.html:329
+msgid "개의 리뷰"
+msgstr "review"
+
+#: templates/product_detail.html:332 templates/products.html:66
+#: templates/search.html:85
+msgid "최신순"
+msgstr "Latest"
+
+#: templates/product_detail.html:333
+msgid "인기순"
+msgstr "Popularity"
+
+#: templates/auth/register_info.html:160 templates/auth/register_info.html:170
+#: templates/auth/register_info.html:182 templates/auth/register_info.html:194
+#: templates/product_detail.html:345
+msgid "이전"
+msgstr "back"
+
+#: templates/auth/register_info.html:150 templates/auth/register_info.html:161
+#: templates/auth/register_info.html:171 templates/auth/register_info.html:183
+#: templates/product_detail.html:349
+msgid "다음"
+msgstr "next"
+
+#: templates/product_detail.html:352
 msgid "아직 리뷰가 없습니다."
 msgstr "There are no reviews yet"
 
-#: templates/product_detail.html:234
+#: templates/product_detail.html:371
 msgid "리뷰 작성하기"
-msgstr "Write a review"
+msgstr "Write a Review"
 
-#: templates/product_detail.html:235
+#: templates/product_detail.html:379
 msgid "별점"
-msgstr "scope"
+msgstr "Score"
 
-#: templates/product_detail.html:238
-msgid "점"
-msgstr " "
-
-#: templates/product_detail.html:242
+#: templates/product_detail.html:387
 msgid "리뷰 내용"
-msgstr "contents"
+msgstr "Content"
 
-#: templates/product_detail.html:246
+#: templates/product_detail.html:391
+msgid "상품 사용 후기를 남겨주세요."
+msgstr "please leave a review of the product"
+
+#: templates/product_detail.html:394
+msgid "리뷰 사진 업로드"
+msgstr "image upload"
+
+#: templates/product_detail.html:405
 msgid "등록"
 msgstr "Register"
 
-#: templates/product_detail.html:308
+#: templates/product_detail.html:436
+msgid "로그인 후 가격 확인"
+msgstr "Check the price after login"
+
+#: templates/product_detail.html:470
+msgid "로그인 후 구매 가능합니다"
+msgstr "Available for purchase after login"
+
+#: templates/product_detail.html:476
 msgid "장바구니 담기"
 msgstr "Add to Cart"
 
-#: templates/product_detail.html:324
+#: templates/product_detail.html:493
 msgid "장바구니에 추가되었습니다"
 msgstr "Added to cart"
 
-#: templates/product_detail.html:328
+#: templates/product_detail.html:497
 msgid "계속 쇼핑하기"
 msgstr "Keep shopping"
 
-#: templates/product_detail.html:332
+#: templates/product_detail.html:501
 msgid "장바구니 이동"
 msgstr "Add to Cart"
 
@@ -1316,10 +1385,6 @@ msgstr "Apply"
 msgid "정렬"
 msgstr "array"
 
-#: templates/products.html:66 templates/search.html:85
-msgid "최신순"
-msgstr "Latest"
-
 #: templates/products.html:67 templates/search.html:86
 msgid "낮은 가격순"
 msgstr "low price"
@@ -1332,23 +1397,35 @@ msgstr "high price"
 msgid "이름순"
 msgstr "Name"
 
-#: templates/products.html:100
+#: templates/products.html:88
+msgid "급여"
+msgstr "Benefit"
+
+#: templates/products.html:92
+msgid "비급여"
+msgstr "Non-benefit"
+
+#: templates/products.html:98
+msgid "회원공개"
+msgstr "private"
+
+#: templates/products.html:117
 msgid "안내사항"
 msgstr "Notification"
 
-#: templates/products.html:104
+#: templates/products.html:121
 msgid "유가몰은 모든 제품에"
 msgstr "ugamall provides"
 
-#: templates/products.html:105
+#: templates/products.html:122
 msgid "정품 UDI"
 msgstr "genuine UDI"
 
-#: templates/products.html:105
+#: templates/products.html:122
 msgid "를 제공합니다."
 msgstr " for all products."
 
-#: templates/products.html:106
+#: templates/products.html:123
 msgid "신뢰할 수 있는 의료 쇼핑몰, 유가몰입니다"
 msgstr "ugamall is a trusted medical shopping mall."
 
@@ -1435,6 +1512,10 @@ msgstr "Confirm New Password"
 msgid "휴대폰 번호"
 msgstr "Phone number"
 
+#: templates/auth/register_info.html:82
+msgid "예"
+msgstr "ex"
+
 #: templates/auth/register_info.html:86 templates/auth/register_info.html:191
 msgid "인증번호 받기"
 msgstr "Get verification number"
@@ -1450,16 +1531,6 @@ msgstr "Sign up"
 #: templates/auth/register_info.html:115
 msgid "진행상황"
 msgstr "Step"
-
-#: templates/auth/register_info.html:150 templates/auth/register_info.html:161
-#: templates/auth/register_info.html:171 templates/auth/register_info.html:183
-msgid "다음"
-msgstr "next"
-
-#: templates/auth/register_info.html:160 templates/auth/register_info.html:170
-#: templates/auth/register_info.html:182 templates/auth/register_info.html:194
-msgid "이전"
-msgstr "back"
 
 #: templates/auth/register_info.html:250
 msgid "이미 사용 중인 이메일입니다"
@@ -1568,10 +1639,6 @@ msgstr "next"
 msgid "약관 상세보기"
 msgstr "Terms and conditions details"
 
-#: templates/auth/register_terms.html:77
-msgid "닫기"
-msgstr "close"
-
 #: templates/auth/reset_password_form.html:5
 msgid "새 비밀번호 설정"
 msgstr "New Password"
@@ -1616,6 +1683,18 @@ msgstr "If you haven't received an email, please check your spam folder."
 #: templates/auth/reset_password_request.html:43
 msgid "메일 전송 중"
 msgstr "Sending mail"
+
+#: templates/partials/_review_list.html:26
+msgid "작성자"
+msgstr "Author"
+
+#: templates/partials/_review_list.html:27
+msgid "등록일"
+msgstr "Register"
+
+#: templates/partials/_review_list.html:29
+msgid "좋아요"
+msgstr "Like"
 
 #: venv/Lib/site-packages/git_filter_repo.py:139
 #, python-format
@@ -3163,7 +3242,7 @@ msgstr[1] ""
 #~ msgstr "History"
 
 #~ msgid "UGAMALL 온라인 플랫폼 공식 런칭"
-#~ msgstr "Official launch of UGAMALL online platform"
+#~ msgstr "UGAMALL Official launch of online platform"
 
 #~ msgid "대형 병원 의료기기 납품 확대"
 #~ msgstr "Expanded medical device supply to major hospitals"
@@ -3353,4 +3432,102 @@ msgstr[1] ""
 
 #~ msgid "마이페이지"
 #~ msgstr "My Page"
+
+#~ msgid "대표자"
+#~ msgstr "Representative"
+
+#~ msgid "부산광역시 동래구 안남로 78-3"
+#~ msgstr "78-3, Annam-ro, Dongnae-gu, Busan, Republic of Korea"
+
+#~ msgid "사업자등록번호"
+#~ msgstr "Business registration number"
+
+#~ msgid "통신판매업신고번호"
+#~ msgstr "Mail order number"
+
+#~ msgid "결제 방법"
+#~ msgstr "Payment Method"
+
+#~ msgid "토스페이"
+#~ msgstr "toss pay"
+
+#~ msgid "유가에 대해"
+#~ msgstr "About UGA"
+
+#~ msgid "혁신 · 신뢰 · 협력"
+#~ msgstr "innovation · Trust · cooperation"
+
+#~ msgid "고객 중심"
+#~ msgstr "Customer First"
+
+#~ msgid ""
+#~ "모든 제품과 서비스는 고객의 건강과 편의를 최우선으로 합니다.\n"
+#~ "쉽고 편리한 쇼핑 경험을 제공하고, 구매 후에도 만족할 수 있도록 지속적인 관리와 지원을 약속합니다."
+#~ msgstr ""
+#~ "All products and services prioritize customer health and convenience.\n"
+#~ "We provide an easy and convenient "
+#~ "shopping experience, and promise ongoing "
+#~ "management and support to ensure your"
+#~ " satisfaction even after your purchase."
+
+#~ msgid "신뢰와 품질"
+#~ msgstr "Trust & Quality"
+
+#~ msgid ""
+#~ "엄격한 검증을 거친 정품 의료·건강 제품만을 취급합니다.\n"
+#~ "투명한 정보 제공과 철저한 품질 관리로 고객이 안심하고 사용할 수 있는 쇼핑몰이 되겠습니다."
+#~ msgstr ""
+#~ "We only handle genuine medical and "
+#~ "health products that have passed strict"
+#~ " verification.\n"
+#~ "We will become a shopping mall "
+#~ "where customers can use our products "
+#~ "with confidence by providing transparent "
+#~ "information and thorough quality control."
+
+#~ msgid "지속적인 혁신"
+#~ msgstr "Innovation for the Future"
+
+#~ msgid ""
+#~ "최신 기술과 데이터를 기반으로 개인 맞춤형 의료·헬스케어 솔루션을 제공합니다.\n"
+#~ "단순한 판매를 넘어, 고객의 건강한 삶을 위한 스마트 헬스 플랫폼으로 발전해 나갑니다"
+#~ msgstr ""
+#~ "We provide personalized medical and "
+#~ "healthcare solutions based on the latest"
+#~ " technology and data.\n"
+#~ "Beyond simple sales, we are evolving "
+#~ "into a smart health platform that "
+#~ "helps customers lead healthier lives."
+
+#~ msgid "신규 의료기기 보급 확대 및 파트너십 체결"
+#~ msgstr ""
+#~ "Expanding the supply of new medical "
+#~ "devices and establishing partnerships"
+
+#~ msgid "관절 치료/재활 라인업 강화"
+#~ msgstr "Strengthening the joint treatment / rehabilitation lineup"
+
+#~ msgid "법인 설립"
+#~ msgstr "Establishment of a corporation"
+
+#~ msgid "우리에게"
+#~ msgstr "To us"
+
+#~ msgid "이메일 (필수)"
+#~ msgstr "Email (required)"
+
+#~ msgid "유가메디컬"
+#~ msgstr "UGAMedical"
+
+#~ msgid "리뷰 작성하기"
+#~ msgstr "Write a review"
+
+#~ msgid "별점"
+#~ msgstr "scope"
+
+#~ msgid "리뷰 내용"
+#~ msgstr "contents"
+
+#~ msgid "장바구니 담기"
+#~ msgstr "Add to Cart"
 

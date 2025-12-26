@@ -85,17 +85,17 @@
             <!-- 🔥 급여/비급여 배지 -->
             {% if p.coverage_type == "급여" %}
             <div class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
-              급여
+              {{ _("급여") }}
             </div>
             {% elif p.coverage_type == "비급여" %}
             <div class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
-              비급여
+              {{ _("비급여") }}
             </div>
             {% endif %}
             <h3 class="font-bold text-gray-800 text-sm sm:text-base truncate">{{ _(p.name) }}</h3>
             <!-- 🔥 회원만 가격 보기 -->
             {% if p.member_only_price and not current_user.is_authenticated %}
-              <p class="text-red-600 font-semibold text-sm sm:text-base mt-1">회원공개</p>
+              <p class="text-red-600 font-semibold text-sm sm:text-base mt-1">{{ _("회원공개") }}</p>
             {% else %}
               <p class="text-indigo-600 font-semibold text-sm sm:text-base mt-1">
                 {{ _("%(price)s원", price=p.base_price|format_won) }}

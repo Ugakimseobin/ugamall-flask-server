@@ -282,9 +282,9 @@
         <div>
           <p class="text-sm sm:text-base font-semibold text-gray-800 mb-1">{{ _("결제방식") }}</p>
           <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm sm:text-base">
-            <li>계좌이체</li>
-            <li>카카오페이</li>
-            <li>신용카드</li>
+            <li>{{ _("계좌이체") }}</li>
+            <li>{{ _("카카오페이") }}</li>
+            <li>{{ _("신용카드") }}</li>
           </ul>
         </div>
       </div>
@@ -298,7 +298,7 @@
       <div class="space-y-6 ml-4">
         <div>
           <p class="text-sm sm:text-base font-semibold text-gray-800 mb-1">{{ _("배송방법") }}</p>
-          <p class="text-gray-700 text-sm sm:text-base ml-4">택배</p>
+          <p class="text-gray-700 text-sm sm:text-base ml-4">{{ _("택배") }}</p>
         </div>
 
         <div>
@@ -329,8 +329,8 @@
           <span id="review-count">{{ reviews|length }} {{ _("개의 리뷰") }}</span>
         </div>
         <select id="review-sort" class="border rounded px-2 py-1 text-sm">
-          <option value="newest" selected>최신순</option>
-          <option value="popular">인기순</option>
+          <option value="newest" selected>{{ _("최신순") }}</option>
+          <option value="popular">{{ _("인기순") }}</option>
         </select>
       </div>
 
@@ -342,11 +342,11 @@
 
       <!-- ✅ 페이지네이션 -->
       <div class="flex justify-center mt-6 space-x-2">
-        <button id="prev-page" class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">이전</button>
+        <button id="prev-page" class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">{{ _("이전") }}</button>
         <span id="page-info" class="text-sm text-gray-600">
           1 / {{ (product.reviews|length // 5) + (1 if product.reviews|length % 5 else 0) }}
         </span>
-        <button id="next-page" class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">다음</button>
+        <button id="next-page" class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">{{ _("다음") }}</button>
       </div>
       {% else %}
         <p class="text-gray-500">{{ _("아직 리뷰가 없습니다.") }}</p>
@@ -368,7 +368,7 @@
           <button id="close-review-modal"
                   class="absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-xl">×</button>
 
-          <h3 class="font-bold text-lg mb-4 text-gray-800 text-center">리뷰 작성하기</h3>
+          <h3 class="font-bold text-lg mb-4 text-gray-800 text-center">{{ _("리뷰 작성하기") }}</h3>
 
           <form method="post"
                 action="{{ url_for('add_review', product_id=product.id) }}"
@@ -376,7 +376,7 @@
                 id="review-form">
             
             <!-- 별점 -->
-            <label class="block font-semibold text-sm mb-1">별점</label>
+            <label class="block font-semibold text-sm mb-1">{{ _("별점") }}</label>
             <select name="rating" class="border rounded p-2 mb-3 w-full">
               {% for i in range(1,6) %}
                 <option value="{{ i }}" {% if i == 5 %}selected{% endif %}>{{ i }}점</option>
@@ -384,25 +384,25 @@
             </select>
 
             <!-- 리뷰 내용 -->
-            <label class="block font-semibold text-sm mb-1">리뷰 내용</label>
+            <label class="block font-semibold text-sm mb-1">{{ _("리뷰 내용") }}</label>
             <textarea name="content"
                       class="border rounded w-full p-3 mb-3 focus:ring-2 focus:ring-indigo-300"
                       rows="3"
-                      placeholder="상품 사용 후기를 남겨주세요."></textarea>
+                      placeholder="{{ _('상품 사용 후기를 남겨주세요.') }}"></textarea>
 
             <!-- 사진 업로드 -->
-            <label class="block font-semibold text-sm mb-1">리뷰 사진 업로드</label>
+            <label class="block font-semibold text-sm mb-1">{{ _("리뷰 사진 업로드") }}</label>
             <input type="file" name="image" accept="image/*" class="block mb-4">
 
             <div class="flex justify-between mt-4">
               <button type="button"
                       id="cancel-review"
                       class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
-                취소
+                {{ _("취소") }}
               </button>
               <button type="submit"
                       class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow">
-                등록
+                {{ _("등록") }}
               </button>
             </div>
           </form>
@@ -433,7 +433,7 @@
     <h4 class="text-base font-bold mb-1">{{ _(product.name) }}</h4>
     <!-- 회원공개 가격 -->
     {% if product.member_only_price and not current_user.is_authenticated %}
-    <p class="text-red-600 font-semibold mb-4">로그인 후 가격 확인</p>
+    <p class="text-red-600 font-semibold mb-4">{{ _("로그인 후 가격 확인") }}</p>
     {% else %}
     <p class="text-indigo-600 font-semibold mb-4">{{ _("%(price)s원", price=product.base_price|int|format_won) }}</p>
     {% endif %}
@@ -467,13 +467,13 @@
 
     {% if product.member_only_price and not current_user.is_authenticated %}
         <button class="w-full bg-gray-400 text-white py-2 rounded cursor-not-allowed" disabled>
-            로그인 후 구매 가능합니다
+            {{ _("로그인 후 구매 가능합니다") }}
         </button>
     {% else %}
          <!-- 기존 장바구니 버튼 -->
          <button type="submit"
             class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 shadow transition">
-            장바구니 담기
+            {{ _("장바구니 담기") }}
         </button>
     {% endif %}
   </form>
