@@ -1652,7 +1652,7 @@ def add_to_cart():
 
     if not variant:
         print("❌ 옵션 매칭 실패:", chosen_options, "vs", [v.options for v in variants])
-        return jsonify({"status": "error", "message": "해당 옵션 조합이 존재하지 않습니다."})
+        return jsonify({"status": "error", "message": "옵션을 선택해주세요."})
 
     if variant.stock < quantity:
         return jsonify({"status": "error", "message": "재고가 부족합니다."})
