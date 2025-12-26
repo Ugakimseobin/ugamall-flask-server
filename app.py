@@ -788,7 +788,7 @@ def home():
     products = Product.query.filter_by(is_active=True).order_by(Product.id.desc()).limit(8).all()
     site = get_site_type()
     if site == "b2b":
-        render_template("b2b/index.html")
+        return render_template("b2b/index.html")
     return render_template('index.html',ads=ads, latest_video=latest_video, products=products, popups=popups)
 
 @app.route('/set_lang/<lang>')
