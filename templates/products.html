@@ -78,9 +78,14 @@
       {% for p in products %}
         <a href="{{ url_for('product_detail', product_id=p.id) }}"
            class="block bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transform hover:-translate-y-1 transition duration-300">
-          <img src="{{ url_for('serve_product_image', product_id=p.id) }}"
+          {% if p.image_data %}
+           <img src="{{ url_for('serve_product_image', product_id=p.id) }}"
                alt="{{ p.name }}"
                class="h-48 sm:h-56 w-full object-cover transition-transform duration-300 hover:scale-105">
+          {% else %}
+           <img src="{{ url_for('static', filename='images/default.png') }}" alt="UGA MEDICAL"
+              class="h-48 sm:h-56 w-full">
+          {% endif %}
           <div class="p-4">
             <!-- 🔥 급여/비급여 배지 -->
             {% if p.coverage_type == "급여" %}

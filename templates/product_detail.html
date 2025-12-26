@@ -18,7 +18,7 @@
                  class="w-full h-64 sm:h-96 object-cover rounded">
           {% else %}
             <div class="w-full h-64 sm:h-96 bg-gray-100 flex items-center justify-center text-gray-400 rounded">
-              {{ _("이미지 없음") }}
+              <img src="{{ url_for('static', filename='images/default.png') }}" alt="UGA MEDICAL">
             </div>
           {% endif %}
         </div>
@@ -69,18 +69,18 @@
 
             {% if product.member_only_price and not current_user.is_authenticated %}
                 <button class="w-full sm:w-[200px] bg-gray-400 text-white py-2 rounded cursor-not-allowed" disabled>
-                    로그인 후 구매 가능합니다
+                    {{ _("로그인 후 구매 가능합니다") }}
                 </button>
             {% else %}
                 <!-- 기존 장바구니 버튼 -->
                 <button type="submit" class="w-full sm:w-[200px] bg-indigo-600 text-white py-2 sm:py-3 rounded-lg hover:bg-indigo-700">
-                    장바구니 담기
+                    {{ _("장바구니 담기") }}
                 </button>
             {% endif %}
             {% if product.coverage_type == '급여' %}
             <div class="text-xs text-gray-500 mt-2">
-              ※ 본 제품은 급여 대상 품목이나,
-              온라인 구매 시 보험 적용은 되지 않습니다.
+              ※ {{ _("본 제품은 급여 대상 품목이나,") }}
+              {{ _("온라인 구매 시 보험 적용은 되지 않습니다.") }}
             </div>
             {% endif %}
           </form>
@@ -237,7 +237,7 @@
           <div class="p-4 bg-gray-50 rounded-xl shadow-sm">
             <p class="text-blue-600 font-semibold text-xs">{{ _("배송 안내") }}</p>
             <p class="text-gray-800 text-xs leading-relaxed">
-              {{ _("택배") }} (CJ대한통운)<br>
+              {{ _("택배") }}<br>
               {{ _("결제 완료 후 평균 2~4일 이내 배송(주말 및 공휴일 제외)") }}
             </p>
           </div>
@@ -357,7 +357,7 @@
       <div class="text-right mt-8">
         <button id="open-review-modal"
                 class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition">
-          리뷰 작성하기
+          {{ _("리뷰 작성하기") }}
         </button>
       </div>
 
