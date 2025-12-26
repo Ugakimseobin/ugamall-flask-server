@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}UGAMALL B2B{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tailwind CDN (운영 중이면 빌드 방식으로 교체 권장) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ugablue: '#4f46e5',   /* ugamall 계열 */
+            ugagray: '#f8fafc'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-ugagray text-gray-800">
+
+  <!-- 상단 B2B 안내 바 -->
+  <div class="bg-gray-900 text-gray-100 text-sm text-center py-2">
+    병원 · 기업 전용 B2B 쇼핑몰 (일반 소비자 구매 불가)
+  </div>
+
+  <!-- 헤더 -->
+  <header class="bg-white border-b">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      
+      <!-- 로고 -->
+      <div class="flex items-center gap-2">
+        <span class="text-xl font-bold text-ugablue">UGAMALL</span>
+        <span class="text-sm font-semibold text-gray-500">B2B</span>
+      </div>
+
+      <!-- 네비게이션 -->
+      <nav class="flex items-center gap-6 text-sm font-medium">
+        <a href="/" class="hover:text-ugablue">홈</a>
+        <a href="/products" class="hover:text-ugablue">상품 카탈로그</a>
+        <a href="/contact" class="hover:text-ugablue">문의</a>
+
+        {% if current_user.is_authenticated %}
+          <span class="text-gray-500">{{ current_user.email }}</span>
+          <a href="/logout" class="text-red-500">로그아웃</a>
+        {% else %}
+          <a href="/login" class="text-ugablue font-semibold">로그인</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="max-w-7xl mx-auto px-6 py-10">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="border-t bg-white mt-20">
+    <div class="max-w-7xl mx-auto px-6 py-6 text-xs text-gray-500 flex justify-between">
+      <div>© {{ now().year }} UGAMALL B2B</div>
+      <div>의료기관 · 기업 전용 공급몰</div>
+    </div>
+  </footer>
+
+</body>
+</html>
