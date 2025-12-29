@@ -97,13 +97,6 @@ ALLOWED_IMAGE_EXT = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 ALLOWED_PAMPHLET_EXT = {".pdf", ".jpg", ".jpeg", ".png"}
 
 # -----------------------------
-# 병원용, 일반사용자용 구분을 위한 도메인 호스트 받아오기 함수
-def get_site_type():
-    host = request.host.split(":")[0]
-    if host.startswith("shop."):
-        return "b2b"
-    return "b2c"
-# -----------------------------
 # DB 모델
 # -----------------------------
 class User(db.Model, UserMixin):
@@ -4127,10 +4120,19 @@ def verify_password():
     else:
         return jsonify({"success": False})
 
+# -----------------------------
+# 병원용, 일반사용자용 구분을 위한 도메인 호스트 받아오기 함수
+def get_site_type():
+    host = request.host.split(":")[0]
+    if host.startswith("shop."):
+        return "b2b"
+    return "b2c"
+# ------------------------------
+
 with app.app_context():
     db.create_all()
     print("✅ DB schema created (or already exists)")
 
 if __name__=="__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render가 주입한 PORT 사용
-    app.run(host="0.0.0.0", port=port)
+    port = 5050
+    app.run(host="127.0.0.1", port=port, debug=True)
