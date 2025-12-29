@@ -8,6 +8,14 @@
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}?v=2">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/Uga_logo1.png') }}">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/TheJamsil.css') }}">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <!-- Tailwind CDN (운영 중이면 빌드 방식으로 교체 권장) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -36,46 +44,55 @@
 
   <!-- 헤더 -->
   <header class="bg-white border-b">
-    <div class="max-w-7x1 mx-auto px-6 py-4">
 
-      <!-- 상단 유틸메뉴 -->
-      <div class="flex justify-end text-sm text-gray-600 gap-4 mb-2 border-b">
-        {% if current_user.is_authenticated %}
-          <span>{{ current_user.name }}</span>
-          <a href="/logout" class="hover:text-ugablue">로그아웃</a>
-        {% else %}
-          <a href="/login" class="hover:text-ugablue">로그인</a>
-          <a href="/register" class="hover:text-ugablue">회원가입</a>
-        {% endif %}
+    <!-- 🔹 상단 안내 바 -->
+    <div class="bg-gray-900 text-gray-100 text-sm">
+      <div class="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
+        <span>일반소비자는 B2C 쇼핑몰로 방문해주세요!</span>
+
+        <div class="flex items-center gap-4">
+          {% if current_user.is_authenticated %}
+            <span class="text-gray-300 text-xs">{{ current_user.email }}</span>
+            <a href="/logout" class="hover:underline">로그아웃</a>
+          {% else %}
+            <a href="/login" class="hover:underline">로그인</a>
+            <a href="/register" class="hover:underline">회원가입</a>
+          {% endif %}
+        </div>
       </div>
+    </div>
 
-      <div class="flex justify-center mb-4">
+    <!-- 🔹 로고 + 검색 영역 -->
+    <div class="max-w-7xl mx-auto px-6 py-6 relative">
+
+      <!-- 로고 (가운데 고정) -->
+      <div class="flex justify-center">
         <div class="flex items-center gap-2">
-          <img src="{{ url_for('static', filename='images/Uga_logo1.png') }}" 
-       alt="유가몰 로고"
-       class="">
-          <span class="text-3xl font-bold text-[#3a3a3c]" 
-          style="font-family: 'TheJamsil5Bold', 'Noto Sans KR', sans-serif; font-weight:700;"></span>>유가몰</span>
+          <span class="text-3xl font-bold text-ugablue">UGAMALL</span>
           <span class="text-sm font-semibold text-gray-500 mt-2">B2B</span>
         </div>
-        <div class="flex items-end">
-          <form action="/search" method="get" class="relative w-80">
+      </div>
+
+      <!-- 검색창 (오른쪽) -->
+      <form action="/search"
+            method="get"
+            class="absolute right-6 top-1/2 -translate-y-1/2 w-72">
         <input
           type="text"
           name="q"
-          placeholder="제품명 또는 품목 검색"
-          class="w-full border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ugablue"
+          placeholder="제품명 검색"
+          class="w-full border rounded-full px-4 py-2 text-sm
+                focus:outline-none focus:ring-2 focus:ring-ugablue"
         >
         <button type="submit"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ugablue">
+                class="absolute right-3 top-1/2 -translate-y-1/2
+                      text-gray-400 hover:text-ugablue">
           🔍
         </button>
       </form>
-        </div>
-      </div>
 
-      
     </div>
+
   </header>
 
   <!-- 메인 콘텐츠 -->
