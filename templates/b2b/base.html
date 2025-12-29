@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>{% block title %}UGAMALL B2B{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}?v=2">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/Uga_logo1.png') }}">
 
   <!-- Tailwind CDN (운영 중이면 빌드 방식으로 교체 권장) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -26,34 +29,36 @@
 
   <!-- 상단 B2B 안내 바 -->
   <a href="https://ugamall.co.kr/">
-    <div class="bg-gray-900 text-gray-100 text-xl text-center py-8">
+    <div class="bg-gray-900 text-gray-100 text-xl text-center py-4">
       일반소비자는 B2C 쇼핑몰로 방문해주세요!
     </div>
   </a>
 
   <!-- 헤더 -->
   <header class="bg-white border-b">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      
-      <!-- 로고 -->
-      <div class="flex items-center gap-2">
-        <span class="text-xl font-bold text-ugablue">UGAMALL</span>
-        <span class="text-sm font-semibold text-gray-500">B2B</span>
+    <div class="max-w-7x1 mx-auto px-6 py-4">
+
+      <!-- 상단 유틸메뉴 -->
+      <div class="flex justify-end text-sm text-gray-600 gap-4 mb-2">
+        {% if current_user.is_authenticated %}
+          <span>{{ current_user.name }}</span>
+          <a href="/logout" class="hover:text-ugablue">로그아웃</a>
+        {% else %}
+          <a href="/login" class="hover:text-ugablue">로그인</a>
+          <a href="/register" class="hover:text-ugablue">회원가입</a>
+        {% endif %}
       </div>
 
-      <!-- 네비게이션 -->
-      <nav class="flex items-center gap-6 text-sm font-medium">
-        <a href="/" class="hover:text-ugablue">홈</a>
-        <a href="/products" class="hover:text-ugablue">상품 카탈로그</a>
-        <a href="/contact" class="hover:text-ugablue">문의</a>
+      <div class="flex justify-center mb-4">
+        <div class="flex items-center gap-2">
+          <img src="{{ url_for('static', filename='images/Uga_logo1.png') }}" 
+       alt="유가몰 로고"
+       class="absolute left-[-0.3rem] top-[47%] -translate-y-1/2 w-8 md:w-9 opacity-40 pointer-events-none select-none">
+          <span class="text-3xl font-bold text-ugablue">유가몰</span>
+          <span class="text-sm font-semibold text-gray-500 mt-2">B2B</span>
+        </div>
+      </div>
 
-        {% if current_user.is_authenticated %}
-          <span class="text-gray-500">{{ current_user.email }}</span>
-          <a href="/logout" class="text-red-500">로그아웃</a>
-        {% else %}
-          <a href="/login" class="text-ugablue font-semibold">로그인</a>
-        {% endif %}
-      </nav>
     </div>
   </header>
 
