@@ -46,13 +46,13 @@
   <header class="bg-white border-b">
 
     <!-- 🔹 상단 안내 바 -->
-    <div class="bg-gray-900 text-gray-100 text-sm">
+    <div class="bg-white border-b text-gray-100 text-sm">
       <div class="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
-        <span>일반소비자는 B2C 쇼핑몰로 방문해주세요!</span>
+        
 
         <div class="flex items-center gap-4">
           {% if current_user.is_authenticated %}
-            <span class="text-gray-300 text-xs">{{ current_user.email }}</span>
+            <span class="text-gray-300 text-xs">{{ current_user.name }}님</span>
             <a href="/logout" class="hover:underline">로그아웃</a>
           {% else %}
             <a href="/login" class="hover:underline">로그인</a>
@@ -68,7 +68,10 @@
       <!-- 로고 (가운데 고정) -->
       <div class="flex justify-center">
         <div class="flex items-center gap-2">
-          <span class="text-3xl font-bold text-ugablue">UGAMALL</span>
+          <img src="{{ url_for('ad_image', image_id=img.id) }}"
+                alt="{{ ad.title }}">
+          <span class="text-3xl font-bold text-[#383938]" 
+          style="font-family: 'TheJamsil5Bold', 'Noto Sans KR', sans-serif; font-weight:700;">유가몰</span>
           <span class="text-sm font-semibold text-gray-500 mt-2">B2B</span>
         </div>
       </div>
