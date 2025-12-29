@@ -47,9 +47,7 @@
 
     <!-- 🔹 상단 안내 바 -->
     <div class="bg-white border-b text-gray-100 text-sm">
-      <div class="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
-        
-
+      <div class="max-w-7xl mx-auto px-6 py-2 flex items-end">
         <div class="flex items-center gap-4">
           {% if current_user.is_authenticated %}
             <span class="text-gray-300 text-xs">{{ current_user.name }}님</span>
