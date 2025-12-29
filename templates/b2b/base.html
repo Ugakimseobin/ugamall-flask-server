@@ -39,7 +39,7 @@
     <div class="max-w-7x1 mx-auto px-6 py-4">
 
       <!-- 상단 유틸메뉴 -->
-      <div class="flex justify-end text-sm text-gray-600 gap-4 mb-2">
+      <div class="flex justify-end text-sm text-gray-600 gap-4 mb-2 border-b">
         {% if current_user.is_authenticated %}
           <span>{{ current_user.name }}</span>
           <a href="/logout" class="hover:text-ugablue">로그아웃</a>
@@ -54,11 +54,27 @@
           <img src="{{ url_for('static', filename='images/Uga_logo1.png') }}" 
        alt="유가몰 로고"
        class="">
-          <span class="text-3xl font-bold text-ugablue">유가몰</span>
+          <span class="text-3xl font-bold text-[#3a3a3c]" 
+          style="font-family: 'TheJamsil5Bold', 'Noto Sans KR', sans-serif; font-weight:700;"></span>>유가몰</span>
           <span class="text-sm font-semibold text-gray-500 mt-2">B2B</span>
+        </div>
+        <div class="flex items-end">
+          <form action="/search" method="get" class="relative w-80">
+        <input
+          type="text"
+          name="q"
+          placeholder="제품명 또는 품목 검색"
+          class="w-full border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ugablue"
+        >
+        <button type="submit"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ugablue">
+          🔍
+        </button>
+      </form>
         </div>
       </div>
 
+      
     </div>
   </header>
 
