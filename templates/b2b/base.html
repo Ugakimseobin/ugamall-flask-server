@@ -50,12 +50,18 @@
       <div class="max-w-7xl mx-auto px-6 py-2 flex justify-end">
         <div class="flex items-center gap-4">
           {% if current_user.is_authenticated %}
-            <span class="text-gray-300 text-xs">{{ current_user.name }}님</span>
+            <span class="text-gray-700 text-xs">{{ current_user.name }}님</span>
             <a href="/logout" class="hover:underline">로그아웃</a>
           {% else %}
             <a href="/login" class="hover:underline">로그인</a>
             <a href="/register" class="hover:underline">회원가입</a>
           {% endif %}
+        </div>
+        <div class="text-gray-700 text-xs">
+          <a href="/mypage" class="hover:underline">내 정보</a>
+          <a href="/checkout" class="relative" aria-label="장바구니">
+            <span id="cart-icon-desktop" class="inline-block align-middle">🛒</span>
+          </a>
         </div>
       </div>
     </div>

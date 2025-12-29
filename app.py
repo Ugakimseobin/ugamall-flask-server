@@ -4121,7 +4121,7 @@ def verify_password():
         return jsonify({"success": False})
 
 # -----------------------------
-# 병원용, 일반사용자용 구분을 위한 도메인 호스트 받아오기 함수
+# 병원용, 일반사용자용 구분을 위한 도메인 호스트 받아오는 함수
 def get_site_type():
     host = request.host.split(":")[0]
     if host.startswith("shop."):
