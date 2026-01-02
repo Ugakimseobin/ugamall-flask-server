@@ -116,15 +116,13 @@
     <!-- 로고형 타이틀 -->
     <div class="mb-8 leading-[0.9]">
       <!-- ✅ 클릭 트리거용 ID 추가 -->
-      <h2 id="trigger-dino"
-          class="text-[64px] sm:text-[80px] text-[#222] cursor-default"
+      <h2 class="text-[64px] sm:text-[80px] text-[#222] cursor-default"
           style="font-family: 'TheJamsil5Bold', 'Noto Sans KR', sans-serif; font-weight:700;">
         유가몰
       </h2>
 
       <!-- ✅ 클릭 트리거용 ID 추가 -->
-      <p id="trigger-plane"
-         class="text-[28px] sm:text-[32px] text-[#222] mt-4 cursor-default"
+      <p class="text-[28px] sm:text-[32px] text-[#222] mt-4 cursor-default"
          style="font-family: 'Playfair Display', 'Times New Roman', serif; font-weight:400; letter-spacing:0.3px;">
         UGA Mall
       </p>
@@ -443,139 +441,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
-
-<!-- secret game -->
-<script>
-let dinoClicks = 0;
-let planeClicks = 0;
-let gameRunning = false;
-
-const wrapper = document.getElementById("secret-game-wrapper");
-const canvas = document.getElementById("secret-game");
-
-function showGame(startFn) {
-  if (gameRunning) return;
-  gameRunning = true;
-
-  wrapper.classList.remove("hidden");
-  setTimeout(() => {
-    wrapper.classList.remove("opacity-0");
-    startFn();
-  }, 50);
-}
-
-// ✅ 유가몰 → 공룡 점프
-document.getElementById("trigger-dino").addEventListener("click", () => {
-  dinoClicks++;
-  if (dinoClicks === 6) {
-    showGame(startDinoGame);
-  }
-});
-
-// ✅ UGA Mall → 비행기 격추
-document.getElementById("trigger-plane").addEventListener("click", () => {
-  planeClicks++;
-  if (planeClicks === 6) {
-    showGame(startPlaneGame);
-  }
-});
-</script>
-<script>
-function startDinoGame() {
-  const ctx = canvas.getContext("2d");
-
-  let y = 160;
-  let vy = 0;
-  let jumping = false;
-  let gravity = 0.6;
-  let obstacleX = 600;
-
-  document.addEventListener("keydown", e => {
-    if (e.code === "Space" && !jumping) {
-      vy = -12;
-      jumping = true;
-    }
-  });
-
-  function loop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 공룡
-    vy += gravity;
-    y += vy;
-    if (y >= 160) {
-      y = 160;
-      vy = 0;
-      jumping = false;
-    }
-    ctx.fillStyle = "#222";
-    ctx.fillRect(50, y - 30, 30, 30);
-
-    // 장애물
-    obstacleX -= 4;
-    if (obstacleX < -20) obstacleX = 600;
-    ctx.fillRect(obstacleX, 160 - 20, 20, 20);
-
-    // 바닥
-    ctx.beginPath();
-    ctx.moveTo(0, 180);
-    ctx.lineTo(600, 180);
-    ctx.stroke();
-
-    requestAnimationFrame(loop);
-  }
-
-  loop();
-}
-</script>
-<script>
-function startPlaneGame() {
-  const ctx = canvas.getContext("2d");
-
-  let planeX = 280;
-  let bullets = [];
-  let enemies = [];
-
-  document.addEventListener("keydown", e => {
-    if (e.code === "ArrowLeft") planeX -= 15;
-    if (e.code === "ArrowRight") planeX += 15;
-    if (e.code === "Space") {
-      bullets.push({ x: planeX + 10, y: 180 });
-    }
-  });
-
-  function spawnEnemy() {
-    enemies.push({ x: Math.random() * 560, y: 0 });
-  }
-
-  setInterval(spawnEnemy, 1000);
-
-  function loop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 비행기
-    ctx.fillStyle = "#222";
-    ctx.fillRect(planeX, 180, 30, 20);
-
-    // 총알
-    bullets.forEach(b => {
-      b.y -= 8;
-      ctx.fillRect(b.x, b.y, 4, 10);
-    });
-
-    // 적
-    enemies.forEach(e => {
-      e.y += 3;
-      ctx.fillRect(e.x, e.y, 20, 20);
-    });
-
-    requestAnimationFrame(loop);
-  }
-
-  loop();
-}
-</script>
-<!-- endgame -->
 
 <style>
 @keyframes fadeIn {
