@@ -4085,13 +4085,13 @@ def sitemap():
     sitemap_xml = render_template("sitemap_template.xml", pages=pages, lastmod=ten_days_ago)
     return Response(sitemap_xml, mimetype="application/xml")
 
-@app.route("/db_tables")
-def db_tables():
-    try:
-        tables = db.inspect(db.engine).get_table_names()
-        return jsonify({"tables": tables})
-    except Exception as e:
-        return jsonify({"error": str(e)})
+# @app.route("/db_tables")
+# def db_tables():
+#     try:
+#         tables = db.inspect(db.engine).get_table_names()
+#         return jsonify({"tables": tables})
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
 
 @app.route("/make_admin_page", methods=["GET", "POST"])
 def make_admin_page():
