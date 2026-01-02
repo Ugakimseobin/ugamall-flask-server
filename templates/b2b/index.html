@@ -4,65 +4,24 @@
 
 {% block content %}
 
-<!-- 상단 히어로 -->
-<section class="bg-white border rounded-lg p-10 mb-12">
-  <h1 class="text-3xl font-bold mb-4">
-    병원 · 기업 전용 의료소모품 공급몰
-  </h1>
-  <p class="text-gray-600 max-w-2xl">
-    UGAMALL B2B는 의료기관 및 기업 고객을 위한 전용 쇼핑몰입니다.<br>
-    인증된 회원만 구매가 가능하며, 급여·비급여 의료소모품을 안정적으로 공급합니다.
-  </p>
-
-  <div class="mt-6 flex gap-4">
-    <a href="/products"
-       class="px-6 py-3 bg-ugablue text-white rounded-lg text-sm font-semibold hover:bg-indigo-700">
-      상품 카탈로그 보기
-    </a>
-    <a href="/contact"
-       class="px-6 py-3 border border-gray-300 rounded-lg text-sm font-semibold hover:bg-gray-100">
-      공급 문의
-    </a>
-  </div>
+<!-- 상단 히어로 x축 긴 광고판 페이지네이션, 좌우 버튼 클릭시 넘어가는 방식 -->
+<section class="bg-white border rounded-lg x-full">
+  
 </section>
 
-<!-- 주요 카테고리 -->
+<!-- 품목 카테고리 -->
 <section class="mb-12">
-  <h2 class="text-xl font-bold mb-6">주요 취급 품목</h2>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    
-    <div class="bg-white border rounded-lg p-6">
-      <h3 class="font-semibold mb-2">드레싱 / 소모품</h3>
-      <p class="text-sm text-gray-500">병원용 상처 보호 및 처치 소모품</p>
-    </div>
+</section>
 
-    <div class="bg-white border rounded-lg p-6">
-      <h3 class="font-semibold mb-2">주사기 / 주입기</h3>
-      <p class="text-sm text-gray-500">의료기관 전용 공급 품목</p>
-    </div>
-
-    <div class="bg-white border rounded-lg p-6">
-      <h3 class="font-semibold mb-2">위생 / 보호용품</h3>
-      <p class="text-sm text-gray-500">감염 예방 및 보호 제품</p>
-    </div>
-
-    <div class="bg-white border rounded-lg p-6">
-      <h3 class="font-semibold mb-2">기타 의료소모품</h3>
-      <p class="text-sm text-gray-500">기관 맞춤 공급 가능</p>
-    </div>
-
-  </div>
+<!-- 추천 카테고리 -->
+<section class="mb-12">
+  
 </section>
 
 <!-- 안내 박스 -->
 <section class="bg-gray-50 border rounded-lg p-8 text-sm text-gray-600">
-  <ul class="list-disc pl-5 space-y-2">
-    <li>본 사이트는 병원·기업 회원 전용입니다.</li>
-    <li>일반 소비자는 구매가 제한됩니다.</li>
-    <li>급여 대상 품목의 경우, 온라인 구매 시 보험 적용은 되지 않습니다.</li>
-    <li>대량 구매 및 기관 공급은 별도 문의 바랍니다.</li>
-  </ul>
+  
 </section>
 
 {% endblock %}
