@@ -129,9 +129,15 @@
       {% for p in related_products %}
       <a href="{{ url_for('product_detail', product_id=p.id) }}"
          class="block bg-white p-3 sm:p-4 shadow rounded hover:shadow-lg transition">
-        <img src="{{ url_for('serve_product_image', product_id=p.id) }}"
-             alt="{{ p.name }}"
-             class="h-36 sm:h-44 w-full object-cover rounded">
+         {% if p.image_data %}
+            <img src="{{ url_for('serve_product_image', product_id=p.id) }}"
+                 alt="{{ p.name }}" 
+                 class="h-36 sm:h-44 w-full object-cover rounded">
+          {% else %}
+            <div class="w-full h-36 sm:h-44 bg-gray-100 flex items-center justify-center text-gray-400 rounded">
+              <img src="{{ url_for('static', filename='images/default.png') }}" alt="UGA MEDICAL">
+            </div>
+          {% endif %}
         <h3 class="mt-2 font-bold text-sm sm:text-base truncate">{{ _(p.name) }}</h3>
         <p class="text-gray-600 text-xs sm:text-sm mt-1">{{ _("%(price)s원", price=p.base_price|format_won) }}</p>
       </a>
@@ -454,9 +460,10 @@
         <span class="hidden md:block text-gray-400" id="cart-toggle-icon">⮜</span>
         <span class="md:hidden font-semibold text-gray-400" id="cart-toggle-icon"><</span>
     </div>
-
-    <img src="{{ url_for('serve_product_image', product_id=product.id) }}"
+    <div class="mt-16">
+      <img src="{{ url_for('serve_product_image', product_id=product.id) }}"
        class="top-4 rounded-lg shadow mb-4 object-cover h-40 w-full">
+    </div>
 
     <h4 class="text-base font-bold mb-1">{{ _(product.name) }}</h4>
     <!-- 회원공개 가격 -->
