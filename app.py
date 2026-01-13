@@ -110,6 +110,23 @@ class User(db.Model, UserMixin):
     phone = db.Column(db.String(20))
     phone_verified = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)  # ✅ 관리자 여부 추가
+
+    # normal(일반), business(사업자), hospital(병원)
+    user_type = db.Column(db.String(20), default="normal")
+    # 인증 진행상태 : none / pending / approved / rejected
+    auth_status = db.Column(db.String(20), default="none")
+    # 사업자명(상호)
+    business_name = db.Column(db.String(200), nullable=True)
+    # 사업자등록번호
+    business_number = db.Column(db.String(200), nullable=True)
+    # 첨부파일 인증
+    auth_file_name = db.Column(db.String(255), nullable=True)
+    auth_file_mime = db.Column(db.String(100), nullable=True)
+    auth_file_data = db.Column(LONGBLOB)
+    # 거절 사유
+    auth_reject_reason = db.Column(db.Text, nullable=True)
+    auth_updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+
     # 약관 동의
     agree_terms = db.Column(db.Boolean, default=False)          # 유가몰 이용약관
     agree_finance = db.Column(db.Boolean, default=False)        # 전자금융서비스
@@ -129,16 +146,30 @@ class User(db.Model, UserMixin):
 
     coupons = db.relationship("UserCoupon", back_populates="user", cascade="all, delete-orphan")
 
+class UserAuthFile(db.Model):
+    __tablename__ = "user_auth_files"
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
+    file_name = db.Column(db.String(255))
+    file_mime = db.Column(db.String(100))
+    file_data = db.Column(db.LargeBinary)
+    uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref="auth_files")
+
 class Product(db.Model):
     __tablename__ = "product"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     base_price = db.Column(db.Integer, nullable=False, default=0)
 
-    coverage_type = db.Column(db.String(20), default="normal")  
     # 값: "급여", "비급여", "일반"
-    member_only_price = db.Column(db.Boolean, default=False)
+    coverage_type = db.Column(db.String(20), default="normal")  
     # True → 비회원은 가격 노출 안 됨
+    member_only_price = db.Column(db.Boolean, default=False)
+    # 인증 필요 여부
+    is_cert_required = db.Column(db.Boolean, default=False)
 
     description = db.Column(db.Text)
     image_data = db.Column(LONGBLOB)
@@ -1094,7 +1125,9 @@ def mypage():
         selected_period=period,
         search_query=search_query,
         start_date=start_date_str,
-        end_date=end_date_str
+        end_date=end_date_str,
+        auth_status=user.auth_status,
+        user_type=user.user_type
     )
 
 @app.route("/mypage/orders")
@@ -1419,6 +1452,36 @@ def reset_password_token(token):
 
     return render_template("auth/reset_password_form.html")
 
+@app.route("/mypage_verify", methods=["POST"])
+@login_required
+def mypage_verify():
+    user = current_user
+
+    # business info
+    user.business_name = request.form.get("business_name")
+    user.business_number = request.form.get("business_number")
+    user.auth_status = "pending"
+    user.auth_updated_at = datetime.utcnow()
+
+    files = request.files.getlist("auth_files")
+
+    # 기존 파일 모두 삭제 (선택사항)
+    UserAuthFile.query.filter_by(user_id=user.id).delete()
+
+    for f in files:
+        if f.filename:
+            new_file = UserAuthFile(
+                user_id=user.id,
+                file_name=f.filename,
+                file_mime=f.mimetype,
+                file_data=f.read()
+            )
+            db.session.add(new_file)
+
+    db.session.commit()
+
+    flash("인증 신청이 완료되었습니다. 관리자 확인 후 승인됩니다.", "success")
+    return redirect(url_for("mypage"))
 
 @app.route('/videos')
 def videos():
@@ -1617,6 +1680,11 @@ def add_to_cart():
         return jsonify({"status": "error", "message": "상품 ID가 누락되었습니다."}), 400
     
     product = Product.query.get_or_404(product_id)
+
+    # 🔥 인증 필요 상품 체크
+    if product.is_cert_required and current_user.auth_status != "approved":
+        flash("인증된 회원만 구매할 수 있는 상품입니다.", "error")
+        return redirect(url_for("product_detail", product_id=product_id))
 
     # 🔥 회원공개 상품이면 비회원은 장바구니 금지
     if product.member_only_price and not current_user.is_authenticated:
@@ -2417,6 +2485,7 @@ def admin_add_product():
         base_price = request.form.get("base_price", type=int)
         coverage_type = request.form.get("coverage_type", "일반")
         member_only_price = True if request.form.get("member_only_price") == "1" else False
+        is_cert_required = True if request.form.get("is_cert_required") == "1" else False
         category = request.form.get("category")
         description = request.form.get("description")
 
@@ -2425,6 +2494,7 @@ def admin_add_product():
             base_price=base_price,
             coverage_type=coverage_type,
             member_only_price=member_only_price,
+            is_cert_required=is_cert_required,
             category=category,
             description=description
         )
@@ -2545,6 +2615,7 @@ def admin_edit_product(product_id):
         product.base_price = request.form.get("base_price", type=int)
         product.coverage_type = request.form.get("coverage_type", "일반")
         product.member_only_price = True if request.form.get("member_only_price") == "1" else False
+        product.is_cert_required = True if request.form.get("is_cert_required") == "1" else False
         product.category = request.form.get("category")
         product.description = request.form.get("description")
 
@@ -2882,6 +2953,69 @@ def admin_users():
             u.is_dormant = False
 
     return render_template("admin/users.html", users=users, two_years_ago=two_years_ago)
+
+@app.route("/admin/user/<int:user_id>/auth_info")
+@login_required
+def admin_user_auth_info(user_id):
+    if not current_user.is_admin:
+        return jsonify({"error": "unauthorized"}), 403
+
+    user = User.query.get_or_404(user_id)
+
+    return jsonify({
+        "user_id": user.id,
+        "email": user.email,
+        "business_name": user.business_name,
+        "business_number": user.business_number,
+        "has_file": True if user.auth_file_name else False,
+        "updated_at": user.auth_updated_at.strftime("%Y-%m-%d %H:%M") if user.auth_updated_at else None
+    })
+
+import io
+
+@app.route("/admin/verifications/<int:file_id>/file")
+@login_required
+def download_auth_file(file_id):
+    if not current_user.is_admin:
+        return "Unauthorized", 403
+
+    file = UserAuthFile.query.get_or_404(file_id)
+
+    return send_file(
+        io.BytesIO(file.file_data),
+        mimetype=file.file_mime or "application/octet-stream",
+        as_attachment=True,
+        download_name=file.file_name
+    )
+
+@app.route("/admin/user/<int:user_id>/approve")
+@login_required
+def admin_user_approve(user_id):
+    if not current_user.is_admin:
+        return redirect(url_for("index"))
+
+    user = User.query.get_or_404(user_id)
+    user.auth_status = "approved"
+    user.auth_reject_reason = None
+    db.session.commit()
+
+    flash(f"{user.email} 님의 인증이 승인되었습니다.", "success")
+    return redirect(url_for("admin_users"))
+
+@app.route("/admin/user/<int:user_id>/reject", methods=["POST"])
+@login_required
+def admin_user_reject(user_id):
+    if not current_user.is_admin:
+        return jsonify({"error": "unauthorized"}), 403
+
+    reason = request.json.get("reason")
+    user = User.query.get_or_404(user_id)
+
+    user.auth_status = "rejected"
+    user.auth_reject_reason = reason
+    db.session.commit()
+
+    return jsonify({"success": True})
 
 @app.route("/admin/users/<int:user_id>/make_admin")
 @login_required

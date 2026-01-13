@@ -226,6 +226,73 @@
 
         <hr class="my-8">
 
+        <div class="bg-white shadow rounded-lg p-4 mb-6 border">
+          <h3 class="text-lg sm:text-xl font-bold mb-3">추가 인증</h3>
+
+          {% if auth_status == "approved" %}
+          <p class="text-green-600 font-semibold">승인완료</p>
+          <p class="text-sm text-gray-600 mt-1">회원 유형: {{ user_type }}</p>
+
+          {% elif auth_status == "pending" %}
+          <p class="text-blue-600 font-semibold">승인 대기중...</p>
+          <p class="text-sm text-gray-600 mt-1">관리자가 확인 중입니다.</p>
+
+          {% elif auth_status == "rejected" %}
+          <p class="text-red-600 font-semibold">승인거절</p>
+          <p class="text-sm text-gray-600 mt-1">거절사유: {{ user.auth_reject_reason }}</p>
+          {% endif %}
+          <form method="POST" action="{{ url_for('mypage_verify')}}" enctype="multipart/form-data"
+          class="space-y-6 bg-gray-50 p-6 rounded-lg shadow">
+            <h4 class="text-lg font-bold mb-2">사업자 정보</h4>
+            <div>
+              <label class="font-semibold block mb-1">사업자명</label>
+              <input type="text" name="business_name" class="w-full border p-2 rounded"
+              value="{{ user.business_name or ''}}" required>
+            </div>
+
+            <div>
+              <label class="font-semibold block mb-1">사업자등록번호</label>
+              <input type="text" name="business_number" class="w-full border p-2 rounded"
+              placeholder="예:123-45-67890" value="{{ user.business_number or ''}}" required>
+            </div>
+
+            <div>
+              <label class="font-semibold block mb-1">사업자등록증 / 파일 첨부</label>
+              <div id="fileList" class="space-y-2 mb-2">
+                <div class="flex items-center gap-2">
+                  <input type="file" name="auth_files" accept="image/*,application/pdf"
+                        class="border p-2 rounded flex-1">
+                  <button type="button" class="add-file-btn bg-gray-200 px-2 py-2 rounded hover:bg-gray-300">+</button>
+                </div>
+              </div>
+
+              {% if user.auth_files %}
+                <p class="text-sm mt-2 text-gray-600">
+                  기존 파일:
+                  <ul class="list-disc ml-4">
+                    {% for f in user.auth_files %}
+                    <li>{{ f.file_name }}</li>
+                    {% endfor %}
+                  </ul>
+                </p>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded hover:bg-indigo-700">
+              인증 신청
+            </button>
+
+            <p class="text-xs text-gray-500 mt-4">
+              사업자등록증 또는 의사면허증 첨부가 어려우면 아래 이메일로 보내주세요.<br>
+              <strong>ugamedical@naver.com</strong><br>
+              ※ 가입자와 대표자명이 다를 경우 위임장 또는 재직증명서도 같이 첨부해주세요.
+            </p>
+            
+          </form>
+        </div>
+
+        <hr class="my-8">
+
         <h3 class="text-lg sm:text-xl font-bold mb-4">{{ _("비밀번호 변경") }}</h3>
         <form method="post" class="space-y-4 text-sm sm:text-base">
           <input type="hidden" name="form_type" value="password">
@@ -659,6 +726,37 @@ function showToast(message, type = "info") {
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 2500);
 }
+</script>
+
+<!-- 사업자 인증 모달 -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const fileList = document.getElementById("fileList");
+
+  // 파일 input 추가 함수
+  function addFileInput() {
+    const div = document.createElement("div");
+    div.className = "flex items-center gap-2";
+
+    div.innerHTML = `
+      <input type="file" name="auth_files" accept="image/*,application/pdf"
+             class="border p-2 rounded flex-1">
+      <button type="button" class="remove-file-btn bg-red-200 px-2 py-1 rounded hover:bg-red-300">-</button>
+    `;
+
+    fileList.appendChild(div);
+
+    // 삭제 버튼 이벤트 연결
+    div.querySelector(".remove-file-btn").addEventListener("click", () => {
+      div.remove();
+    });
+  }
+
+  // + 버튼 이벤트 연결
+  document.querySelector(".add-file-btn").addEventListener("click", () => {
+    addFileInput();
+  });
+});
 </script>
 
 <style>

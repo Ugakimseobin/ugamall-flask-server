@@ -54,6 +54,15 @@
                 <span class="text-gray-400 text-sm">-</span>
               {% endif %}
             </form>
+            {% if u.auth_status == "pending" %}
+              <button type="button" onclick="openVerifyModal({{ u.id }})"
+              class="bg-indigo-600 text-white px-3 py-1 rounded text-xs sm:text-sm hover:bg-indigo-700">
+            인증 확인</button>
+            {% elif u.auth_status == "approved" %}
+              <span class="text-green-600 text-sm">인증됨</span>
+            {% elif u.auth_status == "rejected" %}
+              <span class="text-red-600 text-sm">반려됨</span>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}
@@ -61,4 +70,113 @@
     </table>
   </div>
 </div>
+
+<!-- 인증 확인 모달 -->
+<div id="verifyModal"
+     class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-white w-full max-w-lg p-6 rounded shadow-lg">
+    <h2 class="text-xl font-bold mb-4">사업자 인증 확인</h2>
+
+    <!-- 내용 표시 영역 -->
+    <div id="verifyContent" class="space-y-3 text-sm">
+      로딩 중...
+    </div>
+
+    <!-- 반려 사유 입력 -->
+    <div id="rejectReasonBox" class="hidden mt-4">
+      <label class="font-semibold text-sm">반려 사유 입력</label>
+      <textarea id="rejectReason"
+                class="w-full border rounded p-2 mt-1"
+                rows="3"
+                placeholder="반려 사유를 입력하세요"></textarea>
+    </div>
+
+    <div class="flex justify-end gap-2 mt-6">
+      <button onclick="closeVerifyModal()"
+              class="px-4 py-2 bg-gray-300 rounded">닫기</button>
+
+      <button id="rejectBtn"
+              onclick="showRejectBox()"
+              class="px-4 py-2 bg-red-600 text-white rounded">
+        반려
+      </button>
+
+      <button id="approveBtn"
+              onclick="approveUser()"
+              class="px-4 py-2 bg-green-600 text-white rounded">
+        승인
+      </button>
+
+      <button id="rejectSubmitBtn"
+              onclick="rejectUser()"
+              class="hidden px-4 py-2 bg-red-600 text-white rounded">
+        반려 확정
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentUserId = null;
+
+/* 모달 열기 */
+function openVerifyModal(userId) {
+  currentUserId = userId;
+  document.getElementById("verifyModal").classList.remove("hidden");
+
+  fetch(`/admin/user/${userId}/auth_info`)
+    .then(res => res.json())
+    .then(data => {
+      const box = document.getElementById("verifyContent");
+      box.innerHTML = `
+        <div><b>이메일:</b> ${data.email}</div>
+        <div><b>상호:</b> ${data.business_name || "-"}</div>
+        <div><b>사업자번호:</b> ${data.business_number || "-"}</div>
+        <div><b>신청일:</b> ${data.updated_at || "-"}</div>
+        <div><b>첨부파일:</b> ${
+          data.has_file
+            ? `<a href="/admin/verifications/${data.user_id}/file"
+                 class="text-indigo-600 underline"
+                 target="_blank">다운로드</a>`
+            : "없음"
+        }</div>
+      `;
+    });
+}
+
+function closeVerifyModal() {
+  document.getElementById("verifyModal").classList.add("hidden");
+  document.getElementById("rejectReasonBox").classList.add("hidden");
+  document.getElementById("rejectSubmitBtn").classList.add("hidden");
+  document.getElementById("rejectBtn").classList.remove("hidden");
+  document.getElementById("approveBtn").classList.remove("hidden");
+}
+
+/* 반려 사유창 열기 */
+function showRejectBox() {
+  document.getElementById("rejectReasonBox").classList.remove("hidden");
+  document.getElementById("rejectSubmitBtn").classList.remove("hidden");
+
+  document.getElementById("rejectBtn").classList.add("hidden");
+  document.getElementById("approveBtn").classList.add("hidden");
+}
+
+/* 승인 */
+function approveUser() {
+  fetch(`/admin/user/${currentUserId}/approve`)
+    .then(() => location.reload());
+}
+
+/* 반려 확정 */
+function rejectUser() {
+  const reason = document.getElementById("rejectReason").value.trim();
+  if (!reason) return alert("반려 사유를 입력해야 합니다.");
+
+  fetch(`/admin/user/${currentUserId}/reject`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({reason})
+  }).then(() => location.reload());
+}
+</script>
 {% endblock %}

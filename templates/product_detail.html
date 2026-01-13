@@ -67,16 +67,44 @@
               </div>
             </div>
 
+            {% set cert_blocked = product.is_cert_required 
+                      and current_user.is_authenticated 
+                      and current_user.auth_status != "approved" %}
+
             {% if product.member_only_price and not current_user.is_authenticated %}
+                <!-- 로그인 필요 -->
+                <div class="bg-red-50 border border-red-300 text-red-700 p-3 rounded mb-3 text-sm">
+                  로그인 후 가격을 확인할 수 있습니다.
+                </div>
                 <button class="w-full sm:w-[200px] bg-gray-400 text-white py-2 rounded cursor-not-allowed" disabled>
                     {{ _("로그인 후 구매 가능합니다") }}
                 </button>
+
+            {% elif cert_blocked %}
+                <!-- 🔥 인증 필요 상품 - 말풍선 안내 + 비활성 버튼 -->
+                <div class="relative mb-3">
+                  <div class="absolute -top-14 left-1/2 transform -translate-x-1/2 
+                              bg-red-50 text-red-700 border border-red-300 
+                              p-3 rounded shadow text-sm w-[260px] sm:w-[300px]">
+                    <strong>이 상품은 인증된 회원만 구매할 수 있습니다.</strong><br>
+                    <a href="{{ url_for('mypage') }}#tab-info" class="underline text-red-800 font-semibold">
+                      → 추가 인증하러 가기
+                    </a>
+                  </div>
+                </div>
+
+                <button class="w-full sm:w-[200px] bg-gray-300 text-white py-2 sm:py-3 rounded-lg cursor-not-allowed" disabled>
+                  {{ _("장바구니 담기") }}
+                </button>
+
             {% else %}
-                <!-- 기존 장바구니 버튼 -->
-                <button type="submit" class="w-full sm:w-[200px] bg-indigo-600 text-white py-2 sm:py-3 rounded-lg hover:bg-indigo-700">
+                <!-- 정상 장바구니 버튼 -->
+                <button type="submit" 
+                        class="w-full sm:w-[200px] bg-indigo-600 text-white py-2 sm:py-3 rounded-lg hover:bg-indigo-700">
                     {{ _("장바구니 담기") }}
                 </button>
             {% endif %}
+
             {% if product.coverage_type == '급여' %}
             <div class="text-xs text-gray-500 mt-2">
               ※ {{ _("본 제품은 급여 대상 품목이나,") }}
