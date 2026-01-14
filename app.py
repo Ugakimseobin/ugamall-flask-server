@@ -125,7 +125,7 @@ class User(db.Model, UserMixin):
     auth_file_data = db.Column(LONGBLOB)
     # 거절 사유
     auth_reject_reason = db.Column(db.Text, nullable=True)
-    auth_updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    auth_updated_at = db.Column(db.DateTime, default=lambda: datetime.now(KST))
 
     # 약관 동의
     agree_terms = db.Column(db.Boolean, default=False)          # 유가몰 이용약관
@@ -154,7 +154,7 @@ class UserAuthFile(db.Model):
     file_name = db.Column(db.String(255))
     file_mime = db.Column(db.String(100))
     file_data = db.Column(LONGBLOB)
-    uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+    uploaded_at = db.Column(db.DateTime, default=lambda: datetime.now(KST))
 
     user = db.relationship("User", backref="auth_files")
 
@@ -1461,7 +1461,7 @@ def mypage_verify():
     user.business_name = request.form.get("business_name")
     user.business_number = request.form.get("business_number")
     user.auth_status = "pending"
-    user.auth_updated_at = datetime.utcnow()
+    user.auth_updated_at = datetime.now(KST)
 
     files = request.files.getlist("auth_files")
 
