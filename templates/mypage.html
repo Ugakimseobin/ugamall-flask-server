@@ -229,18 +229,21 @@
         <div class="bg-white shadow rounded-lg p-4 mb-6 border">
           <h3 class="text-lg sm:text-xl font-bold mb-3">추가 인증</h3>
 
-          {% if auth_status == "approved" %}
-          <p class="text-green-600 font-semibold">승인완료</p>
-          <p class="text-sm text-gray-600 mt-1">회원 유형: {{ user_type }}</p>
+          <div id="auth-status-box">
+              {% if auth_status == "approved" %}
+                <p class="text-green-600 font-semibold">승인완료</p>
+                <p class="text-sm text-gray-600 mt-1">회원 유형: {{ user.user_type }}</p>
 
-          {% elif auth_status == "pending" %}
-          <p class="text-blue-600 font-semibold">승인 대기중...</p>
-          <p class="text-sm text-gray-600 mt-1">관리자가 확인 중입니다.</p>
+              {% elif auth_status == "pending" %}
+                <p class="text-blue-600 font-semibold">승인 대기중...</p>
+                <p class="text-sm text-gray-600 mt-1">관리자가 확인 중입니다.</p>
 
-          {% elif auth_status == "rejected" %}
-          <p class="text-red-600 font-semibold">승인거절</p>
-          <p class="text-sm text-gray-600 mt-1">거절사유: {{ user.auth_reject_reason }}</p>
-          {% endif %}
+              {% elif auth_status == "rejected" %}
+                <p class="text-red-600 font-semibold">승인거절</p>
+                <p class="text-sm text-gray-600 mt-1">거절사유: {{ user.auth_reject_reason }}</p>
+              {% endif %}
+          </div>
+          {% if auth_status == "none" or auth_status == "rejected" %}
           <form method="POST" action="{{ url_for('mypage_verify')}}" enctype="multipart/form-data"
           class="space-y-6 bg-gray-50 p-6 rounded-lg shadow">
             <h4 class="text-lg font-bold mb-2">사업자 정보</h4>
@@ -289,6 +292,7 @@
             </p>
             
           </form>
+          {% endif %}
         </div>
 
         <hr class="my-8">
@@ -758,6 +762,50 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const verifyForm = document.querySelector("form[action='{{ url_for('mypage_verify') }}']");
+  if (!verifyForm) return;
+
+  verifyForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(verifyForm);
+
+    const res = await fetch("{{ url_for('mypage_verify') }}", {
+      method: "POST",
+      body: formData,
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      // 신청 폼 숨기기
+      verifyForm.classList.add("hidden");
+
+      // 🔥🔥 반려 상태든 어떤 상태든 즉시 상태 UI 업데이트
+      const statusBox = document.querySelector("#auth-status-box");
+      if (statusBox) {
+        statusBox.innerHTML = `
+          <p class="text-blue-600 font-semibold">승인 대기중...</p>
+          <p class="text-sm text-gray-600 mt-1">관리자가 확인 중입니다.</p>
+        `;
+      }
+
+      // 알림
+      if (typeof showToast === "function") {
+        showToast("인증 신청이 완료되었습니다.", "success");
+      } else {
+        alert("인증 신청이 완료되었습니다.");
+      }
+    }
+  });
+});
+
+</script>
+
 
 <style>
 /* ✅ 공통 버튼 스타일 */

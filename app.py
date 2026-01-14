@@ -153,7 +153,7 @@ class UserAuthFile(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
     file_name = db.Column(db.String(255))
     file_mime = db.Column(db.String(100))
-    file_data = db.Column(db.LargeBinary)
+    file_data = db.Column(LONGBLOB)
     uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship("User", backref="auth_files")
@@ -1480,7 +1480,17 @@ def mypage_verify():
 
     db.session.commit()
 
-    flash("인증 신청이 완료되었습니다. 관리자 확인 후 승인됩니다.", "success")
+    # AJAX 요청인지 확인
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({
+            "success": True,
+            "status": "pending",
+            "message": "인증 신청이 완료되었습니다.",
+            "business_name": user.business_name,
+            "business_number": user.business_number
+        })
+
+    flash("인증 신청이 완료되었습니다.", "success")
     return redirect(url_for("mypage"))
 
 @app.route('/videos')
