@@ -3007,6 +3007,7 @@ def admin_user_approve(user_id):
     user = User.query.get_or_404(user_id)
     user.auth_status = "approved"
     user.auth_reject_reason = None
+    user.user_type = "hospital"
     db.session.commit()
 
     flash(f"{user.email} 님의 인증이 승인되었습니다.", "success")

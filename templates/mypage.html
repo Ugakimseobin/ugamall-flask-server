@@ -232,7 +232,7 @@
           <div id="auth-status-box">
               {% if auth_status == "approved" %}
                 <p class="text-green-600 font-semibold">승인완료</p>
-                <p class="text-sm text-gray-600 mt-1">회원 유형: {{ user.user_type }}</p>
+                <!-- <p class="text-sm text-gray-600 mt-1">회원 유형: {{ user.user_type }}</p> -->
 
               {% elif auth_status == "pending" %}
                 <p class="text-blue-600 font-semibold">승인 대기중...</p>
@@ -240,7 +240,7 @@
 
               {% elif auth_status == "rejected" %}
                 <p class="text-red-600 font-semibold">승인거절</p>
-                <p class="text-sm text-gray-600 mt-1">거절사유: {{ user.auth_reject_reason }}</p>
+                <p class="text-sm text-gray-600 my-1">거절사유: {{ user.auth_reject_reason }}</p>
               {% endif %}
           </div>
           {% if auth_status == "none" or auth_status == "rejected" %}
