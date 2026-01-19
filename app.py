@@ -119,10 +119,6 @@ class User(db.Model, UserMixin):
     business_name = db.Column(db.String(200), nullable=True)
     # 사업자등록번호
     business_number = db.Column(db.String(200), nullable=True)
-    # 첨부파일 인증
-    auth_file_name = db.Column(db.String(255), nullable=True)
-    auth_file_mime = db.Column(db.String(100), nullable=True)
-    auth_file_data = db.Column(LONGBLOB)
     # 거절 사유
     auth_reject_reason = db.Column(db.Text, nullable=True)
     auth_updated_at = db.Column(db.DateTime, default=lambda: datetime.now(KST))
@@ -1465,8 +1461,6 @@ def mypage_verify():
 
     files = request.files.getlist("auth_files")
 
-    # 기존 파일 모두 삭제 (선택사항)
-    UserAuthFile.query.filter_by(user_id=user.id).delete()
 
     for f in files:
         if f.filename:
@@ -2977,7 +2971,7 @@ def admin_user_auth_info(user_id):
         "email": user.email,
         "business_name": user.business_name,
         "business_number": user.business_number,
-        "has_file": True if user.auth_file_name else False,
+        "has_file": len(user.auth_files) > 0,
         "updated_at": user.auth_updated_at.strftime("%Y-%m-%d %H:%M") if user.auth_updated_at else None
     })
 
@@ -3008,6 +3002,7 @@ def admin_user_approve(user_id):
     user.auth_status = "approved"
     user.auth_reject_reason = None
     user.user_type = "hospital"
+    user.auth_updated_at = datetime.now(KST)
     db.session.commit()
 
     flash(f"{user.email} 님의 인증이 승인되었습니다.", "success")
@@ -3024,6 +3019,7 @@ def admin_user_reject(user_id):
 
     user.auth_status = "rejected"
     user.auth_reject_reason = reason
+    user.auth_updated_at = datetime.now(KST)
     db.session.commit()
 
     return jsonify({"success": True})
