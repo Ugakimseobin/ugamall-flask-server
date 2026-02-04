@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, current_app, abort
 from flask_babel import Babel, _
-from flask_login import UserMixin
-from flask_login import current_user, login_required
+from flask_login import LoginManager, UserMixin, current_user, login_required, login_user, logout_user
 import re
 from sqlalchemy.orm import joinedload
 from sqlalchemy import or_, cast, String
@@ -28,8 +27,6 @@ from config.baggage_price import BAGGAGE_PRICE_MAP
 
 
 app = Flask(__name__, static_url_path="", static_folder="static")
-
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 login_manager = LoginManager(app)
 login_manager.login_view = "login"  # 로그인 안 된 상태에서 접근 시 이동할 뷰
@@ -4277,3 +4274,5 @@ with app.app_context():
 if __name__=="__main__":
     port = 5050
     app.run(host="127.0.0.1", port=port, debug=True)
+
+    

@@ -244,7 +244,8 @@
      class="popup-box absolute top-24
             left-1/2 transform -translate-x-1/2
             md:transform-none
-            md:left-[calc(16rem+{{ loop.index0 * 40 }}px)]
+            md:left-[calc(16rem+{{ loop.index0 * 40 }}px)] 
+            md:top-[calc(6rem+{{ loop.index0 * 20 }}px)]
             w-[90%] sm:w-96 bg-white/95 border border-gray-300 
             shadow-xl z-50 hidden animate-fade-in 
             backdrop-blur-sm rounded overflow-hidden">
@@ -287,6 +288,7 @@
   </a>
 
 </div>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const banner = document.getElementById("right-floating-banner");
