@@ -118,7 +118,7 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {% for video in videos %}
             <div class="bg-white shadow rounded-lg overflow-hidden">
-              <video controls class="w-full">
+              <video controls class="w-full h-48">
                 <source src="{{ url_for('serve_video', video_id=video.id) }}" type="{{ video.video_mime }}">
                 {{ _("브라우저가 비디오를 지원하지 않습니다.") }}
               </video>
