@@ -498,6 +498,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (activeBtn) activeBtn.classList.add("active-tab");
   }
 
+  // P_detail에서 인증하러 가기 클릭 시
+  const hash = window.location.hash; // #tab-info
+  if (hash && hash.startsWith("#tab-")) {
+    const tabName = hash.replace("#tab-", "");
+    showTab(tabName);
+  } else {
+    showTab("orders"); // 기본 탭
+  }
+
   // 탭 버튼 클릭 시
   tabButtons.forEach(btn => {
     btn.addEventListener("click", () => showTab(btn.dataset.tab));
