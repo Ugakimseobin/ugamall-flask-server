@@ -39,11 +39,45 @@
 </nav>
 
 <!-- 소개 -->
-<section id="intro" class="py-20 bg-white">
-  <p class="text-lg sm:text-xl text-center leading-relaxed">
-    <strong>{{ _("유가") }}</strong>{{ _("는 의료 현장의") }} <strong>{{ _("신뢰") }}</strong>{{ _("를 바탕으로, ") }}  
-    {{ _("작지만 단단한 걸음을 이어왔습니다.") }}  
-  </p>
+<section id="intro" class="py-40 bg-white">
+  <div class="max-w-5xl mx-auto px-6">
+
+    <div class="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 items-start md:ml-auto md:max-w-[900px]">
+
+      <!-- 🔴 왼쪽: 이미지 -->
+      <div class="w-full max-w-[280px]">
+        <img src="{{ url_for('static', filename='images/default.png') }}"
+             alt="회사 이미지"
+             class="w-full aspect-square object-cover rounded-2xl shadow">
+      </div>
+
+      <!-- 🔵 + ⚫ 오른쪽 영역 -->
+      <div class="flex flex-col gap-4">
+
+        <!-- 🔵 회사명 -->
+        <div>
+          <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">
+            주식회사 유가
+          </h2>
+        </div>
+
+        <!-- ⚫ 설명 박스 -->
+        <div class="pt-4">
+          <p class="text-lg sm:text-lg leading-relaxed text-gray-700 max-w-3xl">
+            <strong>{{ _("유가") }}</strong>{{ _("는 의료 현장의") }}
+            <strong>{{ _("신뢰") }}</strong>{{ _("를 바탕으로,") }}
+            {{ _("작지만 단단한 걸음을 이어가고 있습니다.") }}
+            <br><br>
+            {{ _("고객과의 신뢰를 최우선으로 생각하며,") }}
+            {{ _("지속적인 성장과 발전을 통해 더 나은 가치를 제공합니다.") }}
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 </section>
 
 <!-- 연혁 -->
@@ -111,18 +145,18 @@
     <div class="grid sm:grid-cols-3 gap-8 mt-10">
       <div class="partner-card bg-white rounded-xl shadow-md p-10 font-extrabold text-[#222] text-2xl hover:shadow-lg transition reveal-left cursor-pointer"
            data-name="주식회사 폼" 
-           data-desc="정형외과 및 재활 보조기 전문 제조사로, UGA와 장기 공급 계약 체결. 국내 의료기기 품질 인증 다수 보유.">
-        주식회사 폼
+           data-desc=" ">
+        주식회사 폼<!--정형외과 및 재활 보조기 전문 제조사로, UGA와 장기 공급 계약 체결. 국내 의료기기 품질 인증 다수 보유.-->
       </div>
       <div class="partner-card bg-white rounded-xl shadow-md p-10 font-extrabold text-[#222] text-2xl hover:shadow-lg transition reveal-right cursor-pointer"
            data-name="메디케이" 
-           data-desc="의료 소모품 유통 전문 기업으로, UGA몰에 다양한 제품을 공급하며 협력 관계 유지. 전국 병원 납품망 보유.">
-        메디케이
+           data-desc=" ">
+        메디케이<!--의료 소모품 유통 전문 기업으로, UGA몰에 다양한 제품을 공급하며 협력 관계 유지. 전국 병원 납품망 보유.-->
       </div>
       <div class="partner-card bg-white rounded-xl shadow-md p-10 font-extrabold text-[#222] text-2xl hover:shadow-lg transition reveal-right cursor-pointer"
            data-name="하나캐피탈" 
-           data-desc="UGA몰과 의료기기 렌탈 및 리스 금융 파트너십 체결. 의료 종사자 대상 맞춤 금융 상품 지원.">
-        하나캐피탈
+           data-desc=" ">
+        하나캐피탈<!--UGA몰과 의료기기 렌탈 및 리스 금융 파트너십 체결. 의료 종사자 대상 맞춤 금융 상품 지원.-->
       </div>
     </div>
   </div>
