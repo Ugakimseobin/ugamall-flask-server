@@ -26,11 +26,21 @@
         <!-- 상품 정보 -->
         <div id="purchase-box">
           <h1 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">{{ _(product.name) }}</h1>
-          <!-- 거격 회원공개 -->
-          {% if product.member_only_price and not current_user.is_authenticated %}
-            <p class="text-red-600 text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">로그인 후 가격 확인</p>
+          <!-- 가격 회원공개 -->
+          {% if product.coverage_type == "비급여" %}
+            <p class="text-gray-500 text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
+              {{ _(" ") }}
+            </p>
+
+          {% elif product.member_only_price and not current_user.is_authenticated %}
+            <p class="text-red-600 text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
+              로그인 후 가격 확인
+            </p>
+
           {% else %}
-            <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">{{ _("%(price)s원", price=product.base_price|int|format_won) }}</p>
+            <p class="text-xl sm:text-2xl text-indigo-600 font-semibold mb-4 sm:mb-6">
+              {{ _("%(price)s원", price=product.base_price|int|format_won) }}
+            </p>
           {% endif %}
           
           <p class="text-gray-700 text-sm sm:text-base whitespace-pre-wrap mb-4 sm:mb-6">{{ product.description }}</p>
@@ -72,7 +82,15 @@
                       and current_user.auth_status != "approved" %}
 
             <div class="flex gap-3 mt-3">
-              {% if product.member_only_price and not current_user.is_authenticated %} <!--로그인 후 구매가능 제품-->
+              {% if product.coverage_type == "비급여" %}
+                <!-- 🔥 비급여 → 견적문의 -->
+                <a href="/contact" class="flex-1">
+                  <button type="button"
+                          class="w-64 bg-gray-400 text-white py-3 rounded-lg hover:bg-gray-700 transition">
+                    {{ _("견적문의") }}
+                  </button>
+                </a>
+              {% elif product.member_only_price and not current_user.is_authenticated %} <!--로그인 후 구매가능 제품-->
                 <div class="relative flex-1 group">
 
                   <!-- 버튼 -->
@@ -123,7 +141,8 @@
                   {{ _("🛒 장바구니") }}
                 </button>
               {% endif %}
-
+                
+              {% if product.coverage_type != "비급여" %}
               <a href="/contact" class="flex-1">
                 <button type="button"
                         class="w-full sm:w-[100px] flex items-center justify-center gap-2 
@@ -133,6 +152,7 @@
                   {{ _("문의") }}
                 </button>
               </a>
+              {% endif %}
             </div>
 
             <!-- {% if product.member_only_price and not current_user.is_authenticated %} -->
@@ -189,7 +209,7 @@
     <!-- 관련상품 -->
   {% if related_products %}
   <div class="mt-14 sm:mt-16">
-    <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-800">{{ _("관련 분야 상품") }}</h2>
+    <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-800">{{ _("관련 상품") }}</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
       {% for p in related_products %}
       <a href="{{ url_for('product_detail', product_id=p.id) }}"
