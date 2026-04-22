@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>HANA Micron Clone</title>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Swiper -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+<!-- GSAP -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+<style>
+body { margin:0; }
+.swiper { height:100vh; }
+.hero-overlay {
+  background: rgba(0,0,0,0.4);
+}
+</style>
+</head>
+
+<body class="text-white bg-black">
+
+<!-- 🔷 NAV -->
+<header id="header"
+  class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
+
+  <div id="headerInner"
+    class="flex items-center justify-between px-10 py-7">
+
+    <!-- 로고 -->
+    <a href="/"><img src="{{ url_for('static', filename='images/Uga_logo.png') }}" alt="UGA MEDICAL" class="h-6 md:h-8 pl-16"></a>
+
+    <!-- 메뉴 -->
+    <nav class="flex gap-10 font-bold text-lg">
+      <a href="#">회사정보</a>
+      <a href="#">SUSTAINABILITY</a>
+      <a href="#">IR & PR</a>
+      <a href="#">RECRUIT</a>
+      <a href="#">ABOUT US</a>
+    </nav>
+
+    <!-- 우측 -->
+    <div class="flex gap-4">
+      <span class="text-blue-500">KR</span>
+      <span>EN</span>
+      <span>☰</span>
+    </div>
+
+  </div>
+</header>
+<style>
+/* 🔥 기본 (맨 위 상태) */
+.header-transparent {
+  background: transparent;
+  color: white;
+}
+
+/* 🔥 스크롤 올라올 때 */
+.header-white {
+  background: white;
+  color: black;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* 🔥 숨김 */
+.header-hide {
+  transform: translateY(-100%);
+}
+</style>
+<script>
+let lastScroll = 0;
+const header = document.getElementById("header");
+
+const THRESHOLD = 80; // 🔥 여기 조절
+
+header.classList.add("header-transparent");
+
+window.addEventListener("scroll", () => {
+  const currentScroll = window.scrollY;
+
+  /* 🔥 맨 위 + threshold 이하 */
+  if (currentScroll <= THRESHOLD) {
+    header.classList.remove("header-white", "header-hide");
+    header.classList.add("header-transparent");
+    lastScroll = currentScroll;
+    return;
+  }
+
+  /* 🔥 스크롤 내릴 때 */
+  if (currentScroll > lastScroll) {
+    header.classList.add("header-hide");
+  }
+
+  /* 🔥 스크롤 올릴 때 */
+  else {
+    header.classList.remove("header-hide", "header-transparent");
+    header.classList.add("header-white");
+  }
+
+  lastScroll = currentScroll;
+});
+</script>
+<!-- 🔷 NAV end -->
+
+<!-- 🔷 HERO SLIDER -->
+<div class="swiper">
+  <div class="swiper-wrapper">
+
+    <div class="swiper-slide relative">
+      <img src="https://images.unsplash.com/photo-1624716472114-a7c5f18ac832?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+           class="w-full h-full object-cover">
+      <div class="absolute inset-0 hero-overlay flex items-center justify-center text-center">
+        <div>
+          <h2 class="text-5xl md:text-7xl font-bold mb-6">
+            Innovative Technology
+          </h2>
+          <p class="text-xl opacity-80">Semiconductor Solution</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="swiper-slide relative">
+      <img src="https://images.unsplash.com/photo-1615505367812-0973facb1289?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+           class="w-full h-full object-cover">
+      <div class="absolute inset-0 hero-overlay flex items-center justify-center text-center">
+        <div>
+          <h2 class="text-5xl md:text-7xl font-bold mb-6">
+            Future Packaging
+          </h2>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 🔷 BUSINESS -->
+<section class="py-32 bg-white text-black text-center">
+  <h2 class="text-4xl font-bold mb-16">BUSINESS</h2>
+
+  <div class="flex justify-center gap-6 mb-10">
+    <button onclick="tab('1')" class="tab">BUMP</button>
+    <button onclick="tab('2')" class="tab">PACKAGE</button>
+    <button onclick="tab('3')" class="tab">TEST</button>
+    <button onclick="tab('4')" class="tab">ENG</button>
+  </div>
+
+  <div id="t1" class="tab-content">Bumping / RDL 기술</div>
+  <div id="t2" class="tab-content hidden">Flip Chip / WLP</div>
+  <div id="t3" class="tab-content hidden">Wafer Test</div>
+  <div id="t4" class="tab-content hidden">Engineering</div>
+</section>
+
+<!-- 🔷 GLOBAL -->
+<section class="py-32 text-center bg-black">
+  <h2 class="text-4xl font-bold mb-10">GLOBAL NETWORK</h2>
+  <div class="text-xl space-x-6 opacity-80">
+    <span>KOREA</span>
+    <span>USA</span>
+    <span>CHINA</span>
+    <span>VIETNAM</span>
+  </div>
+</section>
+
+<!-- 🔷 KPI -->
+<section class="py-32 bg-white text-black text-center">
+  <div class="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+    <div class="kpi">
+      <h3 class="text-5xl font-bold text-blue-600">2001</h3>
+      <p>설립</p>
+    </div>
+    <div class="kpi">
+      <h3 class="text-5xl font-bold text-blue-600">12507</h3>
+      <p>매출(억)</p>
+    </div>
+    <div class="kpi">
+      <h3 class="text-5xl font-bold text-blue-600">4000+</h3>
+      <p>임직원</p>
+    </div>
+  </div>
+</section>
+
+<!-- 🔷 FOOTER -->
+<footer class="bg-gray-200 text-gray-700 text-[12px] leading-relaxed border-t border-gray-300">
+  <div class="max-w-4xl mx-auto px-6 pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center lg:text-left">
+
+    <!-- 회사 정보 -->
+    <div>
+      <h3 class="text-sm font-bold text-gray-900 mb-3">㈜ 유가</h3>
+      <p>대표자: 유명환</p>
+      <p class="md:whitespace-nowrap">부산광역시 동래구 안남로 78-3 (더 평안빌딩 2층)</p>
+      <p>사업자등록번호: 822-87-03558</p>
+      <p>통신판매업신고번호: 2025-부산동래-0204 <button onclick="openBizPopup()"
+    class="underline hover:text-blue-600">
+    [사업자정보확인]
+  </button></p>
+    </div>
+
+    <!-- 고객센터 -->
+    <div>
+      <h3 class="text-sm font-bold text-gray-900 mb-3">{{ _("고객센터") }}</h3>
+      <p>{{ _("전화") }}: <a href="tel:0515223969" class="hover:underline">051-522-3969</a></p>
+      <p>{{ _("팩스") }}: 051-524-3969</p>
+      <p>{{ _("이메일") }}: <a href="mailto:ugamedical@naver.com" class="hover:underline">ugamedical@naver.com</a></p>
+      <p class="mt-2 text-gray-500 text-xs">{{ _("평일") }} 08:30~18:00 ({{ _("점심") }} 12:00~13:00)<br>{{ _("주말 및 공휴일 휴무") }}</p>
+    </div>
+
+    <!-- 정책 및 안내 -->
+    <div>
+      <h3 class="text-sm font-bold text-gray-900 mb-3">{{ _("바로가기") }}</h3>
+      <ul>
+        <li><a href="/company" class="hover:text-[var(--primary-color)]">{{ _("회사소개") }}</a></li>
+        <li><a href="/products" class="hover:text-[var(--primary-color)]">{{ _("제품") }}</a></li>
+        <li><a href="/contact" class="hover:text-[var(--primary-color)]">{{ _("문의") }}</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 구분선 -->
+  <div class="border-t border-gray-300 mt-6"></div>
+
+  <!-- 로고 / 인증 영역 -->
+  <div class="bg-white border-t border-gray-200 py-4">
+    <div class="max-w-4xl mx-auto px-4 flex flex-wrap justify-between items-center">
+      <div class="flex items-center gap-2 text-xs">
+        <a href="/"><img src="{{ url_for('static', filename='images/Uga_logo.png') }}" alt="UGA MEDICAL" class="h-6 md:h-8"></a>
+          © 2025. <span class="font-semibold">유가 inc.</span> All Rights Reserved.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+/* 🔥 SWIPER */
+new Swiper('.swiper', {
+  loop: true,
+  autoplay: { delay: 4000 },
+});
+
+/* 🔥 TAB */
+function tab(n){
+  document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"))
+  document.getElementById("t"+n).classList.remove("hidden")
+}
+
+/* 🔥 GSAP */
+gsap.registerPlugin(ScrollTrigger);
+
+gsap.from(".kpi", {
+  scrollTrigger: {
+    trigger: ".kpi",
+    start: "top 80%",
+  },
+  y: 50,
+  opacity: 0,
+  duration: 1,
+  stagger: 0.3
+});
+</script>
+
+<style>
+.tab {
+  padding:10px 20px;
+  background:#eee;
+}
+.tab:hover {
+  background:#ddd;
+}
+</style>
+
+</body>
+</html>

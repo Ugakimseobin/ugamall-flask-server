@@ -4231,6 +4231,10 @@ def sitemap():
 #     except Exception as e:
 #         return jsonify({"error": str(e)})
 
+@app.route("/ugacorp")
+def ugacorp_index():
+    return render_template("ugacorp_index.html")
+
 @app.route("/make_admin_page", methods=["GET", "POST"])
 def make_admin_page():
     message = None
