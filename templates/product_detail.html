@@ -84,12 +84,12 @@
             <div class="flex gap-3 mt-3">
               {% if product.coverage_type != "일반" %}
                 <!-- 🔥 비급여 → 견적문의 -->
-                <a href="/contact" class="flex-1">
+                <!-- <a href="/contact" class="flex-1">
                   <button type="button"
                           class="w-64 bg-gray-400 text-white py-3 rounded-lg hover:bg-gray-700 transition">
                     {{ _("견적문의") }}
                   </button>
-                </a>
+                </a> -->
               {% elif product.member_only_price and not current_user.is_authenticated %} <!--로그인 후 구매가능 제품-->
                 <div class="relative flex-1 group">
 
