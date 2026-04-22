@@ -82,7 +82,7 @@
                       and current_user.auth_status != "approved" %}
 
             <div class="flex gap-3 mt-3">
-              {% if product.coverage_type == "비급여" %}
+              {% if product.coverage_type != "일반" %}
                 <!-- 🔥 비급여 → 견적문의 -->
                 <a href="/contact" class="flex-1">
                   <button type="button"
