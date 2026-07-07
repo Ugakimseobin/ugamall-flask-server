@@ -13,7 +13,7 @@
 <div class="max-w-3xl mx-auto py-8 sm:py-12 px-4">
   <h2 class="text-xl sm:text-2xl font-bold mb-6">{{ _("문의하기") }}</h2>
 
-  <form method="POST" class="space-y-4 bg-white p-4 sm:p-6 shadow rounded">
+  <form method="POST" class="relative space-y-4 bg-white p-4 sm:p-6 shadow rounded"> <!-- 나중에 relative 삭제 -->
     {% if not current_user.is_authenticated %}
       <!-- ✅ 비회원 이메일 인증 -->
       <div>
@@ -72,6 +72,50 @@
         data-theme="light"
         style="transform:scale(0.95); transform-origin:0 0;">
     </div>
+
+    <!-- 문의 일시 중단 나중에 삭제 -->
+<div
+  class="absolute inset-0 z-50 bg-white/85 backdrop-blur-sm rounded flex items-center justify-center">
+
+  <div class="bg-white rounded-2xl shadow-xl border p-8 max-w-md w-[90%] text-center">
+
+    <div class="text-5xl mb-4">📢</div>
+
+    <h3 class="text-3xl font-bold text-gray-900 mb-5">
+      문의 서비스 일시 중단
+    </h3>
+
+    <p class="text-gray-600 leading-8 mb-8">
+      현재 홈페이지 문의 기능을<br>
+      일시적으로 사용할 수 없습니다.<br><br>
+
+      아래 연락처로 문의해 주시면<br>
+      빠르게 답변드리겠습니다.
+    </p>
+
+    <div class="bg-gray-50 rounded-2xl p-6 text-left space-y-3">
+
+      <div class="flex items-center gap-3">
+        <span class="text-xl">📞</span>
+        <a href="tel:0515223969"
+           class="font-semibold hover:text-blue-600">
+          051-522-3969
+        </a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="text-xl">✉️</span>
+        <a href="mailto:ugamedical@naver.com"
+           class="font-semibold hover:text-blue-600">
+          ugamedical@naver.com
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div> <!-- 여기까지 삭제 -->
   </form>
 
   <!-- 회사 위치 -->
